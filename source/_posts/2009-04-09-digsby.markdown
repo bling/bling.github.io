@@ -1,0 +1,14 @@
+---
+layout: post
+title: "Digsby"
+date: 2009-04-09
+comments: false
+---
+it's pretty sweet.  you can connect to every IM service known to man, and it even checks all your email, facebook, and twitter too with nice popup notifications!
+
+it only works for windows at the moment, but the guys over there are working hard and pushing out updates very frequently.  i'm alpha testing and even so i haven't seen any crashes or any major problems.  there have been the minor quarks here and there, but that's to be expected when you're alpha testing.  check it out at digsby.com
+
+also, you can embed a chat client into your website...like this:
+
+<embed width="210" src="http://w.digsby.com/dw.swf?c=ib6uqdcarp1k1t23" wmode="transparent" height="300" type="application/x-shockwave-flash"></embed>
+

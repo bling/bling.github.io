@@ -6,7 +6,7 @@ comments: false
 categories: coding
 ---
 Given the following code, what do you expect the output to be?
-```
+``` csharp
 for (int i = 0; i < 100; ++i)
 {
     ThreadPool.QueueUserWorkItem(delegate
@@ -16,7 +16,7 @@ for (int i = 0; i < 100; ++i)
 }
 ```
 Keep that answer in your head!  Now...what do you expect the output of the following?
-```
+``` csharp
 int i;
 for (i = 0; i < 100; ++i)
 {

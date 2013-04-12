@@ -19,7 +19,7 @@ One of the better implementations on weak events I found was from Dustin Campbel
 But wait, doesn't WPF already have a IWeakEventManager that solves this problem?  The problem with this is a couple things.  It's slow.  It's painful to use.  It's annoying to implement.  Long story short, you need a static WeakEventManager for *every* unique delegate.  Yes, sure, you can override a lot of the methods to make it more perform faster, but if you need to go that far you might as well write your own that does just what you need, and no more.
 
 If you haven't found it already, Daniel Grunwald's Code Project [article](http://www.codeproject.com/KB/cs/WeakEvents.aspx) is yet another great resource.  My implementation was a mix of this and the earlier mentioned link.  Anywho, here it is:
-```
+``` csharp
 public interface IWeakEventEntry<TSender, TArgs>
 {
     bool IsAlive { get; }
@@ -139,7 +139,7 @@ Nothing too special here.  For performance, a copy of all events are stored in a
 I tried generating the OpenForwardingDelegate using DynamicMethod and IL, but the result was negligible because it doesn't actually affect invoking speed, which is what we're most concerned with.
 
 Also, if you didn't notice, this implementation also supports static methods attaching, hence why there is an IWeakEventEntry interface.  Here's the StrongEventEntry implementation:
-```
+``` csharp
 public class StrongEventEntry<TSource, TArgs> : IWeakEventEntry<TSource, TArgs>
 {
     private delegate void ClosedForwardingEventHandler(TSource sender, TArgs args);
@@ -163,7 +163,7 @@ public class StrongEventEntry<TSource, TArgs> : IWeakEventEntry<TSource, TArgs>
 }
 ```
 Last but not least, usage:
-```
+``` csharp
 private WeakEvent<object, PropertyChangedEventArgs> _propertyChanged = new WeakEvent<object, PropertyChangedEventArgs>();
 public event PropertyChangedEventHandler PropertyChanged
 {

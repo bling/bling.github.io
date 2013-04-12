@@ -8,7 +8,7 @@ categories: coding
 Why doesn't C++ have garbage collection? Simply put, it doesn't need it. C++ has something called Resource Acquisition Is Initialization. What this means is that programmers can deterministically know when an object is created and when it is destroyed. You do not have the same information with garbage collected languages. For example, in C# you know when an object is created (when you call new), but you have no idea when the object gets destroyed. C++ heavily relies on RAII, and smart pointers make very good use of this idiom.
 
 For instance, take a look at the following C++ code:
-```
+``` csharp
 class Foo
 {
     Foo() { std::cout << "constructed!" << std::endl; }

@@ -17,7 +17,7 @@ I use git-tfs to make my day job a little less painful every day, because I cann
 Unfortunately, git doesn't have a mass untag, and you must untag each branch individually with `git tag -d name_of_tag`.
 
 This is how you do it with Powershell:
-```
+``` powershell
 50000..40000 | % { git tag -d "tfs/default/C$_" }
 ```
 50000..40000 creates an list of numbers from 50,000 to 40,000, then it gets piped `|` into a foreach loop `%` to run the git tag command by generating the tag name with the current loop item `$_`.

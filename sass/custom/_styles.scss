@@ -1,14 +1,26 @@
 // This File is imported last, and will override other styles in the cascade
 // Add styles here to make changes without digging in too much
 
+p { text-shadow: 1px 1px 1px #000; }
 p, article blockquote, ul, ol { margin-bottom: 1em; }
 
-#content,
-#content .blog-index {
+#content {
     article h1 {
-        font-size: 1.6em;
+        font-size: 1.6em !important;
         a {
-            font-size: 1.2em;
+            font-size: 1.2em !important;
         }
     }
+}
+
+code {
+    font-size: 1em !important;
+    color: $text-color !important;
+    background: #222 !important;
+    border: 1px solid #111 !important;
+    padding: 0 .2em !important;
+}
+
+body {
+    @include box-shadow(#000 0 0 10px);
 }

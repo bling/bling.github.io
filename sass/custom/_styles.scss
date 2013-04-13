@@ -1,2 +1,14 @@
 // This File is imported last, and will override other styles in the cascade
 // Add styles here to make changes without digging in too much
+
+p, article blockquote, ul, ol { margin-bottom: 1em; }
+
+#content,
+#content .blog-index {
+    article h1 {
+        font-size: 1.6em;
+        a {
+            font-size: 1.2em;
+        }
+    }
+}

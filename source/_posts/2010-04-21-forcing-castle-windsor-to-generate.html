@@ -1,0 +1,33 @@
+---
+layout: post
+title: "Forcing Castle Windsor to Generate Class Proxies"
+date: 2010-04-21
+comments: false
+categories:
+ - IoC
+ - Castle
+---
+
+<div class='post'>
+I don't know why it took me so long to come up with this idea, but to save others potential headaches...have you ever thought "hmmmm, I registered this as an interface with an implementation, but I want Windsor to use a class proxy, not an interface proxy, how do I do that?"<br />
+<br />
+For me, initially I <i>almost</i> went as far as implementing my own ProxyFactory to force it to use class proxy no matter what, and then the light bulb hit me and it turns out that there's a much easier way to accomplish this.<br />
+<br />
+c.Register(Component.For&lt;ConcreteImpl, IService&gt;().Interceptors&lt;AnInterceptor&gt;());<br />
+<br />
+Tada!&nbsp; The actual service is now a concrete type, so Windsor will go, OK, I need to create a class proxy.&nbsp; But since it's forwarded to the interface as well, all your dependencies can simply use the interface and everything magically works.<br />
+<br />
+Yay!</div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>bling</div>
+<div class='content'>
+void IService.SomeLongRunningOperation() {<br />  Action1();<br />  Action2();<br />  Action3();<br />}<br /><br />protected virtual void Action1() {}<br />protected virtual void Action2() {}<br />protected virtual void Action3() {}<br /><br />Without class proxies, those action methods could not be intercepted, and in our case, we would not be able to collect metrics/statistics on those methods.</div>
+</div>
+<div class='comment'>
+<div class='author'>Krzysztof Koźmic (2)</div>
+<div class='content'>
+Why did you want a class proxy for interface service?</div>
+</div>
+</div>

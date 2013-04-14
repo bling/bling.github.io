@@ -1,0 +1,38 @@
+---
+layout: post
+title: "Multiple Inheritance in C# with Castle DynamicProxy Mixins"
+date: 2009-11-06
+comments: false
+categories:
+ - Coding
+---
+
+<div class='post'>
+Having some significant experience with C++, every once in a while I’ll <i>really</i> miss features available in C++ that just aren’t possible in C#.&nbsp; Sure, linking takes forever and if you could calculate the percentage of time for a C++ developer spent on linking time I’m sure it’d be around 50%.&nbsp; Nonetheless, there’s a certain seductive pull to stepping through the debugger and the sheer speed of a C++ program (arguably debugger is being made obsolete with TDD).&nbsp; If you’re only used C# for a long time, you probably didn’t even know that C++ was THAT much faster until you try this out.&nbsp; Even a simple hello world program: you can tell a difference.<br />
+But that’s not the point of this post.&nbsp; This post is about mixins!<br />
+So what is a mixin?&nbsp; You can <a href="http://en.wikipedia.org/wiki/Mixin">wikipedia</a> it, but basically it’s a way to add functionality to an existing object.&nbsp; In a way, it’s like multiple inheritance, but not exactly.&nbsp; If you wanna go CS101 terms, this is not a “is-a” relationship, but more of a “can-do” relationship.&nbsp; Both methods promote code reuse, and of course, both can be abused.<br />
+In a way, C# extension methods are a form of mixin, but really it’s just syntactic sugar.&nbsp; It’s a static method but <i>looks</i> like a instance method.&nbsp; True mixins are actual instances.<br />
+I’ve been playing around with Castle.DynamicProxy lately, and some of it is going into production code soon.&nbsp; This is honestly kind of scary, because I really don’t want to mess up production code which generates daily profit for the company.&nbsp; However, if NHibernate’s using dynamic proxy, and that has been proven to work in countless production environments, I’m sure the complexity of the proxies I’m doing pales in comparison to what NHibernate does.<br />
+Most of the examples available on the web show you how a mixin works.&nbsp; Basically, you create a target, and then you mixin extra stuff.&nbsp; Basic stuff…but there’s a really cool trick you can do to make all consuming code a lot easier to use by removing the need of consuming code to cast to a mixin instance.&nbsp; In my case, the system is a very complex piece of legacy code where there are threads all over the place locking things all over the place.&nbsp; I was given the task of keeping track of who owned the lock.<br />
+Originally I started with an extension method, but I soon realized that even though it’s nice that along with IDisposable, I could do something like this:<br />
+<pre class="csharpcode"><span class="kwrd">using</span> (anyInstance.Lock()) {
+anyInstance.DoStuff();
+}</pre><br />
+Where Lock() is an extension method which returns an IDisposable, which when Dispose() is invoked will call Monitor.Exit.&nbsp; This is all nice and dandy use of the ‘using’ syntax, but as you can see this is all just syntactic sugar.&nbsp; At the end of the day, this is still a public static method can is accessible by thousands of other objects.&nbsp; And once you need to keep track of all those owners, you need to create a dictionary of object hashcodes, and locking on that thing for each incoming lock on an instance is…well…very very bad.<br />
+<br />
+Anyways, so with DynamicProxy2, I decided to mix in this lock tracking logic.&nbsp; Now, the interface is simple:<br />
+<pre class="csharpcode"><span class="kwrd">public</span> <span class="kwrd">interface</span> ILockMixin {
+IDisposable Lock(<span class="kwrd">string</span> tag);
+IDisposable TryLock(<span class="kwrd">string</span> tag);
+}</pre><br />
+Now, the particular thing I wanted to target happened to be a hashtable, so with a little interface trick, you could do this:<br />
+<pre class="csharpcode"><span class="kwrd">public</span> <span class="kwrd">interface</span> ILockableHashtable : IDictionary, ILockMixin { }</pre><br />
+Finally, any code that references hashtable needs to be replaced with ILockableHashtable, but the beauty of this is that none of the existing code had to change, and now all proxied hashtables have the Lock() method as well.&nbsp; And alongside Windsor, this is brain-dead simple to wire up:<br />
+<pre class="csharpcode">kernel.Register(
+Component.For&lt;IDictionary, ILockableDictionary&gt;()
+.ImplementedBy&lt;Hashtable&gt;()
+.Proxy.AdditionalInterfaces(<span class="kwrd">typeof</span>(ILockableDictionary))
+.Proxy.MixIns(<span class="kwrd">new</span> Locker()));</pre><br />
+And that’s it!&nbsp; BTW, I realize I could have easily achieved the same effect and with a lot less effort if I just inherited from Hashtable directly (and avoid the negligible proxy/performance cost), but if I needed this locking mechanism for <b>any</b> other code, I would have to resort to either copy/pasting a lot of code, or a lot of copy/paste/redirect to a static class.<br />
+<br />
+Edit: There is a bug in this last bit, check out my latest <a href="http://blingcode.blogspot.com/2010/04/windsordynamicproxymixin-powers.html">entry </a>about this topic.</div>

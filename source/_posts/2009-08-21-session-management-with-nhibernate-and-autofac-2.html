@@ -1,0 +1,25 @@
+---
+layout: post
+title: "Session management with NHibernate and Autofac: Corollary"
+date: 2009-08-21
+comments: false
+categories:
+ - IoC
+ - Coding
+---
+
+<div class='post'>
+Ooops, I forgot to mention that it's easily mockable as well.
+<pre>
+public class UserService : IUserService {
+  public UserService(ISessionFactory factory, UsersRepositoryFactory usersFactory) { ... }
+}
+</pre>
+So that's the basic thing right.  So now, with <a href="http://code.google.com/p/moq/">Moq</a>, we can do this:
+<pre>
+var mockUserRepo = new Mock&lt;IUsersRepository&gt;();
+mockUserRepo.Setup(x =&gt; x.GetUser(It.IsAny&lt;string&gt;())).Returns(() =&gt; someUser);
+
+var userService = new UserService(..., x => mockUserRepo.Object);
+</pre>
+So what I've basically done is insert a lambda expression into the constructor, which is the delegate, which always returns my mock repository.  Pretty nifty methinks!</div>

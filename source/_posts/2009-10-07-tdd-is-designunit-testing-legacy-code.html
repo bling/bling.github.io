@@ -1,0 +1,43 @@
+---
+layout: post
+title: "TDD is Design…Unit Testing Legacy Code"
+date: 2009-10-07
+comments: false
+categories:
+ - Testing
+---
+
+<div class='post'>
+I’ve been listening to a bunch of podcasts lately and I came across a gem that was pretty darn useful.&nbsp; It’s pretty old I suppose in technology standards, since it was recorded January 12, 2009, but it’s still worth a listen.&nbsp; Scott Hanselman talks with Scott Bellware about TDD and design.&nbsp; Find it <a href="http://hanselminutes.com/default.aspx?showID=164">here</a>.<br />
+I’m merely reiterating what Scott has already said in the podcast, but it’s different when I can personally say that I’m joining the ranks of countless others who have seen the benefits of TDD.<br />
+<br />
+Now I can’t say that I’m a 100% TDD practitioner since I’m still learning how to write tests before code effectively, but I’ve already seen the improvements in <b>design</b> in my code many times over just by merely writing unit tests.  At this point I'd say half of my tests are written first, and the other after are after the fact.<br />
+<br />
+I’ve been through many phases of writing unit tests, it it took me <b>a long time</b> to get it right (and I’m sure I have tons more to go).&nbsp; It takes some experience to figure out how to properly write unit tests, and as a by-product how to make classes easily testable.&nbsp; Code quality and testability go hand-in-hand, so if you find something difficult to test, it’s probably because it was badly designed to start.<br />
+<br />
+The first time I was introduced to unit testing in a work setting was when I was writing C++…and man it was ugly, not because it was C++, but because everything was tightly coupled and everything was a singleton.&nbsp; The fixture setup was outrageous, and it was common to ::Sleep(5000) to make tests pass.&nbsp; Needless to say, my first experience with unit testing was extremely painful.<br />
+<br />
+After a job switch and back to the C# world, I started reading more blogs, listening to more podcasts, and experimenting more.&nbsp; I was given a project to prototype, and for phase 1 it was an entirely DDD experience with I got the opportunity to experiment with writing unit tests the “proper” way with dependency injection and mocking frameworks.<br />
+<blockquote>Unit tests are easy to write when you have highly decoupled components.<br />
+</blockquote>Prototype was finished, and now I was back on the main project, and given a critical task to complete in 2 weeks.&nbsp; I had to modify a class which was 10,000 lines long, which has <b>mega</b> dependencies on everything else in the project.&nbsp; Anything I touched could potentially break something else.&nbsp; And of course…no unit tests whatsoever.&nbsp; I like challenges and responsibility – but this was close to overkill.&nbsp; This thing produces revenue for the company daily so I <i>really</i> don’t want to mess anything up.<br />
+<br />
+First thing I realized was that there’s no way I could possibly write any unit test for something like this.&nbsp; If the class file was 10,000 lines long, you can imagine the average line count for methods.<br />
+<br />
+And of course, the business team didn’t make things easy on me by asking that this feature be turned off in production, but turned on for QA.&nbsp; So, the best option was to refactor the existing logic out to a separate class, extract an interface, implement the new implementation, and swap between the 2 implementations dynamically.<br />
+<br />
+After 4 days of analyzing and reading code to make sure I have a very detailed battle plan, I started extracting the feature to a new class.&nbsp; The first iteration of the class was <b>UGLY</b>.&nbsp; I extracted out the feature I was changing to a separate class, but the method names were archaic and didn’t have any good “flow” to them.&nbsp; I felt that I had to comment my unit tests just so whoever’s reading them could understand what’s happening, which brings up a point.<br />
+<blockquote>If you need to comment your unit tests, you need to redesign the API<br />
+</blockquote>It took many iterations and refactoring of the interface to get it to the point where I found acceptable.&nbsp; If you compared the 1st batch of unit tests to the last batch of unit tests it is like night and day.&nbsp; The end result were unit tests which typically followed a 3-line pattern of setup/execute/verify.&nbsp; Brain dead simple.<br />
+<br />
+The last thing to do was to reintegrate the class into the original class.&nbsp; For this I was back to compile/run/debug/cross-fingers, but I had full confidence that whenever I called anything in the extracted class it would work.<br />
+<br />
+An added benefit is that I didn’t add another 500 lines of code to the already gigantic class.&nbsp; Basically, in summary:    <br />
+<br />
+<ul><li><span style="color: #4c4c4c;">Get super mega long legacy code class files</span> </li>
+<li>Extract feature into separate file as close to original implementation as possible (initially will be copy-paste)</li>
+<li>Run and make sure things don’t die</li>
+<li>Write unit tests for extracted class (forces you to have a better understanding of the code modifications, and the requirements)</li>
+<li>Make sure unit tests cover all possible scenarios of invocation from original class</li>
+<li>Start refactoring and redesigning to better testability, while maintaining all previous tests</li>
+<li>Done!&nbsp; Repeat as necessary!</li>
+</ul></div>

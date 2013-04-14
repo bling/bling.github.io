@@ -1,0 +1,25 @@
+---
+layout: post
+title: "That Commenting Thing"
+date: 2011-03-10
+comments: false
+categories:
+ - Coding
+ - Visual Studio
+---
+
+<div class='post'>
+<p>I’m working on a project right now that has near 99% of its code commented.&nbsp; Wow, that’s impressive!&nbsp; Actually, it’s more scary…even some of the private fields are commented….</p> <p>At one point, someone decided that it was a good idea to impose <em>some</em> kind of standard rather than none, so they recommended <a href="http://archive.msdn.microsoft.com/sourceanalysis">StyleCop</a> with all of its default settings, including requiring comments on everything.</p> <p>This seemed like a good idea, and it probably was, until someone found <a href="http://submain.com/products/ghostdoc.aspx">GhostDoc</a>.&nbsp; The plugin definitely gives off that “cool” factor the first time you use it.&nbsp; Wow, with a single key stroke it automagically documented all of my code!!!&nbsp; The problem, and it’s a pretty big one, is that it generates documentation based on the name of the properties, names, and class.&nbsp; Surely if it can do that, you, a much more sophisticated machine, can do that!</p> <p>Alas, the code base ended up getting GhostDocced to death all over the place to the point where I was driven mad and insane that I spent the time to write a VS2010 extension to purposely hide these comments.&nbsp; I’m talking about comments like this:</p> <p><a href="http://lh3.ggpht.com/_WZr-_wsEf1c/TXmZSvlTRnI/AAAAAAAAADQ/hk3vTlVJ5Jc/s1600-h/image%5B4%5D.png"><img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh4.ggpht.com/_WZr-_wsEf1c/TXmZSurQc8I/AAAAAAAAADU/NCeYxDgaINc/image_thumb%5B2%5D.png?imgmax=800" width="505" height="156"></a></p> <p>The comments add absolutely <strong>no value</strong> and IMO <strong>makes it harder to read</strong>, and has the added deficit that if for whatever reason someone changes the name property, chances are they will forget to update the comments.&nbsp; It gets worse with WCF service contracts with many parameters.</p> <p>So yes, it frustrated me enough that I took some spare time to write an extension to shrink those damn XML comments to such a small size it doesn’t bother me anymore, like this:</p> <p><a href="http://lh4.ggpht.com/_WZr-_wsEf1c/TXmZS7pHAXI/AAAAAAAAADY/IV53KxtUWUQ/s1600-h/image%5B8%5D.png"><img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh6.ggpht.com/_WZr-_wsEf1c/TXmZTTUjF0I/AAAAAAAAADc/h96-4zUY6oM/image_thumb%5B4%5D.png?imgmax=800" width="566" height="200"></a></p> <p>You can grab the code off <a href="https://github.com/bling/XmlCommentShrink">GitHub</a>.</p>  </div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>bling</div>
+<div class='content'>
+Originally I tried to use code folding to solve the problem, but the best thing that comes built-in is collapsing to definitions (Ctrl+M/O), which will fold everything.  But that also folds the methods as well, so then I&#39;d have to manually unfold them, which quickly got tiresome.<br /><br />The optimal solution I think would be for the extension to automatically collapse only the comments when you open a file, but that is much more complex than just changing the font size....maybe an exercise for another weekend when I&#39;m bored with nothing to do...</div>
+</div>
+<div class='comment'>
+<div class='author'>Vsevolod Parfenov</div>
+<div class='content'>
+Why don&#39;t you fold them instead of changing font size?</div>
+</div>
+</div>

@@ -10,7 +10,7 @@ categories: [ coding ]
 
 For the vast majority of my career I'd say I was a Microsoft guy.  I took Java in university and toyed around with Linux at home, but what paid the bills was my knowledge and expertise in Microsoft technologies that I've built up over the years.
 
-Then Metro and Windows 8 came, and the writing was on the wall.  Microsoft really screwed up, and despite their best efforts they could not stop the avalanche that was Node and HTML5.  Everyone was moving to HTML5, and even Microsoft themselves could not ignore this as now they're supporting hosting Node on Azure.
+Then Metro and Windows 8 came, and the writing was on the wall.  Microsoft really screwed up.  In their efforts to play catch up, they alienated their business customers and came up with solutions that consumers did not want.  Despite their best efforts they could not stop the avalanche that was Node and HTML5.  Everyone was moving to HTML5, and even Microsoft themselves could not ignore this as now they're supporting hosting Node on Azure.
 
 People who have been in the industry for a long time will say this is just the same desktop vs web debacle and that it is cyclical and that people will realize that the web isn't good enough and go back to desktop applications.  But I think this time is different.  This time around, the browser has hardware acceleration.
 
@@ -102,6 +102,16 @@ There is something incredibly liberating to just add some random property to an 
 Over time all the things I thought I needed, like intellisense, well defined interfaces, static analysis, I didn't actually need them.  Sure, they are nice to have around, but I was productive all the same without them.  And the users using our application didn't care whether it was written in C#/WPF or in HTML/Javascript, as long as it did was it was supposed to do.
 
 Ultimately, what still mattered were architectural decisions.  We still had services, models, and views for properly separating data from business logic and presentation.  We had unit tests which tested all the functionality.  All of these concepts were very important in C# and WPF, and they are just as important here.
+
+# Javascript made me a better developer
+
+Writing in Javascript made me realize just how much I relied on IDEs and static analysis.  Sometimes I would purposely abuse the IDE to do the job faster.  For example, if I wanted to refactor something, rather than using refactoring tools, sometimes the easier way is to just delete code and then go through the error list one by one.  Obviously you can't do this technique in Javascript.
+
+Another thing I would do is purposely write bad code, wait for Resharper to come up with the suggestion, and then auto-correct it.
+
+These were backwards patterns.
+
+With Javascript, I found myself being proactive again.  I understood the code more.  I used snippets a lot more.  And since I was using vim, I never _ever_ had to wait for the IDE anymore, which that in itself changed the way I worked.
 
 # CSS was a huge pain
 

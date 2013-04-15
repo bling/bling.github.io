@@ -54,7 +54,7 @@ I consider myself lucky because if it weren't for Webstorm being in its infant s
 
 # Vim
 
-I still can't remember the exact reason why I decided to learn Vim.  The majority of my coworkers were using Sublime Text.  Maybe I was stubborn and wanted to be different.  Maybe I was curious and wanted to see why this 30 year old editor is still so popular.  Whatever the reason, I decided to use Vim code turkey and refused to open anything else up.
+I still can't remember the exact reason why I decided to learn Vim.  The majority of my coworkers were using Sublime Text.  Maybe I was stubborn and wanted to be different.  Maybe I was curious and wanted to see why this 30 year old editor was still so popular.  Whatever the reason, I decided to use Vim code turkey and refused to open anything else up until I convinced myself that I gave it a fair chance.
 
 The rest is [history](http://bling.github.io/blog/2013/02/10/love-affair-with-vim/).
 
@@ -64,9 +64,9 @@ Don't get me wrong, I was _hugely_ unproductive for the first couple weeks.  But
 
 {% img /images/editor-learning-curve.png %}
 
-I can vouch for this popular comic because I have tried every editor on there (yes even Emacs) and I can confirm that it is true.  There really is no contestant that can match the speed and flexibility of modal editing (and why most other editors out there have a vi emulation mode).  New users are often confused why the default mode in vim's normal mode is...normal mode and not insert mode (like every other editor).
+I can vouch for this popular comic because I have tried every editor on there (yes even Emacs) and I can confirm that it is true.  There really is no contestant that can match the speed and flexibility of modal editing (and why most other editors out there have a vi emulation mode).  New users are often confused why the default mode in vim's default mode is...normal mode and not insert mode (like every other editor).
 
-As it turns out, the majority of our time as programmers are spent *reading and editing* text, not writing it.  And that is why vim's normal mode is normal mode.  Right off the bat you have 26 different commands that you can use to operate on text.  Add a shift, and you have another 26 commands.  In normal mode, you have 52 unique operations that is a single/double keystroke away!
+As it turns out, the majority of our time as programmers are spent *reading and editing* text, not writing it.  And that is why vim's default mode is normal mode.  Right off the bat you have 26 different commands that you can use to operate on text.  Add a shift, and you have another 26 commands.  In normal mode, you have 52 unique operations that is a single/double keystroke away!
 
 Whether it's vim, or emacs, or Sublime text, invest in your editor and learn what it can do for you.  Even if it's just a couple seconds saved here and a couple seconds saved there, do realize that as programmers we stare at a text editor the vast majority of our working hours.  And all those seconds add up.
 
@@ -93,7 +93,7 @@ public void Main() { // this is effectively window
 }
 ```
 
-Yes there is variable hoisting, privileged vs public functions, truthy and falsey values, prototypical inheritance, etc. but like any language, this is just syntax.  You read tutorials, you try it out, you struggle against your previous habits, but then you figure it out.
+Yes, there is variable hoisting, privileged vs public functions, truthy and falsey values, prototypical inheritance, etc. but like any language, this is just syntax.  You read tutorials, you try it out, you struggle against your previous habits, but then you figure it out.
 
 # Javascript changed the way I think
 
@@ -105,7 +105,7 @@ Ultimately, what still mattered were architectural decisions.  We still had serv
 
 # Javascript made me a better developer
 
-Writing in Javascript made me realize just how much I relied on IDEs and static analysis.  Sometimes I would purposely abuse the IDE to do the job faster.  For example, if I wanted to refactor something, rather than using refactoring tools, sometimes the easier way is to just delete code and then go through the error list one by one.  Obviously you can't do this technique in Javascript.
+Writing in Javascript made me realize just how much I relied on IDEs and static analysis.  Sometimes I would purposely abuse the IDE to do the job faster.  For example, if I wanted to refactor something, rather than using refactoring tools, sometimes the easier way is to just delete code and then go through the error list one by one.  Obviously you can't use this technique in Javascript.
 
 Another thing I would do is purposely write bad code, wait for Resharper to come up with the suggestion, and then auto-correct it.
 
@@ -113,7 +113,7 @@ These were backwards patterns.
 
 With Javascript, I found myself being proactive again.  I understood the code more.  I used snippets a lot more.  And since I was using vim, I never _ever_ had to wait for the IDE anymore, which that in itself changed the way I worked.
 
-# CSS was a huge pain
+# CSS is one big hack
 
 Going from XAML to CSS was extremely annoying and where I've struggled the most with the transition.  If you want to vertical center something in XAML, you set `VerticalAlignment=Center` on it and you're done.  How do you do that in CSS?  Well, you could hack it with `table-cell`, or you could hack it with negative margins, or you could hack it with absolute positioning, or `line-height` or something else.  But point is, they are all hacks.
 
@@ -150,7 +150,7 @@ Once I let go of trying to be "correct" from a XAML point of view and just accep
 
 It became a fun challenge, to be presented with a UX design and then think about what kind of hacks I'd have to do to make it look exactly the same.  Pseudo elements became my new best friend.
 
-There was no such kind of fun in the XAML world -- if the UX designer could do something in Illustrator, I can do the same in Blend no problem.  There was no challenge.
+There was no such kind of fun in the XAML world -- if the UX designer could do something in Illustrator, I could do the same in Blend no problem.  There was no challenge.
 
 It was all fun and games until...
 
@@ -165,6 +165,10 @@ If you could do it, my recommendation for supporting IE is to have the page be o
 # Back to an IDE...maybe?
 
 I never did venture back.  With my stubbornness to stick with Vim, I ended up installing plugins and optimizing my workflow around it.  I even created my own [distribution](http://bling.github.io/dotvim).  Chrome became my pseudo-IDE and I used its debugging tools heavily.  I used [LiveReload](http://livereload.com) from time to time.  And coupled with a zsh terminal I had an extremely productive development environment.  In the end I didn't have a reason to use Webstorm anymore because at this point it *slowed me down*.
+
+# Programming became fun again
+
+Perhaps the biggest change I experienced, once I got over the initial pains, was that I really enjoyed programming again.  When I was writing in Javascript, I felt like a hacker.  When I was programming in C#, I felt like a programmer.  Maybe this is temporary and I'll feel the same way when my experience level in Javascript matches with C#.  But for now, I'm enjoying that feeling of rediscovering my inner child of building something from nothing.
 
 # Finale
 

@@ -3,7 +3,6 @@ layout: post
 title: "On TypeScript"
 date: 2013-04-19 23:31
 comments: true
-published: false
 categories: coding
 ---
 
@@ -64,11 +63,14 @@ var Foo = (function() {
 
 All classes are done so with an immediately executed anonymous function.  If you define `Foo` as `export class Foo`, then the output will have an extra line at the bottom: `exports.Foo = Foo;`.  In other words, it's got first class support for the CommonJS syntax (as well as AMD).
 
-# Adoption
+# Competing thought processes
 
 For people coming from C#, it will feel very comfortable, because it is _extremely_ similar to C#.  You have classes, methods, modules (aka namespaces), just like you have in C#.  If you try to use a method that doesn't exist, the compiler will complain.  These features are the bread and butter of compiled languages and people coming from Visual Studio (the majority of the audience) will feel very comfortable.
 
 Then why is it that I did _not_ enjoy writing in Typescript?
 
-# Competing thought processes
+I'm about 99% sure that I was just so used to working in untyped Javascript that I became annoyed that I had to "annotate yet another variable".  TypeScript doesn't force you to annotate every variable, in fact, you could annotate nothing and it'll still compile (as long as you have the definition files).  But if you're going to use TypeScript it seems silly not to use types.
 
+But what this comes down to is the classic static vs dynamic languages.  Static proponents will state that the compiler saves you from a lot of mistakes earlier on.  Dynamic proponents will state that "if it quacks like a duck, it's a duck, I shouldn't need to declare it".  They're both right.
+
+Either way, given an open mind and some time, you can be productive in either environment, and makes you a better developer in the end.

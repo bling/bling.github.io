@@ -15,6 +15,8 @@ Moving from Visual Studio to Vim was a progression through different editors and
 
 My stubbornness turned out to be beneficial when I was learning Vim because the first month was absolutely painful.  I remapped all of my arrows keys to do nothing to force myself to use hjkl.  Eventually I got the hang of it, and now I definitely have the muscle memory that makes me much more productive when editing (and reading) text.
 
+<!--more-->
+
 By default Vim is just a text editor.  But I work on a project, so like most lazy people I searched for prepackaged plugins and came across two popular distributions: [spf13](https://github.com/spf13/spf13-vim) and [janus](https://github.com/carlhuda/janus).  When I installed them, it was like someone took over Vim and made it change into a completely different beast.  I didn't know how to use it anymore.
 
 I took a step back.  I forgot where I got this advice, but I think anyone using Vim needs to do this: *start your own vimrc from scratch*.

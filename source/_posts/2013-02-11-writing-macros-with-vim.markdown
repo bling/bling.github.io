@@ -27,6 +27,8 @@ Here are the macros I used to do this:
 let @r='di(iparameters^[/\{^M2o^[kpg`[v`]Jgv:s/\s//g^M0:try|exe "norm! @q"|endtry^MA;^[V:s/,/;\r/g^Mv``='
 let @q='ywivar ^[pa = parameters.^[f,^[l@q'
 ```
+<!--more-->
+
 Note that if you copy paste the above into your vimrc it will not work. The `^[` and `^M` found are actually single characters, not two. To input this properly you will need to chord it in input mode with `<Ctrl-V>`. So for `<Esc>` you would chord `<Ctrl+V><Ctrl+[>`.
 
 So, when I'm inside the parameters of the function, I can hit `@r` and it will perform the refactoring. Now let’s break it down step by step.

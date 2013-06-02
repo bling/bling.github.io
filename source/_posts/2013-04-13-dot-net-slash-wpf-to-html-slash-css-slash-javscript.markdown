@@ -12,6 +12,8 @@ For the vast majority of my career I'd say I was a Microsoft guy.  I took Java i
 
 Then Metro and Windows 8 came, and the writing was on the wall.  Microsoft really screwed up.  In their efforts to play catch up, they alienated their business customers and came up with solutions that consumers did not want.  Despite their best efforts they could not stop the avalanche that was Node and HTML5.  Everyone was moving to HTML5, and even Microsoft themselves could not ignore this as now they're supporting hosting Node on Azure.
 
+<!--more-->
+
 People who have been in the industry for a long time will say this is just the same desktop vs web debacle and that it is cyclical and that people will realize that the web isn't good enough and go back to desktop applications.  But I think this time is different.  This time around, the browser has hardware acceleration.
 
 Performance has always been the deciding factor for going back to the desktop.  I don't think that argument holds true anymore.  It's clear you can build some amazing applications on the web now that perform well.  You can build an IDE in the browser, like [Cloud9](http://c9.io), or you could create impressive animations like [Famous](http://famo.us) demonstrates.  And even 3D games are possible now.
@@ -158,7 +160,7 @@ It was all fun and games until...
 
 If you charged X amount of dollars for a project, it should be X raised to the number of versions older than IE10 you have to support.  If it's IE9, it's X^1.  If it's IE8, it's X^2.  How about IE7, X^3 !
 
-That would cover the cost of sheer annoyance and frustration that developers and UX designers will be to face, not to mention the increased amount of time to support these older browsers.  Oh, you want to support responsive design?  Ooops, IE8 doesn't support media queries.  Oh, you want to have shadows and gradients, well you're only going to get mono colored boxes instead.  Oh, you want it to run fast?  Here, take a 20x performance hit instead.
+That would cover the cost of sheer annoyance and frustration that developers and UX designers will have to face, not to mention the increased amount of time to support these older browsers.  Oh, you want to support responsive design?  Ooops, IE8 doesn't support media queries.  Oh, you want to have shadows and gradients, well you're only going to get mono colored boxes instead.  Oh, you want it to run fast?  Here, take a 20x performance hit instead.
 
 If you could do it, my recommendation for supporting IE is to have the page be one big fat button that spans the entire screen that says inside with two buttons: install Chrome, or install Firefox.  It worked for Flash and Silverlight!
 

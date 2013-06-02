@@ -12,6 +12,8 @@ For the past week I've been fortunate to work on an internal project which was p
 
 TypeScript was of interest because the application I was writing contained some pretty complex calculations.  The existing implementation was in Java, and at first glance it seemed like it would be a good idea to have some type safety whilst reimplementing the algorithm.
 
+<!--more-->
+
 # Getting Started
 
 I don't know why there's this misconception that you need to have Microsoft tooling to use Typescript, but it is 100% false and a myth.  To install it you just run `npm install typescript`.  Yes!  It's just a standard node package.  Once it's installed you have access to a `tsc` command, similar to how you would use the `coffee`, i.e. you give it input, and it spits output.

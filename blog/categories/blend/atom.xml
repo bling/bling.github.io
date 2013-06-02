@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: blend | bling on software development]]></title>
+  <link href="http://bling.github.io//blog/categories/blend/atom.xml" rel="self"/>
+  <link href="http://bling.github.io//"/>
+  <updated>2013-06-02T19:15:59+00:00</updated>
+  <id>http://bling.github.io//</id>
+  <author>
+    <name><![CDATA[Bailey Ling]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Building a Real-time Push App with Silverlight: Part 6]]></title>
+    <link href="http://bling.github.io//blog/2011/09/13/building-real-time-push-app-with-rx-6/"/>
+    <updated>2011-09-13T00:00:00+00:00</updated>
+    <id>http://bling.github.io//blog/2011/09/13/building-real-time-push-app-with-rx-6</id>
+    <content type="html"><![CDATA[<p>Back to the UI!</p>
+
+<p>For this post I’m going to restyle the tweets.  Recall that they currently look like this:</p>
+
+<p><img src="http://lh4.ggpht.com/-ooxWWcVmX9w/Tm7icHgdN_I/AAAAAAAAAGo/wQ3qnvYAeWw/image_thumb2.png?imgmax=800" alt="img" /></p>
+
+<p>The gradient background is currently #FFEEEEEE to #FFDDDDDD.  For this post I’m going to talk about a very powerful tool in a designer’s arsenal: <em>transparency</em>.</p>
+
+<p>Your first may be to think “big deal”, but just like programmers can use base classes and injection to share common code, designers can use transparency to achieve a similar effect.</p>
+
+<p>Let’s change change the color to be black, and tweak only the alpha.  I’m going to set the colors to be #11000000 to #22000000 on a white background.  This is the result:</p>
+
+<p><img src="http://lh6.ggpht.com/-Ev-xA7pMsak/Tm7icnmllQI/AAAAAAAAAGw/xMZM3yNsGZA/image_thumb5.png?imgmax=800" alt="img" /></p>
+
+<p>Looks almost identical doesn’t it?  However, by doing this we have dramatically improved the reusability of the gradient.  Here’s what happens when I change the background to be a different color:</p>
+
+<p><img src="http://lh3.ggpht.com/-uPxkKsog7xU/Tm7ic2vJhpI/AAAAAAAAAG4/J-PMDfe_6EM/image_thumb8.png?imgmax=800" alt="img" /></p>
+
+<p>I just changed one variable to do that.  If I wanted to provide different themes for my application it would be <em>extremely</em> easy to do that if all the data templates were built with transparencies.  In fact, I just slap on a ColorPicker and I’d be done!</p>
+
+<p>Even though it’d be easy to do this, any application that is dominated by one color gets boring very quickly. Most applications that look nice tend to focus around two dominant colors that contrast well against each other. Black and white are very common because they contrast well with a large variety of colors, but you can also have things like blue/green, purple/orange, etc.  As always, as long as you’re consistent you’ll likely have a good result.</p>
+
+<p>Now, the flip side of the equation is also possible.  This is where you have something that exists already and then you put a transparent layer on top of it, creating a lightening or dimming effect.  In my experience I’ve found this to be inferior because it tends to wash out colors.  In the example above, if I applied a slightly transparent layer over top of the tweet, my picture and text would be negatively affected.  This is nonetheless a very useful trick, like with mouse over effects where you want a quick and cheap way of conveying information to the user.</p>
+
+<p>Now, let’s take a big detour and restyle the entire application and go with a completely different theme.  I also wanted try something besides Apple and Microsoft inspired designs, which was more difficult than expected because I guess I’m not as creative as I thought I was :&ndash;).  Coming up with a good design takes a long time, and frequently you need some sort of inspiration.  Twitter in general is a very simple application, so the best designs are simple as well.</p>
+
+<p>In an attempt to try to come up with something “cool” and “unique”, I started with the idea of elevated boxes layered on top of each other.  Here’s a before and after once I was done:</p>
+
+<p><img src="http://lh5.ggpht.com/-Mz_J4B2JDLM/Tm7idcOBx-I/AAAAAAAAAHA/7FGeCgmZzek/image_thumb11.png?imgmax=800" alt="img" /></p>
+
+<p>The redesign went through many iterations.  I showed it to friends and colleagues and got mixed feelings.  Some liked it.  Some thought it was too noisy.  And herein revealed a problem with complex designs – they are hard to get right!  That, and they tend to divide audience into those that really like it, and those that really don’t.</p>
+
+<p>Anyways, the beauty of XAML is that I can try something else entirely without any changes to the code, so I’ll try another theme in the future.</p>
+
+<p>I’m about 90% ready to release code to GitHub along with the first public alpha version.  Stay tuned!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Building a Real-time Push App with Silverlight: Part 3]]></title>
+    <link href="http://bling.github.io//blog/2011/08/28/building-real-time-push-app-with-rx-3/"/>
+    <updated>2011-08-28T00:00:00+00:00</updated>
+    <id>http://bling.github.io//blog/2011/08/28/building-real-time-push-app-with-rx-3</id>
+    <content type="html"><![CDATA[<p>In this part we’re going to fire up Expression Blend (the trial for version 5 can be found <a href="http://www.microsoft.com/download/en/details.aspx?displaylang=en&amp;amp;id=9503">here</a>) and do some UI work.</p>
+
+<p>In part 2, I created a simple Twitter client which connected to the streaming API, and connected to the sampling request which brings back random tweets.  Here is the data template:</p>
+
+<p>``` xml
+<DataTemplate x:Key="TweetDataTemplate"></p>
+
+<pre><code>&lt;Grid DataContext="{Binding}"&gt;
+    &lt;Grid.RowDefinitions&gt;
+        &lt;RowDefinition /&gt;
+        &lt;RowDefinition Height="Auto" /&gt;
+    &lt;/Grid.RowDefinitions&gt;
+    &lt;TextBlock FontFamily="{StaticResource FontFamily}" FontSize="12" Text="{Binding Text}" TextWrapping="Wrap" /&gt;
+    &lt;TextBlock Grid.Row="1"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Bottom"
+               FontFamily="{StaticResource FontFamily}"
+               FontSize="13.333"
+               Foreground="BlueViolet"
+               Text="{Binding ScreenName}" /&gt;
+    &lt;TextBlock Grid.Row="1"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Bottom"
+               FontFamily="{StaticResource FontFamily}"
+               FontSize="9.333"
+               Foreground="DarkCyan"
+               Text="{Binding CreatedAt}" /&gt;
+&lt;/Grid&gt;
+</code></pre>
+
+<p></DataTemplate>
+```
+This renders into something like this:</p>
+
+<p><img src="http://lh4.ggpht.com/-ul4umD_jKFs/Tlq_U7HuoLI/AAAAAAAAAFg/pOhMiaqmxcE/s1600/image%25255B4%25255D.png" alt="img" /></p>
+
+<p>The text is randomly generated from Blend’s <a href="http://lmgtfy.com/?q=blend+sample+data">sample</a> capability, which is totally awesome as it allows designers to see what they’re working with, and keeps the sample data separate from the real data.</p>
+
+<p>While design is a matter of personal taste, and you’re bound to get disagreements between different people, if you follow some basic rules you’ll satisfy a greater audience.</p>
+
+<ul>
+<li>Subtle gradients and small shadows
+
+<ul>
+<li>If you take a look at all the nice interfaces, they tend to use very slight gradients and small shadows.  Most of the time you don’t even notice unless you look closely.</li>
+<li>I think Microsoft’s Metro design is beautiful.  Reason?  It emphasizes text over decorations (like gradients and shadows).  This tends to lead to very clean design because there’s very little opportunity to abuse gradients and shadows.</li>
+</ul>
+</li>
+<li>Realism and light sources
+
+<ul>
+<li>Continuing on with gradients and shadows, they should be realistic.  Look at your design from a 3D point of view.  Apply a light source from a certain angle, and then apply your shadows relative to that light source.</li>
+<li>Convey distance properly
+
+<ul>
+<li>Darker shadows imply being closer to the background, whereas lighter shadows imply being further away.  Use blurring to add emphasis to the distance.  <img src="http://lh5.ggpht.com/-YvKRal5ToEw/Tlr6OrRIS4I/AAAAAAAAAFs/AAg79v6y2Cc/image_thumb%25255B14%25255D.png?imgmax=800" alt="eg" /></li>
+<li>If you overlap planes you should apply these rules to each individual plane.  Don’t use the same border for everything.  Think about how it would look like in real life if you laid it out like that with pieces of paper.  The shadow sizes for that will be different, so you should do the same.</li>
+<li>Also keep in mind that the shadows used above are <em>way</em> too much for any application.  Be subtle!</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Consistent theme
+
+<ul>
+<li>This one seems obvious but nothing is worse than having a nice looking application bring up an unskinned dialog.</li>
+</ul>
+</li>
+<li>Usability
+
+<ul>
+<li>If the design doesn’t serve a purpose to make it more usable, it shouldn’t be there.  Even something as simple as black on white follows this – you do that so you can read text.  However, even something as simple as that can be improved.  Take a look at why the Kindle is so successful.  The readability is better because of the lower contrast between the black and light-brown background.</li>
+</ul>
+</li>
+</ul>
+
+
+<p>With these starting points, let’s redesign the data template.</p>
+
+<p>``` xml
+<DataTemplate x:Key="TweetDataTemplate">
+   <Grid></p>
+
+<pre><code>   &lt;Grid.Background&gt;
+       &lt;LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1"&gt;
+           &lt;GradientStop Color="#FFDADADA" /&gt;
+           &lt;GradientStop Offset="1" Color="#FFC8C8C8" /&gt;
+       &lt;/LinearGradientBrush&gt;
+   &lt;/Grid.Background&gt;
+   &lt;Grid.RowDefinitions&gt;
+       &lt;RowDefinition /&gt;
+       &lt;RowDefinition Height="Auto" /&gt;
+   &lt;/Grid.RowDefinitions&gt;
+   &lt;TextBlock FontFamily="{StaticResource FontFamily}" FontSize="12" Text="{Binding Text}" TextWrapping="Wrap" /&gt;
+   &lt;TextBlock Grid.Row="1"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Bottom"
+              FontFamily="{StaticResource FontFamily}"
+              FontSize="13.333"
+              Foreground="BlueViolet"
+              Text="{Binding ScreenName}" /&gt;
+   &lt;TextBlock Grid.Row="1"
+              HorizontalAlignment="Left"
+              VerticalAlignment="Bottom"
+              FontFamily="{StaticResource FontFamily}"
+              FontSize="9.333"
+              Foreground="#FF003D8F"
+              Text="{Binding CreatedAt}" /&gt;
+   &lt;Border Grid.RowSpan="2" BorderBrush="#FF999999" BorderThickness="0,0,0,1" /&gt;
+   &lt;Border Grid.RowSpan="2" BorderBrush="White" BorderThickness="0,1,0,0" /&gt;
+</code></pre>
+
+<p>   </Grid>
+</DataTemplate>
+```</p>
+
+<p>After these changes, it looks like this:</p>
+
+<p><img src="http://lh5.ggpht.com/-fTL8wgr5ebs/Tlr6PGkqyeI/AAAAAAAAAF0/O98iakwvqGc/image_thumb%25255B17%25255D.png?imgmax=800" alt="eg" /></p>
+
+<p>Did you notice the gradient?  You might think after seeing it here to adjust the gradients more so you can see it.  That would be a mistake.  See below.</p>
+
+<p><img src="http://lh6.ggpht.com/--uPF_IEo6LM/Tlr6PpL9YDI/AAAAAAAAAF8/UxqCqYW3Wl4/image_thumb%25255B47%25255D.png?imgmax=800" alt="eg" /></p>
+
+<p>The above is the exact same thing, but stacked vertically three times.  When this happens the subtle difference between the top and bottom of the control is more pronounced, so it looks like multiple panels are aligned together.</p>
+
+<p>However, there’s still a little touch you can add.  The white and gray borders are only 1 pixel high, but that’s the little touch needed to make it look crisp.</p>
+
+<p><img src="http://lh3.ggpht.com/-QHLW-sKfPfI/Tlr6P_c9qLI/AAAAAAAAAGE/kJ0Z8VgS3xg/image_thumb%25255B44%25255D.png?imgmax=800" alt="eg" /></p>
+
+<p>Finally, let’s see the before and after (or eh&hellip;rather after and before, because I took the screenshot backwards :P):</p>
+
+<p><img src="http://lh6.ggpht.com/-tzZ8AVtNv0M/Tlr6QmHJHnI/AAAAAAAAAGM/H1SYEqT6cis/image_thumb%25255B50%25255D.png?imgmax=800" alt="eg" /></p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,516 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Windsor/DynamicProxy/Mixin Powers! - bling on software development</title>
+  <meta name="author" content="Bailey Ling">
+
+  
+  <meta name="description" content="Hmmm, I couldn’t really think of a good title except that this blog post has a little bit of everything of the title. As with any multithreaded &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://bling.github.io//blog/2010/04/05/windsordynamicproxymixin-powers">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="bling on software development" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic|Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
+
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38439430-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">bling on software development</a></h1>
+  
+    <h2>when pragmatism meets minimalism</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:bling.github.io/" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Windsor/DynamicProxy/Mixin Powers!</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-04-05T00:00:00+00:00" pubdate data-updated="true">Apr 5<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class='post'>
+Hmmm, I couldn’t really think of a good title except that this blog post has a little bit of everything of the title.<br />
+<br />
+As with any multithreaded program, deadlocks are a huge pain in the butt, and when they happen it costs time, money, and stress.<br />
+<br />
+In my code base I’ve introduced something called an ExtendedLock, which basically has something like this inside:<br />
+<div class="csharpcode"><pre class="alt"><span class="lnum">   1:  </span><span class="kwrd">public</span> <span class="kwrd">class</span> ExtendedLock : IExtendedLock {</pre><pre><span class="lnum">   2:  </span>  <span class="kwrd">public</span> IDisposable Lock() {</pre><pre class="alt"><span class="lnum">   3:  </span>    <span class="kwrd">while</span> (!Monitor.TryEnter(<span class="kwrd">this</span>, 5000)) {</pre><pre><span class="lnum">   4:  </span>      IncrementLockTime();</pre><pre class="alt"><span class="lnum">   5:  </span>    }</pre><pre><span class="lnum">   6:  </span>    <span class="kwrd">return</span> <span class="kwrd">new</span> Disposer(() =&gt; Release());</pre><pre class="alt"><span class="lnum">   7:  </span>  }</pre><pre><span class="lnum">   8:    public event Deadlock;</span></pre><pre>9<span class="lnum">: </span>}</pre></div><style type="text/css">
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style><br />
+<br />
+Pretty simple.&nbsp; IncrementLockTime, as the name implies keeps track of how long the current thread has been attempting to acquire the lock.&nbsp; It returns a Disposer which takes an Action, which releases the lock.&nbsp; This allows us to take advantage of the <b>using</b> syntax, and avoid boiler plate try/finally (oh, and it avoids typos in Monitor.Exit).&nbsp; After some configurable amount of time, if the lock cannot be acquired within, say, 2 minutes, it’s probably a good probability your application is blocked somewhere.<br />
+<br />
+Now, using this class basically means replacing lock(_syncRoot) type code with _elock.Lock().&nbsp; Also, I believe it’s a good candidate for “mixing” into any other component.&nbsp; Mixins are sort of like multiple-inheritance, but not.&nbsp; I like to think of mixins as a “can do” rather than “is a.”<br />
+<br />
+Now, we know that C# doesn’t let you do multiple inheritance, but with libraries like Castle’s DynamicProxy2, it lets you do something very similar, and is extremely powerful.&nbsp; In a sense, it will automatically generate the following code for you:<br />
+<br />
+<div class="csharpcode"><br />
+<pre class="alt"><span class="lnum">   1:  </span><span class="kwrd">public</span> <span class="kwrd">class</span> SomeService : ISomeService, IExtendedLock {</pre><pre><span class="lnum">   2:  </span>  IExtendedLock _lock = <span class="kwrd">new</span> ExtendedLock();</pre><pre class="alt"><span class="lnum">   3:  </span>  <span class="kwrd">public</span> <span class="kwrd">void</span> DoSomething() { }</pre><pre><span class="lnum">   4:  </span>  IDisposable IExtendedLock.Lock() { <span class="kwrd">return</span> _lock.Lock(); }</pre><pre class="alt"><span class="lnum">   5:  </span>}</pre><br />
+</div><style type="text/css">
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style><style type="text/css">
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style><br />
+<br />
+_lock is a private instance variable, SomeService implements IExtendedLock, and simply redirects all the interface methods to _lock.&nbsp; This seems pretty simple and straightforward, but becomes tedious when the type you want to mix in has many methods (as my actual IExtendedLock is).<br />
+<br />
+With Windsor/DynamicProxy, you can do this automatically with minimal amount of code.&nbsp; For example, first you define something like this:<br />
+<br />
+<pre class="csharpcode"><span class="kwrd">public</span> <span class="kwrd">interface</span> ILockableDictionary : IDictionary, IExtendedLock { }</pre><br />
+Then, you register it in the container:<br />
+<div class="csharpcode"><br />
+<pre class="alt"><span class="lnum">   1:  </span>var container = <span class="kwrd">new</span> WindsorContainer();</pre><pre><span class="lnum">   2:  </span>container.Register(Component.For(<span class="kwrd">typeof</span>(ILockableHashtable))</pre><pre class="alt"><span class="lnum">   3:  </span>                                   .LifeStyle.Transient</pre><pre><span class="lnum">   4:  </span>                                   .Activator&lt;LockableHashtableActivator&gt;());</pre></div><style type="text/css">
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style><br />
+<br />
+Now, whenever you need an instance of a lockable hashtable you can simply do something like this:<br />
+<br />
+<pre class="csharpcode">var hash = container.Resolve&lt;ILockableHashtable&gt;();
+<span class="kwrd">using</span> (hash.Lock()) {
+hash[<span class="str">"1"</span>] = 1;
+}</pre><style type="text/css">
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style><br />
+<br />
+You might be wondering why it’s worth all this trouble, and what’s wrong with regular locks and Monitor.&nbsp; For our system it’s pretty critical that it stays running 24/7, and every minute it’s down is money lost, so it is in our best interest to detect any problematic condition.<br />
+<br />
+Last but not least, here’s the important code that actually generates the proxy:<br />
+<div class="csharpcode"><br />
+<pre class="alt"><span class="lnum">   1:  </span><span class="kwrd">internal</span> <span class="kwrd">class</span> LockableHashtableActivator : DefaultComponentActivator</pre><pre><span class="lnum">   2:  </span>{</pre><pre class="alt"><span class="lnum">   3:  </span>    <span class="kwrd">public</span> LockableHashtableActivator(ComponentModel model, IKernel kernel, ComponentInstanceDelegate onCreation, ComponentInstanceDelegate onDestruction)</pre><pre><span class="lnum">   4:  </span>        : <span class="kwrd">base</span>(model, kernel, onCreation, onDestruction)</pre><pre class="alt"><span class="lnum">   5:  </span>    {</pre><pre><span class="lnum">   6:  </span>    }</pre><pre class="alt"><span class="lnum">   7:  </span>&nbsp;</pre><pre><span class="lnum">   8:  </span>    <span class="kwrd">public</span> <span class="kwrd">override</span> <span class="kwrd">object</span> Create(CreationContext context)</pre><pre class="alt"><span class="lnum">   9:  </span>    {</pre><pre><span class="lnum">  10:  </span>        IExtendedLock lockMixin = Kernel.Resolve&lt;IExtendedLock&gt;();</pre><pre class="alt"><span class="lnum">  11:  </span>&nbsp;</pre><pre><span class="lnum">  12:  </span>        <span class="rem">// an additional object we want to "mix" with the implementation to provide combined functionality</span></pre><pre class="alt"><span class="lnum">  13:  </span>        ProxyGenerationOptions options = <span class="kwrd">new</span> ProxyGenerationOptions();</pre><pre><span class="lnum">  14:  </span>        options.AddMixinInstance(lockMixin);</pre><pre class="alt"><span class="lnum">  15:  </span>        </pre><pre><span class="lnum">  16:  </span>        <span class="kwrd">return</span> Kernel.Resolve&lt;ProxyGenerator&gt;().CreateInterfaceProxyWithTarget(</pre><pre class="alt"><span class="lnum">  17:  </span>            <span class="kwrd">typeof</span>(IDictionary), <span class="rem">// the interface of the implementation</span></pre><pre><span class="lnum">  18:  </span>            <span class="kwrd">new</span>[] { <span class="kwrd">typeof</span>(ILockableHashtable) }, <span class="rem">// additional interfaces to use</span></pre><pre class="alt"><span class="lnum">  19:  </span>            Activator.CreateInstance&lt;Hashtable&gt;(), <span class="rem">// concrete implementation to mix into</span></pre><pre><span class="lnum">  20:  </span>            options);</pre><pre class="alt"><span class="lnum">  21:  </span>    }</pre><pre><span class="lnum">  22:  </span>}</pre><br />
+</div><style type="text/css">
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style><style type="text/css">
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style><br />
+For those who are familiar with Windsor and wondering why I didn’t use the fluent Proxy.Mixins method, it’s because those mixins are created once per registration.&nbsp; In this case, it is very important that each mixin (which is an extended lock), is transient, otherwise every lockable hashtable ends up with the same extended lock, which is just asking for trouble.</div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>Krzysztof Koźmic</div>
+<div class='content'>
+actually, with the trunk version the limitation &quot;one mixin per registration&quot; was lifted off. Now Mixins behave pretty much like interceptors, which means they can have any lifestyle, including being transient.</div>
+</div>
+</div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Bailey Ling</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-04-05T00:00:00+00:00" pubdate data-updated="true">Apr 5<span>th</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/castle/'>castle</a>, <a class='category' href='/blog/categories/ioc/'>ioc</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bling.github.io//blog/2010/04/05/windsordynamicproxymixin-powers/" data-via="blingcoder" data-counturl="http://bling.github.io//blog/2010/04/05/windsordynamicproxymixin-powers/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2010/04/05/how-to-advocate-test-driven-development/" title="Previous Post: How to Advocate Test Driven Development (TDD)">&laquo; How to Advocate Test Driven Development (TDD)</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2010/04/21/forcing-castle-windsor-to-generate/" title="Next Post: Forcing Castle Windsor to Generate Class Proxies">Forcing Castle Windsor to Generate Class Proxies &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/19/on-typescript/">On TypeScript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript/">.NET/WPF to HTML/CSS/Javscript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/10/jumping-on-the-hacker-blog-bandwagon/">Jumping on the hacker blog bandwagon</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/11/writing-macros-with-vim/">Writing Macros with Vim</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/10/love-affair-with-vim/">Love Affair with Vim</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/29/snoopshell-evolution/">SnoopShell: Evolution</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/01/snoopshell-marriage-of-snoop-wpf-and/">SnoopShell: The marriage of Snoop WPF and PowerShell</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/08/n2n-net-2-node-part-1/">N2N: .NET 2 Node: Part 1</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/bling">@bling</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'bling',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Bailey Ling -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

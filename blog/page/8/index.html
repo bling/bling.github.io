@@ -1,0 +1,915 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>bling on software development</title>
+  <meta name="author" content="Bailey Ling">
+
+  
+  <meta name="description" content="EDIT:&nbsp;As of version 3, scoped lifestyles are now a first class citizen supported out of the box (http://docs.castleproject.org/Windsor.Whats- &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://bling.github.io//blog/page/8">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="bling on software development" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic|Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
+
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38439430-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">bling on software development</a></h1>
+  
+    <h2>when pragmatism meets minimalism</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:bling.github.io/" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/05/14/contextual-lifestyle-with-castle/">Contextual Lifestyle With Castle Windsor</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-14T00:00:00+00:00" pubdate data-updated="true">May 14<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+<b>EDIT:</b>&nbsp;As of version 3, scoped lifestyles are now a first class citizen supported out of the box (<a href="http://docs.castleproject.org/Windsor.Whats-New-In-Windsor-3.ashx">http://docs.castleproject.org/Windsor.Whats-New-In-Windsor-3.ashx</a>)<br />
+<strong>EDIT:</strong> A much better implementation can be found at <a href="https://github.com/castleprojectcontrib/Castle.Windsor.Lifestyles" title="https://github.com/castleprojectcontrib/Castle.Windsor.Lifestyles">https://github.com/castleprojectcontrib/Castle.Windsor.Lifestyles</a><br />
+<br />
+IMO, one of the big missing features of Castle Windsor is that it doesn’t come with a built-in way for dealing with contextual lifestyles.&nbsp; It handles transients and singletons fairly well, but once you get to other lifestyles it’s pretty heavily dependent on having some “state manager” handling the instances.&nbsp; For example, PerWebRequest uses the HttpContext, PerThread uses thread static variables, etc.<br />
+Contextual lifestyles is one of those things where it doesn’t seem all that useful at first, and then when you see the possibilities it’s like getting hit with a huge truck.<br />
+A question was posted to the Castle Google Group recently, which I follow, which illustrates a relatively common example of why someone would want to have a contextual lifestyle.&nbsp; Basically, you have a whole bunch of components you want to resolve, but only within a context.<br />
+Here’s some boiler plate code of the domain model:<br />
+<pre class="csharpcode"><span class="kwrd">public</span> <span class="kwrd">interface</span> IRepository { ISession Session { get; } }
+<span class="kwrd">public</span> <span class="kwrd">interface</span> ISession : IDisposable { <span class="kwrd">bool</span> IsDisposed { get; } }
+<span class="kwrd">public</span> <span class="kwrd">class</span> Session : ISession
+{
+    <span class="kwrd">public</span> <span class="kwrd">bool</span> IsDisposed { get; set; }
+    <span class="kwrd">public</span> <span class="kwrd">void</span> Dispose() { IsDisposed = <span class="kwrd">true</span>; }
+}
+<span class="kwrd">public</span> <span class="kwrd">class</span> Repository1 :IRepository
+{
+    <span class="kwrd">public</span> ISession Session { get; <span class="kwrd">private</span> set; }
+    <span class="kwrd">public</span> Repository1(ISession session){ Session = session; }
+}
+<span class="kwrd">public</span> <span class="kwrd">class</span> Repository2 : IRepository
+{
+    <span class="kwrd">public</span> ISession Session { get; <span class="kwrd">private</span> set; }
+    <span class="kwrd">public</span> Repository2(ISession session){ Session = session; }
+}
+<span class="kwrd">public</span> <span class="kwrd">class</span> Model1
+{
+    <span class="kwrd">public</span> IRepository First { get; <span class="kwrd">private</span> set; }
+    <span class="kwrd">public</span> IRepository Second { get; <span class="kwrd">private</span> set; }
+    <span class="kwrd">public</span> Model1(IRepository first, IRepository second) { First = first; Second = second; }
+}
+<span class="kwrd">public</span> <span class="kwrd">class</span> Model2
+{
+    <span class="kwrd">public</span> IRepository Second { get; <span class="kwrd">private</span> set; }
+    <span class="kwrd">public</span> Model2(IRepository second) { Second = second; }
+}</pre><style type="text/css">
+.csharpcode, .csharpcode pre
+{
+ font-size: small;
+ color: black;
+ font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+ background-color: #ffffff;
+ /*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+ background-color: #f4f4f4;
+ width: 100%;
+ margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style>And here’s the unit test I want to pass:<br />
+<pre class="csharpcode">[Test]
+        <span class="kwrd">public</span> <span class="kwrd">void</span> ResolutionsByContext()
+        {
+            IWindsorContainer root = <span class="kwrd">new</span> WindsorContainer();
+            root.Register(Component.For&lt;Model1&gt;().LifeStyle.Transient,
+                          Component.For&lt;Model2&gt;().LifeStyle.Transient,
+                          Component.For&lt;IRepository&gt;().ImplementedBy&lt;Repository1&gt;().LifeStyle.Transient,
+                          Component.For&lt;IRepository&gt;().ImplementedBy&lt;Repository2&gt;().LifeStyle.Transient,
+                          Component.For&lt;ISession&gt;().ImplementedBy&lt;Session&gt;().LifeStyle.PerContextScope());
+
+            Model1 model1;
+            Model2 model2;
+            ISession session1, session2;
+            <span class="kwrd">using</span> (var context1 = root.BeginLifetimeScope())
+            {
+                model1 = context1.Resolve&lt;Model1&gt;();
+                session1 = model1.First.Session;
+                Assert.AreSame(model1.First.Session, model1.Second.Session);
+                Assert.AreSame(context1.Resolve&lt;ISession&gt;(), context1.Resolve&lt;ISession&gt;());
+
+                <span class="kwrd">using</span> (var context2 = root.BeginLifetimeScope())
+                {
+                    model2 = context2.Resolve&lt;Model2&gt;();
+                    session2 = model2.Second.Session;
+                    Assert.AreNotSame(model1.First.Session, model2.Second.Session);
+
+                    var anotherModel2 = context2.Resolve&lt;Model2&gt;();
+                    Assert.AreSame(anotherModel2.Second.Session, model2.Second.Session);
+
+                    Assert.AreSame(session2, context2.Resolve&lt;ISession&gt;());
+                    Assert.AreNotSame(context1.Resolve&lt;ISession&gt;(), context2.Resolve&lt;ISession&gt;());
+                }
+                Assert.IsTrue(session2.IsDisposed);
+                Assert.IsFalse(session1.IsDisposed);
+            }
+            Assert.IsTrue(session1.IsDisposed);
+        }</pre><style type="text/css">
+.csharpcode, .csharpcode pre
+{
+ font-size: small;
+ color: black;
+ font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+ background-color: #ffffff;
+ /*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+ background-color: #f4f4f4;
+ width: 100%;
+ margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style>  <br />
+I copied the name BeginLifetimeScope from Autofac, which inherently supports contextual scopes as a first-class citizen (of which the test passes).&nbsp; The question now, is how do we get Castle Windsor to do the same?<br />
+Initially, I took a look at ISubDependencyResolver and caching variables.&nbsp; Unfortunately, this didn’t work too well because sub resolvers never got hit if they were resolved from the container directly.<br />
+The next step I tried was with lifestyle managers, but alas, the CreationContext was always transient and I was unable to store any state that distinguished between different context resolutions.<br />
+After digging deeper into the Windsor codebase and getting into the subsystems and handlers, I found a solution that seems to work.&nbsp; It passes the test above, but that’s about it.&nbsp; Test well if you’re gonna use this in production code!!!<br />
+Here goes!<br />
+First, you have a lifestyle manager to distinguish between other lifestyles.<br />
+<pre class="csharpcode"><span class="kwrd">public</span> <span class="kwrd">class</span> ContextualLifestyleManager : AbstractLifestyleManager
+    {
+        <span class="kwrd">private</span> <span class="kwrd">object</span> instance;
+        <span class="kwrd">public</span> <span class="kwrd">override</span> <span class="kwrd">object</span> Resolve(CreationContext context)
+        {
+            <span class="kwrd">return</span> instance ?? (instance = <span class="kwrd">base</span>.Resolve(context));
+        }
+        <span class="kwrd">public</span> <span class="kwrd">override</span> <span class="kwrd">void</span> Dispose()
+        {
+        }
+    }</pre>And finally, the magic happens with this:<br />
+<pre class="csharpcode"><span class="kwrd">public</span> <span class="kwrd">static</span> <span class="kwrd">class</span> ContextualExtensions
+    {
+        <span class="kwrd">public</span> <span class="kwrd">static</span> ComponentRegistration&lt;T&gt; PerContextScope&lt;T&gt;(<span class="kwrd">this</span> LifestyleGroup&lt;T&gt; group)
+        {
+            <span class="kwrd">return</span> group.Custom&lt;ContextualLifestyleManager&gt;();
+        }
+        <span class="kwrd">public</span> <span class="kwrd">static</span> IWindsorContainer BeginLifetimeScope(<span class="kwrd">this</span> IWindsorContainer parent)
+        {
+            var child = <span class="kwrd">new</span> WindsorContainer();
+            var ss = (INamingSubSystem)parent.Kernel.GetSubSystem(SubSystemConstants.NamingKey);
+            <span class="kwrd">foreach</span> (var handler <span class="kwrd">in</span> ss.GetHandlers())
+            {
+                <span class="kwrd">if</span> (handler.ComponentModel.CustomLifestyle == <span class="kwrd">typeof</span>(ContextualLifestyleManager))
+                {
+                    child.Kernel.AddCustomComponent(handler.ComponentModel);
+                }
+            }
+            parent.AddChildContainer(child);
+            <span class="kwrd">return</span> child;
+        }
+    }</pre>First method is just a helper method to be a little more fluent in the registration for when you want many things to have contextual lifestyle.&nbsp; The second method is the guts.&nbsp; Long story short, we create a child container, and duplicate all component models of contextual lifestyle.&nbsp; Thus, whenever components are resolved, the “override” is found in the child and resolved.&nbsp; Anything else will be found in the parent.<br />
+I was initially pretty happy with this, until I profiled the performance.&nbsp; With Autofac, creating and disposing 100,000 contexts took 5ms on my computer.&nbsp; Doing the same with with Windsor took 3.8 <strong>seconds</strong>.&nbsp; Out of curiosity, I profiled again, but this time just creating child containers without copying handlers down: 1.9 seconds.&nbsp; So while this implementation works, it’s not as performant as I’d like it to be….<br />
+Maybe I’ll come up with another solution, but for now if the performance is acceptable maybe this would be useful for others!</div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>bling</div>
+<div class='content'>
+LOL I need to check these comments more often.  Thanks for responding!</div>
+</div>
+<div class='comment'>
+<div class='author'>Krzysztof Koźmic (2)</div>
+<div class='content'>
+That&#39;s my quick and dirty impl based on per-web-request lifestyle that is far more lightweight and should have similar perf characteristics to other lifestyles<br /><br />http://gist.github.com/400979<br />http://gist.github.com/400980</div>
+</div>
+<div class='comment'>
+<div class='author'>Krzysztof Koźmic (2)</div>
+<div class='content'>
+No wonder it is taking so long, you&#39;re doing it in very heavyweight fashion.<br /><br /><br />It can be done w/o nested containers, much more lightweight.</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/04/21/forcing-castle-windsor-to-generate/">Forcing Castle Windsor to Generate Class Proxies</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-04-21T00:00:00+00:00" pubdate data-updated="true">Apr 21<span>st</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+I don&#8217;t know why it took me so long to come up with this idea, but to save others potential headaches&#8230;have you ever thought &#8220;hmmmm, I registered this as an interface with an implementation, but I want Windsor to use a class proxy, not an interface proxy, how do I do that?&#8221;<br />
+<br />
+For me, initially I <i>almost</i> went as far as implementing my own ProxyFactory to force it to use class proxy no matter what, and then the light bulb hit me and it turns out that there&#8217;s a much easier way to accomplish this.<br />
+<br />
+c.Register(Component.For&lt;ConcreteImpl, IService&gt;().Interceptors&lt;AnInterceptor&gt;());<br />
+<br />
+Tada!&nbsp; The actual service is now a concrete type, so Windsor will go, OK, I need to create a class proxy.&nbsp; But since it&#8217;s forwarded to the interface as well, all your dependencies can simply use the interface and everything magically works.<br />
+<br />
+Yay!</div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>bling</div>
+<div class='content'>
+void IService.SomeLongRunningOperation() {<br />  Action1();<br />  Action2();<br />  Action3();<br />}<br /><br />protected virtual void Action1() {}<br />protected virtual void Action2() {}<br />protected virtual void Action3() {}<br /><br />Without class proxies, those action methods could not be intercepted, and in our case, we would not be able to collect metrics/statistics on those methods.</div>
+</div>
+<div class='comment'>
+<div class='author'>Krzysztof Koźmic (2)</div>
+<div class='content'>
+Why did you want a class proxy for interface service?</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/04/05/windsordynamicproxymixin-powers/">Windsor/DynamicProxy/Mixin Powers!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-04-05T00:00:00+00:00" pubdate data-updated="true">Apr 5<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+Hmmm, I couldn’t really think of a good title except that this blog post has a little bit of everything of the title.<br />
+<br />
+As with any multithreaded program, deadlocks are a huge pain in the butt, and when they happen it costs time, money, and stress.<br />
+<br />
+In my code base I’ve introduced something called an ExtendedLock, which basically has something like this inside:<br />
+<div class="csharpcode"><pre class="alt"><span class="lnum">   1:  </span><span class="kwrd">public</span> <span class="kwrd">class</span> ExtendedLock : IExtendedLock {</pre><pre><span class="lnum">   2:  </span>  <span class="kwrd">public</span> IDisposable Lock() {</pre><pre class="alt"><span class="lnum">   3:  </span>    <span class="kwrd">while</span> (!Monitor.TryEnter(<span class="kwrd">this</span>, 5000)) {</pre><pre><span class="lnum">   4:  </span>      IncrementLockTime();</pre><pre class="alt"><span class="lnum">   5:  </span>    }</pre><pre><span class="lnum">   6:  </span>    <span class="kwrd">return</span> <span class="kwrd">new</span> Disposer(() =&gt; Release());</pre><pre class="alt"><span class="lnum">   7:  </span>  }</pre><pre><span class="lnum">   8:    public event Deadlock;</span></pre><pre>9<span class="lnum">: </span>}</pre></div><style type="text/css">
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style><br />
+<br />
+Pretty simple.&nbsp; IncrementLockTime, as the name implies keeps track of how long the current thread has been attempting to acquire the lock.&nbsp; It returns a Disposer which takes an Action, which releases the lock.&nbsp; This allows us to take advantage of the <b>using</b> syntax, and avoid boiler plate try/finally (oh, and it avoids typos in Monitor.Exit).&nbsp; After some configurable amount of time, if the lock cannot be acquired within, say, 2 minutes, it’s probably a good probability your application is blocked somewhere.<br />
+<br />
+Now, using this class basically means replacing lock(_syncRoot) type code with _elock.Lock().&nbsp; Also, I believe it’s a good candidate for “mixing” into any other component.&nbsp; Mixins are sort of like multiple-inheritance, but not.&nbsp; I like to think of mixins as a “can do” rather than “is a.”<br />
+<br />
+Now, we know that C# doesn’t let you do multiple inheritance, but with libraries like Castle’s DynamicProxy2, it lets you do something very similar, and is extremely powerful.&nbsp; In a sense, it will automatically generate the following code for you:<br />
+<br />
+<div class="csharpcode"><br />
+<pre class="alt"><span class="lnum">   1:  </span><span class="kwrd">public</span> <span class="kwrd">class</span> SomeService : ISomeService, IExtendedLock {</pre><pre><span class="lnum">   2:  </span>  IExtendedLock _lock = <span class="kwrd">new</span> ExtendedLock();</pre><pre class="alt"><span class="lnum">   3:  </span>  <span class="kwrd">public</span> <span class="kwrd">void</span> DoSomething() { }</pre><pre><span class="lnum">   4:  </span>  IDisposable IExtendedLock.Lock() { <span class="kwrd">return</span> _lock.Lock(); }</pre><pre class="alt"><span class="lnum">   5:  </span>}</pre><br />
+</div><style type="text/css">
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style><style type="text/css">
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style><br />
+<br />
+_lock is a private instance variable, SomeService implements IExtendedLock, and simply redirects all the interface methods to _lock.&nbsp; This seems pretty simple and straightforward, but becomes tedious when the type you want to mix in has many methods (as my actual IExtendedLock is).<br />
+<br />
+With Windsor/DynamicProxy, you can do this automatically with minimal amount of code.&nbsp; For example, first you define something like this:<br />
+<br />
+<pre class="csharpcode"><span class="kwrd">public</span> <span class="kwrd">interface</span> ILockableDictionary : IDictionary, IExtendedLock { }</pre><br />
+Then, you register it in the container:<br />
+<div class="csharpcode"><br />
+<pre class="alt"><span class="lnum">   1:  </span>var container = <span class="kwrd">new</span> WindsorContainer();</pre><pre><span class="lnum">   2:  </span>container.Register(Component.For(<span class="kwrd">typeof</span>(ILockableHashtable))</pre><pre class="alt"><span class="lnum">   3:  </span>                                   .LifeStyle.Transient</pre><pre><span class="lnum">   4:  </span>                                   .Activator&lt;LockableHashtableActivator&gt;());</pre></div><style type="text/css">
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style><br />
+<br />
+Now, whenever you need an instance of a lockable hashtable you can simply do something like this:<br />
+<br />
+<pre class="csharpcode">var hash = container.Resolve&lt;ILockableHashtable&gt;();
+<span class="kwrd">using</span> (hash.Lock()) {
+hash[<span class="str">"1"</span>] = 1;
+}</pre><style type="text/css">
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style><br />
+<br />
+You might be wondering why it’s worth all this trouble, and what’s wrong with regular locks and Monitor.&nbsp; For our system it’s pretty critical that it stays running 24/7, and every minute it’s down is money lost, so it is in our best interest to detect any problematic condition.<br />
+<br />
+Last but not least, here’s the important code that actually generates the proxy:<br />
+<div class="csharpcode"><br />
+<pre class="alt"><span class="lnum">   1:  </span><span class="kwrd">internal</span> <span class="kwrd">class</span> LockableHashtableActivator : DefaultComponentActivator</pre><pre><span class="lnum">   2:  </span>{</pre><pre class="alt"><span class="lnum">   3:  </span>    <span class="kwrd">public</span> LockableHashtableActivator(ComponentModel model, IKernel kernel, ComponentInstanceDelegate onCreation, ComponentInstanceDelegate onDestruction)</pre><pre><span class="lnum">   4:  </span>        : <span class="kwrd">base</span>(model, kernel, onCreation, onDestruction)</pre><pre class="alt"><span class="lnum">   5:  </span>    {</pre><pre><span class="lnum">   6:  </span>    }</pre><pre class="alt"><span class="lnum">   7:  </span>&nbsp;</pre><pre><span class="lnum">   8:  </span>    <span class="kwrd">public</span> <span class="kwrd">override</span> <span class="kwrd">object</span> Create(CreationContext context)</pre><pre class="alt"><span class="lnum">   9:  </span>    {</pre><pre><span class="lnum">  10:  </span>        IExtendedLock lockMixin = Kernel.Resolve&lt;IExtendedLock&gt;();</pre><pre class="alt"><span class="lnum">  11:  </span>&nbsp;</pre><pre><span class="lnum">  12:  </span>        <span class="rem">// an additional object we want to "mix" with the implementation to provide combined functionality</span></pre><pre class="alt"><span class="lnum">  13:  </span>        ProxyGenerationOptions options = <span class="kwrd">new</span> ProxyGenerationOptions();</pre><pre><span class="lnum">  14:  </span>        options.AddMixinInstance(lockMixin);</pre><pre class="alt"><span class="lnum">  15:  </span>        </pre><pre><span class="lnum">  16:  </span>        <span class="kwrd">return</span> Kernel.Resolve&lt;ProxyGenerator&gt;().CreateInterfaceProxyWithTarget(</pre><pre class="alt"><span class="lnum">  17:  </span>            <span class="kwrd">typeof</span>(IDictionary), <span class="rem">// the interface of the implementation</span></pre><pre><span class="lnum">  18:  </span>            <span class="kwrd">new</span>[] { <span class="kwrd">typeof</span>(ILockableHashtable) }, <span class="rem">// additional interfaces to use</span></pre><pre class="alt"><span class="lnum">  19:  </span>            Activator.CreateInstance&lt;Hashtable&gt;(), <span class="rem">// concrete implementation to mix into</span></pre><pre><span class="lnum">  20:  </span>            options);</pre><pre class="alt"><span class="lnum">  21:  </span>    }</pre><pre><span class="lnum">  22:  </span>}</pre><br />
+</div><style type="text/css">
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style><style type="text/css">
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style><br />
+For those who are familiar with Windsor and wondering why I didn’t use the fluent Proxy.Mixins method, it’s because those mixins are created once per registration.&nbsp; In this case, it is very important that each mixin (which is an extended lock), is transient, otherwise every lockable hashtable ends up with the same extended lock, which is just asking for trouble.</div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>Krzysztof Koźmic</div>
+<div class='content'>
+actually, with the trunk version the limitation &quot;one mixin per registration&quot; was lifted off. Now Mixins behave pretty much like interceptors, which means they can have any lifestyle, including being transient.</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/04/05/how-to-advocate-test-driven-development/">How to Advocate Test Driven Development (TDD)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-04-05T00:00:00+00:00" pubdate data-updated="true">Apr 5<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+It seems that everywhere you read you will find blog posts asserting that it is difficult to convince others to use TDD, and that everyone talking about TDD is already a believer preaching to other believers.&nbsp; So what&#8217;s the best way convince others?<br />
+<br />
+I recently convinced a good buddy of me to starting doing TDD in his web development.&nbsp; It took a while, but finally he &#8220;saw the light.&#8221;&nbsp; He tried to relay the information to his coworker, and his coworker didn&#8217;t react as positively, citing the common &#8220;I don&#8217;t want to waste time writing test code when I know my stuff works.&#8221;<br />
+<br />
+There are many many <b>MANY</b> hurdles of overcome to begin writing software using TDD.&nbsp; I won&#8217;t go into great detail since you can easily find relevant posts on the web, but basically, if you <i>have</i> successfully transitioned to TDD that also implies that you have in one way or another adopted&nbsp;<a href="http://butunclebob.com/ArticleS.UncleBob.PrinciplesOfOod">S.O.L.I.D. principles</a> in software design.<br />
+<br />
+The reason I say this is because it is literally impossible to do TDD otherwise.&nbsp; It is just plain <b>painful</b>.&nbsp; I&#8217;ve been there.&nbsp; It is so painful you shout in your head WTF are people thinking, how does this make my job easier?!<br />
+<br />
+Usually when this happens, you&#8217;ll probably notice that most (or all) of the SOLID principles have been violated one way or another.<br />
+<br />
+&lt;sarcasm&gt;<br />
+<ul><li>Single Responsibility Principle</li>
+
+<ul><li>You mean 1 class to rule them all right?</li>
+</ul>
+<li>Open Closed Principle</li>
+
+<ul><li>Does this have something to do with sockets?</li>
+</ul>
+<li>Liskov Substitution Principle</li>
+
+<ul><li>I thought the point of Object Oriented Programming is that <i>everything</i> is an object!</li>
+</ul>
+<li>Interface Segregation Principle</li>
+
+<ul><li>What&#8217;s an interface?<br />
+</li>
+</ul>
+<li>Dependency Inversion Principle</li>
+
+<ul><li>I don&#8217;t get it&#8230;I only have 1 super object anyway, I don&#8217;t have dependencies.</li>
+</ul></ul>&lt;/sarcasm&gt;<br />
+<br />
+Notice that even though this post was supposed to be about how to advocate TDD, I ended up talking about SOLID instead for a bit.&nbsp; What am I trying to get at?<br />
+<br />
+TDD spans from the individual to the team to the organization.&nbsp; You need to be able to tackle it from all points of view.&nbsp; The obsession of the word &#8216;test&#8217; has hurt TDD quite a bit.&nbsp; Anyone who&#8217;s spent any reasonable amount of time will assert that tests are just a means to drive the design.&nbsp; Tests should read like a story (well to programmer eyes), and yes, I said read, as in <i>readable!</i><br />
+<br />
+At the individual level, you must convince them it forces you to design better code, because testing against badly designed code is not worth the pain/annoyance.&nbsp; You must assert that better designed code is good because it also means being more maintainable and less bugs.<br />
+<br />
+At the team level, you must convince that collective code ownership is a good thing.&nbsp; There should never be a situation where &#8220;Bob&#8217;s on vacation, we&#8217;ll need to put a hold on Project A because only he knows it&#8221;.&nbsp; Tests serve as a way on how to interact with a specific service, and are a jump-start to figuring out how to actually <b>use</b> a particular service.&nbsp; Moreover, collective code ownership is a means of sharing and distributing knowledge.<br />
+<br />
+At the organizational level, you must convince managers that you are a professional software developer, and that it is your job to produce high quality work.&nbsp; And if what is required to produce high quality work involves writing proper unit tests, following SOLID principles, and even other agile practices like pair programming, then you should be allowed (and optimally encouraged) to do so.&nbsp; Now TDD might not work for everyone, or every organization, but I think everyone owes it to themselves to give it a fair chance.</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/11/23/real-world-performance-comparison/">Real World Performance Comparison: Enterprise Library Logging Block vs Log4net</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-11-23T00:00:00+00:00" pubdate data-updated="true">Nov 23<span>rd</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+Any search on the web you find will consistently show log4net outperforming EL by a factor of around 4:1.&nbsp; Most of these tests are typically tight for/loops, and comments will end up saying things like “oh well that’s not a realistic test” or “well you shouldn’t be logging that much anyway”, etc etc.&nbsp; Well, let’s see how important choosing your logging infrastructure is in terms of overall system performance in a multithreaded application.<br />
+<br />
+One of my recent tasks was hunting down a memory leak.&nbsp; So I downloaded the trial of the ANTS .NET Bundle which contains a memory profiler and performance profiler.&nbsp; Hunting the memory leak was a pain since I wasn’t the one who wrote the code, so it took a while for me to realize which objects were “leaked.”&nbsp; I eventually found it, and then I turned my attention to using the performance profiler to see if any obvious places could be optimized.<br />
+<br />
+At this point I decided to swap in the Enterprise Logging Block to see how it would fair.&nbsp; The logging migration project was still in progress, and we haven’t made the full switch yet, but I figured I should try out it anyway because I’m the curious type.<br />
+<br />
+The software already uses the Trace diagnostics extensively.&nbsp; Practically every message, error, you name it, will get Trace.WriteLined…and then a LogFileWriter will pick it up, and dump it to a file.&nbsp; In my testing, I simply added an extra line of code here, namely Logger.Write(LogEntry).&nbsp; Thus, anything that used to get logged, will also get logged by the EL.<br />
+<br />
+Then, it was basically running the application to a similar set of scenarios, and then seeing what the profiler says.&nbsp; Obviously each run will not be exactly the same as the previous, but overall I think if we look at percentages we can begin to see where the CPU is taking the most time. <br />
+<br />
+Here is what the application does without any modifications.<br />
+<div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/_WZr-_wsEf1c/SwojFG6Z-bI/AAAAAAAAABs/JOlmoVHku8c/s1600/1.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/_WZr-_wsEf1c/SwojFG6Z-bI/AAAAAAAAABs/JOlmoVHku8c/s320/1.png" /></a><br />
+</div>Here is the application after adding Logger.Write(LogEntry).<br />
+<div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/_WZr-_wsEf1c/SwojGq9R6FI/AAAAAAAAAB0/l899yhPm5a0/s1600/2.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/_WZr-_wsEf1c/SwojGq9R6FI/AAAAAAAAAB0/l899yhPm5a0/s320/2.png" /></a><br />
+</div><br />
+Yeah, I was pretty surprised too.&nbsp; That one method ended up being the most expensive method in the entire application.<br />
+<br />
+A quick look at the source revealed quite a bit of code dedicated to thread safety.&nbsp; So digging deeper, I decided to avoid the static Logger.Write method altogether, create instance LogWriters directly, and have them all go to a singleton FileTraceListener.<br />
+<div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/_WZr-_wsEf1c/SwojH5vrfYI/AAAAAAAAAB8/bKYT18Hdx-8/s1600/3.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/_WZr-_wsEf1c/SwojH5vrfYI/AAAAAAAAAB8/bKYT18Hdx-8/s320/3.png" /></a><br />
+</div>That’s a noticeable improvement…it’s not #1 anymore.&nbsp; The CPU time also dropped from ~15% to ~10%.&nbsp; That means that ~5% of CPU time was in the static Logger.Write(LogEntry) method.&nbsp; If you look at the graphs you’ll notice a common pattern among them, because I wanted to test with the same scenario to get as close to as measurable results as possible…but to illustrate how bad the EL’s performance can get, here’s one:<br />
+<br />
+<div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/_WZr-_wsEf1c/SwojJLBz2KI/AAAAAAAAACE/FI3Sl-wNhmE/s1600/4.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/_WZr-_wsEf1c/SwojJLBz2KI/AAAAAAAAACE/FI3Sl-wNhmE/s320/4.png" /></a><br />
+</div><br />
+I literally fell off my chair when I first discovered this as I didn’t think it could be possible something that’s supposed to be non-invasive could end up taking this much CPU.&nbsp; This is one of the earlier tests I did where&nbsp; I didn&#8217;t have a set scenario yet.<br />
+<br />
+And of course, here are the results with log4net.<br />
+<div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/_WZr-_wsEf1c/SwojKotCNLI/AAAAAAAAACM/jhlHy7LvZyc/s1600/5.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/_WZr-_wsEf1c/SwojKotCNLI/AAAAAAAAACM/jhlHy7LvZyc/s320/5.png" /></a><br />
+</div><br />
+So what does that leave us?<br />
+<br />
+log4net:&nbsp; 5%<br />
+EL static:&nbsp; 15%<br />
+EL instance:&nbsp; 10%<br />
+<br />
+So what should you get out of this?&nbsp; Be very careful of how you invoke Logger.Write()…it may not be as cheap as you think it is.&nbsp; Even log4net took much more CPU time than I expected.<br />
+<br />
+I redid the test using Castle’s logging framework, which is a barebones dump messages to a file.&nbsp; The total CPU time for this was 0.016%.&nbsp; Yep!&nbsp; I had to scroll down to even find it!<br />
+<br />
+I guess this shows that even log4net, which is touted for high-performance, comes at a cost.</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/9/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/7/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/19/on-typescript/">On TypeScript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript/">.NET/WPF to HTML/CSS/Javscript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/10/jumping-on-the-hacker-blog-bandwagon/">Jumping on the hacker blog bandwagon</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/11/writing-macros-with-vim/">Writing Macros with Vim</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/10/love-affair-with-vim/">Love Affair with Vim</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/29/snoopshell-evolution/">SnoopShell: Evolution</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/01/snoopshell-marriage-of-snoop-wpf-and/">SnoopShell: The marriage of Snoop WPF and PowerShell</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/08/n2n-net-2-node-part-1/">N2N: .NET 2 Node: Part 1</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/bling">@bling</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'bling',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Bailey Ling -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'blingdev';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

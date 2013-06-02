@@ -1,0 +1,511 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>bling on software development</title>
+  <meta name="author" content="Bailey Ling">
+
+  
+  <meta name="description" content="I think anyone’s who has used ReSharper for an extended period of time has experienced the colors disappearing all of a sudden from Fonts &amp; &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://bling.github.io//blog/page/9">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="bling on software development" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic|Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
+
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38439430-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">bling on software development</a></h1>
+  
+    <h2>when pragmatism meets minimalism</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:bling.github.io/" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/11/07/fixing-resharper-5-eap-missing-colors/">Fixing ReSharper 5 EAP Missing Colors</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-11-07T00:00:00+00:00" pubdate data-updated="true">Nov 7<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I think anyone’s who has used ReSharper for an extended period of time has experienced the colors disappearing all of a sudden from Fonts &amp; Colors.  This is excruciatingly annoying when I have a dark color scheme set up and the colors disappear on me.</p>
+
+<p>In the case of RS5, it seems even more flakey than RS4, and installing/uninstalling other addins have a pretty high probability of losing the colors, and this time, repairing the installation doesn’t fix the problem (nor does the registry restore trick).</p>
+
+<p>For me, to fix the problem I had to:</p>
+
+<ul>
+<li>Uninstall RS5.</li>
+<li>Install RS4.5</li>
+<li>Open VS!!!</li>
+<li>Go into settings, and verify all the colors are in Fonts &amp; Colors.</li>
+<li>Upgrade to RS5.</li>
+</ul>
+
+
+<p>If you skip opening VS, it will not restore colors&hellip;at least it didn’t when I tried it.  Following the above fixed it for me in 2 occasions already.  If Jetbrains sees this blog post, PLEASE fix this extremely annoying bug.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/11/06/multiple-inheritance-in-c-with-castle/">Multiple Inheritance in C# With Castle DynamicProxy Mixins</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-11-06T00:00:00+00:00" pubdate data-updated="true">Nov 6<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+Having some significant experience with C++, every once in a while I’ll <i>really</i> miss features available in C++ that just aren’t possible in C#.&nbsp; Sure, linking takes forever and if you could calculate the percentage of time for a C++ developer spent on linking time I’m sure it’d be around 50%.&nbsp; Nonetheless, there’s a certain seductive pull to stepping through the debugger and the sheer speed of a C++ program (arguably debugger is being made obsolete with TDD).&nbsp; If you’re only used C# for a long time, you probably didn’t even know that C++ was THAT much faster until you try this out.&nbsp; Even a simple hello world program: you can tell a difference.<br />
+But that’s not the point of this post.&nbsp; This post is about mixins!<br />
+So what is a mixin?&nbsp; You can <a href="http://en.wikipedia.org/wiki/Mixin">wikipedia</a> it, but basically it’s a way to add functionality to an existing object.&nbsp; In a way, it’s like multiple inheritance, but not exactly.&nbsp; If you wanna go CS101 terms, this is not a “is-a” relationship, but more of a “can-do” relationship.&nbsp; Both methods promote code reuse, and of course, both can be abused.<br />
+In a way, C# extension methods are a form of mixin, but really it’s just syntactic sugar.&nbsp; It’s a static method but <i>looks</i> like a instance method.&nbsp; True mixins are actual instances.<br />
+I’ve been playing around with Castle.DynamicProxy lately, and some of it is going into production code soon.&nbsp; This is honestly kind of scary, because I really don’t want to mess up production code which generates daily profit for the company.&nbsp; However, if NHibernate’s using dynamic proxy, and that has been proven to work in countless production environments, I’m sure the complexity of the proxies I’m doing pales in comparison to what NHibernate does.<br />
+Most of the examples available on the web show you how a mixin works.&nbsp; Basically, you create a target, and then you mixin extra stuff.&nbsp; Basic stuff…but there’s a really cool trick you can do to make all consuming code a lot easier to use by removing the need of consuming code to cast to a mixin instance.&nbsp; In my case, the system is a very complex piece of legacy code where there are threads all over the place locking things all over the place.&nbsp; I was given the task of keeping track of who owned the lock.<br />
+Originally I started with an extension method, but I soon realized that even though it’s nice that along with IDisposable, I could do something like this:<br />
+<pre class="csharpcode"><span class="kwrd">using</span> (anyInstance.Lock()) {
+anyInstance.DoStuff();
+}</pre><br />
+Where Lock() is an extension method which returns an IDisposable, which when Dispose() is invoked will call Monitor.Exit.&nbsp; This is all nice and dandy use of the ‘using’ syntax, but as you can see this is all just syntactic sugar.&nbsp; At the end of the day, this is still a public static method can is accessible by thousands of other objects.&nbsp; And once you need to keep track of all those owners, you need to create a dictionary of object hashcodes, and locking on that thing for each incoming lock on an instance is…well…very very bad.<br />
+<br />
+Anyways, so with DynamicProxy2, I decided to mix in this lock tracking logic.&nbsp; Now, the interface is simple:<br />
+<pre class="csharpcode"><span class="kwrd">public</span> <span class="kwrd">interface</span> ILockMixin {
+IDisposable Lock(<span class="kwrd">string</span> tag);
+IDisposable TryLock(<span class="kwrd">string</span> tag);
+}</pre><br />
+Now, the particular thing I wanted to target happened to be a hashtable, so with a little interface trick, you could do this:<br />
+<pre class="csharpcode"><span class="kwrd">public</span> <span class="kwrd">interface</span> ILockableHashtable : IDictionary, ILockMixin { }</pre><br />
+Finally, any code that references hashtable needs to be replaced with ILockableHashtable, but the beauty of this is that none of the existing code had to change, and now all proxied hashtables have the Lock() method as well.&nbsp; And alongside Windsor, this is brain-dead simple to wire up:<br />
+<pre class="csharpcode">kernel.Register(
+Component.For&lt;IDictionary, ILockableDictionary&gt;()
+.ImplementedBy&lt;Hashtable&gt;()
+.Proxy.AdditionalInterfaces(<span class="kwrd">typeof</span>(ILockableDictionary))
+.Proxy.MixIns(<span class="kwrd">new</span> Locker()));</pre><br />
+And that’s it!&nbsp; BTW, I realize I could have easily achieved the same effect and with a lot less effort if I just inherited from Hashtable directly (and avoid the negligible proxy/performance cost), but if I needed this locking mechanism for <b>any</b> other code, I would have to resort to either copy/pasting a lot of code, or a lot of copy/paste/redirect to a static class.<br />
+<br />
+Edit: There is a bug in this last bit, check out my latest <a href="http://blingcode.blogspot.com/2010/04/windsordynamicproxymixin-powers.html">entry </a>about this topic.</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/10/19/improving-your-unit-testing-skills/">Improving Your Unit Testing Skills</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-10-19T00:00:00+00:00" pubdate data-updated="true">Oct 19<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Unit testing is <em>hard</em>!  I came to this sad realization when my code which had a large test suite with near 100% code coverage, with every thought-of requirement unit tested, failed during integration testing.</p>
+
+<p>How is that possible?  I thought to myself.  Easy&hellip;my unit tests were incomplete.</p>
+
+<p>Writing software is pretty complex stuff.  This is pretty evident in the level of difficulty in determining how good a software developer is.  Do you measure them based on lines of code?  Can you measure on time to completion of tasks?  Or maybe the feature to bugs coming back ratio?  If writing features alone can be this complicated, surely unit testing is just as (or more) complicated.</p>
+
+<p>First, you must be in a place where you can even <em>start</em> testing your code.  Are you using dependency injection?  Are your components decoupled?  Do you understand mocking and can you use mocking frameworks?  You need an understanding of <em>all</em> these concepts before you can even begin to unit test effectively.  Sure, you can unit test without these prerequisites, but the result will likely be pain and more pain because the you&rsquo;ll be spending 90% of your time setting up a test rather than running it.</p>
+
+<p>But back to the point of this post.  Unit testing is hard because it&rsquo;s one of those things where you&rsquo;ll never really know how to do it properly until you&rsquo;ve tried it.  And that assumes you&rsquo;ve even made the step to do testing at all.</p>
+
+<p>I&rsquo;m at the point where my experience with writing unit tests allows me to set them up quickly with relative ease, and perform very concise tests where anyone reading the unit test would say &ldquo;oh, he&rsquo;s testing this requirement.&rdquo;  However, the problem is that there&rsquo;s still 2 problems that are hard to fix:
+1. Is the test <em>actually</em> correct?
+2. Do the tests cover <em>all</em> scenarios?</p>
+
+<p>(1) is obvious.  If the test is wrong then you might as well not run it all.  You must make it absolute goal to trust your unit tests.  If something fails, it should mean there&rsquo;s a serious problem going on.  You can&rsquo;t have &ldquo;oh that&rsquo;s ok, it&rsquo;ll fail half the time, just ignore it.&rdquo;</p>
+
+<p>(2) is also obvious.  If you don&rsquo;t cover all scenarios, then your unit tests aren&rsquo;t complete.</p>
+
+<p>In my case, I actually made both errors.  The unit test in question was calculating the time until minute X.  So in my unit test, I set the current time to 45 minutes.  The target time was 50 minutes.  5 minutes until minute 50, test passed.  Simple right?  Any veteran developer will probably know what I did wrong.  Yep&hellip;if the current time was 51 minutes, I ended up with a negative result.  The test was wrong in that it only tested half of the problem.  It never accounted for time wrapping.  The test was also incomplete, since it didn&rsquo;t test all scenarios.</p>
+
+<p>Fixing the bug was obviously very simple, but it was still ego shattering knowing that all the confidence I had previously was all false.  I went back to check out other scenarios, and was able to come up with some archaic scenarios where my code failed.  And this is probably another area where novice coders will do, where experienced coders will not: I only coded tests per-requirement.  What happens when 2 requirements collide with each other?  Or, what happens when 2 or more requirements must happen at the same time?  With this thinking I was able to come up with a scenario which led to 4 discrete requirements occurring at the same time.  Yeah&hellip;not fun.</p>
+
+<p>Basically, in summary:
+&ndash; Verify that your tests are correct.
+&ndash; Strive to test for less than, equal, and greater than when applicable.
+&ndash; Cross reference all requirements against each other, and chain them if necessary.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/10/07/tdd-is-designunit-testing-legacy-code/">TDD Is Design…Unit Testing Legacy Code</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-10-07T00:00:00+00:00" pubdate data-updated="true">Oct 7<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+I’ve been listening to a bunch of podcasts lately and I came across a gem that was pretty darn useful.&nbsp; It’s pretty old I suppose in technology standards, since it was recorded January 12, 2009, but it’s still worth a listen.&nbsp; Scott Hanselman talks with Scott Bellware about TDD and design.&nbsp; Find it <a href="http://hanselminutes.com/default.aspx?showID=164">here</a>.<br />
+I’m merely reiterating what Scott has already said in the podcast, but it’s different when I can personally say that I’m joining the ranks of countless others who have seen the benefits of TDD.<br />
+<br />
+Now I can’t say that I’m a 100% TDD practitioner since I’m still learning how to write tests before code effectively, but I’ve already seen the improvements in <b>design</b> in my code many times over just by merely writing unit tests.  At this point I&#8217;d say half of my tests are written first, and the other after are after the fact.<br />
+<br />
+I’ve been through many phases of writing unit tests, it it took me <b>a long time</b> to get it right (and I’m sure I have tons more to go).&nbsp; It takes some experience to figure out how to properly write unit tests, and as a by-product how to make classes easily testable.&nbsp; Code quality and testability go hand-in-hand, so if you find something difficult to test, it’s probably because it was badly designed to start.<br />
+<br />
+The first time I was introduced to unit testing in a work setting was when I was writing C++…and man it was ugly, not because it was C++, but because everything was tightly coupled and everything was a singleton.&nbsp; The fixture setup was outrageous, and it was common to ::Sleep(5000) to make tests pass.&nbsp; Needless to say, my first experience with unit testing was extremely painful.<br />
+<br />
+After a job switch and back to the C# world, I started reading more blogs, listening to more podcasts, and experimenting more.&nbsp; I was given a project to prototype, and for phase 1 it was an entirely DDD experience with I got the opportunity to experiment with writing unit tests the “proper” way with dependency injection and mocking frameworks.<br />
+<blockquote>Unit tests are easy to write when you have highly decoupled components.<br />
+</blockquote>Prototype was finished, and now I was back on the main project, and given a critical task to complete in 2 weeks.&nbsp; I had to modify a class which was 10,000 lines long, which has <b>mega</b> dependencies on everything else in the project.&nbsp; Anything I touched could potentially break something else.&nbsp; And of course…no unit tests whatsoever.&nbsp; I like challenges and responsibility – but this was close to overkill.&nbsp; This thing produces revenue for the company daily so I <i>really</i> don’t want to mess anything up.<br />
+<br />
+First thing I realized was that there’s no way I could possibly write any unit test for something like this.&nbsp; If the class file was 10,000 lines long, you can imagine the average line count for methods.<br />
+<br />
+And of course, the business team didn’t make things easy on me by asking that this feature be turned off in production, but turned on for QA.&nbsp; So, the best option was to refactor the existing logic out to a separate class, extract an interface, implement the new implementation, and swap between the 2 implementations dynamically.<br />
+<br />
+After 4 days of analyzing and reading code to make sure I have a very detailed battle plan, I started extracting the feature to a new class.&nbsp; The first iteration of the class was <b>UGLY</b>.&nbsp; I extracted out the feature I was changing to a separate class, but the method names were archaic and didn’t have any good “flow” to them.&nbsp; I felt that I had to comment my unit tests just so whoever’s reading them could understand what’s happening, which brings up a point.<br />
+<blockquote>If you need to comment your unit tests, you need to redesign the API<br />
+</blockquote>It took many iterations and refactoring of the interface to get it to the point where I found acceptable.&nbsp; If you compared the 1st batch of unit tests to the last batch of unit tests it is like night and day.&nbsp; The end result were unit tests which typically followed a 3-line pattern of setup/execute/verify.&nbsp; Brain dead simple.<br />
+<br />
+The last thing to do was to reintegrate the class into the original class.&nbsp; For this I was back to compile/run/debug/cross-fingers, but I had full confidence that whenever I called anything in the extracted class it would work.<br />
+<br />
+An added benefit is that I didn’t add another 500 lines of code to the already gigantic class.&nbsp; Basically, in summary:    <br />
+<br />
+<ul><li><span style="color: #4c4c4c;">Get super mega long legacy code class files</span> </li>
+<li>Extract feature into separate file as close to original implementation as possible (initially will be copy-paste)</li>
+<li>Run and make sure things don’t die</li>
+<li>Write unit tests for extracted class (forces you to have a better understanding of the code modifications, and the requirements)</li>
+<li>Make sure unit tests cover all possible scenarios of invocation from original class</li>
+<li>Start refactoring and redesigning to better testability, while maintaining all previous tests</li>
+<li>Done!&nbsp; Repeat as necessary!</li>
+</ul></div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/09/27/dark-color-refresh/">Dark Color Refresh</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-09-27T00:00:00+00:00" pubdate data-updated="true">Sep 27<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+<p><a onblur="try {parent.deselectBloggerImageGracefully();} catch(e) {}" href="http://2.bp.blogspot.com/_WZr-_wsEf1c/Sqh4cikBOcI/AAAAAAAAABA/9NgFoJ5lIuA/s1600-h/colorscheme.png"><img style="text-align: center; margin: 0px 15px 10px 0px; width: 252px; display: inline; height: 400px; cursor: hand" id="BLOGGER_PHOTO_ID_5379682186603608514" border="0" alt="" align="left" src="http://2.bp.blogspot.com/_WZr-_wsEf1c/Sqh4cikBOcI/AAAAAAAAABA/9NgFoJ5lIuA/s400/colorscheme.png" /></a> There you have it!&#160; I started with Visual Studio’s default settings and configured each and every color one by one.&#160; 3 hours later I was finished and satisfied with what I have…but I think it was time well spent considering this is what I’m looking at for &gt;= 8 hours a day.</p>  <p>This was a complete re-do of my previous dark theme.&#160; This one is even more colorful than the <a href="http://blingcode.blogspot.com/2008/09/importance-of-color-schemes.html">previous</a>, mainly because <a href="http://www.jetbrains.com/resharper/index.html">Resharper</a> does an amazing job of detecting additional code elements like mutable vs unmutable, or unused code, in additional to many other things.</p>  <p>By the way, you should definitely spend the time to configure your own colors rather than using someone else’s template.&#160; The reason being is that each and every person is different, and obviously will have preferences towards different colors.&#160; I go through different moods and I’ll tweak the theme to be “blue” or “red” for a period of time.</p>  <p>Another reason why you configure it manually is that it drills into your brain more of what each color represents.&#160; If you just used my template you would probably never notice that orange means input parameter, and green is a local variable.</p>  <p>However, one thing you can and should take from this blog post is<strong> not to use pure black or pure white as your background </strong>(did you notice my current line indicator is darker than my background?).&#160; Set your background to (10,10,10) or (245,245,245).&#160; <em>Your eyes will thank me.</em></p>  </div>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/10/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/8/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/19/on-typescript/">On TypeScript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript/">.NET/WPF to HTML/CSS/Javscript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/10/jumping-on-the-hacker-blog-bandwagon/">Jumping on the hacker blog bandwagon</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/11/writing-macros-with-vim/">Writing Macros with Vim</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/10/love-affair-with-vim/">Love Affair with Vim</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/29/snoopshell-evolution/">SnoopShell: Evolution</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/01/snoopshell-marriage-of-snoop-wpf-and/">SnoopShell: The marriage of Snoop WPF and PowerShell</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/08/n2n-net-2-node-part-1/">N2N: .NET 2 Node: Part 1</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/bling">@bling</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'bling',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Bailey Ling -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'blingdev';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

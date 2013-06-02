@@ -1,0 +1,473 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Contextual Lifestyle with Castle Windsor - bling on software development</title>
+  <meta name="author" content="Bailey Ling">
+
+  
+  <meta name="description" content="EDIT:&nbsp;As of version 3, scoped lifestyles are now a first class citizen supported out of the box (http://docs.castleproject.org/Windsor.Whats- &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://bling.github.io//blog/2010/05/14/contextual-lifestyle-with-castle">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="bling on software development" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic|Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
+
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38439430-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">bling on software development</a></h1>
+  
+    <h2>when pragmatism meets minimalism</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:bling.github.io/" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Contextual Lifestyle With Castle Windsor</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-14T00:00:00+00:00" pubdate data-updated="true">May 14<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class='post'>
+<b>EDIT:</b>&nbsp;As of version 3, scoped lifestyles are now a first class citizen supported out of the box (<a href="http://docs.castleproject.org/Windsor.Whats-New-In-Windsor-3.ashx">http://docs.castleproject.org/Windsor.Whats-New-In-Windsor-3.ashx</a>)<br />
+<strong>EDIT:</strong> A much better implementation can be found at <a href="https://github.com/castleprojectcontrib/Castle.Windsor.Lifestyles" title="https://github.com/castleprojectcontrib/Castle.Windsor.Lifestyles">https://github.com/castleprojectcontrib/Castle.Windsor.Lifestyles</a><br />
+<br />
+IMO, one of the big missing features of Castle Windsor is that it doesn’t come with a built-in way for dealing with contextual lifestyles.&nbsp; It handles transients and singletons fairly well, but once you get to other lifestyles it’s pretty heavily dependent on having some “state manager” handling the instances.&nbsp; For example, PerWebRequest uses the HttpContext, PerThread uses thread static variables, etc.<br />
+Contextual lifestyles is one of those things where it doesn’t seem all that useful at first, and then when you see the possibilities it’s like getting hit with a huge truck.<br />
+A question was posted to the Castle Google Group recently, which I follow, which illustrates a relatively common example of why someone would want to have a contextual lifestyle.&nbsp; Basically, you have a whole bunch of components you want to resolve, but only within a context.<br />
+Here’s some boiler plate code of the domain model:<br />
+<pre class="csharpcode"><span class="kwrd">public</span> <span class="kwrd">interface</span> IRepository { ISession Session { get; } }
+<span class="kwrd">public</span> <span class="kwrd">interface</span> ISession : IDisposable { <span class="kwrd">bool</span> IsDisposed { get; } }
+<span class="kwrd">public</span> <span class="kwrd">class</span> Session : ISession
+{
+    <span class="kwrd">public</span> <span class="kwrd">bool</span> IsDisposed { get; set; }
+    <span class="kwrd">public</span> <span class="kwrd">void</span> Dispose() { IsDisposed = <span class="kwrd">true</span>; }
+}
+<span class="kwrd">public</span> <span class="kwrd">class</span> Repository1 :IRepository
+{
+    <span class="kwrd">public</span> ISession Session { get; <span class="kwrd">private</span> set; }
+    <span class="kwrd">public</span> Repository1(ISession session){ Session = session; }
+}
+<span class="kwrd">public</span> <span class="kwrd">class</span> Repository2 : IRepository
+{
+    <span class="kwrd">public</span> ISession Session { get; <span class="kwrd">private</span> set; }
+    <span class="kwrd">public</span> Repository2(ISession session){ Session = session; }
+}
+<span class="kwrd">public</span> <span class="kwrd">class</span> Model1
+{
+    <span class="kwrd">public</span> IRepository First { get; <span class="kwrd">private</span> set; }
+    <span class="kwrd">public</span> IRepository Second { get; <span class="kwrd">private</span> set; }
+    <span class="kwrd">public</span> Model1(IRepository first, IRepository second) { First = first; Second = second; }
+}
+<span class="kwrd">public</span> <span class="kwrd">class</span> Model2
+{
+    <span class="kwrd">public</span> IRepository Second { get; <span class="kwrd">private</span> set; }
+    <span class="kwrd">public</span> Model2(IRepository second) { Second = second; }
+}</pre><style type="text/css">
+.csharpcode, .csharpcode pre
+{
+ font-size: small;
+ color: black;
+ font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+ background-color: #ffffff;
+ /*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+ background-color: #f4f4f4;
+ width: 100%;
+ margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style>And here’s the unit test I want to pass:<br />
+<pre class="csharpcode">[Test]
+        <span class="kwrd">public</span> <span class="kwrd">void</span> ResolutionsByContext()
+        {
+            IWindsorContainer root = <span class="kwrd">new</span> WindsorContainer();
+            root.Register(Component.For&lt;Model1&gt;().LifeStyle.Transient,
+                          Component.For&lt;Model2&gt;().LifeStyle.Transient,
+                          Component.For&lt;IRepository&gt;().ImplementedBy&lt;Repository1&gt;().LifeStyle.Transient,
+                          Component.For&lt;IRepository&gt;().ImplementedBy&lt;Repository2&gt;().LifeStyle.Transient,
+                          Component.For&lt;ISession&gt;().ImplementedBy&lt;Session&gt;().LifeStyle.PerContextScope());
+
+            Model1 model1;
+            Model2 model2;
+            ISession session1, session2;
+            <span class="kwrd">using</span> (var context1 = root.BeginLifetimeScope())
+            {
+                model1 = context1.Resolve&lt;Model1&gt;();
+                session1 = model1.First.Session;
+                Assert.AreSame(model1.First.Session, model1.Second.Session);
+                Assert.AreSame(context1.Resolve&lt;ISession&gt;(), context1.Resolve&lt;ISession&gt;());
+
+                <span class="kwrd">using</span> (var context2 = root.BeginLifetimeScope())
+                {
+                    model2 = context2.Resolve&lt;Model2&gt;();
+                    session2 = model2.Second.Session;
+                    Assert.AreNotSame(model1.First.Session, model2.Second.Session);
+
+                    var anotherModel2 = context2.Resolve&lt;Model2&gt;();
+                    Assert.AreSame(anotherModel2.Second.Session, model2.Second.Session);
+
+                    Assert.AreSame(session2, context2.Resolve&lt;ISession&gt;());
+                    Assert.AreNotSame(context1.Resolve&lt;ISession&gt;(), context2.Resolve&lt;ISession&gt;());
+                }
+                Assert.IsTrue(session2.IsDisposed);
+                Assert.IsFalse(session1.IsDisposed);
+            }
+            Assert.IsTrue(session1.IsDisposed);
+        }</pre><style type="text/css">
+.csharpcode, .csharpcode pre
+{
+ font-size: small;
+ color: black;
+ font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+ background-color: #ffffff;
+ /*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+ background-color: #f4f4f4;
+ width: 100%;
+ margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style>  <br />
+I copied the name BeginLifetimeScope from Autofac, which inherently supports contextual scopes as a first-class citizen (of which the test passes).&nbsp; The question now, is how do we get Castle Windsor to do the same?<br />
+Initially, I took a look at ISubDependencyResolver and caching variables.&nbsp; Unfortunately, this didn’t work too well because sub resolvers never got hit if they were resolved from the container directly.<br />
+The next step I tried was with lifestyle managers, but alas, the CreationContext was always transient and I was unable to store any state that distinguished between different context resolutions.<br />
+After digging deeper into the Windsor codebase and getting into the subsystems and handlers, I found a solution that seems to work.&nbsp; It passes the test above, but that’s about it.&nbsp; Test well if you’re gonna use this in production code!!!<br />
+Here goes!<br />
+First, you have a lifestyle manager to distinguish between other lifestyles.<br />
+<pre class="csharpcode"><span class="kwrd">public</span> <span class="kwrd">class</span> ContextualLifestyleManager : AbstractLifestyleManager
+    {
+        <span class="kwrd">private</span> <span class="kwrd">object</span> instance;
+        <span class="kwrd">public</span> <span class="kwrd">override</span> <span class="kwrd">object</span> Resolve(CreationContext context)
+        {
+            <span class="kwrd">return</span> instance ?? (instance = <span class="kwrd">base</span>.Resolve(context));
+        }
+        <span class="kwrd">public</span> <span class="kwrd">override</span> <span class="kwrd">void</span> Dispose()
+        {
+        }
+    }</pre>And finally, the magic happens with this:<br />
+<pre class="csharpcode"><span class="kwrd">public</span> <span class="kwrd">static</span> <span class="kwrd">class</span> ContextualExtensions
+    {
+        <span class="kwrd">public</span> <span class="kwrd">static</span> ComponentRegistration&lt;T&gt; PerContextScope&lt;T&gt;(<span class="kwrd">this</span> LifestyleGroup&lt;T&gt; group)
+        {
+            <span class="kwrd">return</span> group.Custom&lt;ContextualLifestyleManager&gt;();
+        }
+        <span class="kwrd">public</span> <span class="kwrd">static</span> IWindsorContainer BeginLifetimeScope(<span class="kwrd">this</span> IWindsorContainer parent)
+        {
+            var child = <span class="kwrd">new</span> WindsorContainer();
+            var ss = (INamingSubSystem)parent.Kernel.GetSubSystem(SubSystemConstants.NamingKey);
+            <span class="kwrd">foreach</span> (var handler <span class="kwrd">in</span> ss.GetHandlers())
+            {
+                <span class="kwrd">if</span> (handler.ComponentModel.CustomLifestyle == <span class="kwrd">typeof</span>(ContextualLifestyleManager))
+                {
+                    child.Kernel.AddCustomComponent(handler.ComponentModel);
+                }
+            }
+            parent.AddChildContainer(child);
+            <span class="kwrd">return</span> child;
+        }
+    }</pre>First method is just a helper method to be a little more fluent in the registration for when you want many things to have contextual lifestyle.&nbsp; The second method is the guts.&nbsp; Long story short, we create a child container, and duplicate all component models of contextual lifestyle.&nbsp; Thus, whenever components are resolved, the “override” is found in the child and resolved.&nbsp; Anything else will be found in the parent.<br />
+I was initially pretty happy with this, until I profiled the performance.&nbsp; With Autofac, creating and disposing 100,000 contexts took 5ms on my computer.&nbsp; Doing the same with with Windsor took 3.8 <strong>seconds</strong>.&nbsp; Out of curiosity, I profiled again, but this time just creating child containers without copying handlers down: 1.9 seconds.&nbsp; So while this implementation works, it’s not as performant as I’d like it to be….<br />
+Maybe I’ll come up with another solution, but for now if the performance is acceptable maybe this would be useful for others!</div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>bling</div>
+<div class='content'>
+LOL I need to check these comments more often.  Thanks for responding!</div>
+</div>
+<div class='comment'>
+<div class='author'>Krzysztof Koźmic (2)</div>
+<div class='content'>
+That&#39;s my quick and dirty impl based on per-web-request lifestyle that is far more lightweight and should have similar perf characteristics to other lifestyles<br /><br />http://gist.github.com/400979<br />http://gist.github.com/400980</div>
+</div>
+<div class='comment'>
+<div class='author'>Krzysztof Koźmic (2)</div>
+<div class='content'>
+No wonder it is taking so long, you&#39;re doing it in very heavyweight fashion.<br /><br /><br />It can be done w/o nested containers, much more lightweight.</div>
+</div>
+</div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Bailey Ling</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-14T00:00:00+00:00" pubdate data-updated="true">May 14<span>th</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/castle/'>castle</a>, <a class='category' href='/blog/categories/ioc/'>ioc</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bling.github.io//blog/2010/05/14/contextual-lifestyle-with-castle/" data-via="blingcoder" data-counturl="http://bling.github.io//blog/2010/05/14/contextual-lifestyle-with-castle/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2010/04/21/forcing-castle-windsor-to-generate/" title="Previous Post: Forcing Castle Windsor to Generate Class Proxies">&laquo; Forcing Castle Windsor to Generate Class Proxies</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2010/10/04/yet-another-weak-event-for-wpf/" title="Next Post: Yet Another Weak Event Implementation">Yet Another Weak Event Implementation &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/19/on-typescript/">On TypeScript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript/">.NET/WPF to HTML/CSS/Javscript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/10/jumping-on-the-hacker-blog-bandwagon/">Jumping on the hacker blog bandwagon</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/11/writing-macros-with-vim/">Writing Macros with Vim</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/10/love-affair-with-vim/">Love Affair with Vim</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/29/snoopshell-evolution/">SnoopShell: Evolution</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/01/snoopshell-marriage-of-snoop-wpf-and/">SnoopShell: The marriage of Snoop WPF and PowerShell</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/08/n2n-net-2-node-part-1/">N2N: .NET 2 Node: Part 1</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/bling">@bling</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'bling',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Bailey Ling -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

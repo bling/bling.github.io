@@ -1,0 +1,510 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>.NET/WPF to HTML/CSS/Javscript - bling on software development</title>
+  <meta name="author" content="Bailey Ling">
+
+  
+  <meta name="description" content="In the beginning&hellip; For the vast majority of my career I&rsquo;d say I was a Microsoft guy. I took Java in university and toyed around with &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://bling.github.io//blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="bling on software development" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic|Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
+
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38439430-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">bling on software development</a></h1>
+  
+    <h2>when pragmatism meets minimalism</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:bling.github.io/" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">.NET/WPF to HTML/CSS/Javscript</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-13T11:58:00+00:00" pubdate data-updated="true">Apr 13<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h1>In the beginning&hellip;</h1>
+
+<p>For the vast majority of my career I&rsquo;d say I was a Microsoft guy.  I took Java in university and toyed around with Linux at home, but what paid the bills was my knowledge and expertise in Microsoft technologies that I&rsquo;ve built up over the years.</p>
+
+<p>Then Metro and Windows 8 came, and the writing was on the wall.  Microsoft really screwed up.  In their efforts to play catch up, they alienated their business customers and came up with solutions that consumers did not want.  Despite their best efforts they could not stop the avalanche that was Node and HTML5.  Everyone was moving to HTML5, and even Microsoft themselves could not ignore this as now they&rsquo;re supporting hosting Node on Azure.</p>
+
+<!--more-->
+
+
+<p>People who have been in the industry for a long time will say this is just the same desktop vs web debacle and that it is cyclical and that people will realize that the web isn&rsquo;t good enough and go back to desktop applications.  But I think this time is different.  This time around, the browser has hardware acceleration.</p>
+
+<p>Performance has always been the deciding factor for going back to the desktop.  I don&rsquo;t think that argument holds true anymore.  It&rsquo;s clear you can build some amazing applications on the web now that perform well.  You can build an IDE in the browser, like <a href="http://c9.io">Cloud9</a>, or you could create impressive animations like <a href="http://famo.us">Famous</a> demonstrates.  And even 3D games are possible now.</p>
+
+<p>The web is here to stay, and with more and more people having phones and tablets as their primary computing devices (and <em>not</em> a desktop), naturally the technologies we use to build around these devices become more important, i.e. technologies that are cross platform and work on every device from phone to desktop.</p>
+
+<p>So what happens when you throw a C#/WPF guru into the water with no knowledge of HTML, CSS, or Javascript?</p>
+
+<h1>And then there was pain&hellip;</h1>
+
+<p>From Friday to Monday, I went from a Windows 7 machine with Visual Studio, Resharper, PowerShell, Blend to a OSX machine.  I left out the tools on purpose, because literally I had none.  The only thing I knew was that I would be working on HTML/Javascript and I&rsquo;d have to bring my own knives to the kitchen.</p>
+
+<p>Except that I had no knives&hellip;</p>
+
+<h1>Baby steps</h1>
+
+<p>I was comfortable with the command line, since I&rsquo;m a huge Linux fan and prefer a CLI over a GUI most of the time.  But it became clear that I had acquired quite a bit of PowerShell knowledge in my previous efforts to force myself to learn it, i.e. replace <code>cmd.exe</code> with <code>powershell.exe</code>.  When I tried to do <code>ls | % { $_.Length }</code> I was in for a sad realization&hellip;these aren&rsquo;t objects anymore.  Damn, all that muscle memory can&rsquo;t be used here.  Damn you vendor lock in!</p>
+
+<p>But as you can see, I still used <code>ls</code> instead of <code>dir</code> or <code>gcm</code>, so I was already in this weird world of mixing UNIX with PowerShell, and moving back to UNIX wasn&rsquo;t too bad since I didn&rsquo;t have to remember a whole new set of commands for common use cases.  Although it annoys me from time to time that I cannot just <code>(get-date).addweeks(3)</code> from the command line anymore, I&rsquo;m going to have to live without it.</p>
+
+<p>Next up was getting my environment set up.  A quick Google search showed that <a href="https://github.com/mxcl/homebrew">Homebrew</a> was the hotness, so I installed it, and yes, it was pretty cool.  It still has a ways to go before it&rsquo;s comparable to Linux package managers like <code>apt-get</code> or my favorite, Archlinux&rsquo;s <code>pacman</code>, but that is understandable since OSX is not built from the ground up using package managers like Linux distributions typically are.  For the most part, it worked as advertised, and after <code>brew install git</code> I was ready to check out the source code.</p>
+
+<h1>Making the first commit</h1>
+
+<p>Naturally, the first thing I did was download <a href="http://www.jetbrains.com/webstorm/">Webstorm</a>.  Programming without an IDE, yeah right!  I&rsquo;m a professional!</p>
+
+<p>Alright, let&rsquo;s get working.  Let&rsquo;s start up Webstorm.  OK, it&rsquo;s loading&hellip;loading&hellip;loading&hellip;loading.  OK, great, that&rsquo;s a little faster than Visual Studio, so I&rsquo;m happy.  OK, it looks familiar.  It&rsquo;s got a side bar with my files, it&rsquo;s got navigation like Resharper, let&rsquo;s start working!</p>
+
+<p>Blah blah blah, type type type, <code>this.</code> bam!  What the hell?  Why did autocomplete just list everything in the project?  I&rsquo;m in the current file and clearly it only has 4 properties defined.</p>
+
+<h1>And so it starts</h1>
+
+<p>As it turns out, <code>this.foo</code> is the same as <code>this['foo']</code> in Javascript, effectively making every object into a dictionary.  Webstorm&rsquo;s take on this dynamic behavior is to give you every possible option in the project, effectively turning the feature into a glorified spell checker.  Webstorm has an option to disable this, so I did and now it behaved more like what I expected.  Nonetheless, one thing was crystal clear &mdash; the &ldquo;this dot&rdquo; method of working (and discovering the API) is not possible anymore in the Javascript world.</p>
+
+<p>It was apparent now that the IDE was still in its infant stages.  It had some refactorings built in, but for the most part it was not remotely comparable to what was available in Resharper/C# or IntelliJ.</p>
+
+<p>I have always been a big proponent of tools.  And back in the .NET days I found it incredibly frustrating when some coworkers preferred working <em>without</em> Resharper.  Yes, it was much faster.  But even so, even after waiting for Resharper during its sluggish moments, it saved you time in the end, which in my mind meant you were more efficient with your time.</p>
+
+<p>I consider myself lucky because if it weren&rsquo;t for Webstorm being in its infant stages, I probably would not have done what I was going to do next&hellip;venture into vim.</p>
+
+<h1>Vim</h1>
+
+<p>I still can&rsquo;t remember the exact reason why I decided to learn Vim.  The majority of my coworkers were using Sublime Text.  Maybe I was stubborn and wanted to be different.  Maybe I was curious and wanted to see why this 30 year old editor was still so popular.  Whatever the reason, I decided to use Vim code turkey and refused to open anything else up until I convinced myself that I gave it a fair chance.</p>
+
+<p>The rest is <a href="http://bling.github.io/blog/2013/02/10/love-affair-with-vim/">history</a>.</p>
+
+<p>Don&rsquo;t get me wrong, I was <em>hugely</em> unproductive for the first couple weeks.  But I can confidently say that as a proficient Vim user that I am now, I am <em>far</em> more efficient than I was before.</p>
+
+<h1>How much is your time worth?</h1>
+
+<p><img src="/images/editor-learning-curve.png"></p>
+
+<p>I can vouch for this popular comic because I have tried every editor on there (yes even Emacs) and I can confirm that it is true.  There really is no contestant that can match the speed and flexibility of modal editing (and why most other editors out there have a vi emulation mode).  New users are often confused why the default mode in vim&rsquo;s default mode is&hellip;normal mode and not insert mode (like every other editor).</p>
+
+<p>As it turns out, the majority of our time as programmers are spent <em>reading and editing</em> text, not writing it.  And that is why vim&rsquo;s default mode is normal mode.  Right off the bat you have 26 different commands that you can use to operate on text.  Add a shift, and you have another 26 commands.  In normal mode, you have 52 unique operations that is a single/double keystroke away!</p>
+
+<p>Whether it&rsquo;s vim, or emacs, or Sublime text, invest in your editor and learn what it can do for you.  Even if it&rsquo;s just a couple seconds saved here and a couple seconds saved there, do realize that as programmers we stare at a text editor the vast majority of our working hours.  And all those seconds add up.</p>
+
+<h1>Javascipt was easy to learn</h1>
+
+<p>Well, for me it was.  <a href="http://jshint.com">JSHint</a> caught all the newbie mistakes.  C# already had lambdas and closures, so programming in the functional style of Javascript was weird at first, but ultimately it was a subset of the features available to C#.  Basically, if I were to program in C# like I did in Javascript, it would look like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">public</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">()</span> <span class="p">{</span> <span class="c1">// this is effectively window</span>
+</span><span class='line'>    <span class="kt">var</span> <span class="k">namespace</span> <span class="err">= </span><span class="nn">new</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">foo</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">bar</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span>
+</span><span class='line'>                <span class="n">create</span> <span class="p">=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span><span class='line'>                    <span class="k">return</span> <span class="k">new</span> <span class="p">{</span>
+</span><span class='line'>                        <span class="n">hello</span> <span class="p">=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span><span class='line'>                            <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;hello world&quot;</span><span class="p">);</span>
+</span><span class='line'>                        <span class="p">};</span>
+</span><span class='line'>                    <span class="p">};</span>
+</span><span class='line'>                <span class="p">}</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>    <span class="n">namespace</span><span class="p">.</span><span class="n">foo</span><span class="p">.</span><span class="n">bar</span><span class="p">.</span><span class="n">create</span><span class="p">().</span><span class="n">hello</span><span class="p">();</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Yes, there is variable hoisting, privileged vs public functions, truthy and falsey values, prototypical inheritance, etc. but like any language, this is just syntax.  You read tutorials, you try it out, you struggle against your previous habits, but then you figure it out.</p>
+
+<h1>Javascript changed the way I think</h1>
+
+<p>There is something incredibly liberating to just add some random property to an existing object, or change its prototype altogether.  At first I fought against this quite heavily.  We need constants!  We need well defined interfaces!  But in the end, it didn&rsquo;t matter.  We had some conventions, we followed them, and everything worked just fine.</p>
+
+<p>Over time all the things I thought I needed, like intellisense, well defined interfaces, static analysis, I didn&rsquo;t actually need them.  Sure, they are nice to have around, but I was productive all the same without them.  And the users using our application didn&rsquo;t care whether it was written in C#/WPF or in HTML/Javascript, as long as it did was it was supposed to do.</p>
+
+<p>Ultimately, what still mattered were architectural decisions.  We still had services, models, and views for properly separating data from business logic and presentation.  We had unit tests which tested all the functionality.  All of these concepts were very important in C# and WPF, and they are just as important here.</p>
+
+<h1>Javascript made me a better developer</h1>
+
+<p>Writing in Javascript made me realize just how much I relied on IDEs and static analysis.  Sometimes I would purposely abuse the IDE to do the job faster.  For example, if I wanted to refactor something, rather than using refactoring tools, sometimes the easier way is to just delete code and then go through the error list one by one.  Obviously you can&rsquo;t use this technique in Javascript.</p>
+
+<p>Another thing I would do is purposely write bad code, wait for Resharper to come up with the suggestion, and then auto-correct it.</p>
+
+<p>These were backwards patterns.</p>
+
+<p>With Javascript, I found myself being proactive again.  I understood the code more.  I used snippets a lot more.  And since I was using vim, I never <em>ever</em> had to wait for the IDE anymore, which that in itself changed the way I worked.</p>
+
+<h1>CSS is one big hack</h1>
+
+<p>Going from XAML to CSS was extremely annoying and where I&rsquo;ve struggled the most with the transition.  If you want to vertical center something in XAML, you set <code>VerticalAlignment=Center</code> on it and you&rsquo;re done.  How do you do that in CSS?  Well, you could hack it with <code>table-cell</code>, or you could hack it with negative margins, or you could hack it with absolute positioning, or <code>line-height</code> or something else.  But point is, they are all hacks.</p>
+
+<p>Coming from XAML, CSS is one big hack.  I want to create a grid that resizes to the window size, and is always 30% left side and 70% right side.  In XAML, I just do this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;Grid&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;Grid.ColumnDefinitions&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;ColumnDefinition</span> <span class="na">Width=</span><span class="s">&quot;3*&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;ColumnDefinition</span> <span class="na">Width=</span><span class="s">&quot;7*&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/Grid.ColumnDefinitions&gt;</span>
+</span><span class='line'><span class="nt">&lt;/Grid&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In CSS, here&rsquo;s one way:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nf">#left</span> <span class="p">{</span> <span class="k">float</span><span class="o">:</span> <span class="k">left</span><span class="p">;</span> <span class="k">width</span><span class="o">:</span> <span class="m">30</span><span class="o">%</span><span class="p">;</span> <span class="k">height</span><span class="o">:</span> <span class="m">100</span><span class="o">%</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'><span class="nf">#right</span> <span class="p">{</span> <span class="k">margin-left</span><span class="o">:</span> <span class="m">30</span><span class="o">%</span><span class="p">;</span> <span class="k">width</span><span class="o">:</span> <span class="m">100</span><span class="o">%</span><span class="p">;</span> <span class="k">height</span><span class="o">:</span> <span class="m">100</span><span class="o">%</span><span class="p">;</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Again, more hacks.  And it&rsquo;ll only work if the parent element has a size defined.</p>
+
+<p>Or you could do it this way:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nf">#left</span> <span class="p">{</span> <span class="k">position</span><span class="o">:</span> <span class="k">absolute</span><span class="p">;</span> <span class="k">left</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span> <span class="k">right</span><span class="o">:</span> <span class="m">70</span><span class="o">%</span><span class="p">;</span> <span class="k">bottom</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span> <span class="k">top</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'><span class="nf">#right</span> <span class="p">{</span> <span class="k">position</span><span class="o">:</span> <span class="k">absolute</span><span class="p">;</span> <span class="k">left</span><span class="o">:</span> <span class="m">30</span><span class="o">%</span><span class="p">;</span> <span class="k">right</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span> <span class="k">bottom</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span> <span class="k">top</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But it&rsquo;s not going to work if the parent element doesn&rsquo;t have a position of <code>absolute</code> or <code>relative</code>.</p>
+
+<p>Once I let go of trying to be &ldquo;correct&rdquo; from a XAML point of view and just accepted that CSS is just hacks over top of a document model that was never designed to be used like it is today, I actually really enjoyed CSS.</p>
+
+<p>It became a fun challenge, to be presented with a UX design and then think about what kind of hacks I&rsquo;d have to do to make it look exactly the same.  Pseudo elements became my new best friend.</p>
+
+<p>There was no such kind of fun in the XAML world &mdash; if the UX designer could do something in Illustrator, I could do the same in Blend no problem.  There was no challenge.</p>
+
+<p>It was all fun and games until&hellip;</p>
+
+<h1>Enter the beast&hellip;Internet Explorer</h1>
+
+<p>If you charged X amount of dollars for a project, it should be X raised to the number of versions older than IE10 you have to support.  If it&rsquo;s IE9, it&rsquo;s X<sup>1</sup>.  If it&rsquo;s IE8, it&rsquo;s X<sup>2</sup>.  How about IE7, X<sup>3</sup> !</p>
+
+<p>That would cover the cost of sheer annoyance and frustration that developers and UX designers will have to face, not to mention the increased amount of time to support these older browsers.  Oh, you want to support responsive design?  Ooops, IE8 doesn&rsquo;t support media queries.  Oh, you want to have shadows and gradients, well you&rsquo;re only going to get mono colored boxes instead.  Oh, you want it to run fast?  Here, take a 20x performance hit instead.</p>
+
+<p>If you could do it, my recommendation for supporting IE is to have the page be one big fat button that spans the entire screen that says inside with two buttons: install Chrome, or install Firefox.  It worked for Flash and Silverlight!</p>
+
+<h1>Back to an IDE&hellip;maybe?</h1>
+
+<p>I never did venture back.  With my stubbornness to stick with Vim, I ended up installing plugins and optimizing my workflow around it.  I even created my own <a href="http://bling.github.io/dotvim">distribution</a>.  Chrome became my pseudo-IDE and I used its debugging tools heavily.  I used <a href="http://livereload.com">LiveReload</a> from time to time.  And coupled with a zsh terminal I had an extremely productive development environment.  In the end I didn&rsquo;t have a reason to use Webstorm anymore because at this point it <em>slowed me down</em>.</p>
+
+<h1>Programming became fun again</h1>
+
+<p>Perhaps the biggest change I experienced, once I got over the initial pains, was that I really enjoyed programming again.  When I was writing in Javascript, I felt like a hacker.  When I was programming in C#, I felt like a programmer.  Maybe this is temporary and I&rsquo;ll feel the same way when my experience level in Javascript matches with C#.  But for now, I&rsquo;m enjoying that feeling of rediscovering my inner child of building something from nothing.</p>
+
+<h1>Finale</h1>
+
+<p>Wow.  I didn&rsquo;t expect this blog post to be this long.  But if you got this far I hope you enjoyed the read, because I had fun writing about my experiences.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Bailey Ling</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-13T11:58:00+00:00" pubdate data-updated="true">Apr 13<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/coding/'>coding</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bling.github.io//blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript/" data-via="blingcoder" data-counturl="http://bling.github.io//blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/04/10/jumping-on-the-hacker-blog-bandwagon/" title="Previous Post: Jumping on the hacker blog bandwagon">&laquo; Jumping on the hacker blog bandwagon</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/04/19/on-typescript/" title="Next Post: On TypeScript">On TypeScript &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/19/on-typescript/">On TypeScript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript/">.NET/WPF to HTML/CSS/Javscript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/10/jumping-on-the-hacker-blog-bandwagon/">Jumping on the hacker blog bandwagon</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/11/writing-macros-with-vim/">Writing Macros with Vim</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/10/love-affair-with-vim/">Love Affair with Vim</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/29/snoopshell-evolution/">SnoopShell: Evolution</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/01/snoopshell-marriage-of-snoop-wpf-and/">SnoopShell: The marriage of Snoop WPF and PowerShell</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/08/n2n-net-2-node-part-1/">N2N: .NET 2 Node: Part 1</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/bling">@bling</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'bling',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Bailey Ling -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'blingdev';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://bling.github.io//blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript/';
+        var disqus_url = 'http://bling.github.io//blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

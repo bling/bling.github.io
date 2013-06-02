@@ -1,0 +1,294 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Building a Real-time Push App with Silverlight: Part 7 - bling on software development</title>
+  <meta name="author" content="Bailey Ling">
+
+  
+  <meta name="description" content="Infrastructure Refactor A lot of things changed internally, and I mean….a lot…. From an infrastructure standpoint, I decided to remove the &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://bling.github.io//blog/2011/09/16/building-real-time-push-app-with-rx-7">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="bling on software development" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic|Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
+
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38439430-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">bling on software development</a></h1>
+  
+    <h2>when pragmatism meets minimalism</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:bling.github.io/" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Building a Real-time Push App With Silverlight: Part 7</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-09-16T00:00:00+00:00" pubdate data-updated="true">Sep 16<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class='post'>
+<h3></h3> <h3>Infrastructure Refactor</h3> <p>A lot of things changed internally, and I mean….a lot….</p> <p>From an infrastructure standpoint, I decided to remove the dependency on LinqToTwitter, and I replaced it with <a href="https://github.com/danielcrenna/hammock">Hammock</a>.&nbsp; A couple things led me to this decision, one being the Silverlight support wasn’t as good as I’d hoped, and the streaming API implementation was limited.&nbsp; After reading the Twitter documentation I realized that the REST API was super simple and I’d be better off writing a simple interface to it.</p> <p>I heard good things about Hammock, so I decided to give that one a try (I wasn’t going to go as far as reimplementing OAuth).&nbsp; It was pretty easy to set up and in the end I was able to get Twitter working again and with less lines of code compared to the beginning of the refactor.</p> <h3>Goals</h3> <p>I had a couple goals for this project:</p> <ul> <li><strong>Learn:</strong>&nbsp; I was a complete newbie to Reactive Extensions when I started but now I understand it enough to hit the ground running with it.&nbsp; I’m still learning about more conventions available to Caliburn.Micro.  <li><strong>UX:</strong>&nbsp; I wanted to learn a little more about interface design.&nbsp; I wanted to know how little changes to gradients, shadows, colors, etc. could have a radically effect in the end result.  <li><strong>Performance:</strong>&nbsp; It should be fast.&nbsp; It should be able to react to real-time data.&nbsp; And it should do it with low CPU utilization.  <li><strong>Concise:</strong>&nbsp; I am a huge advocate for KISS.&nbsp; I like convention over configuration.&nbsp; I like implementing something in 2 lines of code rather than 20 (assuming it’s not cryptic).&nbsp; As I was writing the app and refactoring, if there was an opportunity to remove a line of code, I did it.&nbsp; The result is that the app currently consists of less than 500 lines of code as of this post (excluding XAML).</li></ul> <h3>Tidbits</h3> <p>What are some interest things I learned?</p> <ul> <li>System.Json is an amazing assembly.&nbsp; All you need to do is invoke JsonValue.Parse on a string and it will create a JsonValue for you, which will be a dictionary of key/value pairs.&nbsp; What’s more, by doing something like “string s = json[“text”]” will do an explicit conversion <strong>and unescape JSON characters</strong>, and <strong>only</strong> via the explicit operator.&nbsp; Calling ToString(), even though converting it to a string, will not unescape.&nbsp; This was completely undocumented and only found when I looked at the source code via Resharper’s external sources feature.  <li>Rx is awesome.&nbsp; When I ran into performance problems of trying to stream tweets from the world that contained the letter ‘a’ all I had to do was add an operator to improve the performance (in this case it was Buffer).&nbsp; It should be noted that it is <em>very important</em> to understand what Rx is doing underneath the hood to realize its benefits.&nbsp; Rx lets you refactor 30 lines of async code into 1 operator, but it’s still doing that 30 lines of code – you just don’t see it.  <li>I really, <em>really</em>, like the conventions available from Caliburn.&nbsp; Some of the features that come out of the box from this very small library saves me from writing a lot of boilerplate code like commands, triggers, and evening bindings (Caliburn will auto bind x:Name to a property).  <li>Twitter’s documentation for <a href="https://dev.twitter.com/docs/streaming-api/user-streams">user streams</a> currently sucks and some trial and error was required to get it working.</li></ul> <p>What is the end result of all this effort?&nbsp; We have a styled Twitter app that can update your status, pull your home/mentions timeline, and most importantly will <strong>stream all subsequent tweets</strong>.&nbsp; There’s no pulling and no limits.&nbsp; You will get a tweet of everyone you follow in real-time as it happens.</p> <p>Moreover, there’s a feature to connect to the Streaming API to search Twitter for <em>anything</em>.&nbsp; To get an idea of what we’re talking about, here’s a full screenshot of it:</p> <p><img style="background-image: none; border-right-width: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh4.ggpht.com/-tB6iLGL85aE/TnNOi7hdq9I/AAAAAAAAAHE/wGjkyHQzYKs/image%25255B20%25255D.png?imgmax=800" width="578" height="328"></p> <p>You read that right.&nbsp; I’m streaming any tweet in the world that has the words ‘and’, ‘the’, ‘yes’, <strong>or</strong> ‘no’ in them.&nbsp; This is streaming around 400kB/s continuously and CPU utilization is under 25%.&nbsp; The tweets are coming so fast it’s impossible to read them (at a rate of 50 tweets/second), so ideally you’d want to specify realistic search terms.</p> <p>Moreover, the majority of the performance cost is actually downloading all the profile images.&nbsp; If I take took out pictures I could stream any tweet in the world that has the letter ‘e’ in it at under 10% CPU.&nbsp; It looks like Twitter limits the rate of tweets to 50 tweets/second because that was the rate for this one as well.</p> <p>Features are minimalistic.&nbsp; You can update your status, but you can’t DM, you can’t RT, you can’t do any of the normal things.&nbsp; My original goal was not to write another Twitter client, but it’s actually quite fun to do so, so I’ll probably eventually get all features in.</p> <p>And as promised, it’s up on <a href="https://github.com/bling/Ping.Pong">GitHub</a>, and version 0.0.0.1 <strong>alpha</strong> (yes! expect bugs!!) is available in the downloads section.&nbsp; Or, here’s a direct link to the XAP file on my <a href="http://dl.dropbox.com/u/2072014/Ping.Pong/PingPongTestPage.html">Dropbox</a>.&nbsp; Have fun!</p>  </div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Bailey Ling</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-09-16T00:00:00+00:00" pubdate data-updated="true">Sep 16<span>th</span>, 2011</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/coding/'>coding</a>, <a class='category' href='/blog/categories/rx/'>rx</a>, <a class='category' href='/blog/categories/twitter/'>twitter</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bling.github.io//blog/2011/09/16/building-real-time-push-app-with-rx-7/" data-via="blingcoder" data-counturl="http://bling.github.io//blog/2011/09/16/building-real-time-push-app-with-rx-7/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/09/13/building-real-time-push-app-with-rx-6/" title="Previous Post: Building a Real-time Push App with Silverlight: Part 6">&laquo; Building a Real-time Push App with Silverlight: Part 6</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2011/09/21/building-real-time-push-app-with-rx-8/" title="Next Post: Building a Real-time Push App with Silverlight: Part 8">Building a Real-time Push App with Silverlight: Part 8 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/19/on-typescript/">On TypeScript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript/">.NET/WPF to HTML/CSS/Javscript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/10/jumping-on-the-hacker-blog-bandwagon/">Jumping on the hacker blog bandwagon</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/11/writing-macros-with-vim/">Writing Macros with Vim</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/10/love-affair-with-vim/">Love Affair with Vim</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/29/snoopshell-evolution/">SnoopShell: Evolution</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/01/snoopshell-marriage-of-snoop-wpf-and/">SnoopShell: The marriage of Snoop WPF and PowerShell</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/08/n2n-net-2-node-part-1/">N2N: .NET 2 Node: Part 1</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/bling">@bling</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'bling',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Bailey Ling -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

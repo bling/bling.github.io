@@ -1,0 +1,326 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>TDD is Design…Unit Testing Legacy Code - bling on software development</title>
+  <meta name="author" content="Bailey Ling">
+
+  
+  <meta name="description" content="I’ve been listening to a bunch of podcasts lately and I came across a gem that was pretty darn useful.&nbsp; It’s pretty old I suppose in technology &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://bling.github.io//blog/2009/10/07/tdd-is-designunit-testing-legacy-code">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="bling on software development" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic|Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
+
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38439430-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">bling on software development</a></h1>
+  
+    <h2>when pragmatism meets minimalism</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:bling.github.io/" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">TDD Is Design…Unit Testing Legacy Code</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-10-07T00:00:00+00:00" pubdate data-updated="true">Oct 7<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class='post'>
+I’ve been listening to a bunch of podcasts lately and I came across a gem that was pretty darn useful.&nbsp; It’s pretty old I suppose in technology standards, since it was recorded January 12, 2009, but it’s still worth a listen.&nbsp; Scott Hanselman talks with Scott Bellware about TDD and design.&nbsp; Find it <a href="http://hanselminutes.com/default.aspx?showID=164">here</a>.<br />
+I’m merely reiterating what Scott has already said in the podcast, but it’s different when I can personally say that I’m joining the ranks of countless others who have seen the benefits of TDD.<br />
+<br />
+Now I can’t say that I’m a 100% TDD practitioner since I’m still learning how to write tests before code effectively, but I’ve already seen the improvements in <b>design</b> in my code many times over just by merely writing unit tests.  At this point I&#8217;d say half of my tests are written first, and the other after are after the fact.<br />
+<br />
+I’ve been through many phases of writing unit tests, it it took me <b>a long time</b> to get it right (and I’m sure I have tons more to go).&nbsp; It takes some experience to figure out how to properly write unit tests, and as a by-product how to make classes easily testable.&nbsp; Code quality and testability go hand-in-hand, so if you find something difficult to test, it’s probably because it was badly designed to start.<br />
+<br />
+The first time I was introduced to unit testing in a work setting was when I was writing C++…and man it was ugly, not because it was C++, but because everything was tightly coupled and everything was a singleton.&nbsp; The fixture setup was outrageous, and it was common to ::Sleep(5000) to make tests pass.&nbsp; Needless to say, my first experience with unit testing was extremely painful.<br />
+<br />
+After a job switch and back to the C# world, I started reading more blogs, listening to more podcasts, and experimenting more.&nbsp; I was given a project to prototype, and for phase 1 it was an entirely DDD experience with I got the opportunity to experiment with writing unit tests the “proper” way with dependency injection and mocking frameworks.<br />
+<blockquote>Unit tests are easy to write when you have highly decoupled components.<br />
+</blockquote>Prototype was finished, and now I was back on the main project, and given a critical task to complete in 2 weeks.&nbsp; I had to modify a class which was 10,000 lines long, which has <b>mega</b> dependencies on everything else in the project.&nbsp; Anything I touched could potentially break something else.&nbsp; And of course…no unit tests whatsoever.&nbsp; I like challenges and responsibility – but this was close to overkill.&nbsp; This thing produces revenue for the company daily so I <i>really</i> don’t want to mess anything up.<br />
+<br />
+First thing I realized was that there’s no way I could possibly write any unit test for something like this.&nbsp; If the class file was 10,000 lines long, you can imagine the average line count for methods.<br />
+<br />
+And of course, the business team didn’t make things easy on me by asking that this feature be turned off in production, but turned on for QA.&nbsp; So, the best option was to refactor the existing logic out to a separate class, extract an interface, implement the new implementation, and swap between the 2 implementations dynamically.<br />
+<br />
+After 4 days of analyzing and reading code to make sure I have a very detailed battle plan, I started extracting the feature to a new class.&nbsp; The first iteration of the class was <b>UGLY</b>.&nbsp; I extracted out the feature I was changing to a separate class, but the method names were archaic and didn’t have any good “flow” to them.&nbsp; I felt that I had to comment my unit tests just so whoever’s reading them could understand what’s happening, which brings up a point.<br />
+<blockquote>If you need to comment your unit tests, you need to redesign the API<br />
+</blockquote>It took many iterations and refactoring of the interface to get it to the point where I found acceptable.&nbsp; If you compared the 1st batch of unit tests to the last batch of unit tests it is like night and day.&nbsp; The end result were unit tests which typically followed a 3-line pattern of setup/execute/verify.&nbsp; Brain dead simple.<br />
+<br />
+The last thing to do was to reintegrate the class into the original class.&nbsp; For this I was back to compile/run/debug/cross-fingers, but I had full confidence that whenever I called anything in the extracted class it would work.<br />
+<br />
+An added benefit is that I didn’t add another 500 lines of code to the already gigantic class.&nbsp; Basically, in summary:    <br />
+<br />
+<ul><li><span style="color: #4c4c4c;">Get super mega long legacy code class files</span> </li>
+<li>Extract feature into separate file as close to original implementation as possible (initially will be copy-paste)</li>
+<li>Run and make sure things don’t die</li>
+<li>Write unit tests for extracted class (forces you to have a better understanding of the code modifications, and the requirements)</li>
+<li>Make sure unit tests cover all possible scenarios of invocation from original class</li>
+<li>Start refactoring and redesigning to better testability, while maintaining all previous tests</li>
+<li>Done!&nbsp; Repeat as necessary!</li>
+</ul></div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Bailey Ling</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-10-07T00:00:00+00:00" pubdate data-updated="true">Oct 7<span>th</span>, 2009</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/testing/'>testing</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bling.github.io//blog/2009/10/07/tdd-is-designunit-testing-legacy-code/" data-via="blingcoder" data-counturl="http://bling.github.io//blog/2009/10/07/tdd-is-designunit-testing-legacy-code/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2009/09/27/dark-color-refresh/" title="Previous Post: Dark Color Refresh">&laquo; Dark Color Refresh</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2009/10/19/improving-your-unit-testing-skills/" title="Next Post: Improving Your Unit Testing Skills">Improving Your Unit Testing Skills &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/19/on-typescript/">On TypeScript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript/">.NET/WPF to HTML/CSS/Javscript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/10/jumping-on-the-hacker-blog-bandwagon/">Jumping on the hacker blog bandwagon</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/11/writing-macros-with-vim/">Writing Macros with Vim</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/10/love-affair-with-vim/">Love Affair with Vim</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/29/snoopshell-evolution/">SnoopShell: Evolution</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/01/snoopshell-marriage-of-snoop-wpf-and/">SnoopShell: The marriage of Snoop WPF and PowerShell</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/08/n2n-net-2-node-part-1/">N2N: .NET 2 Node: Part 1</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/bling">@bling</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'bling',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Bailey Ling -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

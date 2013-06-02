@@ -1,0 +1,366 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Autofac’s extremely powerful and flexible ContainerScope - bling on software development</title>
+  <meta name="author" content="Bailey Ling">
+
+  
+  <meta name="description" content="I need to show some love and support for my favorite IoC tool because it’s most powerful feature needs more explaining.&nbsp; It’s not that the main &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://bling.github.io//blog/2009/09/26/autofacs-extremely-powerful-containerscope">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="bling on software development" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic|Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
+
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38439430-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">bling on software development</a></h1>
+  
+    <h2>when pragmatism meets minimalism</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:bling.github.io/" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Autofac’s Extremely Powerful and Flexible ContainerScope</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-09-26T00:00:00+00:00" pubdate data-updated="true">Sep 26<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class='post'>
+I need to show some love and support for my favorite IoC tool because it’s most powerful feature needs more explaining.&nbsp; It’s not that the main site doesn’t provide a good explanation, because it does, but because most people don’t really understand what the solution is solving.<br />
+The following is on Autofac’s <a href="http://code.google.com/p/autofac/">front page</a>:<br />
+<blockquote><pre class="csharpcode">var container = // ...
+using (var inner = container.CreateInnerContainer())
+{
+  var controller = inner.Resolve&lt;IController&gt;();
+  controller.Execute(); // use controller..
+}</pre></blockquote>The first time I saw this I basically glanced right passed it.&nbsp; Honestly I didn’t think anything of it, and initially the reason I tried out Autofac was for its very slick lambda registrations.&nbsp; I didn’t realize I was in a world of surprises when I finally realized the power and flexibility of Autofac’s container scope.<br />
+<br />
+If <a href="http://www.codinginstinct.com/2008/05/ioc-container-benchmark-rerevisted.html">benchmarks</a> and <a href="http://blog.ashmind.com/index.php/2008/09/08/comparing-net-di-ioc-frameworks-part-2/">feature comparisons</a> are not enough show off Autofac’s features, this blog post hopes to show how to solve “complex” problems elegantly.<br />
+<br />
+Let’s start with the typical NHibernate use-case.&nbsp; Create 1 singleton, create many sessions-per-request.&nbsp; Here’s a solution with <a href="http://nhforge.org/blogs/nhibernate/archive/2009/08/29/part-7-nhibernate-and-ninject-for-asp-net-mvc.aspx">Ninject</a> (not that I’m picking on Ninject, because I love its very slick contextual binding, but because most other IoC containers have a similar solution, like <a href="http://ayende.com/Blog/archive/2007/06/14/Using-NHibernate-Session-Per-Request-with-WCF-Windsor-Integration.aspx">per-session with WCF &amp; Windsor</a>).<br />
+<br />
+Basically, the solutions mentioned above will following an approach like this: <br />
+<br />
+a) Hook into the beginning of a request, and create the ISession from the ISessionFactory. <br />
+b) Set it in the HttpContext.Current or OperationContext.Current’s dictionaries. <br />
+c) Get this property in all the dependencies that need it. <br />
+d) At the end of the request, Dispose() the ISession.<br />
+<br />
+OK, pretty simple and straightforward solution, but there’s one key thing that really bugs me is that by doing this we have introduced a dependency…that is, HttpContext.Current[].&nbsp; That, or you could wrap that around a class, like SessionManager, again, basically coupling to a dependency under a different name.&nbsp; With Autofac, we can bypass steps b and c entirely and only worry about the beginning and end of a request.<br />
+<br />
+To start off, here&#8217;s the basic wiring needed:<br />
+<div style="text-align: left;"><blockquote><div class="csharpcode"><pre class="alt">1:   var cb = new ContainerBuilder(); 
+2:   cb.Register(x =&gt; CreateSessionFactory())
+       .As&lt;ISessionFactory&gt;()
+       .SingletonScoped(); 
+3:   cb.Register(x =&gt; x.Resolve&lt;ISessionFactory&gt;().OpenSession())
+       .As&lt;ISession&gt;()
+       .ContainerScoped(); 
+4:   IContainer c = cb.Build(); 
+5:  &nbsp;
+6:   Assert.AreSame(c.Resolve&lt;ISessionFactory&gt;(), c.Resolve&lt;ISessionFactory&gt;()); 
+7:   Assert.AreSame(c.Resolve&lt;ISession&gt;(), c.Resolve&lt;ISession&gt;()); 
+8:  &nbsp;
+9:   var inner1 = c.CreateInnerContainer(); 
+10:  Assert.AreSame(c.Resolve&lt;ISessionFactory&gt;(), inner1.Resolve&lt;ISessionFactory&gt;()); 
+11:  Assert.AreNotSame(c.Resolve&lt;ISession&gt;(), inner1.Resolve&lt;ISession&gt;());</pre></div></blockquote></div>That’s the configuration.&nbsp; And that’s it!&nbsp; Nothing more.&nbsp; No additional SessionManager class.&nbsp; No need to use HttpContext.Current to store the session.&nbsp; Just pass ISession in with regular constructor/property injection.<br />
+<br />
+Here’s how it works:<br />
+<br />
+Line 2: ISessionFactory is created from CreateSessionFactory().&nbsp; This is a singleton so there will always be one and only one instance of it within the container (and all child containers).<br />
+<br />
+Line 3: This is where it’s interesting.&nbsp; We’re saying “whenever I need an ISession, resolve ISessionFactory and call OpenSession() on it”.&nbsp; Also, by specifying ContainerScope, we only get 1 instance per-container.<br />
+<br />
+And this is where it’s sort of confusing with the terminology.&nbsp; You can think of Autofac as a tree of containers.&nbsp; The root container (variable c in this case), can create children containers (inner1 in this case, and inner1 could create an inner2, and so on).&nbsp; So when something is Singleton scoped, that means that the root container, and any child containers (and child’s children) will only have 1 instance of a service.&nbsp; With ContainerScope, each “node = container” in the tree gets 1 instance.<br />
+<br />
+So back to the unit test above, in line 6 we verify that there is only 1 instance of ISessionFactory.&nbsp; We resolve ISession twice as well, which shows that we get the same instance.<br />
+<br />
+Line 9, we create an inner container, and here we see that ISessionFactory is the same for both the container <b>c</b> and inner container <b>inner1</b>.&nbsp; However, the ISession resolved is <b>different</b> between the two.<br />
+Thus, by specifying ContainerScope, you can very easily group <i>multiple</i> services and dependencies together as one unit.&nbsp; Implementing the Unit of Work pattern is insanely easy with Autofac.&nbsp; Create services A, which depends on B, which depends on C, which all the previous depends on D.&nbsp; Resolve A within a new inner container, and B, C, and D will always be the same instances.&nbsp; Resolve A in another inner container and you will get a new set of instances.<br />
+<br />
+Last but not least, Autofac will automatically call Dispose() on all resolved services once the container is disposed.&nbsp; So for the above, once <b>inner1</b>.Dispose() is called, ISession.Dispose() is automatically called.&nbsp; If you needed to, you can very easily hook into this mechanism and implement things like transactions and rollbacks.<br />
+<br />
+I hope this blog post clears things up a little bit about Autofac’s ContainerScope!</div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>Nick</div>
+<div class='content'>
+Heya Bailey! Think there is more than one &#39;Nick&#39; lurking around your blog (or else I have a case of amnesia :))<br /><br />Love the article, definitely need more info like this around the &#39;net.<br /><br />Nick (mk II)</div>
+</div>
+<div class='comment'>
+<div class='author'>bling</div>
+<div class='content'>
+Thanks for dropping by Nick!<br /><br />To answer the question, what I ended up doing was creating a set of services for each request/session, basically like how I described in my post.<br /><br />I also wrote my own custom interception module (took some ideas from the one in contrib) based on Castle&#39;s DynamicProxy2.<br /><br />The main difference was that my interceptors work iff methods have specific attributes, and with that I was able to selectively say which methods got transactions (among other things).<br /><br />This made things really easy because I could have the transaction span multiple methods as one huge call or a simple 1 line method depending on where my transaction attributes appear in the code.</div>
+</div>
+<div class='comment'>
+<div class='author'>Nick</div>
+<div class='content'>
+I&#39;ve been toying with a similar approach, but I&#39;m uncertain about how to manage NHibernate&#39;s Transaction (Commits and Rollbacks) in this scenario.  I&#39;ve seen examples that make use of TransactionAttributes (in the case of MVC apps), and previously I had been managing transactions in the begin/end request events (in global.asax), but that ties every request to a transaction which isn&#39;t necessary.  How did you go about handling transactions in this scenario?</div>
+</div>
+</div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Bailey Ling</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-09-26T00:00:00+00:00" pubdate data-updated="true">Sep 26<span>th</span>, 2009</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/coding/'>coding</a>, <a class='category' href='/blog/categories/ioc/'>ioc</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bling.github.io//blog/2009/09/26/autofacs-extremely-powerful-containerscope/" data-via="blingcoder" data-counturl="http://bling.github.io//blog/2009/09/26/autofacs-extremely-powerful-containerscope/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2009/09/13/getting-code-coverage-working-on/" title="Previous Post: Getting code coverage working on TeamCity 5 with something other than NUnit">&laquo; Getting code coverage working on TeamCity 5 with something other than NUnit</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2009/09/27/dark-color-refresh/" title="Next Post: Dark Color Refresh">Dark Color Refresh &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/19/on-typescript/">On TypeScript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript/">.NET/WPF to HTML/CSS/Javscript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/10/jumping-on-the-hacker-blog-bandwagon/">Jumping on the hacker blog bandwagon</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/11/writing-macros-with-vim/">Writing Macros with Vim</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/10/love-affair-with-vim/">Love Affair with Vim</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/29/snoopshell-evolution/">SnoopShell: Evolution</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/01/snoopshell-marriage-of-snoop-wpf-and/">SnoopShell: The marriage of Snoop WPF and PowerShell</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/08/n2n-net-2-node-part-1/">N2N: .NET 2 Node: Part 1</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/bling">@bling</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'bling',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Bailey Ling -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

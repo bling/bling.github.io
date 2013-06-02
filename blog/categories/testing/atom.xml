@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: testing | bling on software development]]></title>
+  <link href="http://bling.github.io//blog/categories/testing/atom.xml" rel="self"/>
+  <link href="http://bling.github.io//"/>
+  <updated>2013-06-02T19:15:59+00:00</updated>
+  <id>http://bling.github.io//</id>
+  <author>
+    <name><![CDATA[Bailey Ling]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Auto Mocking NSubstitute with Castle Windsor]]></title>
+    <link href="http://bling.github.io//blog/2010/12/11/auto-mocking-nsubstitute-with-castle/"/>
+    <updated>2010-12-11T00:00:00+00:00</updated>
+    <id>http://bling.github.io//blog/2010/12/11/auto-mocking-nsubstitute-with-castle</id>
+    <content type="html"><![CDATA[<div class='post'>
+<p>I was debating whether to make this blog post because it’s so damn simple to implement, but hey, if it saves someone else time, I did some good.</p> <p>First of all, register an ILazyComponentLoader into Windsor:</p><pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">var c = <span style="color: #0000ff">new</span> WindsorContainer();
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">c.Register(Component.For&lt;LazyComponentAutoMocker&gt;());</pre></pre>
+<p>Then, the implementation of LazyComponentAutoMocker is simply this:</p><pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">public</span> <span style="color: #0000ff">class</span> LazyComponentAutoMocker : ILazyComponentLoader
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">{
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  <span style="color: #0000ff">public</span> IRegistration Load(<span style="color: #0000ff">string</span> key, Type service, IDictionary arguments)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  {
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    <span style="color: #0000ff">return</span> Component.For(service).Instance(Substitute.For(<span style="color: #0000ff">new</span>[] { service }, <span style="color: #0000ff">null</span>));
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">}</pre></pre>
+<p>And you’re done!&nbsp; Here’s a simple unit test example using <strong>only</strong> the code from above:</p><pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">[Test]
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">public</span> <span style="color: #0000ff">void</span> IDictionary_Add_Invoked()
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">{
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  var dict = c.Resolve&lt;IDictionary&gt;();
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  dict.Add(1, 1);
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  dict.Received().Add(1, 1);
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">}</pre></pre>
+<p>That was almost too easy.</p>  </div>
+
+
+<h2>Comments</h2>
+
+
+<div class='comments'>
+<div class='comment'>
+<div class='author'>Randy</div>
+<div class='content'>
+For what it&#39;s worth, I found this helpful. I&#39;m new to Castle Windsor as well as NSubstitute. This post was able to get me going a lot quicker than sifting through documentation. Thanks.</div>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[That Immutable Thing]]></title>
+    <link href="http://bling.github.io//blog/2010/11/08/that-immutable-thing/"/>
+    <updated>2010-11-08T00:00:00+00:00</updated>
+    <id>http://bling.github.io//blog/2010/11/08/that-immutable-thing</id>
+    <content type="html"><![CDATA[<div class='post'>
+<p>Do you have some sort of ImmutableAttribute in your domain that you use to mark classes as immutable?&#160; Have you ever needed to enforce that contract?&#160; Checking for readonly fields isn’t enough?&#160; Well, this weekend I had a code spike that helped solve this problem in my current project.</p>  <p>For this project, I’m using the <a href="http://normproject.org">NoRM</a> driver for <a href="http://www.mongodb.org/">MongoDB</a>, and one of the limitations of the serializer is that all types must be classes, must have a default constructor, and all properties have a public setter.&#160; So, now the domain has a bunch of classes like this:</p>  <pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"><span style="color: #0000ff">public</span> <span style="color: #0000ff">class</span> UserCreatedEvent : IEvent
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">{
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">  <span style="color: #0000ff">public</span> <span style="color: #0000ff">string</span> Name { <span style="color: #0000ff">get</span>; <span style="color: #0000ff">set</span>; }
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">  <span style="color: #0000ff">public</span> UserCreatedEvent() { }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">  <span style="color: #0000ff">public</span> UserCreatedEvent(<span style="color: #0000ff">string</span> name) { Name = name; }
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">}</pre></pre>
+
+<p>That God for code snippets (or Resharper templates).&#160; With so many classes like this that need to get serialized, I wanted to extra sure that no code ever calls the setter method for the Name property.&#160; Thankfully, with some help of <a href="https://github.com/jbevain/cecil">Mono.Cecil</a>, it’s possible.</p>
+<p>First off, you need to define <em>ImmutableAttribute</em> and that add that do classes, and in my case, it is historical domain events that get serialized to an event store.</p>
+<p>Then, you just write a unit test which leverages the power of Mono.Cecil.&#160; It turned out to be pretty simple.&#160; Here’s the code:</p>
+
+<pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"><span style="color: #0000ff">using</span> System.Collections.Generic;
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"><span style="color: #0000ff">using</span> System.Linq;
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"><span style="color: #0000ff">using</span> Mono.Cecil;
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"><span style="color: #0000ff">using</span> Mono.Cecil.Cil;
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"><span style="color: #0000ff">using</span> NUnit.Framework;
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"></pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"><span style="color: #0000ff">namespace</span> blingcode
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">{
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">    [TestFixture]
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">    <span style="color: #0000ff">public</span> <span style="color: #0000ff">class</span> ImmutabilityTests
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">    {
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        <span style="color: #0000ff">private</span> <span style="color: #0000ff">static</span> <span style="color: #0000ff">readonly</span> MethodDefinition[] _setterMethods;
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        <span style="color: #0000ff">private</span> <span style="color: #0000ff">static</span> <span style="color: #0000ff">readonly</span> AssemblyDefinition[] _assemblies;
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"></pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        <span style="color: #0000ff">static</span> ImmutabilityTests()
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        {
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            _assemblies = <span style="color: #0000ff">new</span>[]
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            {
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                AssemblyDefinition.ReadAssembly(<span style="color: #0000ff">typeof</span>(Something).Assembly.Location),
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            };
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            _setterMethods = _assemblies
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                .SelectMany(a =&gt; a.Modules)
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                .SelectMany(m =&gt; m.Types)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                .Where(t =&gt; t.CustomAttributes.Any(attr =&gt; attr.AttributeType.Name.Contains(&quot;<span style="color: #8b0000">ImmutableAttribute</span>&quot;)))
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                .SelectMany(t =&gt; t.Properties)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                .Where(p =&gt; p.SetMethod != <span style="color: #0000ff">null</span>)
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                .Select(m =&gt; m.SetMethod)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                .ToArray();
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"></pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        [Test]
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        <span style="color: #0000ff">public</span> <span style="color: #0000ff">void</span> ClassesWith_ImmutableAttribute_ShouldNotUse_PropertySetters()
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        {
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            AssertForViolations(_assemblies
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                                    .SelectMany(a =&gt; a.Modules)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                                    .SelectMany(m =&gt; m.Types)
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                                    .Where(t =&gt; t.IsClass)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                                    .SelectMany(t =&gt; t.Methods));
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"></pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        [Test]
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        <span style="color: #0000ff">public</span> <span style="color: #0000ff">void</span> ThisFixtureActuallyWorks()
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        {
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            var assembly = AssemblyDefinition.ReadAssembly(<span style="color: #0000ff">typeof</span>(ImmutabilityTests).Assembly.Location);
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            var type = assembly.Modules.SelectMany(m =&gt; m.Types)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                .Where(t =&gt; t.IsClass &amp;&amp; t.FullName.Contains(GetType().FullName)).First();
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            <span style="color: #0000ff">try</span>
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            {
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                AssertForViolations(type.Methods);
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            }
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            <span style="color: #0000ff">catch</span> (AssertionException)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            {
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                Assert.Pass();
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            }
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"></pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        <span style="color: #0000ff">private</span> <span style="color: #0000ff">static</span> <span style="color: #0000ff">void</span> AssertForViolations(IEnumerable&lt;MethodDefinition&gt; potentialMethods)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        {
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            <span style="color: #0000ff">foreach</span> (var method <span style="color: #0000ff">in</span> potentialMethods.Where(m =&gt; m.HasBody))
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            {
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                <span style="color: #0000ff">foreach</span> (Instruction ins <span style="color: #0000ff">in</span> method.Body.Instructions.Where(ins =&gt; ins.OpCode == OpCodes.Callvirt))
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                {
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                    MemberReference mr = ins.Operand <span style="color: #0000ff">as</span> MemberReference;
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                    <span style="color: #0000ff">if</span> (mr != <span style="color: #0000ff">null</span>)
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                    {
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                        var result = _setterMethods.FirstOrDefault(m =&gt; m.FullName == mr.FullName);
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                        <span style="color: #0000ff">if</span> (result != <span style="color: #0000ff">null</span>)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                        {
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                            <span style="color: #0000ff">throw</span> <span style="color: #0000ff">new</span> AssertionException(result + &quot;<span style="color: #8b0000"> was invoked by </span>&quot; + method + &quot;<span style="color: #8b0000">, even though the type has the Immutable attribute.</span>&quot;);
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                        }
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                    }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                }
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        }
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"></pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        <span style="color: #0000ff">private</span> <span style="color: #0000ff">void</span> InvokeCardSetters()
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        {
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            <span style="color: #008000">// this only exists to test that the test does indeed work</span>
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"></pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            var c = <span style="color: #0000ff">new</span> SomeImmutableClass();
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            c.SomeImmutableValue = 123;
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        }
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">    }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">}</pre></pre>
+
+<p>Nothing too complicated.&#160; The main thing to look for is the <strong>callvirt</strong> method, which the C# compiler always generates for classes.&#160; Then, you match the operand to the method definition and viola!</p>  </div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[How to Advocate Test Driven Development (TDD)]]></title>
+    <link href="http://bling.github.io//blog/2010/04/05/how-to-advocate-test-driven-development/"/>
+    <updated>2010-04-05T00:00:00+00:00</updated>
+    <id>http://bling.github.io//blog/2010/04/05/how-to-advocate-test-driven-development</id>
+    <content type="html"><![CDATA[<div class='post'>
+It seems that everywhere you read you will find blog posts asserting that it is difficult to convince others to use TDD, and that everyone talking about TDD is already a believer preaching to other believers.&nbsp; So what's the best way convince others?<br />
+<br />
+I recently convinced a good buddy of me to starting doing TDD in his web development.&nbsp; It took a while, but finally he "saw the light."&nbsp; He tried to relay the information to his coworker, and his coworker didn't react as positively, citing the common "I don't want to waste time writing test code when I know my stuff works."<br />
+<br />
+There are many many <b>MANY</b> hurdles of overcome to begin writing software using TDD.&nbsp; I won't go into great detail since you can easily find relevant posts on the web, but basically, if you <i>have</i> successfully transitioned to TDD that also implies that you have in one way or another adopted&nbsp;<a href="http://butunclebob.com/ArticleS.UncleBob.PrinciplesOfOod">S.O.L.I.D. principles</a> in software design.<br />
+<br />
+The reason I say this is because it is literally impossible to do TDD otherwise.&nbsp; It is just plain <b>painful</b>.&nbsp; I've been there.&nbsp; It is so painful you shout in your head WTF are people thinking, how does this make my job easier?!<br />
+<br />
+Usually when this happens, you'll probably notice that most (or all) of the SOLID principles have been violated one way or another.<br />
+<br />
+&lt;sarcasm&gt;<br />
+<ul><li>Single Responsibility Principle</li>
+
+<ul><li>You mean 1 class to rule them all right?</li>
+</ul>
+<li>Open Closed Principle</li>
+
+<ul><li>Does this have something to do with sockets?</li>
+</ul>
+<li>Liskov Substitution Principle</li>
+
+<ul><li>I thought the point of Object Oriented Programming is that <i>everything</i> is an object!</li>
+</ul>
+<li>Interface Segregation Principle</li>
+
+<ul><li>What's an interface?<br />
+</li>
+</ul>
+<li>Dependency Inversion Principle</li>
+
+<ul><li>I don't get it...I only have 1 super object anyway, I don't have dependencies.</li>
+</ul></ul>&lt;/sarcasm&gt;<br />
+<br />
+Notice that even though this post was supposed to be about how to advocate TDD, I ended up talking about SOLID instead for a bit.&nbsp; What am I trying to get at?<br />
+<br />
+TDD spans from the individual to the team to the organization.&nbsp; You need to be able to tackle it from all points of view.&nbsp; The obsession of the word 'test' has hurt TDD quite a bit.&nbsp; Anyone who's spent any reasonable amount of time will assert that tests are just a means to drive the design.&nbsp; Tests should read like a story (well to programmer eyes), and yes, I said read, as in <i>readable!</i><br />
+<br />
+At the individual level, you must convince them it forces you to design better code, because testing against badly designed code is not worth the pain/annoyance.&nbsp; You must assert that better designed code is good because it also means being more maintainable and less bugs.<br />
+<br />
+At the team level, you must convince that collective code ownership is a good thing.&nbsp; There should never be a situation where "Bob's on vacation, we'll need to put a hold on Project A because only he knows it".&nbsp; Tests serve as a way on how to interact with a specific service, and are a jump-start to figuring out how to actually <b>use</b> a particular service.&nbsp; Moreover, collective code ownership is a means of sharing and distributing knowledge.<br />
+<br />
+At the organizational level, you must convince managers that you are a professional software developer, and that it is your job to produce high quality work.&nbsp; And if what is required to produce high quality work involves writing proper unit tests, following SOLID principles, and even other agile practices like pair programming, then you should be allowed (and optimally encouraged) to do so.&nbsp; Now TDD might not work for everyone, or every organization, but I think everyone owes it to themselves to give it a fair chance.</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Improving Your Unit Testing Skills]]></title>
+    <link href="http://bling.github.io//blog/2009/10/19/improving-your-unit-testing-skills/"/>
+    <updated>2009-10-19T00:00:00+00:00</updated>
+    <id>http://bling.github.io//blog/2009/10/19/improving-your-unit-testing-skills</id>
+    <content type="html"><![CDATA[<p>Unit testing is <em>hard</em>!  I came to this sad realization when my code which had a large test suite with near 100% code coverage, with every thought-of requirement unit tested, failed during integration testing.</p>
+
+<p>How is that possible?  I thought to myself.  Easy&hellip;my unit tests were incomplete.</p>
+
+<p>Writing software is pretty complex stuff.  This is pretty evident in the level of difficulty in determining how good a software developer is.  Do you measure them based on lines of code?  Can you measure on time to completion of tasks?  Or maybe the feature to bugs coming back ratio?  If writing features alone can be this complicated, surely unit testing is just as (or more) complicated.</p>
+
+<p>First, you must be in a place where you can even <em>start</em> testing your code.  Are you using dependency injection?  Are your components decoupled?  Do you understand mocking and can you use mocking frameworks?  You need an understanding of <em>all</em> these concepts before you can even begin to unit test effectively.  Sure, you can unit test without these prerequisites, but the result will likely be pain and more pain because the you&rsquo;ll be spending 90% of your time setting up a test rather than running it.</p>
+
+<p>But back to the point of this post.  Unit testing is hard because it&rsquo;s one of those things where you&rsquo;ll never really know how to do it properly until you&rsquo;ve tried it.  And that assumes you&rsquo;ve even made the step to do testing at all.</p>
+
+<p>I&rsquo;m at the point where my experience with writing unit tests allows me to set them up quickly with relative ease, and perform very concise tests where anyone reading the unit test would say &ldquo;oh, he&rsquo;s testing this requirement.&rdquo;  However, the problem is that there&rsquo;s still 2 problems that are hard to fix:
+1. Is the test <em>actually</em> correct?
+2. Do the tests cover <em>all</em> scenarios?</p>
+
+<p>(1) is obvious.  If the test is wrong then you might as well not run it all.  You must make it absolute goal to trust your unit tests.  If something fails, it should mean there&rsquo;s a serious problem going on.  You can&rsquo;t have &ldquo;oh that&rsquo;s ok, it&rsquo;ll fail half the time, just ignore it.&rdquo;</p>
+
+<p>(2) is also obvious.  If you don&rsquo;t cover all scenarios, then your unit tests aren&rsquo;t complete.</p>
+
+<p>In my case, I actually made both errors.  The unit test in question was calculating the time until minute X.  So in my unit test, I set the current time to 45 minutes.  The target time was 50 minutes.  5 minutes until minute 50, test passed.  Simple right?  Any veteran developer will probably know what I did wrong.  Yep&hellip;if the current time was 51 minutes, I ended up with a negative result.  The test was wrong in that it only tested half of the problem.  It never accounted for time wrapping.  The test was also incomplete, since it didn&rsquo;t test all scenarios.</p>
+
+<p>Fixing the bug was obviously very simple, but it was still ego shattering knowing that all the confidence I had previously was all false.  I went back to check out other scenarios, and was able to come up with some archaic scenarios where my code failed.  And this is probably another area where novice coders will do, where experienced coders will not: I only coded tests per-requirement.  What happens when 2 requirements collide with each other?  Or, what happens when 2 or more requirements must happen at the same time?  With this thinking I was able to come up with a scenario which led to 4 discrete requirements occurring at the same time.  Yeah&hellip;not fun.</p>
+
+<p>Basically, in summary:
+&ndash; Verify that your tests are correct.
+&ndash; Strive to test for less than, equal, and greater than when applicable.
+&ndash; Cross reference all requirements against each other, and chain them if necessary.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[TDD is Design…Unit Testing Legacy Code]]></title>
+    <link href="http://bling.github.io//blog/2009/10/07/tdd-is-designunit-testing-legacy-code/"/>
+    <updated>2009-10-07T00:00:00+00:00</updated>
+    <id>http://bling.github.io//blog/2009/10/07/tdd-is-designunit-testing-legacy-code</id>
+    <content type="html"><![CDATA[<div class='post'>
+I’ve been listening to a bunch of podcasts lately and I came across a gem that was pretty darn useful.&nbsp; It’s pretty old I suppose in technology standards, since it was recorded January 12, 2009, but it’s still worth a listen.&nbsp; Scott Hanselman talks with Scott Bellware about TDD and design.&nbsp; Find it <a href="http://hanselminutes.com/default.aspx?showID=164">here</a>.<br />
+I’m merely reiterating what Scott has already said in the podcast, but it’s different when I can personally say that I’m joining the ranks of countless others who have seen the benefits of TDD.<br />
+<br />
+Now I can’t say that I’m a 100% TDD practitioner since I’m still learning how to write tests before code effectively, but I’ve already seen the improvements in <b>design</b> in my code many times over just by merely writing unit tests.  At this point I'd say half of my tests are written first, and the other after are after the fact.<br />
+<br />
+I’ve been through many phases of writing unit tests, it it took me <b>a long time</b> to get it right (and I’m sure I have tons more to go).&nbsp; It takes some experience to figure out how to properly write unit tests, and as a by-product how to make classes easily testable.&nbsp; Code quality and testability go hand-in-hand, so if you find something difficult to test, it’s probably because it was badly designed to start.<br />
+<br />
+The first time I was introduced to unit testing in a work setting was when I was writing C++…and man it was ugly, not because it was C++, but because everything was tightly coupled and everything was a singleton.&nbsp; The fixture setup was outrageous, and it was common to ::Sleep(5000) to make tests pass.&nbsp; Needless to say, my first experience with unit testing was extremely painful.<br />
+<br />
+After a job switch and back to the C# world, I started reading more blogs, listening to more podcasts, and experimenting more.&nbsp; I was given a project to prototype, and for phase 1 it was an entirely DDD experience with I got the opportunity to experiment with writing unit tests the “proper” way with dependency injection and mocking frameworks.<br />
+<blockquote>Unit tests are easy to write when you have highly decoupled components.<br />
+</blockquote>Prototype was finished, and now I was back on the main project, and given a critical task to complete in 2 weeks.&nbsp; I had to modify a class which was 10,000 lines long, which has <b>mega</b> dependencies on everything else in the project.&nbsp; Anything I touched could potentially break something else.&nbsp; And of course…no unit tests whatsoever.&nbsp; I like challenges and responsibility – but this was close to overkill.&nbsp; This thing produces revenue for the company daily so I <i>really</i> don’t want to mess anything up.<br />
+<br />
+First thing I realized was that there’s no way I could possibly write any unit test for something like this.&nbsp; If the class file was 10,000 lines long, you can imagine the average line count for methods.<br />
+<br />
+And of course, the business team didn’t make things easy on me by asking that this feature be turned off in production, but turned on for QA.&nbsp; So, the best option was to refactor the existing logic out to a separate class, extract an interface, implement the new implementation, and swap between the 2 implementations dynamically.<br />
+<br />
+After 4 days of analyzing and reading code to make sure I have a very detailed battle plan, I started extracting the feature to a new class.&nbsp; The first iteration of the class was <b>UGLY</b>.&nbsp; I extracted out the feature I was changing to a separate class, but the method names were archaic and didn’t have any good “flow” to them.&nbsp; I felt that I had to comment my unit tests just so whoever’s reading them could understand what’s happening, which brings up a point.<br />
+<blockquote>If you need to comment your unit tests, you need to redesign the API<br />
+</blockquote>It took many iterations and refactoring of the interface to get it to the point where I found acceptable.&nbsp; If you compared the 1st batch of unit tests to the last batch of unit tests it is like night and day.&nbsp; The end result were unit tests which typically followed a 3-line pattern of setup/execute/verify.&nbsp; Brain dead simple.<br />
+<br />
+The last thing to do was to reintegrate the class into the original class.&nbsp; For this I was back to compile/run/debug/cross-fingers, but I had full confidence that whenever I called anything in the extracted class it would work.<br />
+<br />
+An added benefit is that I didn’t add another 500 lines of code to the already gigantic class.&nbsp; Basically, in summary:    <br />
+<br />
+<ul><li><span style="color: #4c4c4c;">Get super mega long legacy code class files</span> </li>
+<li>Extract feature into separate file as close to original implementation as possible (initially will be copy-paste)</li>
+<li>Run and make sure things don’t die</li>
+<li>Write unit tests for extracted class (forces you to have a better understanding of the code modifications, and the requirements)</li>
+<li>Make sure unit tests cover all possible scenarios of invocation from original class</li>
+<li>Start refactoring and redesigning to better testability, while maintaining all previous tests</li>
+<li>Done!&nbsp; Repeat as necessary!</li>
+</ul></div>
+
+]]></content>
+  </entry>
+  
+</feed>

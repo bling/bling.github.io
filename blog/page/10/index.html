@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="I need to show some love and support for my favorite IoC tool because it’s most powerful feature needs more explaining.&nbsp; It’s not that the main &hellip;">
+  <meta name="description" content="There you have it!&#160; I started with Visual Studio’s default settings and configured each and every color one by one.&#160; 3 hours later I was &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,43 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/09/27/dark-color-refresh/">Dark Color Refresh</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-09-27T00:00:00+00:00" pubdate data-updated="true">Sep 27<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+<p><a onblur="try {parent.deselectBloggerImageGracefully();} catch(e) {}" href="http://2.bp.blogspot.com/_WZr-_wsEf1c/Sqh4cikBOcI/AAAAAAAAABA/9NgFoJ5lIuA/s1600-h/colorscheme.png"><img style="text-align: center; margin: 0px 15px 10px 0px; width: 252px; display: inline; height: 400px; cursor: hand" id="BLOGGER_PHOTO_ID_5379682186603608514" border="0" alt="" align="left" src="http://2.bp.blogspot.com/_WZr-_wsEf1c/Sqh4cikBOcI/AAAAAAAAABA/9NgFoJ5lIuA/s400/colorscheme.png" /></a> There you have it!&#160; I started with Visual Studio’s default settings and configured each and every color one by one.&#160; 3 hours later I was finished and satisfied with what I have…but I think it was time well spent considering this is what I’m looking at for &gt;= 8 hours a day.</p>  <p>This was a complete re-do of my previous dark theme.&#160; This one is even more colorful than the <a href="http://blingcode.blogspot.com/2008/09/importance-of-color-schemes.html">previous</a>, mainly because <a href="http://www.jetbrains.com/resharper/index.html">Resharper</a> does an amazing job of detecting additional code elements like mutable vs unmutable, or unused code, in additional to many other things.</p>  <p>By the way, you should definitely spend the time to configure your own colors rather than using someone else’s template.&#160; The reason being is that each and every person is different, and obviously will have preferences towards different colors.&#160; I go through different moods and I’ll tweak the theme to be “blue” or “red” for a period of time.</p>  <p>Another reason why you configure it manually is that it drills into your brain more of what each color represents.&#160; If you just used my template you would probably never notice that orange means input parameter, and green is a local variable.</p>  <p>However, one thing you can and should take from this blog post is<strong> not to use pure black or pure white as your background </strong>(did you notice my current line indicator is darker than my background?).&#160; Set your background to (10,10,10) or (245,245,245).&#160; <em>Your eyes will thank me.</em></p>  </div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -432,113 +469,6 @@ So what I&#8217;ve basically done is insert a lambda expression into the constru
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/08/20/session-management-with-nhibernate-and-autofac-1/">Session Management With NHibernate and Autofac</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-08-20T00:00:00+00:00" pubdate data-updated="true">Aug 20<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-NHibernate is a beast let me tell you!  I think I already mentioned this in the previous post, but NHibernate definitely has a VERY high learning curve.  If it wasn&#8217;t for FluentNHibernate I&#8217;d probably still be struggling with XML mapping files right now.<br />
-<br />
-But anywho, it didn&#8217;t take long for me to run into very many problems with NHibernate.  It&#8217;s not really NHibernate&#8217;s fault, but more of maybe I&#8217;m trying to use the wrong tool for the job.<br />
-<br />
-I&#8217;m using DDD for my project, and there&#8217;s a clear separation between the client and the domain.  I got lazy and I didn&#8217;t make any DTOs for my entities, and just used the [DataContract] and [DataMember] to have WCF automatically generated &#8220;DTO&#8221;s for me (and in the options turn OFF reusing assemblies).<br />
-<br />
-(Disclaimer:  I am *not* by any means knowledgeable about NHibernate, but maybe, just maybe what I say here might point other people in the right direction)<br />
-<br />
-OK, all is good.  I can store my entities in the database, I can read them back.  So I fire up my client and read some users, and it blows up.  NHibernate by default lazy loads everything.  Here&#8217;s what I originally had in my UsersRepository<br />
-<pre>public IEnumerable&lt;User&gt; GetAll() {
-using (var session = _factory.OpenSession())
-return session.CreateCriteria&lt;User&gt;().List&lt;User&gt;();
-}
-</pre><br />
-It looks pretty innocent.  But it blows up.  Why?  If Users has a collection of other entities (which mine did), they are <span style="font-weight: bold;">not</span> loaded with the above code.  They are loaded on-demand, i.e. lazy loaded.  So when my WCF service finally returns the objects and serializes them, it pukes and throws an exception because the session was long closed already.<br />
-<br />
-Easy solution was to Not.LazyLoad() all my collections.  Now here&#8217;s what I&#8217;m thinking I might not be using the right tool for the job because I am purposely disabling one of the key features of NHibernate.  By default, caching is always enabled, and I couldn&#8217;t find anywhere how to globally turn it off.  You must go class by class.<br />
-<br />
-OK, so on to my next problem.  I soon ran into issues with entities not being unique.  I would have code like this in my UserService:<br />
-<pre>public void AddProduct(string username, Guid productId) {
-var user = _usersRepository.GetUser(username);
-var product = _productRepository.GetProduct(productId);
-user.Products.Add(product);
-_usersRepository.Store(user);
-}
-</pre><br />
-Again, this puked.  The problem here was after my GetUser call, inside my repository, like my first example, I had a using(session), which closed when the method ended.  Shortly after, I am trying to update the same user, but with a *different* session.  NHibernate doesn&#8217;t like this, an NHibernate.NonUniqueObjectException is thrown, and I had a new problem to deal with.<br />
-<br />
-It became clear I had to actively manage the sessions somehow, and the best place would be to have them in my services, which typically each method had a &#8220;unit of work&#8221; placed on them.<br />
-<br />
-So the goal I wanted to accomplish was to initiate a new session at the beginning of a service method, call a repository multiple times, close the session, and then exit the method.<br />
-<br />
-So how can we achieve that?<br />
-<br />
-I thought of a couple things, and the first thing I did actually was to use AOP style and use Autofac with Castle.DynamicProxy.  I created an interceptor for my service, and before invocation I opened a session, then manually called a property setter for a CurrentSession, and after invocation close the session.<br />
-<br />
-It did the job, but had some problems:<br />
-a) It did a little too much black magic for me.  All methods got intercepted.<br />
-b) I still had to manually set the CurrentSession property of my repositories.  Sooner or later I&#8217;m sure to run in the threading problems.<br />
-<br />
-After I got that half working I scrapped it and tried to come up with something better.  This is what I came up with:<br />
-<pre>public delegate IUsersRepository UsersRepositoryFactory(ISession session);
-
-public class UserService : IUserService {
-public UserService(ISessionFactory factory, UsersRepositoryFactory usersFactory) { ... }
-}
-
-public class UsersRepository : IUsersRepository {
-public UsersRepository(ISession session) { ... }
-}
-</pre><br />
-Now, when I call a method on my UserService, I do this:<br />
-<pre>public void AddProduct(string username, Guid productId) {
-using (var session = _factory.OpenSession()) {
-var userRepo = _userRepoFactory(session);
-var productRepo = _productFactory(session);
-...
-}
-}
-</pre><br />
-And, of course, the Autofac code:<br />
-<pre>b.Register&lt;UsersRepository&gt;().As&lt;IUsersRepository&gt;().FactoryScoped();
-b.RegisterGeneratedFactory&lt;UsersRepositoryFactory&gt;();
-</pre><br />
-More details on the delegate factory <a href="http://code.google.com/p/autofac/wiki/DelegateFactories">here</a>.  But basically, with Autofac I have told it to inject delegates into my UserService, and those delegates can create new instances of my user repository by passing in the current session.<br />
-<br />
-You&#8217;ll also notice I had a products repository as well.  With these delegate factories I can create up multiple repositories on the fly with the same session (and all the good NHibernate stuff that comes with that).<br />
-<br />
-Sure, there&#8217;s a whole bunch of using(var session) boilerplate now, but it&#8217;s explicit, clear, and allows for a lot of fine-grained control.<br />
-<br />
-EDIT: I have since dropped this approach and I&#8217;m currently injecting ISessions into my constructors by using Autofac&#8217;s container-scope (something that took me a while to understand).</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/11/">&larr; Older</a>
@@ -554,6 +484,10 @@ EDIT: I have since dropped this approach and I&#8217;m currently injecting ISess
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/06/02/unite-dot-vim-the-secret-weapon/">Unite.vim, The Secret Weapon</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/04/19/on-typescript/">On TypeScript</a>
@@ -581,10 +515,6 @@ EDIT: I have since dropped this approach and I&#8217;m currently injecting ISess
     
       <li class="post">
         <a href="/blog/2012/07/01/snoopshell-marriage-of-snoop-wpf-and/">SnoopShell: The marriage of Snoop WPF and PowerShell</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/06/08/n2n-net-2-node-part-1/">N2N: .NET 2 Node: Part 1</a>
       </li>
     
   </ul>

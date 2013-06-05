@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="As you all already know if you’re familiar with MongoDB, is that it does not support transactions.&nbsp; The closest thing we have is atomic &hellip;">
+  <meta name="description" content="I took the dive a couple weeks ago and learned how to use Git and fell in love with its simplicity.&nbsp; I don’t know what it is, but after using &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,43 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/12/05/working-in-git-to-working-in-mercurial/">Working in Git to Working in Mercurial</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-05T00:00:00+00:00" pubdate data-updated="true">Dec 5<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+<p>I took the dive a couple weeks ago and learned how to use Git and fell in love with its simplicity.&nbsp; I don’t know what it is, but after using Git every day it actually started to <em>make sense</em> that <strong>git checkout </strong>is used for so many things, which is ironic because prior to using Git, every introductory tutorial I’ve read has always had me thinking, “checkout does what and what and what now??”.</p> <p>So why did I switch to Mercurial?&nbsp; I need to push/pull from a Subversion repository, and I work on Windows.&nbsp; General day to day work is great, but when I needed to <strong>git svn rebase</strong> or <strong>git svn dcommit</strong> it would take so long that I simply left to get coffee.&nbsp; What’s worse, no matter what I set for core.autocrlf I would <em>always</em> get some weird whitespace merging error, when nothing was wrong.&nbsp; It became a regular part of my workflow to just <strong>git rebase –skip</strong> everything because that’s what fixed things.&nbsp; Scary.</p> <p>The crappy Subversion and whitespace support (at least in Windows) led me to try Mercurial.&nbsp; After getting accustomed to Mercurial, they’re actually a lot more similar than they are different.</p> <p>First things first, you need to add the following to your mercurial.ini file in your home directory:</p> <blockquote> <p>[bookmarks]<br>track.current = True</p></blockquote> <p>Here’s a comparison of my typical Git workflow translated to Mercurial:</p> <table border="1" cellspacing="0" cellpadding="2" width="600"> <tbody> <tr> <td valign="top" width="201">&nbsp;</td> <td valign="top" width="199"><strong>Git</strong></td> <td valign="top" width="198"><strong>Mercurial</strong></td></tr> <tr> <td valign="top" width="201">Work on a new feature/bug</td> <td valign="top" width="199">git checkout –b new_feature</td> <td valign="top" width="198">hg book new_feature</td></tr> <tr> <td valign="top" width="201">Hack hack hack</td> <td valign="top" width="199">git add .</td> <td valign="top" width="198">&nbsp;</td></tr> <tr> <td valign="top" width="201">Commit</td> <td valign="top" width="199">git commit –m “done!”</td> <td valign="top" width="198">hg commit –m “done!”</td></tr> <tr> <td valign="top" width="201">Hack more and commit</td> <td valign="top" width="199">git commit –a –m “more hacking”</td> <td valign="top" width="198">hg commit –m “more hacking”</td></tr> <tr> <td valign="top" width="201">Sync with up stream</td> <td valign="top" width="199">git pull master</td> <td valign="top" width="198">hg pull</td></tr> <tr> <td valign="top" width="201">Merge</td> <td valign="top" width="199">git checkout master</td> <td valign="top" width="198">hg merge new_feature</td></tr> <tr> <td valign="top" width="201">&nbsp;</td> <td valign="top" width="199">git merge new_feature</td> <td valign="top" width="198">hg commit –m “merged”</td></tr> <tr> <td valign="top" width="201">Push</td> <td valign="top" width="199">git push</td> <td valign="top" width="198">hg push</td></tr></tbody></table> <p>Notice that they’re practically exactly the same?&nbsp; There are some minor differences.&nbsp; The obvious one being that you need to add into git’s index before committing.&nbsp; And the other I didn’t have to switch branches in Mercurial (more on that later).&nbsp; But aside from that, it’s pretty much the same, <strong>from a user’s point of view</strong>.&nbsp; Check this fantastic <a href="http://stackoverflow.com/questions/1598759/git-and-mercurial-compare-and-contrast">thread</a> on StackOverflow for one of the best comparisons on the net if you want to dive into technical details.</p> <p>So far, there are only two things that bother me having switched:<br>&nbsp; a) No fast-forward merge.&nbsp; You need to manually rebase and then commit.<br>&nbsp; b) No automatic commit after a conflict free merge.</p> <p>These are fairly minor annoyances, but can be scripted/aliased away.&nbsp; Or if you don’t like those defaults in Git, you can override them in the command arguments or set them in gitconfig.&nbsp; Mercurial similarly can change default arguments in its hgrc/mercurial.ini.</p> <p>One of the biggest advantages of Git is easily switching between all its local lightweight branches at lightning speed.&nbsp; Tangled source code is no more!&nbsp; I was confused with Mercurial’s bookmarks when I first used them because all it does is label your head with something.&nbsp; I don’t know why this is, but it is the same as <strong>git checkout –b</strong>, but for some reason I visualized Git “branching” the latest commit into two paths.&nbsp; But how do you do that if they’re the same?&nbsp; It should only branch <em>after</em> a commit which introduces changes, which is what Mercurial does.&nbsp; In this scenario, Mercurial is more explicit, whereas Git is implicit.</p> <p>Using bookmarks, you can mimic Git’s workflow like this:</p> <table border="1" cellspacing="0" cellpadding="2" width="594"> <tbody> <tr> <td valign="top" width="209">&nbsp;</td> <td valign="top" width="192"><strong>Git</strong></td> <td valign="top" width="191"><strong>Mercurial</strong></td></tr> <tr> <td valign="top" width="212">Create a bunch of ‘working areas’</td> <td valign="top" width="190">git branch feature1</td> <td valign="top" width="189">hg book feature1</td></tr> <tr> <td valign="top" width="214">&nbsp;</td> <td valign="top" width="190">git branch feature2</td> <td valign="top" width="189">hg book feature2</td></tr> <tr> <td valign="top" width="216">Switch/commit/hack/commit</td> <td valign="top" width="189">git checkout feature1</td> <td valign="top" width="188">hg up feature1</td></tr> <tr> <td valign="top" width="217">&nbsp;</td> <td valign="top" width="189">git commit –a –m “feature1”</td> <td valign="top" width="188">hg commit –m “feature1”</td></tr> <tr> <td valign="top" width="218">&nbsp;</td> <td valign="top" width="188">git checkout feature2</td> <td valign="top" width="187">hg up feature2</td></tr> <tr> <td valign="top" width="219">&nbsp;</td> <td valign="top" width="188">git commit –a –m “feature1”</td> <td valign="top" width="187">hg commit –m “feature2”</td></tr> <tr> <td valign="top" width="219">Sync up stream</td> <td valign="top" width="188">git pull master</td> <td valign="top" width="187">hg pull</td></tr> <tr> <td valign="top" width="219">&nbsp;</td> <td valign="top" width="188">git checkout master</td> <td valign="top" width="187">hg up default</td></tr> <tr> <td valign="top" width="219">Merge in 1 feature</td> <td valign="top" width="188">git merge feature1</td> <td valign="top" width="187">hg merge feature1</td></tr> <tr> <td valign="top" width="219">&nbsp;</td> <td valign="top" width="188">&nbsp;</td> <td valign="top" width="187">hg commit –m “merged”</td></tr> <tr> <td valign="top" width="219">Delete branch/bookmark</td> <td valign="top" width="188">git branch –d feature1</td> <td valign="top" width="187">hg book –d feature1</td></tr> <tr> <td valign="top" width="219">Push</td> <td valign="top" width="188">git push</td> <td valign="top" width="187">hg push –r tip</td></tr> <tr> <td valign="top" width="219">Switch back and hack again</td> <td valign="top" width="188">git checkout feature2</td> <td valign="top" width="188">hg up feature2</td></tr></tbody></table> <p>The <strong>–r tip</strong> switch on hg push might have raised an eyebrow.&nbsp; This is to tell Mercurial to push all changes that lead to the tip.&nbsp; This will include the changes in <em>feature1</em> that we just merged in, but exclude all the ones in <em>feature2</em>.&nbsp; If you issue a <strong>hg push</strong> it will complain and warn you that you’re going to create multiple heads on the remote repository.&nbsp; This is not what you want since there may be unfinished features, experimental branches, etc.&nbsp; Of course, you can force it anyways, but that’s not a good idea.</p> <p>At first, the tip was most confusing to me because I tried to associate it with Git’s master, which was simply not the case.&nbsp; Tip refers to the newest change that you know about.&nbsp; This can be on any branch or bookmark.&nbsp; Once I understood that, and <strong>stopped trying to create a Git master</strong> equivalent, everything was straightforward.</p> <p>So let’s start with an example.&nbsp; First I create a bookmark <em>feature1</em> after syncing, and then making a commit looks like this: </p> <p><a href="http://lh3.ggpht.com/_WZr-_wsEf1c/TPwPhlbcWDI/AAAAAAAAACo/3_P3Zvqu1pM/s1600-h/image%5B2%5D.png"><img style="background-image: none; border-right-width: 0px; margin: ; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh6.ggpht.com/_WZr-_wsEf1c/TPwPiMwJxgI/AAAAAAAAACs/DmZxxuMAb2k/image_thumb.png?imgmax=800" width="238" height="101"></a></p> <p>And then if you switch to <em>feature2</em> and make a commit, it becomes like this:</p> <p><a href="http://lh3.ggpht.com/_WZr-_wsEf1c/TPwPiUVV5WI/AAAAAAAAACw/9lf6dwKGApg/s1600-h/image%5B5%5D.png"><img style="background-image: none; border-right-width: 0px; margin: ; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh4.ggpht.com/_WZr-_wsEf1c/TPwPi48MmdI/AAAAAAAAAC0/cC_c0bvyvis/image_thumb%5B1%5D.png?imgmax=800" width="243" height="124"></a></p> <p>Here’s where you start thinking, “I don’t have a master which tracks upstream changes, how do I separate my local changes?”&nbsp; And now here’s a situation where Mercurial does more black magic than Git.&nbsp; If there are up stream changes, after issuing <strong>hg pull</strong>, this happens:</p> <p><a href="http://lh5.ggpht.com/_WZr-_wsEf1c/TPwPjPEMdfI/AAAAAAAAAC4/f2d3b4qfeCE/s1600-h/image%5B8%5D.png"><img style="background-image: none; border-right-width: 0px; margin: ; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh4.ggpht.com/_WZr-_wsEf1c/TPwPjRxmonI/AAAAAAAAAC8/IrEz8ig5Zo0/image_thumb%5B2%5D.png?imgmax=800" width="244" height="144"></a></p> <p>Mercurial automatically split my local changes into their own separate branches (actually, <em>heads</em> is the accurate term).&nbsp; After this operation, <strong>tip</strong> is now tracking the changes that I just pulled in from upstream, instead of my bookmark.</p> <p>From here, it’s simply <strong>hg up tip</strong> to switch to the “master” branch.&nbsp; Then a <strong>hg merge feature1; hg commit</strong>, and it becomes like this:</p> <p><a href="http://lh4.ggpht.com/_WZr-_wsEf1c/TPwPjoJRV0I/AAAAAAAAADA/PEV6bis7pJg/s1600-h/image%5B11%5D.png"><img style="background-image: none; border-right-width: 0px; margin: ; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh3.ggpht.com/_WZr-_wsEf1c/TPwPkIS-mgI/AAAAAAAAADE/labU8QL9AKQ/image_thumb%5B3%5D.png?imgmax=800" width="244" height="168"></a></p> <p>Then it’s simply <strong>hg push –r tip</strong>, and you’re good to go.&nbsp; Basically, if you bookmark every feature/bug you work on, then you should only have one branch that doesn’t have a bookmark, which is the same as the ‘master’ branch from Git.</p> <h4>What about Subversion?</h4> <p>Whoops, forgot why I switched in the first place.&nbsp; First, install <a href="http://bitbucket.org/durin42/hgsubversion/wiki/Home">hgsubversion</a>, after that’s set up, simply:</p> <p>hg clone <a href="http://path/to/subversion/repository">http://path/to/subversion/repository</a></p> <p>And then it’s just <strong>hg pull</strong> or <strong>hg push</strong>.&nbsp; Is it really that simple?&nbsp; Yes, yes it is.</p>  </div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -429,355 +466,6 @@ Awesome post.  <br /><br />When I started writing version 2.0 of my EventStore l
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/10/04/yet-another-weak-event-for-wpf/">Yet Another Weak Event Implementation</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-10-04T00:00:00+00:00" pubdate data-updated="true">Oct 4<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I gotta say that WPF is a complete pain in the butt when it comes to memory leaks.  A simple google/bing search shows up more than enough results for weak events, so why am I making yet another blog post about another implementation of a weak event?  Well, if someone else out there happens to have the same requirements/needs that I do right now, maybe this will save them a little time.</p>
-
-<p>In my particular case, I needed to accomplish a couple goals:
-&ndash; Minimal performance hit.  a.k.a minimal use of reflection.
-&ndash; Generic and easy to use.
-&ndash; Thread safe.
-&ndash; Support for explicit registration and unregistration.</p>
-
-<p>One of the better implementations on weak events I found was from Dustin Campbell&rsquo;s <a href="http://diditwith.net/PermaLink,guid,aacdb8ae-7baa-4423-a953-c18c1c7940ab.aspx">blog post</a>.  Unfortunately, this implementation has one major problem: you cannot explicitly unregister.  In fact, the only way an attached listener no longer receives messages is if it gets garbage collected.  Our application happened to use this for an especially special event on our base entity: the infamous INotifyPropertyChanged event.  Needless to say, all the static WPF dependency objects left a whole bunch of leaked WeakReferences around (ironic?).</p>
-
-<p>But wait, doesn&rsquo;t WPF already have a IWeakEventManager that solves this problem?  The problem with this is a couple things.  It&rsquo;s slow.  It&rsquo;s painful to use.  It&rsquo;s annoying to implement.  Long story short, you need a static WeakEventManager for <em>every</em> unique delegate.  Yes, sure, you can override a lot of the methods to make it more perform faster, but if you need to go that far you might as well write your own that does just what you need, and no more.</p>
-
-<p>If you haven&rsquo;t found it already, Daniel Grunwald&rsquo;s Code Project <a href="http://www.codeproject.com/KB/cs/WeakEvents.aspx">article</a> is yet another great resource.  My implementation was a mix of this and the earlier mentioned link.  Anywho, here it is:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-<span class='line-number'>80</span>
-<span class='line-number'>81</span>
-<span class='line-number'>82</span>
-<span class='line-number'>83</span>
-<span class='line-number'>84</span>
-<span class='line-number'>85</span>
-<span class='line-number'>86</span>
-<span class='line-number'>87</span>
-<span class='line-number'>88</span>
-<span class='line-number'>89</span>
-<span class='line-number'>90</span>
-<span class='line-number'>91</span>
-<span class='line-number'>92</span>
-<span class='line-number'>93</span>
-<span class='line-number'>94</span>
-<span class='line-number'>95</span>
-<span class='line-number'>96</span>
-<span class='line-number'>97</span>
-<span class='line-number'>98</span>
-<span class='line-number'>99</span>
-<span class='line-number'>100</span>
-<span class='line-number'>101</span>
-<span class='line-number'>102</span>
-<span class='line-number'>103</span>
-<span class='line-number'>104</span>
-<span class='line-number'>105</span>
-<span class='line-number'>106</span>
-<span class='line-number'>107</span>
-<span class='line-number'>108</span>
-<span class='line-number'>109</span>
-<span class='line-number'>110</span>
-<span class='line-number'>111</span>
-<span class='line-number'>112</span>
-<span class='line-number'>113</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">public</span> <span class="k">interface</span> <span class="n">IWeakEventEntry</span><span class="p">&lt;</span><span class="n">TSender</span><span class="p">,</span> <span class="n">TArgs</span><span class="p">&gt;</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="kt">bool</span> <span class="n">IsAlive</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
-</span><span class='line'>    <span class="kt">bool</span> <span class="nf">Matches</span><span class="p">(</span><span class="n">Delegate</span> <span class="n">handler</span><span class="p">);</span>
-</span><span class='line'>    <span class="kt">bool</span> <span class="nf">Invoke</span><span class="p">(</span><span class="n">SynchronizationPriority</span> <span class="n">priority</span><span class="p">,</span> <span class="n">TSender</span> <span class="n">sender</span><span class="p">,</span> <span class="n">TArgs</span> <span class="n">args</span><span class="p">);</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">WeakEventEntry</span><span class="p">&lt;</span><span class="n">TTarget</span><span class="p">,</span> <span class="n">TSource</span><span class="p">,</span> <span class="n">TArgs</span><span class="p">&gt;</span> <span class="p">:</span> <span class="n">IWeakEventEntry</span><span class="p">&lt;</span><span class="n">TSource</span><span class="p">,</span> <span class="n">TArgs</span><span class="p">&gt;</span> <span class="k">where</span> <span class="n">TTarget</span> <span class="p">:</span> <span class="k">class</span>
-</span><span class='line'><span class="err">{</span>
-</span><span class='line'>    <span class="k">private</span> <span class="k">delegate</span> <span class="k">void</span> <span class="nf">OpenForwardingEventHandler</span><span class="p">(</span><span class="n">TTarget</span> <span class="n">target</span><span class="p">,</span> <span class="n">TSource</span> <span class="n">sender</span><span class="p">,</span> <span class="n">TArgs</span> <span class="n">args</span><span class="p">);</span>
-</span><span class='line'>    <span class="k">private</span> <span class="k">readonly</span> <span class="n">WeakReference</span> <span class="n">m_TargetRef</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">private</span> <span class="k">readonly</span> <span class="n">OpenForwardingEventHandler</span> <span class="n">m_OpenHandler</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">private</span> <span class="k">readonly</span> <span class="n">MethodInfo</span> <span class="n">m_Method</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">public</span> <span class="nf">WeakEventEntry</span><span class="p">(</span><span class="n">Delegate</span> <span class="n">handler</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="n">m_OpenHandler</span> <span class="p">=</span> <span class="p">(</span><span class="n">OpenForwardingEventHandler</span><span class="p">)</span><span class="n">Delegate</span><span class="p">.</span><span class="n">CreateDelegate</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">OpenForwardingEventHandler</span><span class="p">),</span> <span class="k">null</span><span class="p">,</span> <span class="n">handler</span><span class="p">.</span><span class="n">Method</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">m_TargetRef</span> <span class="p">=</span> <span class="k">new</span> <span class="n">WeakReference</span><span class="p">(</span><span class="n">handler</span><span class="p">.</span><span class="n">Target</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">m_Method</span> <span class="p">=</span> <span class="n">handler</span><span class="p">.</span><span class="n">Method</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsAlive</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_TargetRef</span><span class="p">.</span><span class="n">IsAlive</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-</span><span class='line'>    <span class="k">public</span> <span class="kt">bool</span> <span class="nf">Matches</span><span class="p">(</span><span class="n">Delegate</span> <span class="n">handler</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">handler</span><span class="p">.</span><span class="n">Method</span> <span class="p">==</span> <span class="n">m_Method</span> <span class="p">&amp;&amp;</span> <span class="n">handler</span><span class="p">.</span><span class="n">Target</span> <span class="p">==</span> <span class="n">m_TargetRef</span><span class="p">.</span><span class="n">Target</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="k">public</span> <span class="kt">bool</span> <span class="nf">Invoke</span><span class="p">(</span><span class="n">TSource</span> <span class="n">sender</span><span class="p">,</span> <span class="n">TArgs</span> <span class="n">args</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="n">TTarget</span> <span class="n">target</span> <span class="p">=</span> <span class="n">m_TargetRef</span><span class="p">.</span><span class="n">Target</span> <span class="k">as</span> <span class="n">TTarget</span><span class="p">;</span>
-</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">target</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">{</span>
-</span><span class='line'>            <span class="n">m_OpenHandler</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">sender</span><span class="p">,</span> <span class="n">args</span><span class="p">);</span>
-</span><span class='line'>            <span class="k">return</span> <span class="k">true</span><span class="p">;</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>        <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">WeakEvent</span><span class="p">&lt;</span><span class="n">TSender</span><span class="p">,</span> <span class="n">TArgs</span><span class="p">&gt;</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">private</span> <span class="k">static</span> <span class="k">readonly</span> <span class="n">IWeakEventEntry</span><span class="p">&lt;</span><span class="n">TSender</span><span class="p">,</span> <span class="n">TArgs</span><span class="p">&gt;[]</span> <span class="n">EMPTY_LIST</span> <span class="p">=</span> <span class="k">new</span> <span class="n">IWeakEventEntry</span><span class="p">&lt;</span><span class="n">TSender</span><span class="p">,</span> <span class="n">TArgs</span><span class="p">&gt;[</span><span class="m">0</span><span class="p">];</span>
-</span><span class='line'>    <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">IWeakEventEntry</span><span class="p">&lt;</span><span class="n">TSender</span><span class="p">,</span> <span class="n">TArgs</span><span class="p">&gt;&gt;</span> <span class="n">m_Events</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">private</span> <span class="n">IWeakEventEntry</span><span class="p">&lt;</span><span class="n">TSender</span><span class="p">,</span> <span class="n">TArgs</span><span class="p">&gt;[]</span> <span class="n">m_InvokeList</span> <span class="p">=</span> <span class="n">EMPTY_LIST</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">public</span> <span class="kt">int</span> <span class="n">Count</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_InvokeList</span><span class="p">.</span><span class="n">Length</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-</span><span class='line'>    <span class="k">public</span> <span class="k">void</span> <span class="nf">Add</span><span class="p">(</span><span class="n">Delegate</span> <span class="n">handler</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">handler</span><span class="p">.</span><span class="n">Target</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="c1">// static method</span>
-</span><span class='line'>        <span class="p">{</span>
-</span><span class='line'>            <span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">StrongEventEntry</span><span class="p">&lt;</span><span class="n">TSender</span><span class="p">,</span> <span class="n">TArgs</span><span class="p">&gt;(</span><span class="n">handler</span><span class="p">));</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>        <span class="k">else</span>
-</span><span class='line'>        <span class="p">{</span>
-</span><span class='line'>            <span class="n">Type</span> <span class="n">type</span> <span class="p">=</span> <span class="k">typeof</span><span class="p">(</span><span class="n">WeakEventEntry</span><span class="p">&lt;,,&gt;).</span><span class="n">MakeGenericType</span><span class="p">(</span><span class="n">handler</span><span class="p">.</span><span class="n">Target</span><span class="p">.</span><span class="n">GetType</span><span class="p">(),</span> <span class="k">typeof</span><span class="p">(</span><span class="n">TSender</span><span class="p">),</span> <span class="k">typeof</span><span class="p">(</span><span class="n">TArgs</span><span class="p">));</span>
-</span><span class='line'>            <span class="n">Add</span><span class="p">((</span><span class="n">IWeakEventEntry</span><span class="p">&lt;</span><span class="n">TSender</span><span class="p">,</span> <span class="n">TArgs</span><span class="p">&gt;)</span><span class="n">type</span><span class="p">.</span><span class="n">GetConstructors</span><span class="p">()[</span><span class="m">0</span><span class="p">].</span><span class="n">Invoke</span><span class="p">(</span><span class="k">new</span> <span class="kt">object</span><span class="p">[]</span> <span class="p">{</span> <span class="n">handler</span> <span class="p">}));</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="k">public</span> <span class="k">void</span> <span class="nf">Add</span><span class="p">(</span><span class="n">IWeakEventEntry</span><span class="p">&lt;</span><span class="n">TSender</span><span class="p">,</span> <span class="n">TArgs</span><span class="p">&gt;</span> <span class="n">entry</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">lock</span> <span class="p">(</span><span class="k">this</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">{</span>
-</span><span class='line'>            <span class="k">if</span> <span class="p">(</span><span class="n">m_Events</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span>
-</span><span class='line'>                <span class="n">m_Events</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">IWeakEventEntry</span><span class="p">&lt;</span><span class="n">TSender</span><span class="p">,</span> <span class="n">TArgs</span><span class="p">&gt;&gt;(</span><span class="m">8</span><span class="p">);</span>
-</span><span class='line'>            <span class="n">m_Events</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">entry</span><span class="p">);</span>
-</span><span class='line'>            <span class="n">m_InvokeList</span> <span class="p">=</span> <span class="n">m_Events</span><span class="p">.</span><span class="n">ToArray</span><span class="p">();</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="k">public</span> <span class="k">void</span> <span class="nf">Remove</span><span class="p">(</span><span class="n">Delegate</span> <span class="n">handler</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">lock</span> <span class="p">(</span><span class="k">this</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">{</span>
-</span><span class='line'>            <span class="k">if</span> <span class="p">(</span><span class="n">m_Events</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span>
-</span><span class='line'>            <span class="p">{</span>
-</span><span class='line'>                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">m_Events</span><span class="p">.</span><span class="n">Count</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
-</span><span class='line'>                <span class="p">{</span>
-</span><span class='line'>                    <span class="k">if</span> <span class="p">(</span><span class="n">m_Events</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">Matches</span><span class="p">(</span><span class="n">handler</span><span class="p">))</span>
-</span><span class='line'>                    <span class="p">{</span>
-</span><span class='line'>                        <span class="n">m_Events</span><span class="p">.</span><span class="n">RemoveAt</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
-</span><span class='line'>                        <span class="k">break</span><span class="p">;</span>
-</span><span class='line'>                    <span class="p">}</span>
-</span><span class='line'>                <span class="p">}</span>
-</span><span class='line'>                <span class="n">m_InvokeList</span> <span class="p">=</span> <span class="n">m_Events</span><span class="p">.</span><span class="n">ToArray</span><span class="p">();</span>
-</span><span class='line'>            <span class="p">}</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="k">public</span> <span class="k">void</span> <span class="nf">Clear</span><span class="p">()</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">lock</span> <span class="p">(</span><span class="k">this</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">{</span>
-</span><span class='line'>            <span class="n">m_Events</span> <span class="p">=</span> <span class="k">null</span><span class="p">;</span>
-</span><span class='line'>            <span class="n">m_InvokeList</span> <span class="p">=</span> <span class="n">EMPTY_LIST</span><span class="p">;</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="k">public</span> <span class="k">void</span> <span class="nf">Raise</span><span class="p">(</span><span class="n">TSender</span> <span class="n">sender</span><span class="p">,</span> <span class="n">TArgs</span> <span class="n">args</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="n">IWeakEventEntry</span><span class="p">&lt;</span><span class="n">TSender</span><span class="p">,</span> <span class="n">TArgs</span><span class="p">&gt;[]</span> <span class="n">events</span> <span class="p">=</span> <span class="n">m_InvokeList</span><span class="p">;</span>
-</span><span class='line'>        <span class="kt">bool</span> <span class="n">removeDead</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-</span><span class='line'>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="n">events</span><span class="p">.</span><span class="n">Length</span> <span class="p">-</span> <span class="m">1</span><span class="p">;</span> <span class="n">i</span> <span class="p">&gt;=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span><span class="p">--)</span>
-</span><span class='line'>            <span class="n">removeDead</span> <span class="p">|=</span> <span class="p">!</span><span class="n">events</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">Invoke</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">args</span><span class="p">);</span>
-</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">removeDead</span><span class="p">)</span>
-</span><span class='line'>            <span class="n">RemoveDeadReferences</span><span class="p">();</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="k">private</span> <span class="k">void</span> <span class="nf">RemoveDeadReferences</span><span class="p">()</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">lock</span> <span class="p">(</span><span class="k">this</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">{</span>
-</span><span class='line'>            <span class="k">if</span> <span class="p">(</span><span class="n">m_Events</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span>
-</span><span class='line'>            <span class="p">{</span>
-</span><span class='line'>                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="n">m_Events</span><span class="p">.</span><span class="n">Count</span> <span class="p">-</span> <span class="m">1</span><span class="p">;</span> <span class="n">i</span> <span class="p">&gt;=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span><span class="p">--)</span>
-</span><span class='line'>                <span class="p">{</span>
-</span><span class='line'>                    <span class="k">if</span> <span class="p">(!</span><span class="n">m_Events</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">IsAlive</span><span class="p">)</span>
-</span><span class='line'>                        <span class="n">m_Events</span><span class="p">.</span><span class="n">RemoveAt</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
-</span><span class='line'>                <span class="p">}</span>
-</span><span class='line'>                <span class="n">m_InvokeList</span> <span class="p">=</span> <span class="n">m_Events</span><span class="p">.</span><span class="n">ToArray</span><span class="p">();</span>
-</span><span class='line'>            <span class="p">}</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Nothing too special here.  For performance, a copy of all events are stored in an array so that raising events doesn&rsquo;t need to be in a lock.  And while locking on &ldquo;this&rdquo; is usually bad practice, in this case I didn&rsquo;t have any other local variable to use, and creating an object just for the sake of locking in my eyes was not worth it in this scenario.</p>
-
-<p>I tried generating the OpenForwardingDelegate using DynamicMethod and IL, but the result was negligible because it doesn&rsquo;t actually affect invoking speed, which is what we&rsquo;re most concerned with.</p>
-
-<p>Also, if you didn&rsquo;t notice, this implementation also supports static methods attaching, hence why there is an IWeakEventEntry interface.  Here&rsquo;s the StrongEventEntry implementation:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">StrongEventEntry</span><span class="p">&lt;</span><span class="n">TSource</span><span class="p">,</span> <span class="n">TArgs</span><span class="p">&gt;</span> <span class="p">:</span> <span class="n">IWeakEventEntry</span><span class="p">&lt;</span><span class="n">TSource</span><span class="p">,</span> <span class="n">TArgs</span><span class="p">&gt;</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">private</span> <span class="k">delegate</span> <span class="k">void</span> <span class="nf">ClosedForwardingEventHandler</span><span class="p">(</span><span class="n">TSource</span> <span class="n">sender</span><span class="p">,</span> <span class="n">TArgs</span> <span class="n">args</span><span class="p">);</span>
-</span><span class='line'>    <span class="k">private</span> <span class="k">readonly</span> <span class="n">ClosedForwardingEventHandler</span> <span class="n">m_ClosedHandler</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">private</span> <span class="k">readonly</span> <span class="n">MethodInfo</span> <span class="n">m_Method</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsAlive</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="k">true</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-</span><span class='line'>    <span class="k">public</span> <span class="nf">StrongEventEntry</span><span class="p">(</span><span class="n">Delegate</span> <span class="n">handler</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="n">m_Method</span> <span class="p">=</span> <span class="n">handler</span><span class="p">.</span><span class="n">Method</span><span class="p">;</span>
-</span><span class='line'>        <span class="n">m_ClosedHandler</span> <span class="p">=</span> <span class="p">(</span><span class="n">ClosedForwardingEventHandler</span><span class="p">)</span><span class="n">Delegate</span><span class="p">.</span><span class="n">CreateDelegate</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">ClosedForwardingEventHandler</span><span class="p">),</span> <span class="k">null</span><span class="p">,</span> <span class="n">handler</span><span class="p">.</span><span class="n">Method</span><span class="p">);</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="k">public</span> <span class="kt">bool</span> <span class="nf">Matches</span><span class="p">(</span><span class="n">Delegate</span> <span class="n">handler</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">m_Method</span> <span class="p">==</span> <span class="n">handler</span><span class="p">.</span><span class="n">Method</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="k">public</span> <span class="kt">bool</span> <span class="nf">Invoke</span><span class="p">(</span><span class="n">SynchronizationPriority</span> <span class="n">priority</span><span class="p">,</span> <span class="n">TSource</span> <span class="n">sender</span><span class="p">,</span> <span class="n">TArgs</span> <span class="n">args</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="n">m_ClosedHandler</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">args</span><span class="p">);</span>
-</span><span class='line'>        <span class="k">return</span> <span class="k">true</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Last but not least, usage:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">private</span> <span class="n">WeakEvent</span><span class="p">&lt;</span><span class="kt">object</span><span class="p">,</span> <span class="n">PropertyChangedEventArgs</span><span class="p">&gt;</span> <span class="n">_propertyChanged</span> <span class="p">=</span> <span class="k">new</span> <span class="n">WeakEvent</span><span class="p">&lt;</span><span class="kt">object</span><span class="p">,</span> <span class="n">PropertyChangedEventArgs</span><span class="p">&gt;();</span>
-</span><span class='line'><span class="k">public</span> <span class="k">event</span> <span class="n">PropertyChangedEventHandler</span> <span class="n">PropertyChanged</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">add</span> <span class="p">{</span> <span class="n">_propertyChanged</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">value</span><span class="p">);</span> <span class="p">}</span>
-</span><span class='line'>    <span class="k">remove</span> <span class="p">{</span> <span class="n">_propertyChanged</span><span class="p">.</span><span class="n">Remove</span><span class="p">(</span><span class="k">value</span><span class="p">);</span> <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Performance is quite good.  On my machine for 1,000,000,000 invocations, it takes the WeakEvent ~17.3 seconds, vs 4.2 seconds for a standard delegate, for roughly 4x invocation cost.</p>
-
-<p>And there you have it!  A simple, generic, and fast weak event in ~200 lines of code.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/8/">&larr; Older</a>
@@ -793,6 +481,10 @@ Awesome post.  <br /><br />When I started writing version 2.0 of my EventStore l
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/06/02/unite-dot-vim-the-secret-weapon/">Unite.vim, The Secret Weapon</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/04/19/on-typescript/">On TypeScript</a>
@@ -820,10 +512,6 @@ Awesome post.  <br /><br />When I started writing version 2.0 of my EventStore l
     
       <li class="post">
         <a href="/blog/2012/07/01/snoopshell-marriage-of-snoop-wpf-and/">SnoopShell: The marriage of Snoop WPF and PowerShell</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/06/08/n2n-net-2-node-part-1/">N2N: .NET 2 Node: Part 1</a>
       </li>
     
   </ul>

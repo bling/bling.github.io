@@ -4,7 +4,7 @@
   <title><![CDATA[bling on software development]]></title>
   <link href="http://bling.github.io//atom.xml" rel="self"/>
   <link href="http://bling.github.io//"/>
-  <updated>2013-06-02T19:15:59+00:00</updated>
+  <updated>2013-06-05T00:39:37+00:00</updated>
   <id>http://bling.github.io//</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
@@ -12,6 +12,92 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Unite.vim, The Secret Weapon]]></title>
+    <link href="http://bling.github.io//blog/2013/06/02/unite-dot-vim-the-secret-weapon/"/>
+    <updated>2013-06-02T19:34:00+00:00</updated>
+    <id>http://bling.github.io//blog/2013/06/02/unite-dot-vim-the-secret-weapon</id>
+    <content type="html"><![CDATA[<h1>Unite.vim</h1>
+
+<p>What is this?  If you&rsquo;ve never heard of this Vim plugin, then this post is for you.  This is one of those hidden gems in the Vim plugin world that is truly life changing.  I think this plugin is so awesome that I&rsquo;ve decided to write a post dedicated to it so that more people know about it.</p>
+
+<p>The plugin is written by <a href="https://github.com/Shougo">Shougo Matsu</a>.  He has written a lot of other popular plugins, notably <a href="https://github.com/Shougo/neocomplcache.vim">neocomplcache</a> and <a href="https://github.com/Shougo/vimshell.vim">vimshell</a>.  I use a lot of his plugins, so I started to notice when certain plugins started using Unite as a dependency, like <a href="https://github.com/Shougo/neobundle.vim">neobundle</a> and <a href="https://github.com/Shougo/vimfiler.vim">vimfiler</a>.</p>
+
+<p>At first it looked like Unite was just a general purpose library, but I was in for a surprise because it is so much more than that.</p>
+
+<!--more-->
+
+
+<h1>What is it?</h1>
+
+<p>This is the problem I had initially.  The project <a href="https://github.com/Shougo/unite.vim">homepage</a> describes it as &ldquo;&hellip;can search and display information from arbitrary sources like files, buffers, recently used files or registers.&rdquo;  It goes on to show some usage samples, but there is no &ldquo;wow&rdquo; factor.  After reading the readme I still didn&rsquo;t have a clue what the plugin could do.</p>
+
+<p>It wasn&rsquo;t until I stumbled upon terryma&rsquo;s <a href="https://github.com/terryma/dotfiles/blob/master/.vimrc">vimrc</a> (the author of <a href="https://github.com/terryma/vim-multiple-cursors">multiple-cursors</a> and realized that he replaced <a href="https://github.com/kien/ctrlp.vim">ctrlp</a> entirely with unite.  ctrlp is by far one of the best/most popular plugins and for it to be replacable is no easy feat.</p>
+
+<p>So how do you do it?</p>
+
+<h1>First things first, configuration</h1>
+
+<p>Unite is geared towards experienced vim users &mdash; it does not create any bindings by default.  To make any use of it, you will need to create the bindings yourself.</p>
+
+<p>Unite, like all of Shougo&rsquo;s plugins, is <em>very</em> well documented, so feel free to <code>:help unite</code> to figure out how to use the plugin.</p>
+
+<p>If you&rsquo;re lazy, you can go directly to my <a href="https://github.com/bling/dotvim">vim distribution</a> and take the configuration out of there.</p>
+
+<p>But enough talking, here&rsquo;s some quick demos of what Unite can do&hellip;</p>
+
+<h1>What can it do?</h1>
+
+<h2>Replace ctrlp.vim</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>nnoremap &lt;C-p&gt; :Unite file_rec/async&lt;cr&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img class="center" src="http://bling.github.io//images/unite-ctrlp.gif"></p>
+
+<p>Did you notice the async flag?  Unite uses <a href="https://github.com/Shougo/vimproc.vim">vimproc</a> behind the scenes, which affords for searching while it populates the file list in the background.  That is amazing!</p>
+
+<h2>Replace <a href="https://github.com/mileszs/ack.vim">ack.vim</a> (or <a href="https://github.com/rking/ag.vim">ag.vim</a>)</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>nnoremap &lt;space&gt;/ :Unite grep:.&lt;cr&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img class="center" src="http://bling.github.io//images/unite-grep.gif"></p>
+
+<p>Unite can be configured to use <code>grep</code>, <code>ack</code>, or <code>ag</code>, whichever is available.</p>
+
+<h2>Replace <a href="https://github.com/vim-scripts/YankRing.vim">yankring</a>/<a href="https://github.com/maxbrunsfeld/vim-yankstack">yankstack</a></h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>nnoremap &lt;space&gt;y :Unite history/yanks&lt;cr&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img class="center" src="http://bling.github.io//images/unite-yanks.gif"></p>
+
+<p>To be fair, unite cannot bind to a key to cycle the history, so it&rsquo;s not a 100% replacement.  However, if you only rarely use the yankring then this is a pretty good alternative.</p>
+
+<h2>Replace <a href="https://github.com/sjbach/lusty">LustyJuggler</a></h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>nnoremap &lt;space&gt;s :Unite -quick-match buffer&lt;cr&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img class="center" src="http://bling.github.io//images/unite-juggle.gif"></p>
+
+<p>Notice that <code>-quick-match</code> is just a flag, which means you can apply this to any source.</p>
+
+<h2>Bonus</h2>
+
+<p>Ever been jealous of Sublime&rsquo;s auto preview feature?  Well, turns out unite has an <code>-auto-preview</code> flag that you can add.</p>
+
+<h1>Finale</h1>
+
+<p>And that&rsquo;s all I got for now.  I&rsquo;m still learning more about what this plugin can do, but it&rsquo;s definitely earned its place in my vim toolbox.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[On TypeScript]]></title>
@@ -1700,172 +1786,6 @@ Rather than the custom Observable generator with Iterval, why not use Observable
 <p>Performance is still good at 2-5% CPU, even though we’re scrolling through 1000 items in near real-time.</p>
 
 <p>Stay tuned for part 3, when we introduce Expression Blend and go into basics of UI design.  Also, most of this will hit GitHub very soon.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Building a Real-time Push App with Silverlight: Part 1]]></title>
-    <link href="http://bling.github.io//blog/2011/08/26/building-real-time-push-app-with-rx-1/"/>
-    <updated>2011-08-26T00:00:00+00:00</updated>
-    <id>http://bling.github.io//blog/2011/08/26/building-real-time-push-app-with-rx-1</id>
-    <content type="html"><![CDATA[<p>This is the beginning of a multi-part series where I’ll be building an interactive application with Silverlight 5 (still beta as of this post).  It will be built from the ground up and designed predominantly from a “push data” point of view, where the application is reacting to events in real-time, rather than a more traditional “pulling” point of view.  This type of application has exploded with the popularity of social networking and has made a lot of the traditional methods of building applications obsolete.</p>
-
-<p>The best example of this shift is from Twitter.  When it first came out, it was (and still is predominantly) a “pull” model.  You have 200 API requests an hour, and you pull Twitter whenever you want to check if there are tweets of people you follow.  That is changing with the <a href="https://dev.twitter.com/docs/streaming-api">Streaming API</a> where data is “pushed” to you as it comes.  This changes the way you write your code and requires a mind shift much like from for loops to LINQ.</p>
-
-<p>The primary purpose of this series is build a real-time push application from beginning to end, and to show any problems I run along the way, and how I managed to solve them.  This will be my first attempt at building a Silverlight application as well as learning <a href="http://msdn.microsoft.com/en-us/data/gg577609">Reactive Extensions</a>, so I’m bound to run into newbie mistakes.  If you have any tips or pointers please let me know!</p>
-
-<p>Also, rather than doing this from a purely technical point of view, I’m also going to put on my designer hat and talk about UI design, and make it look good with Expression Blend when I get to designing the UI in later parts of this series.  I feel that this is often overlooked and can result in a lot of wasted work and lead to frustration.</p>
-
-<p>This first post will be to get up and running and connected to Twitter with the Streaming API. This was chosen primarily because it is so much data can be pushed through and it can be used to demonstrate how to write a high performance Silverlight application.  It’s one thing to write something maintainable, and another altogether to make it run fast as well.  I’ve worked on too many WPF projects where performance took a back seat, and in WPF particularly this tends to create some massive technical debt.  The Silverlight/WPF technology stack is an exception to the rule and you should definitely think about performance from the start.</p>
-
-<p>Well let’s get started!  We will connect to Twitter, convert it to an Observable, and then display tweets on the UI.</p>
-
-<p>First, let’s create our TwitterStream class:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">TwitterStream</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">static</span> <span class="nf">TwitterStream</span><span class="p">()</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="c1">// this allows http authentication to work</span>
-</span><span class='line'>        <span class="n">WebRequest</span><span class="p">.</span><span class="n">RegisterPrefix</span><span class="p">(</span><span class="s">&quot;http://&quot;</span><span class="p">,</span> <span class="n">System</span><span class="p">.</span><span class="n">Net</span><span class="p">.</span><span class="n">Browser</span><span class="p">.</span><span class="n">WebRequestCreator</span><span class="p">.</span><span class="n">ClientHttp</span><span class="p">);</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">protected</span> <span class="k">readonly</span> <span class="n">StreamParser</span> <span class="n">parser</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StreamParser</span><span class="p">();</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">public</span> <span class="kt">string</span> <span class="n">Username</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
-</span><span class='line'>    <span class="k">public</span> <span class="kt">string</span> <span class="n">Password</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">protected</span> <span class="n">HttpWebRequest</span> <span class="nf">GetRequest</span><span class="p">()</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="kt">var</span> <span class="n">request</span> <span class="p">=</span> <span class="n">WebRequest</span><span class="p">.</span><span class="n">CreateHttp</span><span class="p">(</span><span class="s">&quot;http://stream.twitter.com/1/statuses/sample.json?delimited=length&quot;</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">request</span><span class="p">.</span><span class="n">UseDefaultCredentials</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-</span><span class='line'>        <span class="n">request</span><span class="p">.</span><span class="n">Credentials</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NetworkCredential</span><span class="p">(</span><span class="n">Username</span><span class="p">,</span> <span class="n">Password</span><span class="p">);</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">request</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">public</span> <span class="n">IObservable</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="n">GetJsonStreams</span><span class="p">()</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="kt">var</span> <span class="n">request</span> <span class="p">=</span> <span class="n">GetRequest</span><span class="p">();</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">Observable</span><span class="p">.</span><span class="n">FromAsyncPattern</span><span class="p">&lt;</span><span class="n">WebResponse</span><span class="p">&gt;(</span><span class="n">request</span><span class="p">.</span><span class="n">BeginGetResponse</span><span class="p">,</span> <span class="n">request</span><span class="p">.</span><span class="n">EndGetResponse</span><span class="p">)()</span>
-</span><span class='line'>            <span class="p">.</span><span class="n">Select</span><span class="p">(</span><span class="n">wr</span> <span class="p">=&gt;</span> <span class="n">wr</span><span class="p">.</span><span class="n">GetResponseStream</span><span class="p">())</span>
-</span><span class='line'>            <span class="p">.</span><span class="n">Select</span><span class="p">(</span><span class="n">str</span> <span class="p">=&gt;</span> <span class="n">Observable</span><span class="p">.</span><span class="n">FromAsyncPattern</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[],</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">&gt;(</span><span class="n">str</span><span class="p">.</span><span class="n">BeginRead</span><span class="p">,</span> <span class="n">str</span><span class="p">.</span><span class="n">EndRead</span><span class="p">))</span>
-</span><span class='line'>            <span class="p">.</span><span class="n">SelectMany</span><span class="p">(</span><span class="n">ParseJson</span><span class="p">);</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">private</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="n">ParseJson</span><span class="p">(</span><span class="n">Func</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[],</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="n">IObservable</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;&gt;</span> <span class="n">reader</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="kt">var</span> <span class="n">buffer</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[</span><span class="m">256</span><span class="p">];</span>
-</span><span class='line'>        <span class="kt">int</span> <span class="n">bytesRead</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">while</span> <span class="p">((</span><span class="n">bytesRead</span> <span class="p">=</span> <span class="n">reader</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">buffer</span><span class="p">.</span><span class="n">Length</span><span class="p">).</span><span class="n">Single</span><span class="p">())</span> <span class="p">&gt;</span> <span class="m">0</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">{</span>
-</span><span class='line'>            <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">json</span> <span class="k">in</span> <span class="n">parser</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">bytesRead</span><span class="p">))</span>
-</span><span class='line'>                <span class="k">yield</span> <span class="k">return</span> <span class="n">json</span><span class="p">;</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And that’s all there is to it!  The most complicated part is probably parsing of the JSON documents themselves, which I refactored into its own class.  The algorithm in the parser is pretty primitive, as it just looks for opening { and closing } and calls that a document – nothing more, nothing less.  Note that this uses the deprecated basic HTTP authentication.  Sooner or later it will be shut down and OAuth will be required, so I will upgrade when that happens as I want to keep the amount of written code to a minimum.</p>
-
-<p>Perhaps the more interesting bit is this part with Rx:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="n">Observable</span><span class="p">.</span><span class="n">FromAsyncPattern</span><span class="p">&lt;</span><span class="n">WebResponse</span><span class="p">&gt;(</span><span class="n">request</span><span class="p">.</span><span class="n">BeginGetResponse</span><span class="p">,</span> <span class="n">request</span><span class="p">.</span><span class="n">EndGetResponse</span><span class="p">)()</span>
-</span><span class='line'>    <span class="p">.</span><span class="n">Select</span><span class="p">(</span><span class="n">wr</span> <span class="p">=&gt;</span> <span class="n">wr</span><span class="p">.</span><span class="n">GetResponseStream</span><span class="p">())</span>
-</span><span class='line'>    <span class="p">.</span><span class="n">Select</span><span class="p">(</span><span class="n">str</span> <span class="p">=&gt;</span> <span class="n">Observable</span><span class="p">.</span><span class="n">FromAsyncPattern</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[],</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">&gt;(</span><span class="n">str</span><span class="p">.</span><span class="n">BeginRead</span><span class="p">,</span> <span class="n">str</span><span class="p">.</span><span class="n">EndRead</span><span class="p">))</span>
-</span><span class='line'>    <span class="p">.</span><span class="n">SelectMany</span><span class="p">(</span><span class="n">ParseJson</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The API takes some getting used to, but once you “tune in” things start to make sense.  The <code>FromAsyncPattern</code> essentially wraps the <a href="http://msdn.microsoft.com/en-us/library/ms228969.aspx">APM</a> pattern’s Begin/End calls into a single <code>Func&lt;&gt;</code>, which when invoked gets you the result as if you called End(), however without all the tedious AsyncCallback implementation.</p>
-
-<p>The nice thing about this wrapper Func is that the code starts to look synchronous, even though it is using the ThreadPool behind the scenes.  Next, the response is projected into its response stream, which again is converted to another Observable for reading bytes from the stream until finally it goes into the <code>ParseJson</code> method which projects string results.  This is both good and bad.  Good in that it can make asynchronous code look short and succinct (in this example I’ve wrapped 2 APM pattern calls in 2 lines of code), bad in that anyone inexperienced with Rx will get lost pretty fast.</p>
-
-<p>Rx thus far has been a fairly high learning curve.  Maybe it’s just me.  When I read about it from others, or from seminars, it all makes sense and I generally don’t have any questions.  Trying to use it directly is another story, as there are so many overloads it’s easy to get overwhelmed.  I feel like Intellisense is making things worse!</p>
-
-<p>Carrying on, the code above actually doesn’t do anything yet.  First, you must Subscribe to an observable before it does something, similar to you must foreach on a IEnumerable before it starts pulling data.</p>
-
-<p>To finish off, let’s create a simple Window with a TextBlock bound to a Text property.  This is the constructor:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">public</span> <span class="nf">MainPage</span><span class="p">()</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>   <span class="n">InitializeComponent</span><span class="p">();</span>
-</span><span class='line'>   <span class="n">DataContext</span> <span class="p">=</span> <span class="k">this</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>   <span class="kt">var</span> <span class="n">s</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TwitterStream</span><span class="p">();</span>
-</span><span class='line'>   <span class="n">s</span><span class="p">.</span><span class="n">Username</span> <span class="p">=</span> <span class="s">&quot;blingcoder&quot;</span><span class="p">;</span>
-</span><span class='line'>   <span class="n">s</span><span class="p">.</span><span class="n">Password</span> <span class="p">=</span> <span class="s">&quot;1234567&quot;</span><span class="p">;</span>
-</span><span class='line'>   <span class="n">s</span><span class="p">.</span><span class="n">GetJsonStreams</span><span class="p">()</span>
-</span><span class='line'>       <span class="p">.</span><span class="n">ObserveOnDispatcher</span><span class="p">()</span>
-</span><span class='line'>       <span class="p">.</span><span class="n">Subscribe</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">Text</span> <span class="p">=</span> <span class="n">x</span><span class="p">);</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Perhaps one of the nicest features of Rx is automatic thread switching between background threads and UI threads.  Above, there is a call to <code>ObserveOnDispatcher</code>, which as the name implies it observes to events on the Dispatcher thread :&ndash;).  Rx automatically handles switching to the UI thread so when Subscribe occurs we’re on the UI thread.</p>
-
-<p>Performance is also very good so far, only maxing out at 5% CPU for what appears to be a continuous flood of tweets from random people.</p>
-
-<p>And there you have it!  A completely asynchronous streaming Twitter client in roughly 20 lines of code (minus the parsing).  Stay tuned for part 2&hellip;</p>
 ]]></content>
   </entry>
   

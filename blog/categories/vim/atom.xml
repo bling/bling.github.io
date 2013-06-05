@@ -4,7 +4,7 @@
   <title><![CDATA[Category: vim | bling on software development]]></title>
   <link href="http://bling.github.io//blog/categories/vim/atom.xml" rel="self"/>
   <link href="http://bling.github.io//"/>
-  <updated>2013-06-02T19:15:59+00:00</updated>
+  <updated>2013-06-05T00:39:37+00:00</updated>
   <id>http://bling.github.io//</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
@@ -12,6 +12,92 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Unite.vim, The Secret Weapon]]></title>
+    <link href="http://bling.github.io//blog/2013/06/02/unite-dot-vim-the-secret-weapon/"/>
+    <updated>2013-06-02T19:34:00+00:00</updated>
+    <id>http://bling.github.io//blog/2013/06/02/unite-dot-vim-the-secret-weapon</id>
+    <content type="html"><![CDATA[<h1>Unite.vim</h1>
+
+<p>What is this?  If you&rsquo;ve never heard of this Vim plugin, then this post is for you.  This is one of those hidden gems in the Vim plugin world that is truly life changing.  I think this plugin is so awesome that I&rsquo;ve decided to write a post dedicated to it so that more people know about it.</p>
+
+<p>The plugin is written by <a href="https://github.com/Shougo">Shougo Matsu</a>.  He has written a lot of other popular plugins, notably <a href="https://github.com/Shougo/neocomplcache.vim">neocomplcache</a> and <a href="https://github.com/Shougo/vimshell.vim">vimshell</a>.  I use a lot of his plugins, so I started to notice when certain plugins started using Unite as a dependency, like <a href="https://github.com/Shougo/neobundle.vim">neobundle</a> and <a href="https://github.com/Shougo/vimfiler.vim">vimfiler</a>.</p>
+
+<p>At first it looked like Unite was just a general purpose library, but I was in for a surprise because it is so much more than that.</p>
+
+<!--more-->
+
+
+<h1>What is it?</h1>
+
+<p>This is the problem I had initially.  The project <a href="https://github.com/Shougo/unite.vim">homepage</a> describes it as &ldquo;&hellip;can search and display information from arbitrary sources like files, buffers, recently used files or registers.&rdquo;  It goes on to show some usage samples, but there is no &ldquo;wow&rdquo; factor.  After reading the readme I still didn&rsquo;t have a clue what the plugin could do.</p>
+
+<p>It wasn&rsquo;t until I stumbled upon terryma&rsquo;s <a href="https://github.com/terryma/dotfiles/blob/master/.vimrc">vimrc</a> (the author of <a href="https://github.com/terryma/vim-multiple-cursors">multiple-cursors</a> and realized that he replaced <a href="https://github.com/kien/ctrlp.vim">ctrlp</a> entirely with unite.  ctrlp is by far one of the best/most popular plugins and for it to be replacable is no easy feat.</p>
+
+<p>So how do you do it?</p>
+
+<h1>First things first, configuration</h1>
+
+<p>Unite is geared towards experienced vim users &mdash; it does not create any bindings by default.  To make any use of it, you will need to create the bindings yourself.</p>
+
+<p>Unite, like all of Shougo&rsquo;s plugins, is <em>very</em> well documented, so feel free to <code>:help unite</code> to figure out how to use the plugin.</p>
+
+<p>If you&rsquo;re lazy, you can go directly to my <a href="https://github.com/bling/dotvim">vim distribution</a> and take the configuration out of there.</p>
+
+<p>But enough talking, here&rsquo;s some quick demos of what Unite can do&hellip;</p>
+
+<h1>What can it do?</h1>
+
+<h2>Replace ctrlp.vim</h2>
+
+<p><code>
+nnoremap &lt;C-p&gt; :Unite file_rec/async&lt;cr&gt;
+</code></p>
+
+<p><img class="center" src="/images/unite-ctrlp.gif"></p>
+
+<p>Did you notice the async flag?  Unite uses <a href="https://github.com/Shougo/vimproc.vim">vimproc</a> behind the scenes, which affords for searching while it populates the file list in the background.  That is amazing!</p>
+
+<h2>Replace <a href="https://github.com/mileszs/ack.vim">ack.vim</a> (or <a href="https://github.com/rking/ag.vim">ag.vim</a>)</h2>
+
+<p><code>
+nnoremap &lt;space&gt;/ :Unite grep:.&lt;cr&gt;
+</code></p>
+
+<p><img class="center" src="/images/unite-grep.gif"></p>
+
+<p>Unite can be configured to use <code>grep</code>, <code>ack</code>, or <code>ag</code>, whichever is available.</p>
+
+<h2>Replace <a href="https://github.com/vim-scripts/YankRing.vim">yankring</a>/<a href="https://github.com/maxbrunsfeld/vim-yankstack">yankstack</a></h2>
+
+<p><code>
+nnoremap &lt;space&gt;y :Unite history/yanks&lt;cr&gt;
+</code></p>
+
+<p><img class="center" src="/images/unite-yanks.gif"></p>
+
+<p>To be fair, unite cannot bind to a key to cycle the history, so it&rsquo;s not a 100% replacement.  However, if you only rarely use the yankring then this is a pretty good alternative.</p>
+
+<h2>Replace <a href="https://github.com/sjbach/lusty">LustyJuggler</a></h2>
+
+<p><code>
+nnoremap &lt;space&gt;s :Unite -quick-match buffer&lt;cr&gt;
+</code></p>
+
+<p><img class="center" src="/images/unite-juggle.gif"></p>
+
+<p>Notice that <code>-quick-match</code> is just a flag, which means you can apply this to any source.</p>
+
+<h2>Bonus</h2>
+
+<p>Ever been jealous of Sublime&rsquo;s auto preview feature?  Well, turns out unite has an <code>-auto-preview</code> flag that you can add.</p>
+
+<h1>Finale</h1>
+
+<p>And that&rsquo;s all I got for now.  I&rsquo;m still learning more about what this plugin can do, but it&rsquo;s definitely earned its place in my vim toolbox.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Writing Macros with Vim]]></title>

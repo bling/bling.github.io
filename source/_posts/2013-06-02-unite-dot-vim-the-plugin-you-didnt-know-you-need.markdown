@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Unite.vim, The Secret Weapon"
+title: "Unite.vim, The plugin you didn't know you need"
 date: 2013-06-02 19:34
 comments: true
 categories: vim
@@ -55,7 +55,7 @@ nnoremap <space>/ :Unite grep:.<cr>
 
 {% img center /images/unite-grep.gif %}
 
-Unite can be configured to use `grep`, `ack`, or `ag`, whichever is available.
+Unite can be configured to use `grep`, `ack`, or `ag`; whichever is available.
 
 ## Replace [yankring][m]/[yankstack][n]
 

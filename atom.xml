@@ -4,7 +4,7 @@
   <title><![CDATA[bling on software development]]></title>
   <link href="http://bling.github.io//atom.xml" rel="self"/>
   <link href="http://bling.github.io//"/>
-  <updated>2013-06-05T01:50:30+00:00</updated>
+  <updated>2013-06-05T02:01:10+00:00</updated>
   <id>http://bling.github.io//</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
@@ -18,7 +18,7 @@
     <link href="http://bling.github.io//blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/"/>
     <updated>2013-06-02T19:34:00+00:00</updated>
     <id>http://bling.github.io//blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need</id>
-    <content type="html"><![CDATA[<h1>Unite.vim</h1>
+    <content type="html"><![CDATA[<h1><a href="https://github.com/Shougo/unite.vim">Unite.vim</a></h1>
 
 <p>What is this?  If you&rsquo;ve never heard of this Vim plugin, then this post is for you.  This is one of those hidden gems in the Vim plugin world that is truly life changing.  I think this plugin is so awesome that I&rsquo;ve decided to write a post dedicated to it so that more people know about it.</p>
 

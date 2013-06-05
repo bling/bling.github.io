@@ -6,7 +6,7 @@ comments: true
 categories: vim
 ---
 
-# Unite.vim
+# [Unite.vim][f]
 
 What is this?  If you've never heard of this Vim plugin, then this post is for you.  This is one of those hidden gems in the Vim plugin world that is truly life changing.  I think this plugin is so awesome that I've decided to write a post dedicated to it so that more people know about it.
 

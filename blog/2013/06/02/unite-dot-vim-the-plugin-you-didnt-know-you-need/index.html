@@ -124,9 +124,7 @@
 
 <h1>First things first, configuration</h1>
 
-<p>Unite is geared towards experienced vim users &mdash; it does not create any bindings by default.  To make any use of it, you will need to create the bindings yourself.</p>
-
-<p>Unite, like all of Shougo&rsquo;s plugins, is <em>very</em> well documented, so feel free to <code>:help unite</code> to figure out how to use the plugin.</p>
+<p>Unite is geared towards experienced vim users &mdash; it does not create any bindings by default.  To make any use of it, you will need to create the bindings yourself.  And in certain cases, rather than declaring <code>g:variables</code>, you configure it with method calls, like <code>unite#filters#matcher_default#use(['matcher_fuzzy'])</code>, but thankfully, like all of Shougo&rsquo;s plugins, the plugin is <em>very</em> well documented, so feel free to <code>:help unite</code> to figure out how to use the plugin.</p>
 
 <p>If you&rsquo;re lazy, you can go directly to my <a href="https://github.com/bling/dotvim">vim distribution</a> and take the configuration out of there.</p>
 
@@ -134,7 +132,7 @@
 
 <h1>What can it do?</h1>
 
-<h2>Replace ctrlp.vim</h2>
+<h2>File searching like <a href="https://github.com/kien/ctrlp.vim">ctrlp.vim</a></h2>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>nnoremap &lt;C-p&gt; :Unite file_rec/async&lt;cr&gt;</span></code></pre></td></tr></table></div></figure>
@@ -144,7 +142,7 @@
 
 <p>Did you notice the async flag?  Unite uses <a href="https://github.com/Shougo/vimproc.vim">vimproc</a> behind the scenes, which affords for searching while it populates the file list in the background.  That is amazing!</p>
 
-<h2>Replace <a href="https://github.com/mileszs/ack.vim">ack.vim</a> (or <a href="https://github.com/rking/ag.vim">ag.vim</a>)</h2>
+<h2>Content searching like <a href="https://github.com/mileszs/ack.vim">ack.vim</a> (or <a href="https://github.com/rking/ag.vim">ag.vim</a>)</h2>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>nnoremap &lt;space&gt;/ :Unite grep:.&lt;cr&gt;</span></code></pre></td></tr></table></div></figure>
@@ -154,7 +152,7 @@
 
 <p>Unite can be configured to use <code>grep</code>, <code>ack</code>, or <code>ag</code>; whichever is available.</p>
 
-<h2>Replace <a href="https://github.com/vim-scripts/YankRing.vim">yankring</a>/<a href="https://github.com/maxbrunsfeld/vim-yankstack">yankstack</a></h2>
+<h2>Yank history like <a href="https://github.com/vim-scripts/YankRing.vim">yankring</a>/<a href="https://github.com/maxbrunsfeld/vim-yankstack">yankstack</a></h2>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>nnoremap &lt;space&gt;y :Unite history/yanks&lt;cr&gt;</span></code></pre></td></tr></table></div></figure>
@@ -164,7 +162,7 @@
 
 <p>To be fair, unite cannot bind to a key to cycle the history, so it&rsquo;s not a 100% replacement.  However, if you only rarely use the yankring then this is a pretty good alternative.</p>
 
-<h2>Replace <a href="https://github.com/sjbach/lusty">LustyJuggler</a></h2>
+<h2>Buffer switching like <a href="https://github.com/sjbach/lusty">LustyJuggler</a></h2>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>nnoremap &lt;space&gt;s :Unite -quick-match buffer&lt;cr&gt;</span></code></pre></td></tr></table></div></figure>

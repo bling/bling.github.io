@@ -26,9 +26,7 @@ So how do you do it?
 
 # First things first, configuration
 
-Unite is geared towards experienced vim users -- it does not create any bindings by default.  To make any use of it, you will need to create the bindings yourself.
-
-Unite, like all of Shougo's plugins, is *very* well documented, so feel free to `:help unite` to figure out how to use the plugin.
+Unite is geared towards experienced vim users -- it does not create any bindings by default.  To make any use of it, you will need to create the bindings yourself.  And in certain cases, rather than declaring `g:variables`, you configure it with method calls, like `unite#filters#matcher_default#use(['matcher_fuzzy'])`, but thankfully, like all of Shougo's plugins, the plugin is *very* well documented, so feel free to `:help unite` to figure out how to use the plugin.
 
 If you're lazy, you can go directly to my [vim distribution][z] and take the configuration out of there.
 
@@ -36,7 +34,7 @@ But enough talking, here's some quick demos of what Unite can do...
 
 # What can it do?
 
-## Replace ctrlp.vim
+## File searching like [ctrlp.vim][h]
 
 ```
 nnoremap <C-p> :Unite file_rec/async<cr>
@@ -47,7 +45,7 @@ nnoremap <C-p> :Unite file_rec/async<cr>
 
 Did you notice the async flag?  Unite uses [vimproc][j] behind the scenes, which affords for searching while it populates the file list in the background.  That is amazing!
 
-## Replace [ack.vim][k] (or [ag.vim][l])
+## Content searching like [ack.vim][k] (or [ag.vim][l])
 
 ```
 nnoremap <space>/ :Unite grep:.<cr>
@@ -57,7 +55,7 @@ nnoremap <space>/ :Unite grep:.<cr>
 
 Unite can be configured to use `grep`, `ack`, or `ag`; whichever is available.
 
-## Replace [yankring][m]/[yankstack][n]
+## Yank history like [yankring][m]/[yankstack][n]
 
 ```
 nnoremap <space>y :Unite history/yanks<cr>
@@ -67,7 +65,7 @@ nnoremap <space>y :Unite history/yanks<cr>
 
 To be fair, unite cannot bind to a key to cycle the history, so it's not a 100% replacement.  However, if you only rarely use the yankring then this is a pretty good alternative.
 
-## Replace [LustyJuggler][o]
+## Buffer switching like [LustyJuggler][o]
 
 ```
 nnoremap <space>s :Unite -quick-match buffer<cr>

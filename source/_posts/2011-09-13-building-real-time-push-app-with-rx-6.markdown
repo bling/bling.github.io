@@ -2,7 +2,7 @@
 layout: post
 title: "Building a Real-time Push App with Silverlight: Part 6"
 date: 2011-09-13
-comments: false
+comments: true
 categories: [ twitter, blend ]
 ---
 Back to the UI!

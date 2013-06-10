@@ -2,7 +2,7 @@
 layout: post
 title: "An Unfortunately Too Well Hidden Tool"
 date: 2008-09-20
-comments: false
+comments: true
 ---
 Alright, maybe it's not THAT well hidden, but it's well hidden enough that most developers don't even know it exists, yet I find it to be probably one of the top 3 tools of Visual Studio that I find most useful.
 

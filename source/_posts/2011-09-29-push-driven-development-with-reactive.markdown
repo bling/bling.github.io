@@ -2,7 +2,7 @@
 layout: post
 title: "Push Driven Development with Reactive Extensions"
 date: 2011-09-29
-comments: false
+comments: true
 categories:
  - rx
  - twitter

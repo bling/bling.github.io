@@ -2,7 +2,7 @@
 layout: post
 title: "Love Affair with Vim"
 date: 2013-02-10
-comments: false
+comments: true
 categories:
  - vim
  - software tools

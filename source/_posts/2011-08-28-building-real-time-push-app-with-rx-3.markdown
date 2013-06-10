@@ -2,7 +2,7 @@
 layout: post
 title: "Building a Real-time Push App with Silverlight: Part 3"
 date: 2011-08-28
-comments: false
+comments: true
 categories: [ rx, coding, blend ]
 ---
 In this part we’re going to fire up Expression Blend (the trial for version 5 can be found [here](http://www.microsoft.com/download/en/details.aspx?displaylang=en&amp;id=9503)) and do some UI work.

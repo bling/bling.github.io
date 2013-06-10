@@ -2,7 +2,7 @@
 layout: post
 title: "Injecting Logger Instances Via Convention With Unity"
 date: 2011-08-19
-comments: false
+comments: true
 categories: [ logging, coding ]
 ---
 Let’s say you have something like this:

@@ -2,7 +2,7 @@
 layout: post
 title: "Building a Real-time Push App with Silverlight: Part 5"
 date: 2011-09-08
-comments: false
+comments: true
 categories: [ coding, twitter ]
 ---
 I planned on this post to be about UI, but I’m going to defer that until the next post.  I said from the start of this series that I would document about everything about building the application from scratch, including my struggles.

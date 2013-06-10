@@ -2,7 +2,7 @@
 layout: post
 title: "SnoopShell: Evolution"
 date: 2012-07-29
-comments: false
+comments: true
 categories:
  - coding
  - software tools

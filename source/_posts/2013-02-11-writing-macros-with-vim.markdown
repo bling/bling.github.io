@@ -2,7 +2,7 @@
 layout: post
 title: "Writing Macros with Vim"
 date: 2013-02-11
-comments: false
+comments: true
 categories: vim
 ---
 First, let’s start with a Javascript function:

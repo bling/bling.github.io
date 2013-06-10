@@ -2,7 +2,7 @@
 layout: post
 title: "Building a Real-time Push App with Silverlight: Part 2"
 date: 2011-08-27
-comments: false
+comments: true
 categories: [ rx, coding ]
 ---
 Let’s review the main Rx code from last time:

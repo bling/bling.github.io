@@ -2,7 +2,7 @@
 layout: post
 title: "Building a Real-time Push App with Silverlight: Part 1"
 date: 2011-08-26
-comments: false
+comments: true
 categories: [ rx, coding ]
 ---
 This is the beginning of a multi-part series where I’ll be building an interactive application with Silverlight 5 (still beta as of this post).  It will be built from the ground up and designed predominantly from a “push data” point of view, where the application is reacting to events in real-time, rather than a more traditional “pulling” point of view.  This type of application has exploded with the popularity of social networking and has made a lot of the traditional methods of building applications obsolete.

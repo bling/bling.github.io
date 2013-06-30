@@ -20,7 +20,7 @@ At first it looked like Unite was just a general purpose library, but I was in f
 
 This is the problem I had initially.  The project [homepage][f] describes it as "...can search and display information from arbitrary sources like files, buffers, recently used files or registers."  It goes on to show some usage samples, but there is no "wow" factor.  After reading the readme I still didn't have a clue what the plugin could do.
 
-It wasn't until I stumbled upon terryma's [vimrc][g] (the author of [multiple-cursors][i] and realized that he replaced [ctrlp][h] entirely with unite.  ctrlp is by far one of the best/most popular plugins and for it to be replacable is no easy feat.
+It wasn't until I stumbled upon terryma's [vimrc][g] (the author of [multiple-cursors][i] and realized that he replaced [ctrlp][h] entirely with unite).  ctrlp is by far one of the best/most popular plugins and for it to be replacable is no easy feat.
 
 So how do you do it?
 
@@ -42,7 +42,6 @@ nnoremap <C-p> :Unite file_rec/async<cr>
 
 {% img center /images/unite-ctrlp.gif %}
 
-
 Did you notice the async flag?  Unite uses [vimproc][j] behind the scenes, which affords for searching while it populates the file list in the background.  That is amazing!
 
 ## Content searching like [ack.vim][k] (or [ag.vim][l])
@@ -58,7 +57,8 @@ Unite can be configured to use `grep`, `ack`, or `ag`; whichever is available.
 ## Yank history like [yankring][m]/[yankstack][n]
 
 ```
-nnoremap <space>y :Unite history/yanks<cr>
+let g:unite_source_history_yank_enable = 1
+nnoremap <space>y :Unite history/yank<cr>
 ```
 
 {% img center /images/unite-yanks.gif %}

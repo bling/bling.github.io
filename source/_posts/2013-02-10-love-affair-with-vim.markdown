@@ -31,11 +31,11 @@ However, even though I recommend that anyone interested in taking their Vim skil
 
 # Plugin Management
 
-First things first you will need one plugin to rule them all!  [Pathogen](https://github.com/tpope/vim-pathogen) changed the way people install plugins by utilizing git submodules.  This has the pros and cons of git submodules, i.e. they track a specific version of the external git repository, so if plugin authors decide to rewrite everything new users trying out your distribution will not be in for a nasty surprise.
+First things first you will need one plugin to rule them all!  [Pathogen](https://github.com/tpope/vim-pathogen) changed the way people install plugins by utilizing git submodules.  This has the pros and cons of git submodules, i.e. they track a specific version of the external git repository, so if external plugins are updated frequently you have to manually update all your submodules.
 
-However, this rarely happens and usually you just want the latest version.  [Vundle](https://github.com/gmarik/vundle) takes the management one step further and will automatically grab source code from Github for you (as well as automatically updating everything to the latest version).
+However, more often than not, you just want the latest version.  [Vundle](https://github.com/gmarik/vundle) takes the management one step further and will automatically grab source code from Github for you (as well as automatically updating everything to the latest version).
 
-The last one and least known is [neobundle](https://github.com/Shougo/neobundle.vim), which enhances Vundle even further and allows you to specify installation steps like compiling something.
+The last one and least known is [NeoBundle](https://github.com/Shougo/neobundle.vim), which is like Vundle on steroids.  It adds a whole ton of new features like allowing you to specify installation steps for compiling something.
 
 # Fuzzy File Searching
 
@@ -57,6 +57,8 @@ Neocomplcache is a very powerful completion plugin.  It runs a little slower tha
 And of course, a good collection of snippets like [honza](https://github.com/honza/vim-snippets)'s collection.
 
 *edit*: Since I last posted this another autocomplete plugin has taken the Vim world by storm.  It is none other than [YouCompleteMe](https://github.com/Valloric/YouCompleteMe).  This is a fantastic plugin which shows a lot of promise.  It does not have as many features as neocomplcache yet, but it is improving every day and has a large community gathering around it.  Things can only get better!
+
+*edit 2*: [neocomplete](https://github.com/Shougo/neocomplete.vim) is the next generation version of neocomplcache, and despite being in its infancy is showing great progress and has most (if not all) of the features of neocomplcache.  It requires you to recompile vim with lua support, but has the added benefit that it is way faster than before, and unlike YouCompleteMe (which officially does not support Windows), it works very well on Windows as well.
 
 # And that's it!
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: vim | bling on software development]]></title>
   <link href="http://bling.github.io//blog/categories/vim/atom.xml" rel="self"/>
   <link href="http://bling.github.io//"/>
-  <updated>2013-06-10T12:21:00+00:00</updated>
+  <updated>2013-06-30T17:16:54+00:00</updated>
   <id>http://bling.github.io//</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
@@ -33,7 +33,7 @@
 
 <p>This is the problem I had initially.  The project <a href="https://github.com/Shougo/unite.vim">homepage</a> describes it as &ldquo;&hellip;can search and display information from arbitrary sources like files, buffers, recently used files or registers.&rdquo;  It goes on to show some usage samples, but there is no &ldquo;wow&rdquo; factor.  After reading the readme I still didn&rsquo;t have a clue what the plugin could do.</p>
 
-<p>It wasn&rsquo;t until I stumbled upon terryma&rsquo;s <a href="https://github.com/terryma/dotfiles/blob/master/.vimrc">vimrc</a> (the author of <a href="https://github.com/terryma/vim-multiple-cursors">multiple-cursors</a> and realized that he replaced <a href="https://github.com/kien/ctrlp.vim">ctrlp</a> entirely with unite.  ctrlp is by far one of the best/most popular plugins and for it to be replacable is no easy feat.</p>
+<p>It wasn&rsquo;t until I stumbled upon terryma&rsquo;s <a href="https://github.com/terryma/dotfiles/blob/master/.vimrc">vimrc</a> (the author of <a href="https://github.com/terryma/vim-multiple-cursors">multiple-cursors</a> and realized that he replaced <a href="https://github.com/kien/ctrlp.vim">ctrlp</a> entirely with unite).  ctrlp is by far one of the best/most popular plugins and for it to be replacable is no easy feat.</p>
 
 <p>So how do you do it?</p>
 
@@ -70,7 +70,8 @@ nnoremap &lt;space&gt;/ :Unite grep:.&lt;cr&gt;
 <h2>Yank history like <a href="https://github.com/vim-scripts/YankRing.vim">yankring</a>/<a href="https://github.com/maxbrunsfeld/vim-yankstack">yankstack</a></h2>
 
 <p><code>
-nnoremap &lt;space&gt;y :Unite history/yanks&lt;cr&gt;
+let g:unite_source_history_yank_enable = 1
+nnoremap &lt;space&gt;y :Unite history/yank&lt;cr&gt;
 </code></p>
 
 <p><img class="center" src="/images/unite-yanks.gif"></p>

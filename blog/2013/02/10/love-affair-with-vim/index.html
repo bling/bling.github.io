@@ -128,11 +128,11 @@
 
 <h1>Plugin Management</h1>
 
-<p>First things first you will need one plugin to rule them all!  <a href="https://github.com/tpope/vim-pathogen">Pathogen</a> changed the way people install plugins by utilizing git submodules.  This has the pros and cons of git submodules, i.e. they track a specific version of the external git repository, so if plugin authors decide to rewrite everything new users trying out your distribution will not be in for a nasty surprise.</p>
+<p>First things first you will need one plugin to rule them all!  <a href="https://github.com/tpope/vim-pathogen">Pathogen</a> changed the way people install plugins by utilizing git submodules.  This has the pros and cons of git submodules, i.e. they track a specific version of the external git repository, so if external plugins are updated frequently you have to manually update all your submodules.</p>
 
-<p>However, this rarely happens and usually you just want the latest version.  <a href="https://github.com/gmarik/vundle">Vundle</a> takes the management one step further and will automatically grab source code from Github for you (as well as automatically updating everything to the latest version).</p>
+<p>However, more often than not, you just want the latest version.  <a href="https://github.com/gmarik/vundle">Vundle</a> takes the management one step further and will automatically grab source code from Github for you (as well as automatically updating everything to the latest version).</p>
 
-<p>The last one and least known is <a href="https://github.com/Shougo/neobundle.vim">neobundle</a>, which enhances Vundle even further and allows you to specify installation steps like compiling something.</p>
+<p>The last one and least known is <a href="https://github.com/Shougo/neobundle.vim">NeoBundle</a>, which is like Vundle on steroids.  It adds a whole ton of new features like allowing you to specify installation steps for compiling something.</p>
 
 <h1>Fuzzy File Searching</h1>
 
@@ -157,6 +157,8 @@
 <p>And of course, a good collection of snippets like <a href="https://github.com/honza/vim-snippets">honza</a>&rsquo;s collection.</p>
 
 <p><em>edit</em>: Since I last posted this another autocomplete plugin has taken the Vim world by storm.  It is none other than <a href="https://github.com/Valloric/YouCompleteMe">YouCompleteMe</a>.  This is a fantastic plugin which shows a lot of promise.  It does not have as many features as neocomplcache yet, but it is improving every day and has a large community gathering around it.  Things can only get better!</p>
+
+<p><em>edit 2</em>: <a href="https://github.com/Shougo/neocomplete.vim">neocomplete</a> is the next generation version of neocomplcache, and despite being in its infancy is showing great progress and has most (if not all) of the features of neocomplcache.  It requires you to recompile vim with lua support, but has the added benefit that it is way faster than before, and unlike YouCompleteMe (which officially does not support Windows), it works very well on Windows as well.</p>
 
 <h1>And that&rsquo;s it!</h1>
 

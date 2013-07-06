@@ -4,7 +4,7 @@
   <title><![CDATA[bling on software development]]></title>
   <link href="http://bling.github.io//atom.xml" rel="self"/>
   <link href="http://bling.github.io//"/>
-  <updated>2013-06-30T22:45:46+00:00</updated>
+  <updated>2013-07-06T03:02:36+00:00</updated>
   <id>http://bling.github.io//</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
@@ -32,6 +32,8 @@
 <h1>What is it?</h1>
 
 <p>This is the problem I had initially.  The project <a href="https://github.com/Shougo/unite.vim">homepage</a> describes it as &ldquo;&hellip;can search and display information from arbitrary sources like files, buffers, recently used files or registers.&rdquo;  It goes on to show some usage samples, but there is no &ldquo;wow&rdquo; factor.  After reading the readme I still didn&rsquo;t have a clue what the plugin could do.</p>
+
+<p>(edit: After I wrote blog post, Unite&rsquo;s homepage has been dramatically improved with screenshots, animated gifs, and even a kickass logo.  It definitely has a lot of &ldquo;wow&rdquo; now.)</p>
 
 <p>It wasn&rsquo;t until I stumbled upon terryma&rsquo;s <a href="https://github.com/terryma/dotfiles/blob/master/.vimrc">vimrc</a> (the author of <a href="https://github.com/terryma/vim-multiple-cursors">multiple-cursors</a> and realized that he replaced <a href="https://github.com/kien/ctrlp.vim">ctrlp</a> entirely with unite).  ctrlp is by far one of the best/most popular plugins and for it to be replacable is no easy feat.</p>
 

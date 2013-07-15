@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="NHibernate is a beast let me tell you! I think I already mentioned this in the previous post, but NHibernate definitely has a VERY high learning &hellip;">
+  <meta name="description" content="Ooops, I forgot to mention that it&#8217;s easily mockable as well. public class UserService : IUserService { public UserService(ISessionFactory &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,56 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/08/21/session-management-with-nhibernate-and-autofac-2/">Session Management With NHibernate and Autofac: Corollary</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-08-21T00:00:00+00:00" pubdate data-updated="true">Aug 21<span>st</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+Ooops, I forgot to mention that it&#8217;s easily mockable as well.
+<pre>
+public class UserService : IUserService {
+  public UserService(ISessionFactory factory, UsersRepositoryFactory usersFactory) { ... }
+}
+</pre>
+So that&#8217;s the basic thing right.  So now, with <a href="http://code.google.com/p/moq/">Moq</a>, we can do this:
+<pre>
+var mockUserRepo = new Mock&lt;IUsersRepository&gt;();
+mockUserRepo.Setup(x =&gt; x.GetUser(It.IsAny&lt;string&gt;())).Returns(() =&gt; someUser);
+
+var userService = new UserService(..., x => mockUserRepo.Object);
+</pre>
+So what I&#8217;ve basically done is insert a lambda expression into the constructor, which is the delegate, which always returns my mock repository.  Pretty nifty methinks!</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -448,48 +498,6 @@ Not only that. Castle has integration with logging, validation framework, much m
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/08/06/who-woulda-thought-ilist-kills-wcf/">Who Woulda Thought, IList<> Kills WCF</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-08-06T00:00:00+00:00" pubdate data-updated="true">Aug 6<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>It can&rsquo;t be that hard!!!</p>
-
-<p>I keep telling myself this.  I&rsquo;m writing a WCF application right now and I&rsquo;ve been running into loads of problems trying to configure things.  ABC right?  Set my address, contract, and binding&hellip;.how hard can it be??  Why is a horrible ExecutionEngineException being thrown and taking down IIS with it???</p>
-
-<p><a href="http://connect.microsoft.com/wcf/feedback/ViewFeedback.aspx?FeedbackID=433569">http://connect.microsoft.com/wcf/feedback/ViewFeedback.aspx?FeedbackID=433569</a></p>
-
-<p>Turns out you can&rsquo;t have an IList&lt;> of DataContracts.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/12/">&larr; Older</a>
@@ -505,6 +513,10 @@ Not only that. Castle has integration with logging, validation framework, much m
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/15/flight-of-an-open-source-project/">The flight of an open-source project</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/">Unite.vim, The plugin you didn&#8217;t know you need</a>
@@ -532,10 +544,6 @@ Not only that. Castle has integration with logging, validation framework, much m
     
       <li class="post">
         <a href="/blog/2012/07/29/snoopshell-evolution/">SnoopShell: Evolution</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/07/01/snoopshell-marriage-of-snoop-wpf-and/">SnoopShell: The marriage of Snoop WPF and PowerShell</a>
       </li>
     
   </ul>

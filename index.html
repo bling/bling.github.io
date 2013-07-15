@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="Unite.vim What is this? If you&rsquo;ve never heard of this Vim plugin, then this post is for you. This is one of those hidden gems in the Vim plugin &hellip;">
+  <meta name="description" content="Welcome aboard! Those were the words that a flight attendant said to me as a boarded a plane to visit Paris for a summer vacation of wine and cheese &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/15/flight-of-an-open-source-project/">The Flight of an Open-source Project</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-15T10:00:00+00:00" pubdate data-updated="true">Jul 15<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1>Welcome aboard!</h1>
+
+<p>Those were the words that a flight attendant said to me as a boarded a plane to visit Paris for a summer vacation of wine and cheese.  It was a long flight; about 8 hours.  This particular plane was older and didn&rsquo;t have the personal TVs installed yet.  What this meant was I didn&rsquo;t have any movies to distract me from working on a pet project I had going on.  This little project was a single vim file in my vimrc.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/07/15/flight-of-an-open-source-project/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -257,86 +300,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/11/writing-macros-with-vim/">Writing Macros With Vim</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-11T00:00:00+00:00" pubdate data-updated="true">Feb 11<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>First, let’s start with a Javascript function:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">foo</span><span class="p">(</span><span class="nx">hello</span><span class="p">,</span> <span class="nx">world</span><span class="p">,</span>
-</span><span class='line'>             <span class="nx">how</span><span class="p">,</span> <span class="nx">are</span><span class="p">,</span>
-</span><span class='line'>             <span class="nx">you</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now let’s convert that to the following:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">foo</span><span class="p">(</span><span class="nx">parameters</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">hello</span> <span class="o">=</span> <span class="nx">parameters</span><span class="p">.</span><span class="nx">hello</span><span class="p">;</span>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">world</span> <span class="o">=</span> <span class="nx">parameters</span><span class="p">.</span><span class="nx">world</span><span class="p">;</span>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">how</span> <span class="o">=</span> <span class="nx">parameters</span><span class="p">.</span><span class="nx">how</span><span class="p">;</span>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">are</span> <span class="o">=</span> <span class="nx">parameters</span><span class="p">.</span><span class="nx">are</span><span class="p">;</span>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">you</span> <span class="o">=</span> <span class="nx">parameters</span><span class="p">.</span><span class="nx">you</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Here are the macros I used to do this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='vim'><span class='line'><span class="k">let</span> @<span class="k">r</span><span class="p">=</span><span class="s1">&#39;di(iparameters^[/\{^M2o^[kpg`[v`]Jgv:s/\s//g^M0:try|exe &quot;norm! @q&quot;|endtry^MA;^[V:s/,/;\r/g^Mv``=&#39;</span>
-</span><span class='line'><span class="k">let</span> @<span class="k">q</span><span class="p">=</span><span class="s1">&#39;ywivar ^[pa = parameters.^[f,^[l@q&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/02/11/writing-macros-with-vim/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -350,6 +313,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/15/flight-of-an-open-source-project/">The flight of an open-source project</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/">Unite.vim, The plugin you didn&#8217;t know you need</a>
@@ -377,10 +344,6 @@
     
       <li class="post">
         <a href="/blog/2012/07/29/snoopshell-evolution/">SnoopShell: Evolution</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/07/01/snoopshell-marriage-of-snoop-wpf-and/">SnoopShell: The marriage of Snoop WPF and PowerShell</a>
       </li>
     
   </ul>

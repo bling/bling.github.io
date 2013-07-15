@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="Any search on the web you find will consistently show log4net outperforming EL by a factor of around 4:1.&nbsp; Most of these tests are typically &hellip;">
+  <meta name="description" content="It seems that everywhere you read you will find blog posts asserting that it is difficult to convince others to use TDD, and that everyone talking &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,84 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/04/05/how-to-advocate-test-driven-development/">How to Advocate Test Driven Development (TDD)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-04-05T00:00:00+00:00" pubdate data-updated="true">Apr 5<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+It seems that everywhere you read you will find blog posts asserting that it is difficult to convince others to use TDD, and that everyone talking about TDD is already a believer preaching to other believers.&nbsp; So what&#8217;s the best way convince others?<br />
+<br />
+I recently convinced a good buddy of me to starting doing TDD in his web development.&nbsp; It took a while, but finally he &#8220;saw the light.&#8221;&nbsp; He tried to relay the information to his coworker, and his coworker didn&#8217;t react as positively, citing the common &#8220;I don&#8217;t want to waste time writing test code when I know my stuff works.&#8221;<br />
+<br />
+There are many many <b>MANY</b> hurdles of overcome to begin writing software using TDD.&nbsp; I won&#8217;t go into great detail since you can easily find relevant posts on the web, but basically, if you <i>have</i> successfully transitioned to TDD that also implies that you have in one way or another adopted&nbsp;<a href="http://butunclebob.com/ArticleS.UncleBob.PrinciplesOfOod">S.O.L.I.D. principles</a> in software design.<br />
+<br />
+The reason I say this is because it is literally impossible to do TDD otherwise.&nbsp; It is just plain <b>painful</b>.&nbsp; I&#8217;ve been there.&nbsp; It is so painful you shout in your head WTF are people thinking, how does this make my job easier?!<br />
+<br />
+Usually when this happens, you&#8217;ll probably notice that most (or all) of the SOLID principles have been violated one way or another.<br />
+<br />
+&lt;sarcasm&gt;<br />
+<ul><li>Single Responsibility Principle</li>
+
+<ul><li>You mean 1 class to rule them all right?</li>
+</ul>
+<li>Open Closed Principle</li>
+
+<ul><li>Does this have something to do with sockets?</li>
+</ul>
+<li>Liskov Substitution Principle</li>
+
+<ul><li>I thought the point of Object Oriented Programming is that <i>everything</i> is an object!</li>
+</ul>
+<li>Interface Segregation Principle</li>
+
+<ul><li>What&#8217;s an interface?<br />
+</li>
+</ul>
+<li>Dependency Inversion Principle</li>
+
+<ul><li>I don&#8217;t get it&#8230;I only have 1 super object anyway, I don&#8217;t have dependencies.</li>
+</ul></ul>&lt;/sarcasm&gt;<br />
+<br />
+Notice that even though this post was supposed to be about how to advocate TDD, I ended up talking about SOLID instead for a bit.&nbsp; What am I trying to get at?<br />
+<br />
+TDD spans from the individual to the team to the organization.&nbsp; You need to be able to tackle it from all points of view.&nbsp; The obsession of the word &#8216;test&#8217; has hurt TDD quite a bit.&nbsp; Anyone who&#8217;s spent any reasonable amount of time will assert that tests are just a means to drive the design.&nbsp; Tests should read like a story (well to programmer eyes), and yes, I said read, as in <i>readable!</i><br />
+<br />
+At the individual level, you must convince them it forces you to design better code, because testing against badly designed code is not worth the pain/annoyance.&nbsp; You must assert that better designed code is good because it also means being more maintainable and less bugs.<br />
+<br />
+At the team level, you must convince that collective code ownership is a good thing.&nbsp; There should never be a situation where &#8220;Bob&#8217;s on vacation, we&#8217;ll need to put a hold on Project A because only he knows it&#8221;.&nbsp; Tests serve as a way on how to interact with a specific service, and are a jump-start to figuring out how to actually <b>use</b> a particular service.&nbsp; Moreover, collective code ownership is a means of sharing and distributing knowledge.<br />
+<br />
+At the organizational level, you must convince managers that you are a professional software developer, and that it is your job to produce high quality work.&nbsp; And if what is required to produce high quality work involves writing proper unit tests, following SOLID principles, and even other agile practices like pair programming, then you should be allowed (and optimally encouraged) to do so.&nbsp; Now TDD might not work for everyone, or every organization, but I think everyone owes it to themselves to give it a fair chance.</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -329,75 +407,6 @@ Edit: There is a bug in this last bit, check out my latest <a href="http://bling
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/10/07/tdd-is-designunit-testing-legacy-code/">TDD Is Design…Unit Testing Legacy Code</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-10-07T00:00:00+00:00" pubdate data-updated="true">Oct 7<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-I’ve been listening to a bunch of podcasts lately and I came across a gem that was pretty darn useful.&nbsp; It’s pretty old I suppose in technology standards, since it was recorded January 12, 2009, but it’s still worth a listen.&nbsp; Scott Hanselman talks with Scott Bellware about TDD and design.&nbsp; Find it <a href="http://hanselminutes.com/default.aspx?showID=164">here</a>.<br />
-I’m merely reiterating what Scott has already said in the podcast, but it’s different when I can personally say that I’m joining the ranks of countless others who have seen the benefits of TDD.<br />
-<br />
-Now I can’t say that I’m a 100% TDD practitioner since I’m still learning how to write tests before code effectively, but I’ve already seen the improvements in <b>design</b> in my code many times over just by merely writing unit tests.  At this point I&#8217;d say half of my tests are written first, and the other after are after the fact.<br />
-<br />
-I’ve been through many phases of writing unit tests, it it took me <b>a long time</b> to get it right (and I’m sure I have tons more to go).&nbsp; It takes some experience to figure out how to properly write unit tests, and as a by-product how to make classes easily testable.&nbsp; Code quality and testability go hand-in-hand, so if you find something difficult to test, it’s probably because it was badly designed to start.<br />
-<br />
-The first time I was introduced to unit testing in a work setting was when I was writing C++…and man it was ugly, not because it was C++, but because everything was tightly coupled and everything was a singleton.&nbsp; The fixture setup was outrageous, and it was common to ::Sleep(5000) to make tests pass.&nbsp; Needless to say, my first experience with unit testing was extremely painful.<br />
-<br />
-After a job switch and back to the C# world, I started reading more blogs, listening to more podcasts, and experimenting more.&nbsp; I was given a project to prototype, and for phase 1 it was an entirely DDD experience with I got the opportunity to experiment with writing unit tests the “proper” way with dependency injection and mocking frameworks.<br />
-<blockquote>Unit tests are easy to write when you have highly decoupled components.<br />
-</blockquote>Prototype was finished, and now I was back on the main project, and given a critical task to complete in 2 weeks.&nbsp; I had to modify a class which was 10,000 lines long, which has <b>mega</b> dependencies on everything else in the project.&nbsp; Anything I touched could potentially break something else.&nbsp; And of course…no unit tests whatsoever.&nbsp; I like challenges and responsibility – but this was close to overkill.&nbsp; This thing produces revenue for the company daily so I <i>really</i> don’t want to mess anything up.<br />
-<br />
-First thing I realized was that there’s no way I could possibly write any unit test for something like this.&nbsp; If the class file was 10,000 lines long, you can imagine the average line count for methods.<br />
-<br />
-And of course, the business team didn’t make things easy on me by asking that this feature be turned off in production, but turned on for QA.&nbsp; So, the best option was to refactor the existing logic out to a separate class, extract an interface, implement the new implementation, and swap between the 2 implementations dynamically.<br />
-<br />
-After 4 days of analyzing and reading code to make sure I have a very detailed battle plan, I started extracting the feature to a new class.&nbsp; The first iteration of the class was <b>UGLY</b>.&nbsp; I extracted out the feature I was changing to a separate class, but the method names were archaic and didn’t have any good “flow” to them.&nbsp; I felt that I had to comment my unit tests just so whoever’s reading them could understand what’s happening, which brings up a point.<br />
-<blockquote>If you need to comment your unit tests, you need to redesign the API<br />
-</blockquote>It took many iterations and refactoring of the interface to get it to the point where I found acceptable.&nbsp; If you compared the 1st batch of unit tests to the last batch of unit tests it is like night and day.&nbsp; The end result were unit tests which typically followed a 3-line pattern of setup/execute/verify.&nbsp; Brain dead simple.<br />
-<br />
-The last thing to do was to reintegrate the class into the original class.&nbsp; For this I was back to compile/run/debug/cross-fingers, but I had full confidence that whenever I called anything in the extracted class it would work.<br />
-<br />
-An added benefit is that I didn’t add another 500 lines of code to the already gigantic class.&nbsp; Basically, in summary:    <br />
-<br />
-<ul><li><span style="color: #4c4c4c;">Get super mega long legacy code class files</span> </li>
-<li>Extract feature into separate file as close to original implementation as possible (initially will be copy-paste)</li>
-<li>Run and make sure things don’t die</li>
-<li>Write unit tests for extracted class (forces you to have a better understanding of the code modifications, and the requirements)</li>
-<li>Make sure unit tests cover all possible scenarios of invocation from original class</li>
-<li>Start refactoring and redesigning to better testability, while maintaining all previous tests</li>
-<li>Done!&nbsp; Repeat as necessary!</li>
-</ul></div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/10/">&larr; Older</a>
@@ -413,6 +422,10 @@ An added benefit is that I didn’t add another 500 lines of code to the already
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/15/flight-of-an-open-source-project/">The flight of an open-source project</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/">Unite.vim, The plugin you didn&#8217;t know you need</a>
@@ -440,10 +453,6 @@ An added benefit is that I didn’t add another 500 lines of code to the already
     
       <li class="post">
         <a href="/blog/2012/07/29/snoopshell-evolution/">SnoopShell: Evolution</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/07/01/snoopshell-marriage-of-snoop-wpf-and/">SnoopShell: The marriage of Snoop WPF and PowerShell</a>
       </li>
     
   </ul>

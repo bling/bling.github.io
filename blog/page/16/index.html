@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: logging - bling on software development</title>
+  <title>bling on software development</title>
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="Category: logging">
+  <meta name="description" content="Sometimes I wish Microsoft didn&rsquo;t include this method in the API because it promotes bad programming. I&rsquo;ve seen people use this in their &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://bling.github.io/blog/categories/logging">
+  <link rel="canonical" href="http://bling.github.io//blog/page/16">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="bling on software development" type="application/atom+xml">
@@ -75,57 +75,59 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div>
-<article role="article">
+      <div class="blog-index">
   
+  
+  
+    <article>
+      
   <header>
-    <h1 class="entry-title">Category: Logging</h1>
+    
+      <h1 class="entry-title"><a href="/blog/2008/09/11/gccollect-is-bad-for-you/">GC.Collect Is Bad for You</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-09-11T00:00:00+00:00" pubdate data-updated="true">Sep 11<span>th</span>, 2008</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+  <div class="entry-content"><p>Sometimes I wish Microsoft didn&rsquo;t include this method in the API because it promotes bad programming.  I&rsquo;ve seen people use this in their code and 99.99% of the time, it is incorrect to do so.</p>
 
-  
-  <h2>2011</h2>
+<p>I came across a program which had many try/catch/finally blocks which had GC.Collect() in the finally block.  C# has a garbage collector so you, the programmer, does not have to worry about cleaning up memory.  In fact, it&rsquo;s optimized in such a way that it only collects memory when it needs to.  By manually calling GC.Collect(), you are preventing the JIT from doing its job properly.</p>
 
-<article>
-  
-<h1><a href="/blog/2011/08/19/injecting-logger-instances-via-unity/">Injecting Logger Instances Via Convention With Unity</a></h1>
-<time datetime="2011-08-19T00:00:00+00:00" pubdate><span class='month'>Aug</span> <span class='day'>19</span> <span class='year'>2011</span></time>
+<p>Not only that, GC.Collect() is <em>expensive</em> operation.  It searches every reference in memory to see if there are other objects pointing to them, and if there are no references, it cleans up and removes it from memory.  Something this heavy should definitely not be called without a good reason.</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/coding/'>coding</a>, <a class='category' href='/blog/categories/logging/'>logging</a></span>
-</footer>
-
-
-</article>
-
-
-
-  
-  <h2>2009</h2>
-
-<article>
-  
-<h1><a href="/blog/2009/11/23/real-world-performance-comparison/">Real World Performance Comparison: Enterprise Library Logging Block vs log4net</a></h1>
-<time datetime="2009-11-23T00:00:00+00:00" pubdate><span class='month'>Nov</span> <span class='day'>23</span> <span class='year'>2009</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/logging/'>logging</a></span>
-</footer>
-
-
-</article>
-
+<p>Summary, do not call GC.Collect().  If you want to manage memory, use another language.</p>
 </div>
-
   
-</article>
+  
 
+
+    </article>
+  
+  <div class="pagination">
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/15/">Newer &rarr;</a>
+    
+  </div>
 </div>
-
 <aside class="sidebar">
   
     <section>
@@ -137,7 +139,7 @@
       </li>
     
       <li class="post">
-        <a href="/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/">Unite.vim, The plugin you didn't know you need</a>
+        <a href="/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/">Unite.vim, The plugin you didn&#8217;t know you need</a>
       </li>
     
       <li class="post">
@@ -170,7 +172,7 @@
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating...</li>
+    <li class="loading">Status updating&#8230;</li>
   </ul>
   
   <a href="https://github.com/bling">@bling</a> on GitHub
@@ -202,7 +204,6 @@
 
   
 </aside>
-
 
     </div>
   </div>

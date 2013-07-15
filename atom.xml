@@ -4,7 +4,7 @@
   <title><![CDATA[bling on software development]]></title>
   <link href="http://bling.github.io//atom.xml" rel="self"/>
   <link href="http://bling.github.io//"/>
-  <updated>2013-07-06T03:02:36+00:00</updated>
+  <updated>2013-07-15T14:07:42+00:00</updated>
   <id>http://bling.github.io//</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
@@ -12,6 +12,70 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[The flight of an open-source project]]></title>
+    <link href="http://bling.github.io//blog/2013/07/15/flight-of-an-open-source-project/"/>
+    <updated>2013-07-15T10:00:00+00:00</updated>
+    <id>http://bling.github.io//blog/2013/07/15/flight-of-an-open-source-project</id>
+    <content type="html"><![CDATA[<h1>Welcome aboard!</h1>
+
+<p>Those were the words that a flight attendant said to me as a boarded a plane to visit Paris for a summer vacation of wine and cheese.  It was a long flight; about 8 hours.  This particular plane was older and didn&rsquo;t have the personal TVs installed yet.  What this meant was I didn&rsquo;t have any movies to distract me from working on a pet project I had going on.  This little project was a single vim file in my vimrc.</p>
+
+<!--more-->
+
+
+<h1>That color thing</h1>
+
+<p>I was a huge fan of the original <a href="https://github.com/Lokaltog/vim-powerline">vim-powerline</a> project.  Even though it was purely cosmetic and didn&rsquo;t really add value (compared other plugins like <a href="https://github.com/tpope/vim-surround">vim-surround</a> where a productivity increase was measurable), I still considered it one of the most important plugins in my arsenal because I like things to look pretty.  I choose colorschemes with a lot of prejudice.  And I choose my font carefully as well (I&rsquo;m currently using Ubuntu Mono as the preferred choice).  As developers we stare at a text editor the majority of our time, and if I can make that experience a little more enjoyable then that&rsquo;s a good enough reason for me!</p>
+
+<h1>Prologue</h1>
+
+<p>If vim-powerline was already so good, why bother writing a replacement?  The biggest reason why I bothered was powerline <a href="https://github.com/Lokaltog/powerline">v2</a>.  This was the python rewrite of powerline which unified the codebase so that it could be used outside of vim, such as in bash, zsh, and tmux.  And just like that, vim-powerline was deprecated.</p>
+
+<p>I was one of the early adopters because I like to use bleeding edge software.  I compile my vim to the latest tip, my preferred Linux distribution is <a href="http://www.archlinux.org">ArchLinux</a> (a rolling release distribution), and all my browsers are beta (sometimes alpha).</p>
+
+<p>Early versions of powerline were very buggy for me to the point where I couldn&rsquo;t use it and had to fall back to vim-powerline.  It also lost a lot of features in the process, like integration with third party plugins like ctrlp and tagbar.  And lastly, installation made it very difficult to get working consistently across all operating systems.  And even within an OS, you would run into problems, e.g. system python vs homebrew python on OSX, or python3 being the default on Arch.  Ironically, I found installing on Windows the easiest of them all.</p>
+
+<p>I started looking for alternatives and found <a href="https://github.com/molok/vim-smartusline">smartusline</a>, which is a simple statusline plugin which changes colors like powerline.  I used it for a while, but eventually I felt a strong yearning for a nicer looking statusline.  Honestly, I didn&rsquo;t have a good reason not to use vim-powerline other than the fact that it was &ldquo;old&rdquo;.  But powerline v2 wasn&rsquo;t ready yet either.  And with that I had enough of an excuse to spend my hacking hours writing statuslines.</p>
+
+<h1>:help statusline</h1>
+
+<p>The first working version I had was <a href="https://github.com/bling/dotvim/blob/c39021c45289d11e515bd08c1f4a976f7ba4352e/plugin/statusline.vim">65 lines</a> of code.  It was not configurable and everything was hardcoded, but it served my needs and worked pretty well.  Over time I tweaked it slowly, making small changes here and there, changing colors, and eventually using powerline font symbols.  And then I thought, wait a minute, maybe someone else might find this useful!  So on that airplane ride I decided to create a plugin out of it and share it with the community.</p>
+
+<p>I published a link to the <a href="http://www.reddit.com/r/vim/comments/1hfbfz/vimairline_a_lightweight_statusline_light_as_air/">vim subreddit</a> and it was well received.  I got a boost to 100 stars on GitHub in a day.  Cool!  People like what I built!</p>
+
+<h1>The first pull request</h1>
+
+<p>The first pull request was to fix a spelling mistake where I used sep<strong>e</strong>rator instead of sep<strong>a</strong>rator.  It was also the first time I saw the big green &ldquo;Merge Pull Request&rdquo; button on GitHub.  And let me tell you that entire process is nothing short of amazing.  It is so damn easy to collaborate I wish I had this at work.</p>
+
+<p>And then issues started coming in; bugs and feature requests.  More pull requests were submitted, some to fix bugs, others to fix performance problems.  I had my little open source project going and it was so much fun!  And people were open to suggestions, code reviews, and just generally very receptive to discussion.  It was awesome!</p>
+
+<p>I continued working on the plugin to add theming support, and once I finished I posted it to <a href="https://news.ycombinator.com/item?id=6002518">HackerNews</a>.</p>
+
+<h1>A lesson in marketing</h1>
+
+<p>It sounds obvious now after the fact, but I didn&rsquo;t really realize what a big difference marketing makes.  Last year I made a relatively significant contribution to the WPF world &mdash; I added <a href="http://bling.github.io/blog/2012/07/01/snoopshell-marriage-of-snoop-wpf-and/">PowerShell to Snoop</a>.  Snoop is a staple tool for any WPF developer, and for my work to be accepted and merged into the main product was really quite something.  After many retweets, my fork acquired a whopping 6 stars.  The reason?  My target audience was C# developers who did WPF, <em>and</em> who used PowerShell.  It was tiny market!</p>
+
+<p>vim-airline is different.  The market is all terminal users, which is a <strong>huge</strong> market.  It didn&rsquo;t matter if you were doing sysadmin work scripting the shell or developing a website in JavaScript or deploying a distributed cluster using Ruby.  Somebody would be using vim, and furthormore, because airline was written in 100% VimScript it worked for everyone.</p>
+
+<p>After I posted it to HackerNews, momentum <strong><em>really</em></strong> picked up and a flood of bugs and feature requests came in.  A lot of people also starting writing themes for it, which validated my claim that it was easy to do.  The project gained another 200-300 stars overnight.</p>
+
+<h1>Murphy&rsquo;s Law</h1>
+
+<p>Last Tuesday night, vim-airline became the default in the <a href="http://vim.spf13.com/">spf13</a> distribution, which is one of the most popular distributions out there.  On that same night, I <a href="https://github.com/bling/vim-airline/commit/c0427e435d2eb2170517438ddd4f0b5fa7a8b691">pushed</a> a change to improve the extendability of the plugin.  It was the last thing I did that night and I went to bed shortly after.  Everthing that could go wrong, went wrong &mdash; I woke up to a flurry of emails about it breaking in the most <a href="https://github.com/bling/vim-airline/issues/49">catastrophic</a> <a href="https://github.com/bling/vim-airline/issues/45">way</a> <a href="https://github.com/spf13/spf13-vim/issues/397">possible</a>.  I jumped from my bed to the computer in record time to revert that change.  After a lot of (manual) investigation, I narrowed it down to the exact <a href="https://code.google.com/p/vim/source/detail?r=66e615ce7f61948a2a4a8615d703a42d56763490&amp;name=v7-3-1058">patch</a> (1058) in Vim that affected my code.  That&rsquo;s what I get for using bleeding edge software&hellip;</p>
+
+<p>Since this incident I&rsquo;ve been testing with Vim 7.2 prior to pushing any code changes to the core.</p>
+
+<h1>Destination to be determined&hellip;</h1>
+
+<p>Popularity continued to grow, and as of now, after being live for only 2 weeks, the project has 772 stars, 36 forks, and 15 contributors.  6 themes have been contributed.</p>
+
+<p>It&rsquo;s hard to describe the feeling I&rsquo;m having &mdash; I guess I&rsquo;m just really thrilled to have so many people take interest in something I built.  I had no idea it would be this popular, and now I&rsquo;m just trying to keep up with the issues.</p>
+
+<p>The community aspect of open source is incredible.  I don&rsquo;t know where the project will go from here, but for the time being, I&rsquo;m going to sit back, relax, and enjoy the flight.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Unite.vim, The plugin you didn't know you need]]></title>
@@ -1553,243 +1617,6 @@ Rather than the custom Observable generator with Iterval, why not use Observable
 <p>Finally, let’s see the before and after (or eh&hellip;rather after and before, because I took the screenshot backwards :P):</p>
 
 <p><img src="http://lh6.ggpht.com/-tzZ8AVtNv0M/Tlr6QmHJHnI/AAAAAAAAAGM/H1SYEqT6cis/image_thumb%25255B50%25255D.png?imgmax=800" alt="eg" /></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Building a Real-time Push App with Silverlight: Part 2]]></title>
-    <link href="http://bling.github.io//blog/2011/08/27/building-real-time-push-app-with-rx-2/"/>
-    <updated>2011-08-27T00:00:00+00:00</updated>
-    <id>http://bling.github.io//blog/2011/08/27/building-real-time-push-app-with-rx-2</id>
-    <content type="html"><![CDATA[<p>Let’s review the main Rx code from last time:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">public</span> <span class="n">IObservable</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="n">GetJsonStreams</span><span class="p">()</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="kt">var</span> <span class="n">request</span> <span class="p">=</span> <span class="n">GetRequest</span><span class="p">();</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">Observable</span><span class="p">.</span><span class="n">FromAsyncPattern</span><span class="p">&lt;</span><span class="n">WebResponse</span><span class="p">&gt;(</span><span class="n">request</span><span class="p">.</span><span class="n">BeginGetResponse</span><span class="p">,</span> <span class="n">request</span><span class="p">.</span><span class="n">EndGetResponse</span><span class="p">)()</span>
-</span><span class='line'>        <span class="p">.</span><span class="n">Select</span><span class="p">(</span><span class="n">wr</span> <span class="p">=&gt;</span> <span class="n">wr</span><span class="p">.</span><span class="n">GetResponseStream</span><span class="p">())</span>
-</span><span class='line'>        <span class="p">.</span><span class="n">Select</span><span class="p">(</span><span class="n">str</span> <span class="p">=&gt;</span> <span class="n">Observable</span><span class="p">.</span><span class="n">FromAsyncPattern</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[],</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">&gt;(</span><span class="n">str</span><span class="p">.</span><span class="n">BeginRead</span><span class="p">,</span> <span class="n">str</span><span class="p">.</span><span class="n">EndRead</span><span class="p">))</span>
-</span><span class='line'>        <span class="p">.</span><span class="n">SelectMany</span><span class="p">(</span><span class="n">ParseJson</span><span class="p">);</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>One thing I didn’t like about this was that the web request object was created regardless of whether the Observable gets a subscription or not.  This is potentially wasted resources, and I wanted to refactor this to be completely lazy.</p>
-
-<p>And with this I started to run into my first &ldquo;huh?&rdquo; moments with Rx: I blocked the UI thread.  How did I do that? I started down the path of exploring some more of the Rx methods, which lead me to <code>Create</code>, which lets you manually call <code>OnNext</code>.  With this train of thought, I came up with something like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">return</span> <span class="n">Observable</span><span class="p">.</span><span class="n">Create</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;(</span><span class="n">obs</span> <span class="p">=&gt;</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="kt">var</span> <span class="n">request</span> <span class="p">=</span> <span class="n">GetRequest</span><span class="p">();</span>
-</span><span class='line'>        <span class="kt">var</span> <span class="n">response</span> <span class="p">=</span> <span class="n">Observable</span><span class="p">.</span><span class="n">FromAsyncPattern</span><span class="p">&lt;</span><span class="n">WebResponse</span><span class="p">&gt;(</span><span class="n">request</span><span class="p">.</span><span class="n">BeginGetResponse</span><span class="p">,</span> <span class="n">request</span><span class="p">.</span><span class="n">EndGetResponse</span><span class="p">)().</span><span class="n">First</span><span class="p">();</span>
-</span><span class='line'>        <span class="kt">var</span> <span class="n">str</span> <span class="p">=</span> <span class="n">response</span><span class="p">.</span><span class="n">GetResponseStream</span><span class="p">();</span>
-</span><span class='line'>        <span class="kt">var</span> <span class="n">reader</span> <span class="p">=</span> <span class="n">Observable</span><span class="p">.</span><span class="n">FromAsyncPattern</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[],</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">&gt;(</span><span class="n">str</span><span class="p">.</span><span class="n">BeginRead</span><span class="p">,</span> <span class="n">str</span><span class="p">.</span><span class="n">EndRead</span><span class="p">);</span>
-</span><span class='line'>        <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">json</span> <span class="k">in</span> <span class="n">ParseJson</span><span class="p">(</span><span class="n">reader</span><span class="p">))</span>
-</span><span class='line'>        <span class="n">obs</span><span class="p">.</span><span class="n">OnNext</span><span class="p">(</span><span class="n">json</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">obs</span><span class="p">.</span><span class="n">OnCompleted</span><span class="p">();</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">str</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Great! The initialization of the web request only occurs when subscribed! And it will even dispose the stream (by returning <code>str</code>) upon unsubscription.  I ran the app and the UI thread immediately blocked.  What happened?</p>
-
-<p>Rx has the concept of subscription and observation, and provides a way to subscribe and observe on different threads.  Here is the original code that subscribed:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="n">s</span><span class="p">.</span><span class="n">GetJsonStreams</span><span class="p">()</span>
-</span><span class='line'>   <span class="p">.</span><span class="n">ObserveOnDispatcher</span><span class="p">()</span>
-</span><span class='line'>   <span class="p">.</span><span class="n">Subscribe</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">Text</span> <span class="p">=</span> <span class="n">x</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Can you spot the error? I explicitly told Rx to observe on the dispatcher thread, because I want the action inside <code>Subscribe</code> to be invoked on the UI thread, but I didn’t specify where I want to set up the subscription.  Since I left it out, it uses the current thread, which happens to be the UI thread.  To solve this, it’s as simple as doing this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="n">s</span><span class="p">.</span><span class="n">GetJsonStreams</span><span class="p">()</span>
-</span><span class='line'>    <span class="p">.</span><span class="n">SubscribeOn</span><span class="p">(</span><span class="n">Scheduler</span><span class="p">.</span><span class="n">ThreadPool</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">.</span><span class="n">ObserveOnDispatcher</span><span class="p">()</span>
-</span><span class='line'>    <span class="p">.</span><span class="n">Subscribe</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">Text</span> <span class="p">=</span> <span class="n">x</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>That’s it! Easy! This also follows one of the most important guidelines when using Rx: <em>Subscription and Observation should be done as late as possible</em>, typically just before the <code>Subscribe</code>.  Anything more and you’ll likely make Rx spawn more threads than are necessary or some other nasty bugs.  <a href="http://en.wikipedia.org/wiki/KISS_principle">KISS</a>!</p>
-
-<p>Now with that out of the way, let’s replace the boring TextBlock with something more usable.  First, I need to parse all the JSON streams I’m getting into bindable models.  To do that, I upgraded my StreamReader component and threw in System.Json for some basic parsing:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">TweetParser</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">private</span> <span class="kt">int</span> <span class="n">_stack</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">private</span> <span class="k">readonly</span> <span class="n">StringBuilder</span> <span class="n">_sb</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="p">();</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">public</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Tweet</span><span class="p">&gt;</span> <span class="n">Parse</span><span class="p">(</span><span class="kt">byte</span><span class="p">[]</span> <span class="n">buffer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">count</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
-</span><span class='line'>        <span class="p">{</span>
-</span><span class='line'>            <span class="kt">var</span> <span class="n">current</span> <span class="p">=</span> <span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="n">buffer</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-</span><span class='line'>            <span class="n">_sb</span><span class="p">.</span><span class="n">Append</span><span class="p">(</span><span class="n">current</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="k">if</span> <span class="p">(</span><span class="n">current</span> <span class="p">==</span> <span class="sc">&#39;{&#39;</span><span class="p">)</span> <span class="n">_stack</span><span class="p">++;</span>
-</span><span class='line'>            <span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">current</span> <span class="p">==</span> <span class="sc">&#39;}&#39;</span><span class="p">)</span> <span class="n">_stack</span><span class="p">--;</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="k">if</span> <span class="p">(</span><span class="n">_stack</span> <span class="p">==</span> <span class="m">0</span> <span class="p">&amp;</span><span class="n">_sb</span><span class="p">.</span><span class="n">Length</span> <span class="p">&gt;</span> <span class="m">0</span><span class="p">)</span>
-</span><span class='line'>            <span class="p">{</span>
-</span><span class='line'>                <span class="n">Tweet</span> <span class="n">tweet</span><span class="p">;</span>
-</span><span class='line'>                <span class="kt">var</span> <span class="k">value</span> <span class="p">=</span> <span class="n">JsonValue</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="n">_sb</span><span class="p">.</span><span class="n">ToString</span><span class="p">());</span>
-</span><span class='line'>
-</span><span class='line'>                <span class="k">if</span> <span class="p">(</span><span class="k">value</span> <span class="k">is</span> <span class="n">JsonObject</span> <span class="p">&amp;</span><span class="n">Tweet</span><span class="p">.</span><span class="n">TryParse</span><span class="p">((</span><span class="n">JsonObject</span><span class="p">)</span><span class="k">value</span><span class="p">,</span> <span class="k">out</span> <span class="n">tweet</span><span class="p">))</span>
-</span><span class='line'>                    <span class="k">yield</span> <span class="k">return</span> <span class="n">tweet</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>                <span class="n">_sb</span><span class="p">.</span><span class="n">Clear</span><span class="p">();</span>
-</span><span class='line'>            <span class="p">}</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Nothing overly complicated.  Next, the Tweet object:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">Tweet</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">private</span> <span class="k">readonly</span> <span class="n">JsonObject</span> <span class="n">_json</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span> <span class="nf">TryParse</span><span class="p">(</span><span class="n">JsonObject</span> <span class="k">value</span><span class="p">,</span> <span class="k">out</span> <span class="n">Tweet</span> <span class="n">tweet</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="k">value</span><span class="p">.</span><span class="n">ContainsKey</span><span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">)</span> <span class="p">&amp;</span><span class="k">value</span><span class="p">.</span><span class="n">ContainsKey</span><span class="p">(</span><span class="s">&quot;user&quot;</span><span class="p">))</span>
-</span><span class='line'>        <span class="p">{</span>
-</span><span class='line'>            <span class="n">tweet</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Tweet</span><span class="p">(</span><span class="k">value</span><span class="p">);</span>
-</span><span class='line'>            <span class="k">return</span> <span class="k">true</span><span class="p">;</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>        <span class="n">tweet</span> <span class="p">=</span> <span class="k">null</span><span class="p">;</span>
-</span><span class='line'>        <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">private</span> <span class="nf">Tweet</span><span class="p">(</span><span class="n">JsonObject</span> <span class="n">json</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="n">_json</span> <span class="p">=</span> <span class="n">json</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">public</span> <span class="kt">string</span> <span class="n">Text</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_json</span><span class="p">[</span><span class="s">&quot;text&quot;</span><span class="p">].</span><span class="n">ToValueString</span><span class="p">();</span> <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">public</span> <span class="kt">string</span> <span class="n">ScreenName</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_json</span><span class="p">[</span><span class="s">&quot;user&quot;</span><span class="p">][</span><span class="s">&quot;screen_name&quot;</span><span class="p">].</span><span class="n">ToValueString</span><span class="p">();</span> <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">internal</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">TweetEx</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">public</span> <span class="k">static</span> <span class="kt">string</span> <span class="nf">ToValueString</span><span class="p">(</span><span class="k">this</span> <span class="n">JsonValue</span> <span class="n">s</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">s</span><span class="p">.</span><span class="n">ToString</span><span class="p">().</span><span class="n">Trim</span><span class="p">(</span><span class="sc">&#39;&quot;&#39;</span><span class="p">);</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>To keep things simple I’m only extracting the screen name and text.  I won’t bore you setting up the views since it’s just simple ListBox bound to an <code>ObservableCollection&lt;Tweet&gt;</code>, and a DataTemplate for Tweet.  When it’s all said and done, we see something like this:</p>
-
-<p><img src="http://lh3.ggpht.com/-sVzoQRx_V2s/TlqFswXVhUI/AAAAAAAAAFc/d9nLfBSrARA/image_thumb3.png?imgmax=800" alt="img" /></p>
-
-<p>Performance is still good at 2-5% CPU, even though we’re scrolling through 1000 items in near real-time.</p>
-
-<p>Stay tuned for part 3, when we introduce Expression Blend and go into basics of UI design.  Also, most of this will hit GitHub very soon.</p>
 ]]></content>
   </entry>
   

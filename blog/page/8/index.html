@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="I gotta say that WPF is a complete pain in the butt when it comes to memory leaks. A simple google/bing search shows up more than enough results for &hellip;">
+  <meta name="description" content="Apparently, setting IsUndoEnabled to false isn’t enough. You must also set UndoLimit=0 as well otherwise it&rsquo;ll still keep track of undo history &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,42 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/05/memory-leak-with-wpfs-richtextbox/">Memory Leak With WPF’s RichTextBox</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-05T00:00:00+00:00" pubdate data-updated="true">Oct 5<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Apparently, setting <code>IsUndoEnabled</code> to false isn’t enough.  You must also set <code>UndoLimit=0</code> as well otherwise it&rsquo;ll still keep track of undo history.  Doh!</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -960,84 +996,6 @@ actually, with the trunk version the limitation &quot;one mixin per registration
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/04/05/how-to-advocate-test-driven-development/">How to Advocate Test Driven Development (TDD)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-04-05T00:00:00+00:00" pubdate data-updated="true">Apr 5<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-It seems that everywhere you read you will find blog posts asserting that it is difficult to convince others to use TDD, and that everyone talking about TDD is already a believer preaching to other believers.&nbsp; So what&#8217;s the best way convince others?<br />
-<br />
-I recently convinced a good buddy of me to starting doing TDD in his web development.&nbsp; It took a while, but finally he &#8220;saw the light.&#8221;&nbsp; He tried to relay the information to his coworker, and his coworker didn&#8217;t react as positively, citing the common &#8220;I don&#8217;t want to waste time writing test code when I know my stuff works.&#8221;<br />
-<br />
-There are many many <b>MANY</b> hurdles of overcome to begin writing software using TDD.&nbsp; I won&#8217;t go into great detail since you can easily find relevant posts on the web, but basically, if you <i>have</i> successfully transitioned to TDD that also implies that you have in one way or another adopted&nbsp;<a href="http://butunclebob.com/ArticleS.UncleBob.PrinciplesOfOod">S.O.L.I.D. principles</a> in software design.<br />
-<br />
-The reason I say this is because it is literally impossible to do TDD otherwise.&nbsp; It is just plain <b>painful</b>.&nbsp; I&#8217;ve been there.&nbsp; It is so painful you shout in your head WTF are people thinking, how does this make my job easier?!<br />
-<br />
-Usually when this happens, you&#8217;ll probably notice that most (or all) of the SOLID principles have been violated one way or another.<br />
-<br />
-&lt;sarcasm&gt;<br />
-<ul><li>Single Responsibility Principle</li>
-
-<ul><li>You mean 1 class to rule them all right?</li>
-</ul>
-<li>Open Closed Principle</li>
-
-<ul><li>Does this have something to do with sockets?</li>
-</ul>
-<li>Liskov Substitution Principle</li>
-
-<ul><li>I thought the point of Object Oriented Programming is that <i>everything</i> is an object!</li>
-</ul>
-<li>Interface Segregation Principle</li>
-
-<ul><li>What&#8217;s an interface?<br />
-</li>
-</ul>
-<li>Dependency Inversion Principle</li>
-
-<ul><li>I don&#8217;t get it&#8230;I only have 1 super object anyway, I don&#8217;t have dependencies.</li>
-</ul></ul>&lt;/sarcasm&gt;<br />
-<br />
-Notice that even though this post was supposed to be about how to advocate TDD, I ended up talking about SOLID instead for a bit.&nbsp; What am I trying to get at?<br />
-<br />
-TDD spans from the individual to the team to the organization.&nbsp; You need to be able to tackle it from all points of view.&nbsp; The obsession of the word &#8216;test&#8217; has hurt TDD quite a bit.&nbsp; Anyone who&#8217;s spent any reasonable amount of time will assert that tests are just a means to drive the design.&nbsp; Tests should read like a story (well to programmer eyes), and yes, I said read, as in <i>readable!</i><br />
-<br />
-At the individual level, you must convince them it forces you to design better code, because testing against badly designed code is not worth the pain/annoyance.&nbsp; You must assert that better designed code is good because it also means being more maintainable and less bugs.<br />
-<br />
-At the team level, you must convince that collective code ownership is a good thing.&nbsp; There should never be a situation where &#8220;Bob&#8217;s on vacation, we&#8217;ll need to put a hold on Project A because only he knows it&#8221;.&nbsp; Tests serve as a way on how to interact with a specific service, and are a jump-start to figuring out how to actually <b>use</b> a particular service.&nbsp; Moreover, collective code ownership is a means of sharing and distributing knowledge.<br />
-<br />
-At the organizational level, you must convince managers that you are a professional software developer, and that it is your job to produce high quality work.&nbsp; And if what is required to produce high quality work involves writing proper unit tests, following SOLID principles, and even other agile practices like pair programming, then you should be allowed (and optimally encouraged) to do so.&nbsp; Now TDD might not work for everyone, or every organization, but I think everyone owes it to themselves to give it a fair chance.</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/9/">&larr; Older</a>
@@ -1053,6 +1011,10 @@ At the organizational level, you must convince managers that you are a professio
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/15/flight-of-an-open-source-project/">The flight of an open-source project</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/">Unite.vim, The plugin you didn&#8217;t know you need</a>
@@ -1080,10 +1042,6 @@ At the organizational level, you must convince managers that you are a professio
     
       <li class="post">
         <a href="/blog/2012/07/29/snoopshell-evolution/">SnoopShell: Evolution</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/07/01/snoopshell-marriage-of-snoop-wpf-and/">SnoopShell: The marriage of Snoop WPF and PowerShell</a>
       </li>
     
   </ul>

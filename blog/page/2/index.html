@@ -9,7 +9,15 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="It wasn&rsquo;t too long ago when I was a full-time C# developer and my environment was Visual Studio eight hours a day. Then, I became a web &hellip;">
+  <meta name="description" content="First, let’s start with a Javascript function: 1
+2
+3
+4
+function foo(hello, world, how, are, you) {
+} Now let’s convert that to the following: 1
+2
+3
+4 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +85,86 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/02/11/writing-macros-with-vim/">Writing Macros With Vim</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-11T00:00:00+00:00" pubdate data-updated="true">Feb 11<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>First, let’s start with a Javascript function:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">foo</span><span class="p">(</span><span class="nx">hello</span><span class="p">,</span> <span class="nx">world</span><span class="p">,</span>
+</span><span class='line'>             <span class="nx">how</span><span class="p">,</span> <span class="nx">are</span><span class="p">,</span>
+</span><span class='line'>             <span class="nx">you</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now let’s convert that to the following:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">foo</span><span class="p">(</span><span class="nx">parameters</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">hello</span> <span class="o">=</span> <span class="nx">parameters</span><span class="p">.</span><span class="nx">hello</span><span class="p">;</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">world</span> <span class="o">=</span> <span class="nx">parameters</span><span class="p">.</span><span class="nx">world</span><span class="p">;</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">how</span> <span class="o">=</span> <span class="nx">parameters</span><span class="p">.</span><span class="nx">how</span><span class="p">;</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">are</span> <span class="o">=</span> <span class="nx">parameters</span><span class="p">.</span><span class="nx">are</span><span class="p">;</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">you</span> <span class="o">=</span> <span class="nx">parameters</span><span class="p">.</span><span class="nx">you</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here are the macros I used to do this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='vim'><span class='line'><span class="k">let</span> @<span class="k">r</span><span class="p">=</span><span class="s1">&#39;di(iparameters^[/\{^M2o^[kpg`[v`]Jgv:s/\s//g^M0:try|exe &quot;norm! @q&quot;|endtry^MA;^[V:s/,/;\r/g^Mv``=&#39;</span>
+</span><span class='line'><span class="k">let</span> @<span class="k">q</span><span class="p">=</span><span class="s1">&#39;ywivar ^[pa = parameters.^[f,^[l@q&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/02/11/writing-macros-with-vim/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -301,43 +389,6 @@ Let’s get some actual coding done.&nbsp; If you want some basic prologue, chec
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/06/03/n2n-net-2-node/">N2N: .NET 2 Node</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-03T00:00:00+00:00" pubdate data-updated="true">Jun 3<span>rd</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-<p>Well, it’s been quite a while since I’ve blogged about…well…anything, and I figured it’s about time I get off my lazy butt and do something with my spare time on weekends.&nbsp; What better option than to see what all the hype is about Node?&nbsp; I had to do it sooner or later.</p> <p>As any newbie would do, they go to Google and type “nodejs tutorial”.&nbsp; <a href="http://www.nodebeginner.org/">The Node Beginner Book</a> came up first, so I went with that.&nbsp; It was an excellent tutorial.&nbsp; Prior to this I also skimmed through the book <a href="http://www.amazon.com/JavaScript-Good-Parts-Douglas-Crockford/dp/0596517742">JavaScript, The Good Parts</a>, so I had a basic understanding of the language syntax.</p> <p>One of the first oddities I noticed, was that NodeJS seems to have a convention of comma-first.&nbsp; You notice this immediately because most examples start with require(‘module’), and if they require more than one module, the second line is prefixed with a comma (as opposed to the more traditional comma at the end of the line).&nbsp; I apparently missed the <a href="https://gist.github.com/357981">discussion</a> by 2 years!&nbsp; It was still interesting nonetheless.</p> <p>As someone with a strong .NET background, I definitely experienced all the usual ‘gotchas’:</p> <ul> <li>== vs ===  <li>falsey values  <li>variable hoisting</li></ul> <p>Once you understand all of these things, Javascript isn’t so bad.&nbsp; Oh, and of course understanding closures will get you <em>a long</em> way in being effective with Javascript, because that’s what you need to use to do proper scoping.&nbsp; If C# didn’t have lambdas and closures it would have been a much longer journey to “get it”.</p> <p>Not too longer after, I deployed my first Heroku app running on NodeJS.</p> <p>Anyways, enough with the prologue…I won’t bore you with anymore beginner/tutorial stuff.</p> <p>Let’s get on with what I plan on doing over a multi-part blog series.&nbsp; When I build something on my own time, I can’t build something just for the hell of it to learn something….that’s not enough.&nbsp; If I build something it has to be useful – something that I (or someone else) will find valuable.</p> <p>I won’t reveal what it is yet, but it’s going to involve Node/MongoDB on the backend, with Backbone on the front-end.&nbsp; Should be fun :-)</p>  </div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -353,6 +404,10 @@ Let’s get some actual coding done.&nbsp; If you want some basic prologue, chec
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/15/flight-of-an-open-source-project/">The flight of an open-source project</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/">Unite.vim, The plugin you didn&#8217;t know you need</a>
@@ -380,10 +435,6 @@ Let’s get some actual coding done.&nbsp; If you want some basic prologue, chec
     
       <li class="post">
         <a href="/blog/2012/07/29/snoopshell-evolution/">SnoopShell: Evolution</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/07/01/snoopshell-marriage-of-snoop-wpf-and/">SnoopShell: The marriage of Snoop WPF and PowerShell</a>
       </li>
     
   </ul>

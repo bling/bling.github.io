@@ -31,6 +31,8 @@ I started looking for alternatives and found [smartusline][f], which is a simple
 
 The first working version I had was [65 lines][g] of code.  It was not configurable and everything was hardcoded, but it served my needs and worked pretty well.  Over time I tweaked it slowly, making small changes here and there, changing colors, and eventually using powerline font symbols.  And then I thought, wait a minute, maybe someone else might find this useful!  So on that airplane ride I decided to create a plugin out of it and share it with the community.
 
+[vim-airline][s] was born.
+
 I published a link to the [vim subreddit][h] and it was well received.  I got a boost to 100 stars on GitHub in a day.  Cool!  People like what I built!
 
 # The first pull request
@@ -81,3 +83,4 @@ The community aspect of open source is incredible.  I don't know where the proje
 [o]: https://github.com/bling/vim-airline/issues/49
 [p]: https://github.com/bling/vim-airline/issues/45
 [r]: https://github.com/spf13/spf13-vim/issues/397
+[s]: https://github.com/bling/vim-airline

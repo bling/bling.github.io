@@ -53,7 +53,7 @@ After I posted it to HackerNews, momentum ***really*** picked up and a flood of 
 
 # Murphy's Law
 
-Last Tuesday night, vim-airline became the default in the [spf13][j] distribution, which is one of the most popular distributions out there.  On that same night, I [pushed][k] a change to improve the extendability of the plugin.  It was the last thing I did that night and I went to bed shortly after.  Everthing that could go wrong, went wrong -- I woke up to a flurry of emails about it breaking in the most [catastrophic][o] [way][p] [possible][r].  I jumped from my bed to the computer in record time to revert that change.  After a lot of (manual) investigation, I narrowed it down to the exact [patch][l] (1058) in Vim that affected my code.  That's what I get for using bleeding edge software...
+Last Tuesday night, vim-airline became the default in the [spf13][j] distribution, which is one of the most popular distributions out there.  On that same night, I [pushed][k] a change to improve the extendability of the plugin.  It was the last thing I did that night and I went to bed shortly after.  Everything that could go wrong, went wrong -- I woke up to a flurry of emails about it breaking in the most [catastrophic][o] [way][p] [possible][r].  I jumped from my bed to the computer in record time to revert that change.  After a lot of (manual) investigation, I narrowed it down to the exact [patch][l] (1058) in Vim that affected my code.  That's what I get for using bleeding edge software...
 
 Since this incident I've been testing with Vim 7.2 prior to pushing any code changes to the core.
 

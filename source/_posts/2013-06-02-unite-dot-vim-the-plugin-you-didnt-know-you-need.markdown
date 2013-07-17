@@ -10,7 +10,7 @@ categories: vim
 
 What is this?  If you've never heard of this Vim plugin, then this post is for you.  This is one of those hidden gems in the Vim plugin world that is truly life changing.  I think this plugin is so awesome that I've decided to write a post dedicated to it so that more people know about it.
 
-The plugin is written by [Shougo Matsu][a].  He has written a lot of other popular plugins, notably [neocomplcache][b] and [vimshell][c].  I use a lot of his plugins, so I started to notice when certain plugins started using Unite as a dependency, like [neobundle][d] and [vimfiler][e].
+The plugin is written by [Shougo Matsushita][a].  He has written a lot of other popular plugins, notably [neocomplcache][b] and [vimshell][c].  I use a lot of his plugins, so I started to notice when certain plugins started using Unite as a dependency, like [neobundle][d] and [vimfiler][e].
 
 At first it looked like Unite was just a general purpose library, but I was in for a surprise because it is so much more than that.
 

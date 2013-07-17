@@ -4,7 +4,7 @@
   <title><![CDATA[bling on software development]]></title>
   <link href="http://bling.github.io//atom.xml" rel="self"/>
   <link href="http://bling.github.io//"/>
-  <updated>2013-07-15T14:25:02+00:00</updated>
+  <updated>2013-07-17T04:00:18+00:00</updated>
   <id>http://bling.github.io//</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
@@ -65,7 +65,7 @@
 
 <h1>Murphy&rsquo;s Law</h1>
 
-<p>Last Tuesday night, vim-airline became the default in the <a href="http://vim.spf13.com/">spf13</a> distribution, which is one of the most popular distributions out there.  On that same night, I <a href="https://github.com/bling/vim-airline/commit/c0427e435d2eb2170517438ddd4f0b5fa7a8b691">pushed</a> a change to improve the extendability of the plugin.  It was the last thing I did that night and I went to bed shortly after.  Everthing that could go wrong, went wrong &mdash; I woke up to a flurry of emails about it breaking in the most <a href="https://github.com/bling/vim-airline/issues/49">catastrophic</a> <a href="https://github.com/bling/vim-airline/issues/45">way</a> <a href="https://github.com/spf13/spf13-vim/issues/397">possible</a>.  I jumped from my bed to the computer in record time to revert that change.  After a lot of (manual) investigation, I narrowed it down to the exact <a href="https://code.google.com/p/vim/source/detail?r=66e615ce7f61948a2a4a8615d703a42d56763490&amp;name=v7-3-1058">patch</a> (1058) in Vim that affected my code.  That&rsquo;s what I get for using bleeding edge software&hellip;</p>
+<p>Last Tuesday night, vim-airline became the default in the <a href="http://vim.spf13.com/">spf13</a> distribution, which is one of the most popular distributions out there.  On that same night, I <a href="https://github.com/bling/vim-airline/commit/c0427e435d2eb2170517438ddd4f0b5fa7a8b691">pushed</a> a change to improve the extendability of the plugin.  It was the last thing I did that night and I went to bed shortly after.  Everything that could go wrong, went wrong &mdash; I woke up to a flurry of emails about it breaking in the most <a href="https://github.com/bling/vim-airline/issues/49">catastrophic</a> <a href="https://github.com/bling/vim-airline/issues/45">way</a> <a href="https://github.com/spf13/spf13-vim/issues/397">possible</a>.  I jumped from my bed to the computer in record time to revert that change.  After a lot of (manual) investigation, I narrowed it down to the exact <a href="https://code.google.com/p/vim/source/detail?r=66e615ce7f61948a2a4a8615d703a42d56763490&amp;name=v7-3-1058">patch</a> (1058) in Vim that affected my code.  That&rsquo;s what I get for using bleeding edge software&hellip;</p>
 
 <p>Since this incident I&rsquo;ve been testing with Vim 7.2 prior to pushing any code changes to the core.</p>
 
@@ -88,7 +88,7 @@
 
 <p>What is this?  If you&rsquo;ve never heard of this Vim plugin, then this post is for you.  This is one of those hidden gems in the Vim plugin world that is truly life changing.  I think this plugin is so awesome that I&rsquo;ve decided to write a post dedicated to it so that more people know about it.</p>
 
-<p>The plugin is written by <a href="https://github.com/Shougo">Shougo Matsu</a>.  He has written a lot of other popular plugins, notably <a href="https://github.com/Shougo/neocomplcache.vim">neocomplcache</a> and <a href="https://github.com/Shougo/vimshell.vim">vimshell</a>.  I use a lot of his plugins, so I started to notice when certain plugins started using Unite as a dependency, like <a href="https://github.com/Shougo/neobundle.vim">neobundle</a> and <a href="https://github.com/Shougo/vimfiler.vim">vimfiler</a>.</p>
+<p>The plugin is written by <a href="https://github.com/Shougo">Shougo Matsushita</a>.  He has written a lot of other popular plugins, notably <a href="https://github.com/Shougo/neocomplcache.vim">neocomplcache</a> and <a href="https://github.com/Shougo/vimshell.vim">vimshell</a>.  I use a lot of his plugins, so I started to notice when certain plugins started using Unite as a dependency, like <a href="https://github.com/Shougo/neobundle.vim">neobundle</a> and <a href="https://github.com/Shougo/vimfiler.vim">vimfiler</a>.</p>
 
 <p>At first it looked like Unite was just a general purpose library, but I was in for a surprise because it is so much more than that.</p>
 

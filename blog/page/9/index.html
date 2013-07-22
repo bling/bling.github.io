@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="It seems that everywhere you read you will find blog posts asserting that it is difficult to convince others to use TDD, and that everyone talking &hellip;">
+  <meta name="description" content="Hmmm, I couldn’t really think of a good title except that this blog post has a little bit of everything of the title. As with any multithreaded &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,265 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/04/05/windsordynamicproxymixin-powers/">Windsor/DynamicProxy/Mixin Powers!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-04-05T00:00:00+00:00" pubdate data-updated="true">Apr 5<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+Hmmm, I couldn’t really think of a good title except that this blog post has a little bit of everything of the title.<br />
+<br />
+As with any multithreaded program, deadlocks are a huge pain in the butt, and when they happen it costs time, money, and stress.<br />
+<br />
+In my code base I’ve introduced something called an ExtendedLock, which basically has something like this inside:<br />
+<div class="csharpcode"><pre class="alt"><span class="lnum">   1:  </span><span class="kwrd">public</span> <span class="kwrd">class</span> ExtendedLock : IExtendedLock {</pre><pre><span class="lnum">   2:  </span>  <span class="kwrd">public</span> IDisposable Lock() {</pre><pre class="alt"><span class="lnum">   3:  </span>    <span class="kwrd">while</span> (!Monitor.TryEnter(<span class="kwrd">this</span>, 5000)) {</pre><pre><span class="lnum">   4:  </span>      IncrementLockTime();</pre><pre class="alt"><span class="lnum">   5:  </span>    }</pre><pre><span class="lnum">   6:  </span>    <span class="kwrd">return</span> <span class="kwrd">new</span> Disposer(() =&gt; Release());</pre><pre class="alt"><span class="lnum">   7:  </span>  }</pre><pre><span class="lnum">   8:    public event Deadlock;</span></pre><pre>9<span class="lnum">: </span>}</pre></div><style type="text/css">
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style><br />
+<br />
+Pretty simple.&nbsp; IncrementLockTime, as the name implies keeps track of how long the current thread has been attempting to acquire the lock.&nbsp; It returns a Disposer which takes an Action, which releases the lock.&nbsp; This allows us to take advantage of the <b>using</b> syntax, and avoid boiler plate try/finally (oh, and it avoids typos in Monitor.Exit).&nbsp; After some configurable amount of time, if the lock cannot be acquired within, say, 2 minutes, it’s probably a good probability your application is blocked somewhere.<br />
+<br />
+Now, using this class basically means replacing lock(_syncRoot) type code with _elock.Lock().&nbsp; Also, I believe it’s a good candidate for “mixing” into any other component.&nbsp; Mixins are sort of like multiple-inheritance, but not.&nbsp; I like to think of mixins as a “can do” rather than “is a.”<br />
+<br />
+Now, we know that C# doesn’t let you do multiple inheritance, but with libraries like Castle’s DynamicProxy2, it lets you do something very similar, and is extremely powerful.&nbsp; In a sense, it will automatically generate the following code for you:<br />
+<br />
+<div class="csharpcode"><br />
+<pre class="alt"><span class="lnum">   1:  </span><span class="kwrd">public</span> <span class="kwrd">class</span> SomeService : ISomeService, IExtendedLock {</pre><pre><span class="lnum">   2:  </span>  IExtendedLock _lock = <span class="kwrd">new</span> ExtendedLock();</pre><pre class="alt"><span class="lnum">   3:  </span>  <span class="kwrd">public</span> <span class="kwrd">void</span> DoSomething() { }</pre><pre><span class="lnum">   4:  </span>  IDisposable IExtendedLock.Lock() { <span class="kwrd">return</span> _lock.Lock(); }</pre><pre class="alt"><span class="lnum">   5:  </span>}</pre><br />
+</div><style type="text/css">
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style><style type="text/css">
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style><br />
+<br />
+_lock is a private instance variable, SomeService implements IExtendedLock, and simply redirects all the interface methods to _lock.&nbsp; This seems pretty simple and straightforward, but becomes tedious when the type you want to mix in has many methods (as my actual IExtendedLock is).<br />
+<br />
+With Windsor/DynamicProxy, you can do this automatically with minimal amount of code.&nbsp; For example, first you define something like this:<br />
+<br />
+<pre class="csharpcode"><span class="kwrd">public</span> <span class="kwrd">interface</span> ILockableDictionary : IDictionary, IExtendedLock { }</pre><br />
+Then, you register it in the container:<br />
+<div class="csharpcode"><br />
+<pre class="alt"><span class="lnum">   1:  </span>var container = <span class="kwrd">new</span> WindsorContainer();</pre><pre><span class="lnum">   2:  </span>container.Register(Component.For(<span class="kwrd">typeof</span>(ILockableHashtable))</pre><pre class="alt"><span class="lnum">   3:  </span>                                   .LifeStyle.Transient</pre><pre><span class="lnum">   4:  </span>                                   .Activator&lt;LockableHashtableActivator&gt;());</pre></div><style type="text/css">
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style><br />
+<br />
+Now, whenever you need an instance of a lockable hashtable you can simply do something like this:<br />
+<br />
+<pre class="csharpcode">var hash = container.Resolve&lt;ILockableHashtable&gt;();
+<span class="kwrd">using</span> (hash.Lock()) {
+hash[<span class="str">"1"</span>] = 1;
+}</pre><style type="text/css">
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style><br />
+<br />
+You might be wondering why it’s worth all this trouble, and what’s wrong with regular locks and Monitor.&nbsp; For our system it’s pretty critical that it stays running 24/7, and every minute it’s down is money lost, so it is in our best interest to detect any problematic condition.<br />
+<br />
+Last but not least, here’s the important code that actually generates the proxy:<br />
+<div class="csharpcode"><br />
+<pre class="alt"><span class="lnum">   1:  </span><span class="kwrd">internal</span> <span class="kwrd">class</span> LockableHashtableActivator : DefaultComponentActivator</pre><pre><span class="lnum">   2:  </span>{</pre><pre class="alt"><span class="lnum">   3:  </span>    <span class="kwrd">public</span> LockableHashtableActivator(ComponentModel model, IKernel kernel, ComponentInstanceDelegate onCreation, ComponentInstanceDelegate onDestruction)</pre><pre><span class="lnum">   4:  </span>        : <span class="kwrd">base</span>(model, kernel, onCreation, onDestruction)</pre><pre class="alt"><span class="lnum">   5:  </span>    {</pre><pre><span class="lnum">   6:  </span>    }</pre><pre class="alt"><span class="lnum">   7:  </span>&nbsp;</pre><pre><span class="lnum">   8:  </span>    <span class="kwrd">public</span> <span class="kwrd">override</span> <span class="kwrd">object</span> Create(CreationContext context)</pre><pre class="alt"><span class="lnum">   9:  </span>    {</pre><pre><span class="lnum">  10:  </span>        IExtendedLock lockMixin = Kernel.Resolve&lt;IExtendedLock&gt;();</pre><pre class="alt"><span class="lnum">  11:  </span>&nbsp;</pre><pre><span class="lnum">  12:  </span>        <span class="rem">// an additional object we want to "mix" with the implementation to provide combined functionality</span></pre><pre class="alt"><span class="lnum">  13:  </span>        ProxyGenerationOptions options = <span class="kwrd">new</span> ProxyGenerationOptions();</pre><pre><span class="lnum">  14:  </span>        options.AddMixinInstance(lockMixin);</pre><pre class="alt"><span class="lnum">  15:  </span>        </pre><pre><span class="lnum">  16:  </span>        <span class="kwrd">return</span> Kernel.Resolve&lt;ProxyGenerator&gt;().CreateInterfaceProxyWithTarget(</pre><pre class="alt"><span class="lnum">  17:  </span>            <span class="kwrd">typeof</span>(IDictionary), <span class="rem">// the interface of the implementation</span></pre><pre><span class="lnum">  18:  </span>            <span class="kwrd">new</span>[] { <span class="kwrd">typeof</span>(ILockableHashtable) }, <span class="rem">// additional interfaces to use</span></pre><pre class="alt"><span class="lnum">  19:  </span>            Activator.CreateInstance&lt;Hashtable&gt;(), <span class="rem">// concrete implementation to mix into</span></pre><pre><span class="lnum">  20:  </span>            options);</pre><pre class="alt"><span class="lnum">  21:  </span>    }</pre><pre><span class="lnum">  22:  </span>}</pre><br />
+</div><style type="text/css">
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style><style type="text/css">
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style><br />
+For those who are familiar with Windsor and wondering why I didn’t use the fluent Proxy.Mixins method, it’s because those mixins are created once per registration.&nbsp; In this case, it is very important that each mixin (which is an extended lock), is transient, otherwise every lockable hashtable ends up with the same extended lock, which is just asking for trouble.</div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>Krzysztof Koźmic</div>
+<div class='content'>
+actually, with the trunk version the limitation &quot;one mixin per registration&quot; was lifted off. Now Mixins behave pretty much like interceptors, which means they can have any lifestyle, including being transient.</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -346,67 +605,6 @@ Edit: There is a bug in this last bit, check out my latest <a href="http://bling
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/10/19/improving-your-unit-testing-skills/">Improving Your Unit Testing Skills</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-10-19T00:00:00+00:00" pubdate data-updated="true">Oct 19<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Unit testing is <em>hard</em>!  I came to this sad realization when my code which had a large test suite with near 100% code coverage, with every thought-of requirement unit tested, failed during integration testing.</p>
-
-<p>How is that possible?  I thought to myself.  Easy&hellip;my unit tests were incomplete.</p>
-
-<p>Writing software is pretty complex stuff.  This is pretty evident in the level of difficulty in determining how good a software developer is.  Do you measure them based on lines of code?  Can you measure on time to completion of tasks?  Or maybe the feature to bugs coming back ratio?  If writing features alone can be this complicated, surely unit testing is just as (or more) complicated.</p>
-
-<p>First, you must be in a place where you can even <em>start</em> testing your code.  Are you using dependency injection?  Are your components decoupled?  Do you understand mocking and can you use mocking frameworks?  You need an understanding of <em>all</em> these concepts before you can even begin to unit test effectively.  Sure, you can unit test without these prerequisites, but the result will likely be pain and more pain because the you&rsquo;ll be spending 90% of your time setting up a test rather than running it.</p>
-
-<p>But back to the point of this post.  Unit testing is hard because it&rsquo;s one of those things where you&rsquo;ll never really know how to do it properly until you&rsquo;ve tried it.  And that assumes you&rsquo;ve even made the step to do testing at all.</p>
-
-<p>I&rsquo;m at the point where my experience with writing unit tests allows me to set them up quickly with relative ease, and perform very concise tests where anyone reading the unit test would say &ldquo;oh, he&rsquo;s testing this requirement.&rdquo;  However, the problem is that there&rsquo;s still 2 problems that are hard to fix:
-1. Is the test <em>actually</em> correct?
-2. Do the tests cover <em>all</em> scenarios?</p>
-
-<p>(1) is obvious.  If the test is wrong then you might as well not run it all.  You must make it absolute goal to trust your unit tests.  If something fails, it should mean there&rsquo;s a serious problem going on.  You can&rsquo;t have &ldquo;oh that&rsquo;s ok, it&rsquo;ll fail half the time, just ignore it.&rdquo;</p>
-
-<p>(2) is also obvious.  If you don&rsquo;t cover all scenarios, then your unit tests aren&rsquo;t complete.</p>
-
-<p>In my case, I actually made both errors.  The unit test in question was calculating the time until minute X.  So in my unit test, I set the current time to 45 minutes.  The target time was 50 minutes.  5 minutes until minute 50, test passed.  Simple right?  Any veteran developer will probably know what I did wrong.  Yep&hellip;if the current time was 51 minutes, I ended up with a negative result.  The test was wrong in that it only tested half of the problem.  It never accounted for time wrapping.  The test was also incomplete, since it didn&rsquo;t test all scenarios.</p>
-
-<p>Fixing the bug was obviously very simple, but it was still ego shattering knowing that all the confidence I had previously was all false.  I went back to check out other scenarios, and was able to come up with some archaic scenarios where my code failed.  And this is probably another area where novice coders will do, where experienced coders will not: I only coded tests per-requirement.  What happens when 2 requirements collide with each other?  Or, what happens when 2 or more requirements must happen at the same time?  With this thinking I was able to come up with a scenario which led to 4 discrete requirements occurring at the same time.  Yeah&hellip;not fun.</p>
-
-<p>Basically, in summary:
-&ndash; Verify that your tests are correct.
-&ndash; Strive to test for less than, equal, and greater than when applicable.
-&ndash; Cross reference all requirements against each other, and chain them if necessary.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/10/">&larr; Older</a>
@@ -422,6 +620,10 @@ Edit: There is a bug in this last bit, check out my latest <a href="http://bling
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/07/15/flight-of-an-open-source-project/">The flight of an open-source project</a>
@@ -449,10 +651,6 @@ Edit: There is a bug in this last bit, check out my latest <a href="http://bling
     
       <li class="post">
         <a href="/blog/2013/02/10/love-affair-with-vim/">Love Affair with Vim</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/07/29/snoopshell-evolution/">SnoopShell: Evolution</a>
       </li>
     
   </ul>

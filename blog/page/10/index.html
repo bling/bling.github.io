@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="I’ve been listening to a bunch of podcasts lately and I came across a gem that was pretty darn useful.&nbsp; It’s pretty old I suppose in technology &hellip;">
+  <meta name="description" content="Unit testing is hard! I came to this sad realization when my code which had a large test suite with near 100% code coverage, with every thought-of &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,67 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/10/19/improving-your-unit-testing-skills/">Improving Your Unit Testing Skills</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-10-19T00:00:00+00:00" pubdate data-updated="true">Oct 19<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Unit testing is <em>hard</em>!  I came to this sad realization when my code which had a large test suite with near 100% code coverage, with every thought-of requirement unit tested, failed during integration testing.</p>
+
+<p>How is that possible?  I thought to myself.  Easy&hellip;my unit tests were incomplete.</p>
+
+<p>Writing software is pretty complex stuff.  This is pretty evident in the level of difficulty in determining how good a software developer is.  Do you measure them based on lines of code?  Can you measure on time to completion of tasks?  Or maybe the feature to bugs coming back ratio?  If writing features alone can be this complicated, surely unit testing is just as (or more) complicated.</p>
+
+<p>First, you must be in a place where you can even <em>start</em> testing your code.  Are you using dependency injection?  Are your components decoupled?  Do you understand mocking and can you use mocking frameworks?  You need an understanding of <em>all</em> these concepts before you can even begin to unit test effectively.  Sure, you can unit test without these prerequisites, but the result will likely be pain and more pain because the you&rsquo;ll be spending 90% of your time setting up a test rather than running it.</p>
+
+<p>But back to the point of this post.  Unit testing is hard because it&rsquo;s one of those things where you&rsquo;ll never really know how to do it properly until you&rsquo;ve tried it.  And that assumes you&rsquo;ve even made the step to do testing at all.</p>
+
+<p>I&rsquo;m at the point where my experience with writing unit tests allows me to set them up quickly with relative ease, and perform very concise tests where anyone reading the unit test would say &ldquo;oh, he&rsquo;s testing this requirement.&rdquo;  However, the problem is that there&rsquo;s still 2 problems that are hard to fix:
+1. Is the test <em>actually</em> correct?
+2. Do the tests cover <em>all</em> scenarios?</p>
+
+<p>(1) is obvious.  If the test is wrong then you might as well not run it all.  You must make it absolute goal to trust your unit tests.  If something fails, it should mean there&rsquo;s a serious problem going on.  You can&rsquo;t have &ldquo;oh that&rsquo;s ok, it&rsquo;ll fail half the time, just ignore it.&rdquo;</p>
+
+<p>(2) is also obvious.  If you don&rsquo;t cover all scenarios, then your unit tests aren&rsquo;t complete.</p>
+
+<p>In my case, I actually made both errors.  The unit test in question was calculating the time until minute X.  So in my unit test, I set the current time to 45 minutes.  The target time was 50 minutes.  5 minutes until minute 50, test passed.  Simple right?  Any veteran developer will probably know what I did wrong.  Yep&hellip;if the current time was 51 minutes, I ended up with a negative result.  The test was wrong in that it only tested half of the problem.  It never accounted for time wrapping.  The test was also incomplete, since it didn&rsquo;t test all scenarios.</p>
+
+<p>Fixing the bug was obviously very simple, but it was still ego shattering knowing that all the confidence I had previously was all false.  I went back to check out other scenarios, and was able to come up with some archaic scenarios where my code failed.  And this is probably another area where novice coders will do, where experienced coders will not: I only coded tests per-requirement.  What happens when 2 requirements collide with each other?  Or, what happens when 2 or more requirements must happen at the same time?  With this thinking I was able to come up with a scenario which led to 4 discrete requirements occurring at the same time.  Yeah&hellip;not fun.</p>
+
+<p>Basically, in summary:
+&ndash; Verify that your tests are correct.
+&ndash; Strive to test for less than, equal, and greater than when applicable.
+&ndash; Cross reference all requirements against each other, and chain them if necessary.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -401,93 +462,6 @@ I&#39;ve been toying with a similar approach, but I&#39;m uncertain about how to
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/09/07/member-injection-module-for-autofac/">Member Injection Module for Autofac</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-09-07T00:00:00+00:00" pubdate data-updated="true">Sep 7<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-Inevitably as a project gets more complicated, you will need to start using more features of your IoC container.  Autofac has built-in support for property injection by hooking into the OnActivating or OnActivated events, which basically set all public properties (or only those which are unset).
-
-However, I didn&#8217;t really like this because once you start using properties, it&#8217;s not as clear cut as constructors that you are using injection.  It becomes hard to manage later on when you have many properties which some should be injected and others should be manually set in code.  Autofac&#8217;s inject all or only-null approach doesn&#8217;t fit the bill when a class gets a little more complicated.
-
-I set up to fix this by writing a custom module, and it turned out to be very very simple.  With attributes, we can mimic functionality that&#8217;s used in Ninject.
-
-Here&#8217;s the module code:
-<pre>
-public class MemberInjectionModule : IModule
-{
-  public void Configure(IContainer container)
-  {
-    container.ComponentRegistered += (oo, ee) =>
-      ee.ComponentRegistration.Activated += (o, e) =>
-    {
-      const BindingFlags flags = BindingFlags.Instance |
-                                 BindingFlags.NonPublic |
-                                 BindingFlags.Public;
-      var type = e.Instance.GetType();
-      foreach (var field in type.GetFields(flags))
-      {
-        if (field.GetCustomAttributes(typeof(InjectedAttribute), true).Length > 0)
-          field.SetValue(e.Instance, e.Context.Resolve(field.FieldType));
-      }
-      foreach (var prop in type.GetProperties(flags))
-      {
-        if (prop.GetCustomAttributes(typeof(InjectedAttribute), true).Length > 0)
-        {
-          if (prop.GetIndexParameters().Length > 0)
-            throw new InvalidOperationException("Indexed properties cannot be injected.");
-
-          prop.SetValue(e.Instance, e.Context.Resolve(prop.PropertyType), null);
-        }
-      }
-    };
-  }
-}
-[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-public class InjectedAttribute : Attribute { }
-</pre>
-And that&#8217;s it!  Pretty basic reflection here stuff here, but as you can see&#8230;iterate through all fields and properties (including privates), and try to resolve them.
-
-Now, you can just RegisterModule(new MemberInjectionModule()), and inside your services you simply annotate your properties/fields with the [Injected] attribute, like so:
-<pre>
-public class SomeService : ISomeService
-{
-  [Injected]
-  protected ISomeOtherService SomeOtherService { get; set; }
-}
-</pre>
-And now, it&#8217;s a very clear cut way of explicitly defining which properties (and fields) should be injected.  Also, it&#8217;s also a simple string property away defined in the attribute if you want to specify a named service, which I&#8217;ll leave the the reader to implement :)</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/11/">&larr; Older</a>
@@ -503,6 +477,10 @@ And now, it&#8217;s a very clear cut way of explicitly defining which properties
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/07/15/flight-of-an-open-source-project/">The flight of an open-source project</a>
@@ -530,10 +508,6 @@ And now, it&#8217;s a very clear cut way of explicitly defining which properties
     
       <li class="post">
         <a href="/blog/2013/02/10/love-affair-with-vim/">Love Affair with Vim</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/07/29/snoopshell-evolution/">SnoopShell: Evolution</a>
       </li>
     
   </ul>

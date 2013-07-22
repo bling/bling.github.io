@@ -4,7 +4,7 @@
   <title><![CDATA[bling on software development]]></title>
   <link href="http://bling.github.io//atom.xml" rel="self"/>
   <link href="http://bling.github.io//"/>
-  <updated>2013-07-17T04:00:18+00:00</updated>
+  <updated>2013-07-22T00:47:43+00:00</updated>
   <id>http://bling.github.io//</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
@@ -12,6 +12,92 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Smart tab expansions in Vim with expression mappings]]></title>
+    <link href="http://bling.github.io//blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/"/>
+    <updated>2013-07-21T20:38:00+00:00</updated>
+    <id>http://bling.github.io//blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been having a small itch for a while now, and it&rsquo;s a very simple thing &mdash; I want to make my tab smarter.  This all starts with a dive into <a href="https://www.emmet.io">Emmet</a>.  To understand what it is, here&rsquo;s a quick introduction.  First, you type something using its syntax:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>div&gt;li*4</span></code></pre></td></tr></table></div></figure>
+
+
+<p>and after you &ldquo;expand&rdquo; it, usually with a hotkey, and it gets converted to</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;div&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;li&gt;&lt;/li&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;li&gt;&lt;/li&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;li&gt;&lt;/li&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;li&gt;&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As you can imagine, this saves you <em>a lot</em> of typing and lets you prototype a web page (or CSS) in no time once you learn the syntax.  It is snippets on steriods!  The Sublime <a href="https://github.com/sergeche/emmet-sublime">plugin</a> handles this perfectly.  It maps <code>&lt;tab&gt;</code> as the expansion key.  Hitting tab after typing <code>div&gt;li*4</code> will expand it and put the cursor at the first <code>&lt;li&gt;|&lt;/li&gt;</code>.  Then after you type something, if you hit <code>&lt;tab&gt;</code> again, it will jump to the next <code>li</code>.  It is smart enough to know whether to expand or jump to the next tag.</p>
+
+<p>So how does this functionality look like in Vim?  <!--more-->First, you must install the <a href="https://github.com/mattn/zencoding-vim">zencoding-vim</a> plugin to get this functionality (Emmet used to be named Zen Coding).  However, by default it&rsquo;s mappings are <code>&lt;C-y&gt;,</code> to expand, and <code>&lt;C-y&gt;n</code> to jump to the next tag.  There are two problems here.  First, these mappings are <strong>really</strong> awkward to type.  And secondly, there are two mappings!  You could, of course, remap it do something else, but let&rsquo;s be honest, <code>&lt;leader&gt;</code> whatever just does not compare with <code>&lt;tab&gt;</code>.</p>
+
+<p>How can we replicate this functionality in Vim?</p>
+
+<h1>Expression Mappings</h1>
+
+<p>Most of the time, you will see people do mappings in Vim like <code>nnoremap j gj</code> which is a very simple and straightforward mapping.  Other times you may see something like <code>nnoremap Q :call CloseWindow()&lt;cr&gt;</code> where a key is mapped to a function.  But rarely will you see anyone use <code>&lt;expr&gt;</code> mappings.  What are these?  Long story short, you can determine what to map based on the return value of the function.  To replicate the above tab behavior, let&rsquo;s first set up a basic mapping:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='vim'><span class='line'><span class="k">function</span><span class="p">!</span> <span class="k">s</span>:zen_html_tab<span class="p">()</span>
+</span><span class='line'>  <span class="k">return</span> <span class="s2">&quot;\&lt;c-y&gt;,&quot;</span>
+</span><span class='line'><span class="k">endfunction</span>
+</span><span class='line'>autocmd <span class="nb">FileType</span> html imap <span class="p">&lt;</span>buffer<span class="p">&gt;&lt;</span>expr<span class="p">&gt;&lt;</span><span class="k">tab</span><span class="p">&gt;</span> <span class="p">&lt;</span>sid<span class="p">&gt;</span>zen_html_tab<span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>There&rsquo;s a lot of things going on here, so I&rsquo;ll go over them one by one.</p>
+
+<ul>
+<li><code>s:</code> denotes that the function is scoped to the script.  You can, of course, define the function globally (must be PascalCased or script#prefixed), but I prefer not to pollute the global scope if I don&rsquo;t have to.  The return value is an escaped string which are the keys you want to map.  An additional thing to note is that you need <code>&lt;sid&gt;</code> to reference the function in the mapping.</li>
+<li>The FileType autocmd is used to set up the mapping only for HTML files.</li>
+<li><code>&lt;buffer&gt;</code> denotes that the mapping should only apply for the current buffer (without this when you open an HTML file it will apply the mapping globally).</li>
+<li><code>&lt;expr&gt;</code> is the special sauce that lets you to execute code to determine the value of the mapping.</li>
+</ul>
+
+
+<p>OK, the above doesn&rsquo;t actually do anything yet.  In fact, it&rsquo;s pretty much equivalent to <code>imap &lt;tab&gt; &lt;c-y&gt;,</code>.  So let&rsquo;s add some context into it:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='vim'><span class='line'><span class="k">function</span><span class="p">!</span> <span class="k">s</span>:zen_html_tab<span class="p">()</span>
+</span><span class='line'>  <span class="k">let</span> line <span class="p">=</span> getline<span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">if</span> <span class="k">match</span><span class="p">(</span>line<span class="p">,</span> <span class="s1">&#39;&lt;.*&gt;&#39;</span><span class="p">)</span> <span class="p">&gt;=</span> <span class="p">-</span>
+</span><span class='line'>    <span class="k">return</span> <span class="s2">&quot;\&lt;c-y&gt;n&quot;</span>
+</span><span class='line'>  <span class="k">endif</span>
+</span><span class='line'>  <span class="k">return</span> <span class="s2">&quot;\&lt;c-y&gt;,&quot;</span>
+</span><span class='line'><span class="k">endfunction</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is a simple implementation that captures the majority of use cases.  <code>getline('.')</code> gets the current line under the cursor.  <code>match()</code> is a built-in function which returns the index of the matched regular expression.  I am relying on the fact that Emmet syntax will <em>not</em> have an opening &lt;.  This makes the function very simple; if there&rsquo;s an &lt;> then jump to the next tag, otherwise, expand.</p>
+
+<p>And that&rsquo;s all there is to it!  This function won&rsquo;t cover more &ldquo;advanced&rdquo; scenarios like nested expansions (although you could cheat by creating a newline), but otherwise it shows that expression mappings are an easy way to get more umph from your mappings.</p>
+
+<p>For more details, contact your local Vim department by calling <code>:help map-&lt;expr&gt;</code>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[The flight of an open-source project]]></title>
@@ -1429,196 +1515,6 @@ Rather than the custom Observable generator with Iterval, why not use Observable
 </div>
 </div>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Building a Real-time Push App with Silverlight: Part 3]]></title>
-    <link href="http://bling.github.io//blog/2011/08/28/building-real-time-push-app-with-rx-3/"/>
-    <updated>2011-08-28T00:00:00+00:00</updated>
-    <id>http://bling.github.io//blog/2011/08/28/building-real-time-push-app-with-rx-3</id>
-    <content type="html"><![CDATA[<p>In this part we’re going to fire up Expression Blend (the trial for version 5 can be found <a href="http://www.microsoft.com/download/en/details.aspx?displaylang=en&amp;amp;id=9503">here</a>) and do some UI work.</p>
-
-<p>In part 2, I created a simple Twitter client which connected to the streaming API, and connected to the sampling request which brings back random tweets.  Here is the data template:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;DataTemplate</span> <span class="na">x:Key=</span><span class="s">&quot;TweetDataTemplate&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;Grid</span> <span class="na">DataContext=</span><span class="s">&quot;{Binding}&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;Grid.RowDefinitions&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;RowDefinition</span> <span class="nt">/&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;RowDefinition</span> <span class="na">Height=</span><span class="s">&quot;Auto&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/Grid.RowDefinitions&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;TextBlock</span> <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span> <span class="na">FontSize=</span><span class="s">&quot;12&quot;</span> <span class="na">Text=</span><span class="s">&quot;{Binding Text}&quot;</span> <span class="na">TextWrapping=</span><span class="s">&quot;Wrap&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;TextBlock</span> <span class="na">Grid.Row=</span><span class="s">&quot;1&quot;</span>
-</span><span class='line'>                   <span class="na">HorizontalAlignment=</span><span class="s">&quot;Right&quot;</span>
-</span><span class='line'>                   <span class="na">VerticalAlignment=</span><span class="s">&quot;Bottom&quot;</span>
-</span><span class='line'>                   <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span>
-</span><span class='line'>                   <span class="na">FontSize=</span><span class="s">&quot;13.333&quot;</span>
-</span><span class='line'>                   <span class="na">Foreground=</span><span class="s">&quot;BlueViolet&quot;</span>
-</span><span class='line'>                   <span class="na">Text=</span><span class="s">&quot;{Binding ScreenName}&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;TextBlock</span> <span class="na">Grid.Row=</span><span class="s">&quot;1&quot;</span>
-</span><span class='line'>                   <span class="na">HorizontalAlignment=</span><span class="s">&quot;Left&quot;</span>
-</span><span class='line'>                   <span class="na">VerticalAlignment=</span><span class="s">&quot;Bottom&quot;</span>
-</span><span class='line'>                   <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span>
-</span><span class='line'>                   <span class="na">FontSize=</span><span class="s">&quot;9.333&quot;</span>
-</span><span class='line'>                   <span class="na">Foreground=</span><span class="s">&quot;DarkCyan&quot;</span>
-</span><span class='line'>                   <span class="na">Text=</span><span class="s">&quot;{Binding CreatedAt}&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/Grid&gt;</span>
-</span><span class='line'><span class="nt">&lt;/DataTemplate&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This renders into something like this:</p>
-
-<p><img src="http://lh4.ggpht.com/-ul4umD_jKFs/Tlq_U7HuoLI/AAAAAAAAAFg/pOhMiaqmxcE/s1600/image%25255B4%25255D.png" alt="img" /></p>
-
-<p>The text is randomly generated from Blend’s <a href="http://lmgtfy.com/?q=blend+sample+data">sample</a> capability, which is totally awesome as it allows designers to see what they’re working with, and keeps the sample data separate from the real data.</p>
-
-<p>While design is a matter of personal taste, and you’re bound to get disagreements between different people, if you follow some basic rules you’ll satisfy a greater audience.</p>
-
-<ul>
-<li>Subtle gradients and small shadows
-
-<ul>
-<li>If you take a look at all the nice interfaces, they tend to use very slight gradients and small shadows.  Most of the time you don’t even notice unless you look closely.</li>
-<li>I think Microsoft’s Metro design is beautiful.  Reason?  It emphasizes text over decorations (like gradients and shadows).  This tends to lead to very clean design because there’s very little opportunity to abuse gradients and shadows.</li>
-</ul>
-</li>
-<li>Realism and light sources
-
-<ul>
-<li>Continuing on with gradients and shadows, they should be realistic.  Look at your design from a 3D point of view.  Apply a light source from a certain angle, and then apply your shadows relative to that light source.</li>
-<li>Convey distance properly
-
-<ul>
-<li>Darker shadows imply being closer to the background, whereas lighter shadows imply being further away.  Use blurring to add emphasis to the distance.  <img src="http://lh5.ggpht.com/-YvKRal5ToEw/Tlr6OrRIS4I/AAAAAAAAAFs/AAg79v6y2Cc/image_thumb%25255B14%25255D.png?imgmax=800" alt="eg" /></li>
-<li>If you overlap planes you should apply these rules to each individual plane.  Don’t use the same border for everything.  Think about how it would look like in real life if you laid it out like that with pieces of paper.  The shadow sizes for that will be different, so you should do the same.</li>
-<li>Also keep in mind that the shadows used above are <em>way</em> too much for any application.  Be subtle!</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Consistent theme
-
-<ul>
-<li>This one seems obvious but nothing is worse than having a nice looking application bring up an unskinned dialog.</li>
-</ul>
-</li>
-<li>Usability
-
-<ul>
-<li>If the design doesn’t serve a purpose to make it more usable, it shouldn’t be there.  Even something as simple as black on white follows this – you do that so you can read text.  However, even something as simple as that can be improved.  Take a look at why the Kindle is so successful.  The readability is better because of the lower contrast between the black and light-brown background.</li>
-</ul>
-</li>
-</ul>
-
-
-<p>With these starting points, let’s redesign the data template.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;DataTemplate</span> <span class="na">x:Key=</span><span class="s">&quot;TweetDataTemplate&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>   <span class="nt">&lt;Grid&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;Grid.Background&gt;</span>
-</span><span class='line'>           <span class="nt">&lt;LinearGradientBrush</span> <span class="na">StartPoint=</span><span class="s">&quot;0.5,0&quot;</span> <span class="na">EndPoint=</span><span class="s">&quot;0.5,1&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>               <span class="nt">&lt;GradientStop</span> <span class="na">Color=</span><span class="s">&quot;#FFDADADA&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>               <span class="nt">&lt;GradientStop</span> <span class="na">Offset=</span><span class="s">&quot;1&quot;</span> <span class="na">Color=</span><span class="s">&quot;#FFC8C8C8&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>           <span class="nt">&lt;/LinearGradientBrush&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;/Grid.Background&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;Grid.RowDefinitions&gt;</span>
-</span><span class='line'>           <span class="nt">&lt;RowDefinition</span> <span class="nt">/&gt;</span>
-</span><span class='line'>           <span class="nt">&lt;RowDefinition</span> <span class="na">Height=</span><span class="s">&quot;Auto&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;/Grid.RowDefinitions&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;TextBlock</span> <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span> <span class="na">FontSize=</span><span class="s">&quot;12&quot;</span> <span class="na">Text=</span><span class="s">&quot;{Binding Text}&quot;</span> <span class="na">TextWrapping=</span><span class="s">&quot;Wrap&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;TextBlock</span> <span class="na">Grid.Row=</span><span class="s">&quot;1&quot;</span>
-</span><span class='line'>                  <span class="na">HorizontalAlignment=</span><span class="s">&quot;Right&quot;</span>
-</span><span class='line'>                  <span class="na">VerticalAlignment=</span><span class="s">&quot;Bottom&quot;</span>
-</span><span class='line'>                  <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span>
-</span><span class='line'>                  <span class="na">FontSize=</span><span class="s">&quot;13.333&quot;</span>
-</span><span class='line'>                  <span class="na">Foreground=</span><span class="s">&quot;BlueViolet&quot;</span>
-</span><span class='line'>                  <span class="na">Text=</span><span class="s">&quot;{Binding ScreenName}&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;TextBlock</span> <span class="na">Grid.Row=</span><span class="s">&quot;1&quot;</span>
-</span><span class='line'>                  <span class="na">HorizontalAlignment=</span><span class="s">&quot;Left&quot;</span>
-</span><span class='line'>                  <span class="na">VerticalAlignment=</span><span class="s">&quot;Bottom&quot;</span>
-</span><span class='line'>                  <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span>
-</span><span class='line'>                  <span class="na">FontSize=</span><span class="s">&quot;9.333&quot;</span>
-</span><span class='line'>                  <span class="na">Foreground=</span><span class="s">&quot;#FF003D8F&quot;</span>
-</span><span class='line'>                  <span class="na">Text=</span><span class="s">&quot;{Binding CreatedAt}&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;Border</span> <span class="na">Grid.RowSpan=</span><span class="s">&quot;2&quot;</span> <span class="na">BorderBrush=</span><span class="s">&quot;#FF999999&quot;</span> <span class="na">BorderThickness=</span><span class="s">&quot;0,0,0,1&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;Border</span> <span class="na">Grid.RowSpan=</span><span class="s">&quot;2&quot;</span> <span class="na">BorderBrush=</span><span class="s">&quot;White&quot;</span> <span class="na">BorderThickness=</span><span class="s">&quot;0,1,0,0&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>   <span class="nt">&lt;/Grid&gt;</span>
-</span><span class='line'><span class="nt">&lt;/DataTemplate&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>After these changes, it looks like this:</p>
-
-<p><img src="http://lh5.ggpht.com/-fTL8wgr5ebs/Tlr6PGkqyeI/AAAAAAAAAF0/O98iakwvqGc/image_thumb%25255B17%25255D.png?imgmax=800" alt="eg" /></p>
-
-<p>Did you notice the gradient?  You might think after seeing it here to adjust the gradients more so you can see it.  That would be a mistake.  See below.</p>
-
-<p><img src="http://lh6.ggpht.com/--uPF_IEo6LM/Tlr6PpL9YDI/AAAAAAAAAF8/UxqCqYW3Wl4/image_thumb%25255B47%25255D.png?imgmax=800" alt="eg" /></p>
-
-<p>The above is the exact same thing, but stacked vertically three times.  When this happens the subtle difference between the top and bottom of the control is more pronounced, so it looks like multiple panels are aligned together.</p>
-
-<p>However, there’s still a little touch you can add.  The white and gray borders are only 1 pixel high, but that’s the little touch needed to make it look crisp.</p>
-
-<p><img src="http://lh3.ggpht.com/-QHLW-sKfPfI/Tlr6P_c9qLI/AAAAAAAAAGE/kJ0Z8VgS3xg/image_thumb%25255B44%25255D.png?imgmax=800" alt="eg" /></p>
-
-<p>Finally, let’s see the before and after (or eh&hellip;rather after and before, because I took the screenshot backwards :P):</p>
-
-<p><img src="http://lh6.ggpht.com/-tzZ8AVtNv0M/Tlr6QmHJHnI/AAAAAAAAAGM/H1SYEqT6cis/image_thumb%25255B50%25255D.png?imgmax=800" alt="eg" /></p>
 ]]></content>
   </entry>
   

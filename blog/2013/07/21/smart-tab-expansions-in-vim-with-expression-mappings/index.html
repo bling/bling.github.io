@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>bling on software development</title>
+  <title>Smart tab expansions in Vim with expression mappings - bling on software development</title>
   <meta name="author" content="Bailey Ling">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://bling.github.io/">
+  <link rel="canonical" href="http://bling.github.io//blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="bling on software development" type="application/atom+xml">
@@ -75,15 +75,12 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart Tab Expansions in Vim With Expression Mappings</a></h1>
+      <h1 class="entry-title">Smart Tab Expansions in Vim With Expression Mappings</h1>
     
     
       <p class="meta">
@@ -106,7 +103,7 @@
   </header>
 
 
-  <div class="entry-content"><p>I&rsquo;ve been having a small itch for a while now, and it&rsquo;s a very simple thing &mdash; I want to make my tab smarter.  This all starts with a dive into <a href="https://www.emmet.io">Emmet</a>.  To understand what it is, here&rsquo;s a quick introduction.  First, you type something using its syntax:</p>
+<div class="entry-content"><p>I&rsquo;ve been having a small itch for a while now, and it&rsquo;s a very simple thing &mdash; I want to make my tab smarter.  This all starts with a dive into <a href="https://www.emmet.io">Emmet</a>.  To understand what it is, here&rsquo;s a quick introduction.  First, you type something using its syntax:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>div&gt;li*4</span></code></pre></td></tr></table></div></figure>
@@ -131,70 +128,70 @@
 
 <p>As you can imagine, this saves you <em>a lot</em> of typing and lets you prototype a web page (or CSS) in no time once you learn the syntax.  It is snippets on steriods!  The Sublime <a href="https://github.com/sergeche/emmet-sublime">plugin</a> handles this perfectly.  It maps <code>&lt;tab&gt;</code> as the expansion key.  Hitting tab after typing <code>div&gt;li*4</code> will expand it and put the cursor at the first <code>&lt;li&gt;|&lt;/li&gt;</code>.  Then after you type something, if you hit <code>&lt;tab&gt;</code> again, it will jump to the next <code>li</code>.  It is smart enough to know whether to expand or jump to the next tag.</p>
 
-<p>So how does this functionality look like in Vim?  </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Read on &rarr;</a>
-    </footer>
-  
+<p>So how does this functionality look like in Vim?  <!--more-->First, you must install the <a href="https://github.com/mattn/zencoding-vim">zencoding-vim</a> plugin to get this functionality (Emmet used to be named Zen Coding).  However, by default it&rsquo;s mappings are <code>&lt;C-y&gt;,</code> to expand, and <code>&lt;C-y&gt;n</code> to jump to the next tag.  There are two problems here.  First, these mappings are <strong>really</strong> awkward to type.  And secondly, there are two mappings!  You could, of course, remap it do something else, but let&rsquo;s be honest, <code>&lt;leader&gt;</code> whatever just does not compare with <code>&lt;tab&gt;</code>.</p>
+
+<p>How can we replicate this functionality in Vim?</p>
+
+<h1>Expression Mappings</h1>
+
+<p>Most of the time, you will see people do mappings in Vim like <code>nnoremap j gj</code> which is a very simple and straightforward mapping.  Other times you may see something like <code>nnoremap Q :call CloseWindow()&lt;cr&gt;</code> where a key is mapped to a function.  But rarely will you see anyone use <code>&lt;expr&gt;</code> mappings.  What are these?  Long story short, you can determine what to map based on the return value of the function.  To replicate the above tab behavior, let&rsquo;s first set up a basic mapping:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='vim'><span class='line'><span class="k">function</span><span class="p">!</span> <span class="k">s</span>:zen_html_tab<span class="p">()</span>
+</span><span class='line'>  <span class="k">return</span> <span class="s2">&quot;\&lt;c-y&gt;,&quot;</span>
+</span><span class='line'><span class="k">endfunction</span>
+</span><span class='line'>autocmd <span class="nb">FileType</span> html imap <span class="p">&lt;</span>buffer<span class="p">&gt;&lt;</span>expr<span class="p">&gt;&lt;</span><span class="k">tab</span><span class="p">&gt;</span> <span class="p">&lt;</span>sid<span class="p">&gt;</span>zen_html_tab<span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-    </article>
-  
-  
-    <article>
+<p>There&rsquo;s a lot of things going on here, so I&rsquo;ll go over them one by one.</p>
+
+<ul>
+<li><code>s:</code> denotes that the function is scoped to the script.  You can, of course, define the function globally (must be PascalCased or script#prefixed), but I prefer not to pollute the global scope if I don&rsquo;t have to.  The return value is an escaped string which are the keys you want to map.  An additional thing to note is that you need <code>&lt;sid&gt;</code> to reference the function in the mapping.</li>
+<li>The FileType autocmd is used to set up the mapping only for HTML files.</li>
+<li><code>&lt;buffer&gt;</code> denotes that the mapping should only apply for the current buffer (without this when you open an HTML file it will apply the mapping globally).</li>
+<li><code>&lt;expr&gt;</code> is the special sauce that lets you to execute code to determine the value of the mapping.</li>
+</ul>
+
+
+<p>OK, the above doesn&rsquo;t actually do anything yet.  In fact, it&rsquo;s pretty much equivalent to <code>imap &lt;tab&gt; &lt;c-y&gt;,</code>.  So let&rsquo;s add some context into it:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='vim'><span class='line'><span class="k">function</span><span class="p">!</span> <span class="k">s</span>:zen_html_tab<span class="p">()</span>
+</span><span class='line'>  <span class="k">let</span> line <span class="p">=</span> getline<span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">if</span> <span class="k">match</span><span class="p">(</span>line<span class="p">,</span> <span class="s1">&#39;&lt;.*&gt;&#39;</span><span class="p">)</span> <span class="p">&gt;=</span> <span class="p">-</span>
+</span><span class='line'>    <span class="k">return</span> <span class="s2">&quot;\&lt;c-y&gt;n&quot;</span>
+</span><span class='line'>  <span class="k">endif</span>
+</span><span class='line'>  <span class="k">return</span> <span class="s2">&quot;\&lt;c-y&gt;,&quot;</span>
+</span><span class='line'><span class="k">endfunction</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is a simple implementation that captures the majority of use cases.  <code>getline('.')</code> gets the current line under the cursor.  <code>match()</code> is a built-in function which returns the index of the matched regular expression.  I am relying on the fact that Emmet syntax will <em>not</em> have an opening &lt;.  This makes the function very simple; if there&rsquo;s an &lt;> then jump to the next tag, otherwise, expand.</p>
+
+<p>And that&rsquo;s all there is to it!  This function won&rsquo;t cover more &ldquo;advanced&rdquo; scenarios like nested expansions (although you could cheat by creating a newline), but otherwise it shows that expression mappings are an easy way to get more umph from your mappings.</p>
+
+<p>For more details, contact your local Vim department by calling <code>:help map-&lt;expr&gt;</code>.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/15/flight-of-an-open-source-project/">The Flight of an Open-source Project</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
   
 
+<span class="byline author vcard">Posted by <span class="fn">Bailey Ling</span></span>
 
-<time datetime="2013-07-15T10:00:00+00:00" pubdate data-updated="true">Jul 15<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1>Welcome aboard!</h1>
-
-<p>Those were the words that a flight attendant said to me as a boarded a plane to visit Paris for a summer vacation of wine and cheese.  It was a long flight; about 8 hours.  This particular plane was older and didn&rsquo;t have the personal TVs installed yet.  What this meant was I didn&rsquo;t have any movies to distract me from working on a pet project I had going on.  This little project was a single vim file in my vimrc.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/07/15/flight-of-an-open-source-project/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/">Unite.vim, the Plugin You Didn&#8217;t Know You Need</a></h1>
-    
-    
-      <p class="meta">
-        
 
 
 
@@ -206,130 +203,48 @@
   
 
 
-<time datetime="2013-06-02T19:34:00+00:00" pubdate data-updated="true">Jun 2<span>nd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1><a href="https://github.com/Shougo/unite.vim">Unite.vim</a></h1>
-
-<p>What is this?  If you&rsquo;ve never heard of this Vim plugin, then this post is for you.  This is one of those hidden gems in the Vim plugin world that is truly life changing.  I think this plugin is so awesome that I&rsquo;ve decided to write a post dedicated to it so that more people know about it.</p>
-
-<p>The plugin is written by <a href="https://github.com/Shougo">Shougo Matsushita</a>.  He has written a lot of other popular plugins, notably <a href="https://github.com/Shougo/neocomplcache.vim">neocomplcache</a> and <a href="https://github.com/Shougo/vimshell.vim">vimshell</a>.  I use a lot of his plugins, so I started to notice when certain plugins started using Unite as a dependency, like <a href="https://github.com/Shougo/neobundle.vim">neobundle</a> and <a href="https://github.com/Shougo/vimfiler.vim">vimfiler</a>.</p>
-
-<p>At first it looked like Unite was just a general purpose library, but I was in for a surprise because it is so much more than that.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
+<time datetime="2013-07-21T20:38:00+00:00" pubdate data-updated="true">Jul 21<span>st</span>, 2013</time>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/19/on-typescript/">On TypeScript</a></h1>
-    
-    
-      <p class="meta">
-        
 
-
-
-
-
-
-
-
+<span class="categories">
   
+    <a class='category' href='/blog/categories/vim/'>vim</a>
+  
+</span>
 
 
-<time datetime="2013-04-19T23:31:00+00:00" pubdate data-updated="true">Apr 19<span>th</span>, 2013</time>
-        
-      </p>
+    </p>
     
-  </header>
-
-
-  <div class="entry-content"><h1>What&rsquo;s the deal?</h1>
-
-<p>For the past week I&rsquo;ve been fortunate to work on an internal project which was purely greenfield and built on Node/Express on the backend, and AngularJS on the front-end.  It was a ton of fun and I learned a lot in the process, most particularly TypeScript and CoffeeScript.</p>
-
-<p>TypeScript was of interest because the application I was writing contained some pretty complex calculations.  The existing implementation was in Java, and at first glance it seemed like it would be a good idea to have some type safety whilst reimplementing the algorithm.</p>
-
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bling.github.io//blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/" data-via="blingcoder" data-counturl="http://bling.github.io//blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/04/19/on-typescript/">Read on &rarr;</a>
-    </footer>
-  
 
-
-    </article>
-  
-  
-    <article>
+    
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript/">.NET/WPF to HTML/CSS/Javscript</a></h1>
-    
-    
-      <p class="meta">
-        
+        <a class="basic-alignment left" href="/blog/2013/07/15/flight-of-an-open-source-project/" title="Previous Post: The flight of an open-source project">&laquo; The flight of an open-source project</a>
+      
+      
+    </p>
+  </footer>
+</article>
 
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-13T11:58:00+00:00" pubdate data-updated="true">Apr 13<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1>In the beginning&hellip;</h1>
-
-<p>For the vast majority of my career I&rsquo;d say I was a Microsoft guy.  I took Java in university and toyed around with Linux at home, but what paid the bills was my knowledge and expertise in Microsoft technologies that I&rsquo;ve built up over the years.</p>
-
-<p>Then Metro and Windows 8 came, and the writing was on the wall.  Microsoft really screwed up.  In their efforts to play catch up, they alienated their business customers and came up with solutions that consumers did not want.  Despite their best efforts they could not stop the avalanche that was Node and HTML5.  Everyone was moving to HTML5, and even Microsoft themselves could not ignore this as now they&rsquo;re supporting hosting Node on Azure.</p>
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript/">Read on &rarr;</a>
-    </footer>
-  
 
-
-    </article>
-  
-  <div class="pagination">
-    
-      <a class="prev" href="/blog/page/2/">&larr; Older</a>
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
 <aside class="sidebar">
   
     <section>
@@ -345,7 +260,7 @@
       </li>
     
       <li class="post">
-        <a href="/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/">Unite.vim, The plugin you didn&#8217;t know you need</a>
+        <a href="/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/">Unite.vim, The plugin you didn't know you need</a>
       </li>
     
       <li class="post">
@@ -374,7 +289,7 @@
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   
   <a href="https://github.com/bling">@bling</a> on GitHub
@@ -407,6 +322,7 @@
   
 </aside>
 
+
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -421,7 +337,10 @@
       var disqus_shortname = 'blingdev';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://bling.github.io//blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/';
+        var disqus_url = 'http://bling.github.io//blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

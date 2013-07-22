@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="I was debating whether to make this blog post because it’s so damn simple to implement, but hey, if it saves someone else time, I did some good. &hellip;">
+  <meta name="description" content="I’m working on a project right now that has near 99% of its code commented.&nbsp; Wow, that’s impressive!&nbsp; Actually, it’s more scary…even some &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,56 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/03/10/that-commenting-thing/">That Commenting Thing</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-03-10T00:00:00+00:00" pubdate data-updated="true">Mar 10<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+<p>I’m working on a project right now that has near 99% of its code commented.&nbsp; Wow, that’s impressive!&nbsp; Actually, it’s more scary…even some of the private fields are commented….</p> <p>At one point, someone decided that it was a good idea to impose <em>some</em> kind of standard rather than none, so they recommended <a href="http://archive.msdn.microsoft.com/sourceanalysis">StyleCop</a> with all of its default settings, including requiring comments on everything.</p> <p>This seemed like a good idea, and it probably was, until someone found <a href="http://submain.com/products/ghostdoc.aspx">GhostDoc</a>.&nbsp; The plugin definitely gives off that “cool” factor the first time you use it.&nbsp; Wow, with a single key stroke it automagically documented all of my code!!!&nbsp; The problem, and it’s a pretty big one, is that it generates documentation based on the name of the properties, names, and class.&nbsp; Surely if it can do that, you, a much more sophisticated machine, can do that!</p> <p>Alas, the code base ended up getting GhostDocced to death all over the place to the point where I was driven mad and insane that I spent the time to write a VS2010 extension to purposely hide these comments.&nbsp; I’m talking about comments like this:</p> <p><a href="http://lh3.ggpht.com/_WZr-_wsEf1c/TXmZSvlTRnI/AAAAAAAAADQ/hk3vTlVJ5Jc/s1600-h/image%5B4%5D.png"><img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh4.ggpht.com/_WZr-_wsEf1c/TXmZSurQc8I/AAAAAAAAADU/NCeYxDgaINc/image_thumb%5B2%5D.png?imgmax=800" width="505" height="156"></a></p> <p>The comments add absolutely <strong>no value</strong> and IMO <strong>makes it harder to read</strong>, and has the added deficit that if for whatever reason someone changes the name property, chances are they will forget to update the comments.&nbsp; It gets worse with WCF service contracts with many parameters.</p> <p>So yes, it frustrated me enough that I took some spare time to write an extension to shrink those damn XML comments to such a small size it doesn’t bother me anymore, like this:</p> <p><a href="http://lh4.ggpht.com/_WZr-_wsEf1c/TXmZS7pHAXI/AAAAAAAAADY/IV53KxtUWUQ/s1600-h/image%5B8%5D.png"><img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh6.ggpht.com/_WZr-_wsEf1c/TXmZTTUjF0I/AAAAAAAAADc/h96-4zUY6oM/image_thumb%5B4%5D.png?imgmax=800" width="566" height="200"></a></p> <p>You can grab the code off <a href="https://github.com/bling/XmlCommentShrink">GitHub</a>.</p>  </div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>bling</div>
+<div class='content'>
+Originally I tried to use code folding to solve the problem, but the best thing that comes built-in is collapsing to definitions (Ctrl+M/O), which will fold everything.  But that also folds the methods as well, so then I&#39;d have to manually unfold them, which quickly got tiresome.<br /><br />The optimal solution I think would be for the extension to automatically collapse only the comments when you open a file, but that is much more complex than just changing the font size&#8230;.maybe an exercise for another weekend when I&#39;m bored with nothing to do&#8230;</div>
+</div>
+<div class='comment'>
+<div class='author'>Vsevolod Parfenov</div>
+<div class='content'>
+Why don&#39;t you fold them instead of changing font size?</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -365,132 +415,6 @@ Awesome post.  <br /><br />When I started writing version 2.0 of my EventStore l
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/11/08/that-immutable-thing/">That Immutable Thing</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-11-08T00:00:00+00:00" pubdate data-updated="true">Nov 8<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-<p>Do you have some sort of ImmutableAttribute in your domain that you use to mark classes as immutable?&#160; Have you ever needed to enforce that contract?&#160; Checking for readonly fields isn’t enough?&#160; Well, this weekend I had a code spike that helped solve this problem in my current project.</p>  <p>For this project, I’m using the <a href="http://normproject.org">NoRM</a> driver for <a href="http://www.mongodb.org/">MongoDB</a>, and one of the limitations of the serializer is that all types must be classes, must have a default constructor, and all properties have a public setter.&#160; So, now the domain has a bunch of classes like this:</p>  <pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"><span style="color: #0000ff">public</span> <span style="color: #0000ff">class</span> UserCreatedEvent : IEvent
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">{
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">  <span style="color: #0000ff">public</span> <span style="color: #0000ff">string</span> Name { <span style="color: #0000ff">get</span>; <span style="color: #0000ff">set</span>; }
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">  <span style="color: #0000ff">public</span> UserCreatedEvent() { }
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">  <span style="color: #0000ff">public</span> UserCreatedEvent(<span style="color: #0000ff">string</span> name) { Name = name; }
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">}</pre></pre>
-
-<p>That God for code snippets (or Resharper templates).&#160; With so many classes like this that need to get serialized, I wanted to extra sure that no code ever calls the setter method for the Name property.&#160; Thankfully, with some help of <a href="https://github.com/jbevain/cecil">Mono.Cecil</a>, it’s possible.</p>
-<p>First off, you need to define <em>ImmutableAttribute</em> and that add that do classes, and in my case, it is historical domain events that get serialized to an event store.</p>
-<p>Then, you just write a unit test which leverages the power of Mono.Cecil.&#160; It turned out to be pretty simple.&#160; Here’s the code:</p>
-
-<pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"><span style="color: #0000ff">using</span> System.Collections.Generic;
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"><span style="color: #0000ff">using</span> System.Linq;
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"><span style="color: #0000ff">using</span> Mono.Cecil;
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"><span style="color: #0000ff">using</span> Mono.Cecil.Cil;
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"><span style="color: #0000ff">using</span> NUnit.Framework;
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"></pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"><span style="color: #0000ff">namespace</span> blingcode
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">{
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">    [TestFixture]
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">    <span style="color: #0000ff">public</span> <span style="color: #0000ff">class</span> ImmutabilityTests
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">    {
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        <span style="color: #0000ff">private</span> <span style="color: #0000ff">static</span> <span style="color: #0000ff">readonly</span> MethodDefinition[] _setterMethods;
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        <span style="color: #0000ff">private</span> <span style="color: #0000ff">static</span> <span style="color: #0000ff">readonly</span> AssemblyDefinition[] _assemblies;
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"></pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        <span style="color: #0000ff">static</span> ImmutabilityTests()
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        {
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            _assemblies = <span style="color: #0000ff">new</span>[]
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            {
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                AssemblyDefinition.ReadAssembly(<span style="color: #0000ff">typeof</span>(Something).Assembly.Location),
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            };
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            _setterMethods = _assemblies
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                .SelectMany(a =&gt; a.Modules)
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                .SelectMany(m =&gt; m.Types)
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                .Where(t =&gt; t.CustomAttributes.Any(attr =&gt; attr.AttributeType.Name.Contains(&quot;<span style="color: #8b0000">ImmutableAttribute</span>&quot;)))
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                .SelectMany(t =&gt; t.Properties)
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                .Where(p =&gt; p.SetMethod != <span style="color: #0000ff">null</span>)
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                .Select(m =&gt; m.SetMethod)
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                .ToArray();
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        }
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"></pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        [Test]
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        <span style="color: #0000ff">public</span> <span style="color: #0000ff">void</span> ClassesWith_ImmutableAttribute_ShouldNotUse_PropertySetters()
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        {
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            AssertForViolations(_assemblies
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                                    .SelectMany(a =&gt; a.Modules)
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                                    .SelectMany(m =&gt; m.Types)
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                                    .Where(t =&gt; t.IsClass)
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                                    .SelectMany(t =&gt; t.Methods));
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        }
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"></pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        [Test]
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        <span style="color: #0000ff">public</span> <span style="color: #0000ff">void</span> ThisFixtureActuallyWorks()
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        {
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            var assembly = AssemblyDefinition.ReadAssembly(<span style="color: #0000ff">typeof</span>(ImmutabilityTests).Assembly.Location);
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            var type = assembly.Modules.SelectMany(m =&gt; m.Types)
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                .Where(t =&gt; t.IsClass &amp;&amp; t.FullName.Contains(GetType().FullName)).First();
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            <span style="color: #0000ff">try</span>
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            {
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                AssertForViolations(type.Methods);
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            }
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            <span style="color: #0000ff">catch</span> (AssertionException)
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            {
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                Assert.Pass();
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            }
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        }
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"></pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        <span style="color: #0000ff">private</span> <span style="color: #0000ff">static</span> <span style="color: #0000ff">void</span> AssertForViolations(IEnumerable&lt;MethodDefinition&gt; potentialMethods)
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        {
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            <span style="color: #0000ff">foreach</span> (var method <span style="color: #0000ff">in</span> potentialMethods.Where(m =&gt; m.HasBody))
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            {
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                <span style="color: #0000ff">foreach</span> (Instruction ins <span style="color: #0000ff">in</span> method.Body.Instructions.Where(ins =&gt; ins.OpCode == OpCodes.Callvirt))
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                {
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                    MemberReference mr = ins.Operand <span style="color: #0000ff">as</span> MemberReference;
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                    <span style="color: #0000ff">if</span> (mr != <span style="color: #0000ff">null</span>)
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                    {
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                        var result = _setterMethods.FirstOrDefault(m =&gt; m.FullName == mr.FullName);
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                        <span style="color: #0000ff">if</span> (result != <span style="color: #0000ff">null</span>)
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                        {
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                            <span style="color: #0000ff">throw</span> <span style="color: #0000ff">new</span> AssertionException(result + &quot;<span style="color: #8b0000"> was invoked by </span>&quot; + method + &quot;<span style="color: #8b0000">, even though the type has the Immutable attribute.</span>&quot;);
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                        }
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                    }
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                }
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            }
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        }
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"></pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        <span style="color: #0000ff">private</span> <span style="color: #0000ff">void</span> InvokeCardSetters()
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        {
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            <span style="color: #008000">// this only exists to test that the test does indeed work</span>
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"></pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            var c = <span style="color: #0000ff">new</span> SomeImmutableClass();
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            c.SomeImmutableValue = 123;
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        }
-</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">    }
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">}</pre></pre>
-
-<p>Nothing too complicated.&#160; The main thing to look for is the <strong>callvirt</strong> method, which the C# compiler always generates for classes.&#160; Then, you match the operand to the method definition and viola!</p>  </div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/8/">&larr; Older</a>
@@ -506,6 +430,10 @@ Awesome post.  <br /><br />When I started writing version 2.0 of my EventStore l
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/07/15/flight-of-an-open-source-project/">The flight of an open-source project</a>
@@ -533,10 +461,6 @@ Awesome post.  <br /><br />When I started writing version 2.0 of my EventStore l
     
       <li class="post">
         <a href="/blog/2013/02/10/love-affair-with-vim/">Love Affair with Vim</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/07/29/snoopshell-evolution/">SnoopShell: Evolution</a>
       </li>
     
   </ul>

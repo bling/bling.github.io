@@ -9,16 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="Let’s review the main Rx code from last time: 1
-2
-3
-4
-5
-6
-7
-8
-public IObservable&lt;string&gt; GetJsonStreams()
-{ var request = GetRequest(); return &hellip;">
+  <meta name="description" content="In this part we’re going to fire up Expression Blend (the trial for version 5 can be found here) and do some UI work. In part 2, I created a simple &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -86,6 +77,223 @@ public IObservable&lt;string&gt; GetJsonStreams()
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/08/28/building-real-time-push-app-with-rx-3/">Building a Real-time Push App With Silverlight: Part 3</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-28T00:00:00+00:00" pubdate data-updated="true">Aug 28<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In this part we’re going to fire up Expression Blend (the trial for version 5 can be found <a href="http://www.microsoft.com/download/en/details.aspx?displaylang=en&amp;amp;id=9503">here</a>) and do some UI work.</p>
+
+<p>In part 2, I created a simple Twitter client which connected to the streaming API, and connected to the sampling request which brings back random tweets.  Here is the data template:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;DataTemplate</span> <span class="na">x:Key=</span><span class="s">&quot;TweetDataTemplate&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;Grid</span> <span class="na">DataContext=</span><span class="s">&quot;{Binding}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;Grid.RowDefinitions&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;RowDefinition</span> <span class="nt">/&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;RowDefinition</span> <span class="na">Height=</span><span class="s">&quot;Auto&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/Grid.RowDefinitions&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;TextBlock</span> <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span> <span class="na">FontSize=</span><span class="s">&quot;12&quot;</span> <span class="na">Text=</span><span class="s">&quot;{Binding Text}&quot;</span> <span class="na">TextWrapping=</span><span class="s">&quot;Wrap&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;TextBlock</span> <span class="na">Grid.Row=</span><span class="s">&quot;1&quot;</span>
+</span><span class='line'>                   <span class="na">HorizontalAlignment=</span><span class="s">&quot;Right&quot;</span>
+</span><span class='line'>                   <span class="na">VerticalAlignment=</span><span class="s">&quot;Bottom&quot;</span>
+</span><span class='line'>                   <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span>
+</span><span class='line'>                   <span class="na">FontSize=</span><span class="s">&quot;13.333&quot;</span>
+</span><span class='line'>                   <span class="na">Foreground=</span><span class="s">&quot;BlueViolet&quot;</span>
+</span><span class='line'>                   <span class="na">Text=</span><span class="s">&quot;{Binding ScreenName}&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;TextBlock</span> <span class="na">Grid.Row=</span><span class="s">&quot;1&quot;</span>
+</span><span class='line'>                   <span class="na">HorizontalAlignment=</span><span class="s">&quot;Left&quot;</span>
+</span><span class='line'>                   <span class="na">VerticalAlignment=</span><span class="s">&quot;Bottom&quot;</span>
+</span><span class='line'>                   <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span>
+</span><span class='line'>                   <span class="na">FontSize=</span><span class="s">&quot;9.333&quot;</span>
+</span><span class='line'>                   <span class="na">Foreground=</span><span class="s">&quot;DarkCyan&quot;</span>
+</span><span class='line'>                   <span class="na">Text=</span><span class="s">&quot;{Binding CreatedAt}&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/Grid&gt;</span>
+</span><span class='line'><span class="nt">&lt;/DataTemplate&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This renders into something like this:</p>
+
+<p><img src="http://lh4.ggpht.com/-ul4umD_jKFs/Tlq_U7HuoLI/AAAAAAAAAFg/pOhMiaqmxcE/s1600/image%25255B4%25255D.png" alt="img" /></p>
+
+<p>The text is randomly generated from Blend’s <a href="http://lmgtfy.com/?q=blend+sample+data">sample</a> capability, which is totally awesome as it allows designers to see what they’re working with, and keeps the sample data separate from the real data.</p>
+
+<p>While design is a matter of personal taste, and you’re bound to get disagreements between different people, if you follow some basic rules you’ll satisfy a greater audience.</p>
+
+<ul>
+<li>Subtle gradients and small shadows
+
+<ul>
+<li>If you take a look at all the nice interfaces, they tend to use very slight gradients and small shadows.  Most of the time you don’t even notice unless you look closely.</li>
+<li>I think Microsoft’s Metro design is beautiful.  Reason?  It emphasizes text over decorations (like gradients and shadows).  This tends to lead to very clean design because there’s very little opportunity to abuse gradients and shadows.</li>
+</ul>
+</li>
+<li>Realism and light sources
+
+<ul>
+<li>Continuing on with gradients and shadows, they should be realistic.  Look at your design from a 3D point of view.  Apply a light source from a certain angle, and then apply your shadows relative to that light source.</li>
+<li>Convey distance properly
+
+<ul>
+<li>Darker shadows imply being closer to the background, whereas lighter shadows imply being further away.  Use blurring to add emphasis to the distance.  <img src="http://lh5.ggpht.com/-YvKRal5ToEw/Tlr6OrRIS4I/AAAAAAAAAFs/AAg79v6y2Cc/image_thumb%25255B14%25255D.png?imgmax=800" alt="eg" /></li>
+<li>If you overlap planes you should apply these rules to each individual plane.  Don’t use the same border for everything.  Think about how it would look like in real life if you laid it out like that with pieces of paper.  The shadow sizes for that will be different, so you should do the same.</li>
+<li>Also keep in mind that the shadows used above are <em>way</em> too much for any application.  Be subtle!</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Consistent theme
+
+<ul>
+<li>This one seems obvious but nothing is worse than having a nice looking application bring up an unskinned dialog.</li>
+</ul>
+</li>
+<li>Usability
+
+<ul>
+<li>If the design doesn’t serve a purpose to make it more usable, it shouldn’t be there.  Even something as simple as black on white follows this – you do that so you can read text.  However, even something as simple as that can be improved.  Take a look at why the Kindle is so successful.  The readability is better because of the lower contrast between the black and light-brown background.</li>
+</ul>
+</li>
+</ul>
+
+
+<p>With these starting points, let’s redesign the data template.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;DataTemplate</span> <span class="na">x:Key=</span><span class="s">&quot;TweetDataTemplate&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;Grid&gt;</span>
+</span><span class='line'>       <span class="nt">&lt;Grid.Background&gt;</span>
+</span><span class='line'>           <span class="nt">&lt;LinearGradientBrush</span> <span class="na">StartPoint=</span><span class="s">&quot;0.5,0&quot;</span> <span class="na">EndPoint=</span><span class="s">&quot;0.5,1&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>               <span class="nt">&lt;GradientStop</span> <span class="na">Color=</span><span class="s">&quot;#FFDADADA&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>               <span class="nt">&lt;GradientStop</span> <span class="na">Offset=</span><span class="s">&quot;1&quot;</span> <span class="na">Color=</span><span class="s">&quot;#FFC8C8C8&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>           <span class="nt">&lt;/LinearGradientBrush&gt;</span>
+</span><span class='line'>       <span class="nt">&lt;/Grid.Background&gt;</span>
+</span><span class='line'>       <span class="nt">&lt;Grid.RowDefinitions&gt;</span>
+</span><span class='line'>           <span class="nt">&lt;RowDefinition</span> <span class="nt">/&gt;</span>
+</span><span class='line'>           <span class="nt">&lt;RowDefinition</span> <span class="na">Height=</span><span class="s">&quot;Auto&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>       <span class="nt">&lt;/Grid.RowDefinitions&gt;</span>
+</span><span class='line'>       <span class="nt">&lt;TextBlock</span> <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span> <span class="na">FontSize=</span><span class="s">&quot;12&quot;</span> <span class="na">Text=</span><span class="s">&quot;{Binding Text}&quot;</span> <span class="na">TextWrapping=</span><span class="s">&quot;Wrap&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>       <span class="nt">&lt;TextBlock</span> <span class="na">Grid.Row=</span><span class="s">&quot;1&quot;</span>
+</span><span class='line'>                  <span class="na">HorizontalAlignment=</span><span class="s">&quot;Right&quot;</span>
+</span><span class='line'>                  <span class="na">VerticalAlignment=</span><span class="s">&quot;Bottom&quot;</span>
+</span><span class='line'>                  <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span>
+</span><span class='line'>                  <span class="na">FontSize=</span><span class="s">&quot;13.333&quot;</span>
+</span><span class='line'>                  <span class="na">Foreground=</span><span class="s">&quot;BlueViolet&quot;</span>
+</span><span class='line'>                  <span class="na">Text=</span><span class="s">&quot;{Binding ScreenName}&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>       <span class="nt">&lt;TextBlock</span> <span class="na">Grid.Row=</span><span class="s">&quot;1&quot;</span>
+</span><span class='line'>                  <span class="na">HorizontalAlignment=</span><span class="s">&quot;Left&quot;</span>
+</span><span class='line'>                  <span class="na">VerticalAlignment=</span><span class="s">&quot;Bottom&quot;</span>
+</span><span class='line'>                  <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span>
+</span><span class='line'>                  <span class="na">FontSize=</span><span class="s">&quot;9.333&quot;</span>
+</span><span class='line'>                  <span class="na">Foreground=</span><span class="s">&quot;#FF003D8F&quot;</span>
+</span><span class='line'>                  <span class="na">Text=</span><span class="s">&quot;{Binding CreatedAt}&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>       <span class="nt">&lt;Border</span> <span class="na">Grid.RowSpan=</span><span class="s">&quot;2&quot;</span> <span class="na">BorderBrush=</span><span class="s">&quot;#FF999999&quot;</span> <span class="na">BorderThickness=</span><span class="s">&quot;0,0,0,1&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>       <span class="nt">&lt;Border</span> <span class="na">Grid.RowSpan=</span><span class="s">&quot;2&quot;</span> <span class="na">BorderBrush=</span><span class="s">&quot;White&quot;</span> <span class="na">BorderThickness=</span><span class="s">&quot;0,1,0,0&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;/Grid&gt;</span>
+</span><span class='line'><span class="nt">&lt;/DataTemplate&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After these changes, it looks like this:</p>
+
+<p><img src="http://lh5.ggpht.com/-fTL8wgr5ebs/Tlr6PGkqyeI/AAAAAAAAAF0/O98iakwvqGc/image_thumb%25255B17%25255D.png?imgmax=800" alt="eg" /></p>
+
+<p>Did you notice the gradient?  You might think after seeing it here to adjust the gradients more so you can see it.  That would be a mistake.  See below.</p>
+
+<p><img src="http://lh6.ggpht.com/--uPF_IEo6LM/Tlr6PpL9YDI/AAAAAAAAAF8/UxqCqYW3Wl4/image_thumb%25255B47%25255D.png?imgmax=800" alt="eg" /></p>
+
+<p>The above is the exact same thing, but stacked vertically three times.  When this happens the subtle difference between the top and bottom of the control is more pronounced, so it looks like multiple panels are aligned together.</p>
+
+<p>However, there’s still a little touch you can add.  The white and gray borders are only 1 pixel high, but that’s the little touch needed to make it look crisp.</p>
+
+<p><img src="http://lh3.ggpht.com/-QHLW-sKfPfI/Tlr6P_c9qLI/AAAAAAAAAGE/kJ0Z8VgS3xg/image_thumb%25255B44%25255D.png?imgmax=800" alt="eg" /></p>
+
+<p>Finally, let’s see the before and after (or eh&hellip;rather after and before, because I took the screenshot backwards :P):</p>
+
+<p><img src="http://lh6.ggpht.com/-tzZ8AVtNv0M/Tlr6QmHJHnI/AAAAAAAAAGM/H1SYEqT6cis/image_thumb%25255B50%25255D.png?imgmax=800" alt="eg" /></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -709,56 +917,6 @@ public IObservable&lt;string&gt; GetJsonStreams()
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/06/23/tools-i-use-to-do-what-i-do/">Tools I Use to Do What I Do</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-06-23T00:00:00+00:00" pubdate data-updated="true">Jun 23<span>rd</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-<p>It’s been a while since I last blogged, but I want to get back into it….I just haven’t thought about what I wanna blog about yet.&nbsp; I’m thinking of doing some sort of multi-part series on a topic but haven’t decided on what yet.&nbsp; Nonetheless, just to get the ball rolling again here’s a quick blog post on some of the tools I use to do my every day job that’s in addition to your typical .NET developer tool chain.</p> <p><strong>General</strong></p> <p><a href="http://www.tcbmi.com/strokeit/">StrokeIt</a>:&nbsp; Funny name aside, on any clean install of Windows this is the <strong>first</strong> thing I install.&nbsp; I load up IE and I download this, followed by Chrome/Firefox.&nbsp; It is a mouse gesture program that affects all of Windows.&nbsp; By holding down the right mouse button, and making gestures you can do common tasks like minimize (drag SW), maximize (drag NE), close (draw a C), and others.&nbsp; It’s much faster than clicking the minimize/maximize buttons.&nbsp; For web browsing, creating and close tabs are drag SE and drag NW respectively.&nbsp; Back is W.&nbsp; Forward is E.&nbsp; Working this way is faster than any keyboard shortcut.</p> <p><a href="http://sourceforge.net/projects/console/">Console2</a>:&nbsp; It’s not a necessity, but it’s nice to be able to use a console with a better looking font.&nbsp; You can easily customize to run another shell, and in my case I have Powershell as the shell.</p> <p><a href="http://virtuawin.sourceforge.net/">VirtuaWin</a>:&nbsp; Ironically I don’t use any virtual desktops, but this app creates a nice middle click on any window that lets you mark it as ‘always on top’.</p> <p><a href="http://www.vim.org/">Vim</a>:&nbsp; It was an awful, painful 2 weeks to learn this thing but I’m sure glad I did.</p> <p><strong>Development/Visual Studio</strong></p> <p><a href="http://www.jetbrains.com/resharper/">Resharper</a>:&nbsp; This one doesn’t need much mentioning as anyone serious about programming in .NET has either heard of it, use it, or use one of its competitors like <a href="http://www.devexpress.com/Products/Visual_Studio_Add-in/Coding_Assistance/">CodeRush</a>.</p> <p><a href="http://visualstudiogallery.msdn.microsoft.com/465a0d53-5133-4edd-a0cd-94484fe3d853">AllMargins</a>:&nbsp; This hidden gem is an awesome extension has brings a bunch of very useful features to the editor.&nbsp; It brings structural highlighting, highlighting matching words under caret, and RockScroll inspired scroll bar, and it does it all with little to no cost in performance.</p> <p><a href="http://visualstudiogallery.msdn.microsoft.com/d0d33361-18e2-46c0-8ff2-4adea1e34fef/">Productivity Power Tools</a>:&nbsp; There’s only 2 that I use here: document tabs, and moving lines.&nbsp; All the rest are either eye candy, negligible enhancements, or just plain too slow to be any use in large solutions (solution navigator I’m looking at you!!).</p> <p><a href="http://visualstudiogallery.msdn.microsoft.com/1a67eee3-fdd1-4745-b290-09d649d07ee0">XAML Intellisense Presenter</a>:&nbsp; This is a must-have for anyone who works with XAML in VS regularly.&nbsp; Resharper 6 may soon make this obsolete, however…</p> <p><a href="http://wiki.sharpdevelop.net/ILSpy.ashx">ILSpy</a>/<a href="http://www.jetbrains.com/decompiler/">dotPeek</a>:&nbsp; Decompilers.&nbsp; ‘nuff said.</p> <p><a href="http://snoopwpf.codeplex.com/">Snoop</a>:&nbsp; Staple tool for WPF developers to inspect the visual/logical tree.&nbsp; There’s also <a href="http://wpfinspector.codeplex.com/">WPF Inspector</a> which has a much nicer UI, but unfortunately doesn’t perform as fast.</p> <p><strong>Profiling</strong></p> <p><a href="http://www.red-gate.com/products/dotnet-development/dotnet-developer-bundle/">ANTS</a>/<a href="http://www.jetbrains.com/profiler/">dotTrace</a>/<a href="http://www.yourkit.com/dotnet/download/">YourKit</a>/etc:&nbsp; I’ve used many performance/memory profilers, and those 3 are the ones I like the most.&nbsp; Unfortunately, they all do things the others don’t, and all these things are very useful, so you still end up needing to use all of them to fix the particular problem you’re working on.</p> <p><a href="http://msdn.microsoft.com/en-us/windows/hardware/gg463009">WinDbg</a>: It isn’t every day I use this, but I’m sure glad to know that such a thing exists and the amount of power it gives me.</p> <p><strong>Scripting</strong></p> <p><a href="http://powergui.org/index.jspa">PowerGUI</a>:&nbsp; Best tool I found for editing PowerShell.&nbsp; The intellisense is great and has all the things you were expect when debugging through scripts.</p> <p><strong>Miscellaneous</strong></p> <p><a href="http://www.baremetalsoft.com/baretail/">BareTail</a>:&nbsp; Amazing program which watches log files in real time and can highlight rows based on a search pattern.</p> <p><a href="http://technet.microsoft.com/en-us/scriptcenter/dd742419">PowerShell</a>/<a href="http://cygwin.org/">Cygwin</a>/<a href="http://www.mingw.org/wiki/MSYS">MSYS</a>:&nbsp; I used to be a Cygwin/MSYS user because back in the day I liked to install a different Linux distribution every week so I learned some basic Bash commands and that carried over to Windows.&nbsp; Since PowerShell now exists, we have a real shell in Windows, so I’ve switched over to learn it, since as a Windows developer it’s more applicable to the kind of work I do.</p> <p>&nbsp;</p> <p>And there’s more but that’s enough for now!</p>  </div>
-<h2>Comments</h2>
-<div class='comments'>
-<div class='comment'>
-<div class='author'>bling</div>
-<div class='content'>
-Actually, Cygwin/MSYS used to be in my tool chain, but I&#39;ve made an effort to learn PowerShell by making it my shell.<br /><br />I&#39;m still thrown off sometimes because PowerShell operates on objects, rather than text.  Sometimes this makes it easier, sometimes harder.  Grep comes to mind.<br /><br />Check out BareTail if you want to watch log files in real time.</div>
-</div>
-<div class='comment'>
-<div class='author'>Mike McG</div>
-<div class='content'>
-Nice post! Gonna check out XAML Intellisense Presenter, All Margins, and PowerGUI.<br /><br />For Always on Top functionality, I&#39;ve relied on PowerMenu. It doesn&#39;t have the middle-click (gotta go through the app menu in the window chrome), but it also lets you Minimize to Tray. StexBar is also pretty neat-o, lets you create your own buttons on the Explorer button bar.<br /><br />Maybe due to my *nix background, I also install Cygwin (including sshd which allows me to use Cygwin through PuTTY rather than cmd.exe), grepWin (regular expression per-directory content search), and Tail for Win32 (to watch log files). (In addition to Tail I install Less for Windows and hook it up to StexBar, then use Shift+F to watch files).</div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -774,6 +932,10 @@ Nice post! Gonna check out XAML Intellisense Presenter, All Margins, and PowerGU
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/07/15/flight-of-an-open-source-project/">The flight of an open-source project</a>
@@ -801,10 +963,6 @@ Nice post! Gonna check out XAML Intellisense Presenter, All Margins, and PowerGU
     
       <li class="post">
         <a href="/blog/2013/02/10/love-affair-with-vim/">Love Affair with Vim</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/07/29/snoopshell-evolution/">SnoopShell: Evolution</a>
       </li>
     
   </ul>

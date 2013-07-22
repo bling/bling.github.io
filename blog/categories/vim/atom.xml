@@ -4,7 +4,7 @@
   <title><![CDATA[Category: vim | bling on software development]]></title>
   <link href="http://bling.github.io//blog/categories/vim/atom.xml" rel="self"/>
   <link href="http://bling.github.io//"/>
-  <updated>2013-07-17T04:00:18+00:00</updated>
+  <updated>2013-07-22T00:47:43+00:00</updated>
   <id>http://bling.github.io//</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
@@ -12,6 +12,81 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Smart tab expansions in Vim with expression mappings]]></title>
+    <link href="http://bling.github.io//blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/"/>
+    <updated>2013-07-21T20:38:00+00:00</updated>
+    <id>http://bling.github.io//blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been having a small itch for a while now, and it&rsquo;s a very simple thing &mdash; I want to make my tab smarter.  This all starts with a dive into <a href="https://www.emmet.io">Emmet</a>.  To understand what it is, here&rsquo;s a quick introduction.  First, you type something using its syntax:</p>
+
+<p><code>
+div&gt;li*4
+</code></p>
+
+<p>and after you &ldquo;expand&rdquo; it, usually with a hotkey, and it gets converted to</p>
+
+<p>``` html</p>
+
+<div>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+</div>
+
+
+<p>```</p>
+
+<p>As you can imagine, this saves you <em>a lot</em> of typing and lets you prototype a web page (or CSS) in no time once you learn the syntax.  It is snippets on steriods!  The Sublime <a href="https://github.com/sergeche/emmet-sublime">plugin</a> handles this perfectly.  It maps <code>&lt;tab&gt;</code> as the expansion key.  Hitting tab after typing <code>div&gt;li*4</code> will expand it and put the cursor at the first <code>&lt;li&gt;|&lt;/li&gt;</code>.  Then after you type something, if you hit <code>&lt;tab&gt;</code> again, it will jump to the next <code>li</code>.  It is smart enough to know whether to expand or jump to the next tag.</p>
+
+<p>So how does this functionality look like in Vim?  <!--more-->First, you must install the <a href="https://github.com/mattn/zencoding-vim">zencoding-vim</a> plugin to get this functionality (Emmet used to be named Zen Coding).  However, by default it&rsquo;s mappings are <code>&lt;C-y&gt;,</code> to expand, and <code>&lt;C-y&gt;n</code> to jump to the next tag.  There are two problems here.  First, these mappings are <strong>really</strong> awkward to type.  And secondly, there are two mappings!  You could, of course, remap it do something else, but let&rsquo;s be honest, <code>&lt;leader&gt;</code> whatever just does not compare with <code>&lt;tab&gt;</code>.</p>
+
+<p>How can we replicate this functionality in Vim?</p>
+
+<h1>Expression Mappings</h1>
+
+<p>Most of the time, you will see people do mappings in Vim like <code>nnoremap j gj</code> which is a very simple and straightforward mapping.  Other times you may see something like <code>nnoremap Q :call CloseWindow()&lt;cr&gt;</code> where a key is mapped to a function.  But rarely will you see anyone use <code>&lt;expr&gt;</code> mappings.  What are these?  Long story short, you can determine what to map based on the return value of the function.  To replicate the above tab behavior, let&rsquo;s first set up a basic mapping:</p>
+
+<p><code>vim
+function! s:zen_html_tab()
+  return "\&lt;c-y&gt;,"
+endfunction
+autocmd FileType html imap &lt;buffer&gt;&lt;expr&gt;&lt;tab&gt; &lt;sid&gt;zen_html_tab()
+</code></p>
+
+<p>There&rsquo;s a lot of things going on here, so I&rsquo;ll go over them one by one.</p>
+
+<ul>
+<li><code>s:</code> denotes that the function is scoped to the script.  You can, of course, define the function globally (must be PascalCased or script#prefixed), but I prefer not to pollute the global scope if I don&rsquo;t have to.  The return value is an escaped string which are the keys you want to map.  An additional thing to note is that you need <code>&lt;sid&gt;</code> to reference the function in the mapping.</li>
+<li>The FileType autocmd is used to set up the mapping only for HTML files.</li>
+<li><code>&lt;buffer&gt;</code> denotes that the mapping should only apply for the current buffer (without this when you open an HTML file it will apply the mapping globally).</li>
+<li><code>&lt;expr&gt;</code> is the special sauce that lets you to execute code to determine the value of the mapping.</li>
+</ul>
+
+
+<p>OK, the above doesn&rsquo;t actually do anything yet.  In fact, it&rsquo;s pretty much equivalent to <code>imap &lt;tab&gt; &lt;c-y&gt;,</code>.  So let&rsquo;s add some context into it:</p>
+
+<p>``` vim
+function! s:zen_html_tab()
+  let line = getline(&lsquo;.&rsquo;)
+  if match(line, &lsquo;&lt;.*>&rsquo;) >= &ndash;</p>
+
+<pre><code>return "\&lt;c-y&gt;n"
+</code></pre>
+
+<p>  endif
+  return &ldquo;&lt;c-y>,&rdquo;
+endfunction
+```</p>
+
+<p>This is a simple implementation that captures the majority of use cases.  <code>getline('.')</code> gets the current line under the cursor.  <code>match()</code> is a built-in function which returns the index of the matched regular expression.  I am relying on the fact that Emmet syntax will <em>not</em> have an opening &lt;.  This makes the function very simple; if there&rsquo;s an &lt;> then jump to the next tag, otherwise, expand.</p>
+
+<p>And that&rsquo;s all there is to it!  This function won&rsquo;t cover more &ldquo;advanced&rdquo; scenarios like nested expansions (although you could cheat by creating a newline), but otherwise it shows that expression mappings are an easy way to get more umph from your mappings.</p>
+
+<p>For more details, contact your local Vim department by calling <code>:help map-&lt;expr&gt;</code>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[The flight of an open-source project]]></title>

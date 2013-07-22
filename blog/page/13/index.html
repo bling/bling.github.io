@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="One of my time-wasting hobbies is running Linux on virtual machines. I play games from time to time so Windows is still my main OS. But otherwise, I &hellip;">
+  <meta name="description" content="One of my hobbies is forex trading, and a sub-hobby of that is writing custom indicators. MetaTrader is a trading platform that is very popular in &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,50 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/05/05/metatrader-indicators/">MetaTrader Indicators</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-05-05T00:00:00+00:00" pubdate data-updated="true">May 5<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>One of my hobbies is forex trading, and a sub-hobby of that is writing custom indicators.  MetaTrader is a trading platform that is very popular in the forex community because it allows traders to write custom indicators.  It&rsquo;s pretty easy to get started if you have programming experience because the language is very similar to C.  And yes, you can also write your own bot if you wanted, called an Expert Advisor.</p>
+
+<p>Personally I don&rsquo;t spend too much time trying to write a winning bot simply because there are way too many variables to take into account, and eventually the market&rsquo;s going to yell &ldquo;in your face&rdquo; and your winning bot will end up losing.  I just write simple scripts that help me identify entry points, and filter out all the non-interesting price movements.</p>
+
+<p>Recently I&rsquo;ve been looking at breakout strategies because they are simple, yet effective.  The result is a custom indicator I wrote which simply put calculates the high and low for a time period, and then draws pretty rectangles.  Like so:</p>
+
+<p><img src="http://imgur.com/2ceH.gif" alt="img" /></p>
+
+<p>The above is simply the high/low of 2 hours before the opening London session, and the opening US session.  Isn&rsquo;t it puurrrrrrty?</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -465,48 +509,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/04/25/sourcegear-vault-part-4/">SourceGear Vault, Part 4, Conclusion</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-04-25T00:00:00+00:00" pubdate data-updated="true">Apr 25<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I suppose I should give a disclaimer since I am <em>not</em> an expert with Vault, and my opinions may be completely due to my lack of understanding of the system.  With that in mind, here&rsquo;s what my experience of using Vault has been so far.</p>
-
-<p>In general, it is not as fast as TortoiseSVN.  There are many operations in SVN that are instant, where the comparable operation in Vault is met with 10 seconds of &ldquo;beginning transaction&rdquo; and &ldquo;ending transaction&rdquo;, sometimes more.</p>
-
-<p>Feature-wise, Vault has much more to offer than Subversion does.  Basically, it can do most of what Subversion can do, plus features from SourceSafe (like sharing, pinning, labeling, etc.).  However, like I mentioned before, Vault has no offline support whatsoever, and you cannot generate patches, so it effectively cuts off any kind of outside collaboration.</p>
-
-<p>You could say that this is fine because SourceGear&rsquo;s target audience is small organizations where everyone will have access to the network anyway, but that doesn&rsquo;t mean that you won&rsquo;t be sent off to the middle of nowhere with no internet access and you need to fix bugs now!  Not to say that Subversion is much better in that scenario, but at least you can still revert back to the last updated version.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/14/">&larr; Older</a>
@@ -522,6 +524,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/07/15/flight-of-an-open-source-project/">The flight of an open-source project</a>
@@ -549,10 +555,6 @@
     
       <li class="post">
         <a href="/blog/2013/02/10/love-affair-with-vim/">Love Affair with Vim</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/07/29/snoopshell-evolution/">SnoopShell: Evolution</a>
       </li>
     
   </ul>

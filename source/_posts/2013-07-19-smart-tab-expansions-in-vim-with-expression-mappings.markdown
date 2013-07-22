@@ -66,6 +66,6 @@ And that's all there is to it!  This function won't cover more "advanced" scenar
 
 For more details, contact your local Vim department by calling `:help map-<expr>`.
 
-[a]: https://www.emmet.io
+[a]: http://www.emmet.io
 [b]: https://github.com/sergeche/emmet-sublime
 [c]: https://github.com/mattn/zencoding-vim

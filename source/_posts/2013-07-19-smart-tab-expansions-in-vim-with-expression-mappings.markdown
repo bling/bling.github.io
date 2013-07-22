@@ -53,7 +53,7 @@ OK, the above doesn't actually do anything yet.  In fact, it's pretty much equiv
 ``` vim
 function! s:zen_html_tab()
   let line = getline('.')
-  if match(line, '<.*>') >= -
+  if match(line, '<.*>') >= 0
     return "\<c-y>n"
   endif
   return "\<c-y>,"

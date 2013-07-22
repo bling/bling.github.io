@@ -4,7 +4,7 @@
   <title><![CDATA[bling on software development]]></title>
   <link href="http://bling.github.io//atom.xml" rel="self"/>
   <link href="http://bling.github.io//"/>
-  <updated>2013-07-22T00:47:43+00:00</updated>
+  <updated>2013-07-22T00:49:07+00:00</updated>
   <id>http://bling.github.io//</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
@@ -83,7 +83,7 @@
 <span class='line-number'>7</span>
 </pre></td><td class='code'><pre><code class='vim'><span class='line'><span class="k">function</span><span class="p">!</span> <span class="k">s</span>:zen_html_tab<span class="p">()</span>
 </span><span class='line'>  <span class="k">let</span> line <span class="p">=</span> getline<span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">if</span> <span class="k">match</span><span class="p">(</span>line<span class="p">,</span> <span class="s1">&#39;&lt;.*&gt;&#39;</span><span class="p">)</span> <span class="p">&gt;=</span> <span class="p">-</span>
+</span><span class='line'>  <span class="k">if</span> <span class="k">match</span><span class="p">(</span>line<span class="p">,</span> <span class="s1">&#39;&lt;.*&gt;&#39;</span><span class="p">)</span> <span class="p">&gt;=</span> <span class="m">0</span>
 </span><span class='line'>    <span class="k">return</span> <span class="s2">&quot;\&lt;c-y&gt;n&quot;</span>
 </span><span class='line'>  <span class="k">endif</span>
 </span><span class='line'>  <span class="k">return</span> <span class="s2">&quot;\&lt;c-y&gt;,&quot;</span>

@@ -3,7 +3,7 @@ layout: post
 title: "Smart tab expansions in Vim with expression mappings"
 date: 2013-07-21 20:38
 comments: true
-published: false
+published: true
 categories: vim
 ---
 

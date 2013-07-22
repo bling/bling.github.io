@@ -26,7 +26,7 @@ and after you "expand" it, usually with a hotkey, and it gets converted to
 
 As you can imagine, this saves you *a lot* of typing and lets you prototype a web page (or CSS) in no time once you learn the syntax.  It is snippets on steriods!  The Sublime [plugin][b] handles this perfectly.  It maps `<tab>` as the expansion key.  Hitting tab after typing `div>li*4` will expand it and put the cursor at the first `<li>|</li>`.  Then after you type something, if you hit `<tab>` again, it will jump to the next `li`.  It is smart enough to know whether to expand or jump to the next tag.
 
-So how does this functionality look like in Vim?  First, you must install the [zencoding-vim][c] plugin to get this functionality (Emmet used to be named Zen Coding).  However, by default it's mappings are `<C-y>,` to expand, and `<C-y>n` to jump to the next tag.  There are two problems here.  First, these mappings are **really** awkward to type.  And secondly, there are two mappings!  You could, of course, remap it do something else, but let's be honest, `<leader>` whatever just does not compare with `<tab>`.
+So how does this functionality look like in Vim?  <!--more-->First, you must install the [zencoding-vim][c] plugin to get this functionality (Emmet used to be named Zen Coding).  However, by default it's mappings are `<C-y>,` to expand, and `<C-y>n` to jump to the next tag.  There are two problems here.  First, these mappings are **really** awkward to type.  And secondly, there are two mappings!  You could, of course, remap it do something else, but let's be honest, `<leader>` whatever just does not compare with `<tab>`.
 
 How can we replicate this functionality in Vim?
 

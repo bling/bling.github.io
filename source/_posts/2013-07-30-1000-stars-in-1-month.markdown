@@ -1,0 +1,27 @@
+---
+layout: post
+title: "1000 stars in 1 month"
+date: 2013-07-30 21:26
+comments: true
+categories: vim
+---
+
+# 1000 stars in 1 month
+
+One month ago I pushed the first [commit][1] of my plugin [vim-airline][2].
+
+Two weeks later I wrote a blog [post][3] about the experience.  By that time the plugin gained over 700 stars.
+
+Two more weeks later, today the project has over 1000 stars.  Here are some other numbers:
+
+*  35 merged pull requests
+*  8 contributed airline themes
+*  4 contributed ctrlp themes
+*  23 total contributors
+*  15 plugins integrated
+
+Wow!  That is all I can say...
+
+[1]: https://github.com/bling/vim-airline/commit/25b9d4d48bd8c0a3daf3859998825e2e55562f70
+[2]: https://github.com/bling/vim-airline
+[3]: http://bling.github.io/blog/2013/07/15/flight-of-an-open-source-project/

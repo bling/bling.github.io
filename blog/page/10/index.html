@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="Unit testing is hard! I came to this sad realization when my code which had a large test suite with near 100% code coverage, with every thought-of &hellip;">
+  <meta name="description" content="Having some significant experience with C++, every once in a while I’ll really miss features available in C++ that just aren’t possible in C#.&nbsp &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,70 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/11/06/multiple-inheritance-in-c-with-castle/">Multiple Inheritance in C# With Castle DynamicProxy Mixins</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-11-06T00:00:00+00:00" pubdate data-updated="true">Nov 6<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+Having some significant experience with C++, every once in a while I’ll <i>really</i> miss features available in C++ that just aren’t possible in C#.&nbsp; Sure, linking takes forever and if you could calculate the percentage of time for a C++ developer spent on linking time I’m sure it’d be around 50%.&nbsp; Nonetheless, there’s a certain seductive pull to stepping through the debugger and the sheer speed of a C++ program (arguably debugger is being made obsolete with TDD).&nbsp; If you’re only used C# for a long time, you probably didn’t even know that C++ was THAT much faster until you try this out.&nbsp; Even a simple hello world program: you can tell a difference.<br />
+But that’s not the point of this post.&nbsp; This post is about mixins!<br />
+So what is a mixin?&nbsp; You can <a href="http://en.wikipedia.org/wiki/Mixin">wikipedia</a> it, but basically it’s a way to add functionality to an existing object.&nbsp; In a way, it’s like multiple inheritance, but not exactly.&nbsp; If you wanna go CS101 terms, this is not a “is-a” relationship, but more of a “can-do” relationship.&nbsp; Both methods promote code reuse, and of course, both can be abused.<br />
+In a way, C# extension methods are a form of mixin, but really it’s just syntactic sugar.&nbsp; It’s a static method but <i>looks</i> like a instance method.&nbsp; True mixins are actual instances.<br />
+I’ve been playing around with Castle.DynamicProxy lately, and some of it is going into production code soon.&nbsp; This is honestly kind of scary, because I really don’t want to mess up production code which generates daily profit for the company.&nbsp; However, if NHibernate’s using dynamic proxy, and that has been proven to work in countless production environments, I’m sure the complexity of the proxies I’m doing pales in comparison to what NHibernate does.<br />
+Most of the examples available on the web show you how a mixin works.&nbsp; Basically, you create a target, and then you mixin extra stuff.&nbsp; Basic stuff…but there’s a really cool trick you can do to make all consuming code a lot easier to use by removing the need of consuming code to cast to a mixin instance.&nbsp; In my case, the system is a very complex piece of legacy code where there are threads all over the place locking things all over the place.&nbsp; I was given the task of keeping track of who owned the lock.<br />
+Originally I started with an extension method, but I soon realized that even though it’s nice that along with IDisposable, I could do something like this:<br />
+<pre class="csharpcode"><span class="kwrd">using</span> (anyInstance.Lock()) {
+anyInstance.DoStuff();
+}</pre><br />
+Where Lock() is an extension method which returns an IDisposable, which when Dispose() is invoked will call Monitor.Exit.&nbsp; This is all nice and dandy use of the ‘using’ syntax, but as you can see this is all just syntactic sugar.&nbsp; At the end of the day, this is still a public static method can is accessible by thousands of other objects.&nbsp; And once you need to keep track of all those owners, you need to create a dictionary of object hashcodes, and locking on that thing for each incoming lock on an instance is…well…very very bad.<br />
+<br />
+Anyways, so with DynamicProxy2, I decided to mix in this lock tracking logic.&nbsp; Now, the interface is simple:<br />
+<pre class="csharpcode"><span class="kwrd">public</span> <span class="kwrd">interface</span> ILockMixin {
+IDisposable Lock(<span class="kwrd">string</span> tag);
+IDisposable TryLock(<span class="kwrd">string</span> tag);
+}</pre><br />
+Now, the particular thing I wanted to target happened to be a hashtable, so with a little interface trick, you could do this:<br />
+<pre class="csharpcode"><span class="kwrd">public</span> <span class="kwrd">interface</span> ILockableHashtable : IDictionary, ILockMixin { }</pre><br />
+Finally, any code that references hashtable needs to be replaced with ILockableHashtable, but the beauty of this is that none of the existing code had to change, and now all proxied hashtables have the Lock() method as well.&nbsp; And alongside Windsor, this is brain-dead simple to wire up:<br />
+<pre class="csharpcode">kernel.Register(
+Component.For&lt;IDictionary, ILockableDictionary&gt;()
+.ImplementedBy&lt;Hashtable&gt;()
+.Proxy.AdditionalInterfaces(<span class="kwrd">typeof</span>(ILockableDictionary))
+.Proxy.MixIns(<span class="kwrd">new</span> Locker()));</pre><br />
+And that’s it!&nbsp; BTW, I realize I could have easily achieved the same effect and with a lot less effort if I just inherited from Hashtable directly (and avoid the negligible proxy/performance cost), but if I needed this locking mechanism for <b>any</b> other code, I would have to resort to either copy/pasting a lot of code, or a lot of copy/paste/redirect to a static class.<br />
+<br />
+Edit: There is a bug in this last bit, check out my latest <a href="http://blingcode.blogspot.com/2010/04/windsordynamicproxymixin-powers.html">entry </a>about this topic.</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -354,114 +418,6 @@ I&#39;ve been toying with a similar approach, but I&#39;m uncertain about how to
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/09/13/getting-code-coverage-working-on/">Getting Code Coverage Working on TeamCity 5 With Something Other Than NUnit</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-09-13T00:00:00+00:00" pubdate data-updated="true">Sep 13<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve been experimenting lately with <a href="http://www.jetbrains.net/confluence/display/TW/TeamCity+EAP?eap">TeamCity 5 EAP</a> and so far it&rsquo;s been a pretty awesome experience.  I was up and running within minutes and I was swarmed with beautiful graphs and statistics with specifics even per-test.  Getting something like that up with <a href="http://ccnet.thoughtworks.com/">CC.NET</a> is not a trivial task.</p>
-
-<p>Anywho, with TC5 code coverage is one of the cool new features added for .NET, but unfortunately only <a href="http://nunit.org">NUnit</a> is supported.  Not that that&rsquo;s a bad thing, but some people  prefer to use other testing tools.  Two notable contenders are <a href="http://xunit.codeplex.com">xUnit.net</a> and <a href="http://www.gallio.org">MbUnit</a>.</p>
-
-<p>I like the fact (pun intended) that xUnit.net makes it a point to prevent you from doing bad practices (like <code>[ExpectedException]</code>), and I like how MbUnit is so bleeding edge with useful features (like <code>[Parallelizable]</code> and a vast availability of assertions).</p>
-
-<p>And with that I set up to figure out how to get TC working with Gallio, but the following should work with any test runner.</p>
-
-<p>It certainly was a pain to set up because it took a lot of trial and error but eventually I figured it out.  I analyzed the build logs provided in each build report and noticed something interesting&hellip;specifically:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[13:51:23]: ##teamcity[importData type=’dotNetCoverage’ tool=’ncover’ file=’C:\TeamCity5\buildAgent\temp\buildTmp\tmp1C93.tmp’]</span></code></pre></td></tr></table></div></figure>
-
-
-<p>and</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageL’ value=’94.85067’]
-</span><span class='line'>[13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageM’ value=’97.32143’]
-</span><span class='line'>[13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageC’ value=’98.68421’]
-</span><span class='line'>[13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageAbsLCovered’ value=’921.0’]
-</span><span class='line'>[13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageAbsMCovered’ value=’218.0’]
-</span><span class='line'>[13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageAbsCCovered’ value=’75.0’]
-</span><span class='line'>[13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageAbsLTotal’ value=’971.0’]
-</span><span class='line'>[13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageAbsMTotal’ value=’224.0’]
-</span><span class='line'>[13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageAbsCTotal’ value=’76.0’]</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The first message happens after NCover.Console is done its thing.  After NCoverExplorer is done its thing, the statistics are published.  I set out to mimic this functionality with Gallio, but what&rsquo;s described here should work with any test runner.</p>
-
-<ol>
-<li>Disable code coverage in TC.  We&rsquo;re doing it manually instead.</li>
-<li>In your build script, run your unit tests with NCover and generate a coverage.xml report.</li>
-<li>Run NCoverExplorer on coverage.xml and generate reports ncoverexplorer.xml and index.html.</li>
-<li>Create a zip file of index.html and name it coverage.zip.</li>
-<li>Configure coverage.zip to be an artifact in your TC configuration (this is to enable the tab).</li>
-<li>Parse out ncoverexplorer.xml with XPath and output the statistics.</li>
-</ol>
-
-
-<p>Certainly a lot of things to do just for the sake of pretty statistics reporting&hellip;.but it was the weekend and I was bored.  With the help of <a href="http://msbuildtasks.tigris.org/">MSBuildCommunityTasks</a>, the zip file and XML parsing was made a lot easier.</p>
-
-<p>After that, viola!  Code coverage + Gallio on TeamCity 5!!!</p>
-
-<p>Unfortunately, NCoverExplorer&rsquo;s report only reports the # total of classes and nothing about unvisited or covered, so for those values I set to 0/0/0 (BTW, you need all values present for the statistics to show).  A task for next weekend!!!</p>
-
-<p>(Edit: I suppose I could should also mention that you could technically avoid all the trouble above and hack it with this:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#if NUNIT
-</span><span class='line'>
-</span><span class='line'>using TestFixtureAttribute = NUnit.Framework.TestFixtureAttribute;
-</span><span class='line'>
-</span><span class='line'>using TestAttribute = NUnit.Framework.TestAttribute;
-</span><span class='line'>
-</span><span class='line'>#endif</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And it&rsquo;ll work just fine as well).</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/11/">&larr; Older</a>
@@ -477,6 +433,10 @@ I&#39;ve been toying with a similar approach, but I&#39;m uncertain about how to
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/30/1000-stars-in-1-month/">1000 stars in 1 month</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
@@ -504,10 +464,6 @@ I&#39;ve been toying with a similar approach, but I&#39;m uncertain about how to
     
       <li class="post">
         <a href="/blog/2013/02/11/writing-macros-with-vim/">Writing Macros with Vim</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/02/10/love-affair-with-vim/">Love Affair with Vim</a>
       </li>
     
   </ul>

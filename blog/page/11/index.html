@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="Inevitably as a project gets more complicated, you will need to start using more features of your IoC container. Autofac has built-in support for &hellip;">
+  <meta name="description" content="I&rsquo;ve been experimenting lately with TeamCity 5 EAP and so far it&rsquo;s been a pretty awesome experience. I was up and running within minutes &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,114 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/09/13/getting-code-coverage-working-on/">Getting Code Coverage Working on TeamCity 5 With Something Other Than NUnit</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-09-13T00:00:00+00:00" pubdate data-updated="true">Sep 13<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve been experimenting lately with <a href="http://www.jetbrains.net/confluence/display/TW/TeamCity+EAP?eap">TeamCity 5 EAP</a> and so far it&rsquo;s been a pretty awesome experience.  I was up and running within minutes and I was swarmed with beautiful graphs and statistics with specifics even per-test.  Getting something like that up with <a href="http://ccnet.thoughtworks.com/">CC.NET</a> is not a trivial task.</p>
+
+<p>Anywho, with TC5 code coverage is one of the cool new features added for .NET, but unfortunately only <a href="http://nunit.org">NUnit</a> is supported.  Not that that&rsquo;s a bad thing, but some people  prefer to use other testing tools.  Two notable contenders are <a href="http://xunit.codeplex.com">xUnit.net</a> and <a href="http://www.gallio.org">MbUnit</a>.</p>
+
+<p>I like the fact (pun intended) that xUnit.net makes it a point to prevent you from doing bad practices (like <code>[ExpectedException]</code>), and I like how MbUnit is so bleeding edge with useful features (like <code>[Parallelizable]</code> and a vast availability of assertions).</p>
+
+<p>And with that I set up to figure out how to get TC working with Gallio, but the following should work with any test runner.</p>
+
+<p>It certainly was a pain to set up because it took a lot of trial and error but eventually I figured it out.  I analyzed the build logs provided in each build report and noticed something interesting&hellip;specifically:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[13:51:23]: ##teamcity[importData type=’dotNetCoverage’ tool=’ncover’ file=’C:\TeamCity5\buildAgent\temp\buildTmp\tmp1C93.tmp’]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>and</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageL’ value=’94.85067’]
+</span><span class='line'>[13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageM’ value=’97.32143’]
+</span><span class='line'>[13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageC’ value=’98.68421’]
+</span><span class='line'>[13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageAbsLCovered’ value=’921.0’]
+</span><span class='line'>[13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageAbsMCovered’ value=’218.0’]
+</span><span class='line'>[13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageAbsCCovered’ value=’75.0’]
+</span><span class='line'>[13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageAbsLTotal’ value=’971.0’]
+</span><span class='line'>[13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageAbsMTotal’ value=’224.0’]
+</span><span class='line'>[13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageAbsCTotal’ value=’76.0’]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The first message happens after NCover.Console is done its thing.  After NCoverExplorer is done its thing, the statistics are published.  I set out to mimic this functionality with Gallio, but what&rsquo;s described here should work with any test runner.</p>
+
+<ol>
+<li>Disable code coverage in TC.  We&rsquo;re doing it manually instead.</li>
+<li>In your build script, run your unit tests with NCover and generate a coverage.xml report.</li>
+<li>Run NCoverExplorer on coverage.xml and generate reports ncoverexplorer.xml and index.html.</li>
+<li>Create a zip file of index.html and name it coverage.zip.</li>
+<li>Configure coverage.zip to be an artifact in your TC configuration (this is to enable the tab).</li>
+<li>Parse out ncoverexplorer.xml with XPath and output the statistics.</li>
+</ol>
+
+
+<p>Certainly a lot of things to do just for the sake of pretty statistics reporting&hellip;.but it was the weekend and I was bored.  With the help of <a href="http://msbuildtasks.tigris.org/">MSBuildCommunityTasks</a>, the zip file and XML parsing was made a lot easier.</p>
+
+<p>After that, viola!  Code coverage + Gallio on TeamCity 5!!!</p>
+
+<p>Unfortunately, NCoverExplorer&rsquo;s report only reports the # total of classes and nothing about unvisited or covered, so for those values I set to 0/0/0 (BTW, you need all values present for the statistics to show).  A task for next weekend!!!</p>
+
+<p>(Edit: I suppose I could should also mention that you could technically avoid all the trouble above and hack it with this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#if NUNIT
+</span><span class='line'>
+</span><span class='line'>using TestFixtureAttribute = NUnit.Framework.TestFixtureAttribute;
+</span><span class='line'>
+</span><span class='line'>using TestAttribute = NUnit.Framework.TestAttribute;
+</span><span class='line'>
+</span><span class='line'>#endif</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And it&rsquo;ll work just fine as well).</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -375,112 +483,6 @@ EDIT: I have since dropped this approach and I&#8217;m currently injecting ISess
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/08/15/ddd-tdd-enterprise-library-autofac-and-lokad/">DDD, TDD, Enterprise Library, Autofac, and Lokad.Shared Libs!</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-08-15T00:00:00+00:00" pubdate data-updated="true">Aug 15<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-So my project has been chuggin along quite nicely, and gave my CTO a quick look over the design of my project of which he was very impressed&#8230;I&#8217;m glad I spent all that time reading up on DDD, BDD, TDD, and listening to all the <a href="http://altnetpodcast.com/">ALT.NET podcasts</a>.
-
-I&#8217;ve learned SOOOOO much in the past month it is ridiculous, mostly thanks to coming across ALT.NET, and then reading everything linked from that source.
-
-I can honestly say I&#8217;m 100% sold on the TDD approach.  Initially, after reading about it I was like, hmmm, yeah, I can see that working, but writing tests first kinda seems dumb and redundant.  After all, obviously you know the tests will pass because you wrote them!!
-
-Then&#8230;I saw the light!!!
-
-I&#8217;m currently prototyping my project, but since I live in the real world I can reasonably assume the prototype will become the real thing.  But that&#8217;s not really an issue having designed everything with DDD and DI.  Once the prototype is done, we can <span style="font-style:italic;">optionally</span> replace the implementation, change the IoC wiring up, and voila, it just works (because we had all those tests written).
-
-Another design choice for the prototype I made was to use <a href="http://www.db4o.com/about/productinformation/">DB4O</a> rather than SQL Server.  DDD emphasizes very much on storing aggregate roots in repositories, and let&#8217;s be honest, object databases work ridiculously well with storing domain entities.
-
-So not only can I speed up development in my prototype by having all repositories go to a DB4O backing store, if it&#8217;s decided we need to change to a relational database, boom, I just need to reimplement all my repositories with <a href="http://nhforge.org/Default.aspx"/>NHibernate</a>.
-
-And just to drive home how easy DB4O is, literally, this is what you need to do to store a User in the database.
-<pre>
-using (IObjectContainer c = Db4oFactory.OpenFile("database.db"))
-{
-  c.Store(user);
-}
-</pre>
-Seriously!!!  It <span style="font-weight:bold;">IS</span> that easy!
-
-But back to why I&#8217;m sold on TDD.  Originally, I had IUsersRepository modeled something like this:
-<pre>
-User GetUserByName(string userName);
-User GetUserById(Guid id);
-User GetUserByFirstName(string firstName);
-</pre>
-And then I realized, it&#8217;s a total pain in the butt to be adding all these methods because once the method call reaches the DB4O container, I need to pass in a predicate for the query.  So I thought, I&#8217;ll just pass the predicate directly to DB4O.  I changed all my repositories (I had 4 at the time), to do this instead:
-<pre>
-User GetUser(Predicate&lt;User&gt; condition);
-</pre>
-So now I can simply do this:
-<pre>
-var user = usersRepository.GetUser(x => x.UserName == userName);
-</pre>
-I&#8217;ve converted 3 methods (and potentially more) into a single method that is very expressive and easy to read (thank you lambdas!).
-
-And then I reran all my tests and they passed&#8230;.which leads to the following conclusion:
-
-<span style="font-weight:bold;">TDD lets you refactor with confidence!</span>
-
-Oh wait, I mentioned <a href="http://code.google.com/p/autofac/">Autofac</a> and <a href="http://code.google.com/p/lokad-shared-libraries/">Lokad.Shared</a> libs in this blog post didn&#8217;t I&#8230;.
-
-To start&#8230;my project has removed all dependencies on the <a href="http://www.codeplex.com/entlib">Enterprise Library</a>.  In my previous post I mentioned how Unity wasn&#8217;t as mature as other frameworks.  Well, it appears that the Logging Block and/or the Exception Handling Block has a dependency on Unity.  I definitely did not like having 2 IoC containers in my bin directory, so I decided maybe I should just ditch the entire thing.
-
-Honestly, I didn&#8217;t really like the EntLib anyways&#8230;.the logging block requires the use of a static class Logger (tight coupling), and the exception block needs a try/catch/handle for any exception you want to handle, again with a static class ExceptionPolicy (more tight coupling!!!).
-
-So now it was a matter of finding a replacement.  There really was only 2 choices: the <a href="http://www.castleproject.org/index.html">Castle Stack</a>, or Autofac+Lokad.Shared.
-
-I was not very impressed with the lack of documentation on the Castle Validator component (or even where to download a binary of it).  Also, I&#8217;m really not a big fan of attributes on parameters.
-
-So what&#8217;s left is Autofac and Lokad.Shared.  I chose Autofac mainly because I love its lambda syntax (and the included performance benefit).  But of more concern is Lokad.Shared.
-a) It is basically written by 1 guy
-b) It doesn&#8217;t have community inertia
-
-But after reading the <a href="http://abdullin.com/journal/2008/11/23/net-application-block-for-validation-and-business-rules.html">examples</a> <a href="http://abdullin.com/journal/2008/12/1/net-exception-handling-action-policies-application-block.html">here</a> and <a href="http://abdullin.com/journal/2009/1/3/strongly-typed-reflection-in-lokad-shared.html">here</a> I didn&#8217;t have a choice!  It is just too damn nice!
-
-Comparing code I&#8217;m writing today with code I wrote 3 months ago is like light and day&#8230;.on different planets.
-
-And since I&#8217;m very link happy today, check out this awesome add-on called <a href="http://www.exactmagic.com/products/studiotools/index.html">Studio Tools</a>.  It&#8217;s free, only 1.9 megs and has the most impressive and blazing fast file/class/symbol search I&#8217;ve ever seen.</div>
-<h2>Comments</h2>
-<div class='comments'>
-<div class='comment'>
-<div class='author'>Codestructioner</div>
-<div class='content'>
-There&#39;s a few of us floating around who&#39;ve found, like, and use Lokad.Shard (and Lokad.ActionPolicy).</div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/12/">&larr; Older</a>
@@ -496,6 +498,10 @@ There&#39;s a few of us floating around who&#39;ve found, like, and use Lokad.Sh
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/30/1000-stars-in-1-month/">1000 stars in 1 month</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
@@ -523,10 +529,6 @@ There&#39;s a few of us floating around who&#39;ve found, like, and use Lokad.Sh
     
       <li class="post">
         <a href="/blog/2013/02/11/writing-macros-with-vim/">Writing Macros with Vim</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/02/10/love-affair-with-vim/">Love Affair with Vim</a>
       </li>
     
   </ul>

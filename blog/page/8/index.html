@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="Do you have some sort of ImmutableAttribute in your domain that you use to mark classes as immutable?&#160; Have you ever needed to enforce that &hellip;">
+  <meta name="description" content="I’m not going to go into detail about what the deal is about event handlers in a CQRS architecture, since a quick Google/Bing search will give &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,90 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/11/23/cqrs-auto-register-event-handlers/">CQRS: Auto Register Event Handlers</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-11-23T00:00:00+00:00" pubdate data-updated="true">Nov 23<span>rd</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+<p>I’m not going to go into detail about what the deal is about event handlers in a CQRS architecture, since a quick Google/Bing search will give plenty of very good information.&nbsp; What this post is about is a solution to the “how do I quickly register something to handle a bunch of events” without copying pasting all over the place. There are other solutions out there, like <a href="http://thinkbeforecoding.com/post/2009/11/03/Event-Sourcing-and-CQRS-Dispatch-options">this one</a>.&nbsp; Here’s something I came up with (took some concepts from my post on <a href="http://blingcode.blogspot.com/2010/10/yet-another-weak-event-for-wpf.html">Weak Events</a>).</p><pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">public</span> <span style="color: #0000ff">class</span> Aggregate
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">{
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  <span style="color: #0000ff">private</span> <span style="color: #0000ff">delegate</span> <span style="color: #0000ff">void</span> OpenEventHandler&lt;<span style="color: #0000ff">in</span> TTarget, <span style="color: #0000ff">in</span> TEvt&gt;(TTarget target, TEvt @<span style="color: #0000ff">event</span>);
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  <span style="color: #0000ff">private</span> <span style="color: #0000ff">static</span> <span style="color: #0000ff">readonly</span> IDictionary&lt;Type, OpenEventHandler&lt;Game, IEvent&gt;&gt; _evtHandlers = <span style="color: #0000ff">new</span> Dictionary&lt;Type, OpenEventHandler&lt;Game, IEvent&gt;&gt;();
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">   
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  <span style="color: #0000ff">static</span> Aggregate()
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  {
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    var methods = from m <span style="color: #0000ff">in</span> <span style="color: #0000ff">typeof</span>(Game).GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    let p = m.GetParameters()
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">            where m.Name == "<span style="color: #8b0000">ApplyEvent</span>" &amp;&amp; p.Length == 1 &amp;&amp; <span style="color: #0000ff">typeof</span>(IEvent).IsAssignableFrom(p[0].ParameterType)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">            select m;
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    var registerForwarder = <span style="color: #0000ff">typeof</span>(Game).GetMethod("<span style="color: #8b0000">RegisterForwarder</span>", BindingFlags.NonPublic | BindingFlags.Static);
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    <span style="color: #0000ff">foreach</span> (var m <span style="color: #0000ff">in</span> methods)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    {
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">      Type eventType = m.GetParameters()[0].ParameterType;
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">      var forwarder = registerForwarder.MakeGenericMethod(eventType).Invoke(<span style="color: #0000ff">null</span>, <span style="color: #0000ff">new</span>[] { m });
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">      _evtHandlers[eventType] = (OpenEventHandler&lt;Game, IEvent&gt;)forwarder;
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  <span style="color: #0000ff">private</span> <span style="color: #0000ff">static</span> OpenEventHandler&lt;Game, IEvent&gt; RegisterForwarder&lt;TEvt&gt;(MethodInfo method)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  {
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    var invoker = <span style="color: #0000ff">typeof</span>(OpenEventHandler&lt;,&gt;).MakeGenericType(<span style="color: #0000ff">typeof</span>(Game), <span style="color: #0000ff">typeof</span>(TEvt));
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    var forwarder = (OpenEventHandler&lt;Game, TEvt&gt;)Delegate.CreateDelegate(invoker, <span style="color: #0000ff">null</span>, method);
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    <span style="color: #0000ff">return</span> (g, e) =&gt; forwarder(g, (TEvt)e);
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"> 
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  <span style="color: #0000ff">private</span> <span style="color: #0000ff">void</span> ApplyEvent(EventHappened e)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  {
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    _something = e.Something;
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"> 
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  <span style="color: #0000ff">public</span> <span style="color: #0000ff">void</span> ApplyChanges(IEnumerable&lt;IEvent&gt; events)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  {
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    <span style="color: #0000ff">foreach</span> (var e <span style="color: #0000ff">in</span> events)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    {
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">      _evtHandlers[e.GetType()](<span style="color: #0000ff">this</span>, e);
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">}</pre></pre>
+<p>A couple things:</p>
+<ul>
+<li>The registration happens in the <strong>static constructor</strong>.&nbsp; This is important, because this relatively heavy cost of using reflection only happens once for the aggregate. 
+<li>The filtering of methods is arbitrary.&nbsp; I chose “ApplyEvent” here as the convention, but of course you can choose whatever you like. 
+<li><em>ApplyChanges</em> simply invokes the event handlers dictionary directly.&nbsp; Assuming you’re being a good citizen with the code, accessing <em>_evtHandlers</em> doesn’t need a lock because once created it should never be modified.</li></ul>
+<p>So in summary, it finds all methods named <em>ApplyEvent</em> in the current class, and generates an “open delegate” which takes in an extra parameter which is the instance itself.&nbsp; In this case, the instance is the aggregate, as shown in the <em>ApplyChanges</em> method.</p>
+<p>So there you have it!&nbsp; Excluding the lengthy LINQ query, roughly 10 lines of code to find and register all event handlers in the aggregate.&nbsp; And if you’re wondering, the performance cost is negligible because there’s no reflection involved in the invocation of the handlers.&nbsp; Awesome!</p>  </div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -805,64 +889,6 @@ No wonder it is taking so long, you&#39;re doing it in very heavyweight fashion.
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/04/21/forcing-castle-windsor-to-generate/">Forcing Castle Windsor to Generate Class Proxies</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-04-21T00:00:00+00:00" pubdate data-updated="true">Apr 21<span>st</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-I don&#8217;t know why it took me so long to come up with this idea, but to save others potential headaches&#8230;have you ever thought &#8220;hmmmm, I registered this as an interface with an implementation, but I want Windsor to use a class proxy, not an interface proxy, how do I do that?&#8221;<br />
-<br />
-For me, initially I <i>almost</i> went as far as implementing my own ProxyFactory to force it to use class proxy no matter what, and then the light bulb hit me and it turns out that there&#8217;s a much easier way to accomplish this.<br />
-<br />
-c.Register(Component.For&lt;ConcreteImpl, IService&gt;().Interceptors&lt;AnInterceptor&gt;());<br />
-<br />
-Tada!&nbsp; The actual service is now a concrete type, so Windsor will go, OK, I need to create a class proxy.&nbsp; But since it&#8217;s forwarded to the interface as well, all your dependencies can simply use the interface and everything magically works.<br />
-<br />
-Yay!</div>
-<h2>Comments</h2>
-<div class='comments'>
-<div class='comment'>
-<div class='author'>bling</div>
-<div class='content'>
-void IService.SomeLongRunningOperation() {<br />  Action1();<br />  Action2();<br />  Action3();<br />}<br /><br />protected virtual void Action1() {}<br />protected virtual void Action2() {}<br />protected virtual void Action3() {}<br /><br />Without class proxies, those action methods could not be intercepted, and in our case, we would not be able to collect metrics/statistics on those methods.</div>
-</div>
-<div class='comment'>
-<div class='author'>Krzysztof Koźmic (2)</div>
-<div class='content'>
-Why did you want a class proxy for interface service?</div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/9/">&larr; Older</a>
@@ -878,6 +904,10 @@ Why did you want a class proxy for interface service?</div>
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/30/1000-stars-in-1-month/">1000 stars in 1 month</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
@@ -905,10 +935,6 @@ Why did you want a class proxy for interface service?</div>
     
       <li class="post">
         <a href="/blog/2013/02/11/writing-macros-with-vim/">Writing Macros with Vim</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/02/10/love-affair-with-vim/">Love Affair with Vim</a>
       </li>
     
   </ul>

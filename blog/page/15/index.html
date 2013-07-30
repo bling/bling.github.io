@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="“Cross thread operation not valid: Control ### accessed from a thread other than the thread it was created.” Seriously, I don’t think there’s a &hellip;">
+  <meta name="description" content="it&rsquo;s pretty sweet. you can connect to every IM service known to man, and it even checks all your email, facebook, and twitter too with nice &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,48 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/04/09/digsby/">Digsby</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-04-09T00:00:00+00:00" pubdate data-updated="true">Apr 9<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>it&rsquo;s pretty sweet.  you can connect to every IM service known to man, and it even checks all your email, facebook, and twitter too with nice popup notifications!</p>
+
+<p>it only works for windows at the moment, but the guys over there are working hard and pushing out updates very frequently.  i&rsquo;m alpha testing and even so i haven&rsquo;t seen any crashes or any major problems.  there have been the minor quarks here and there, but that&rsquo;s to be expected when you&rsquo;re alpha testing.  check it out at digsby.com</p>
+
+<p>also, you can embed a chat client into your website&hellip;like this:</p>
+
+<p><embed width="210" src="http://w.digsby.com/dw.swf?c=ib6uqdcarp1k1t23" wmode="transparent" height="300" type="application/x-shockwave-flash"></embed></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -374,150 +416,6 @@ destroyed! (from a exiting the main function)</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/09/17/infamous-idisposable-pattern/">The Infamous IDisposable Pattern</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2008-09-17T00:00:00+00:00" pubdate data-updated="true">Sep 17<span>th</span>, 2008</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>At one point or another, any .NET developer should come across the concept of implementing the IDisposable pattern. For more detail, visit this excellent article at <a href="http://www.codeproject.com/KB/cs/idisposable.aspx.">http://www.codeproject.com/KB/cs/idisposable.aspx.</a></p>
-
-<p>One of the most common errors of programmers with a C++ background is that they define the Finalize() method with ~() syntax. This is almost always wrong. Just like you should never call GC.Collect(), you should not define a finalizer most of the time. The destructor is only required if your class uses unmanaged resources. If it does, then you should implement both the destructor and IDisposable, which simply contains a public Dispose() method which is where you deterministically clean up resources. Finalizers are called during garbage collection.</p>
-
-<p>The typically class template is this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">class</span> <span class="nc">Foo</span> <span class="p">:</span> <span class="n">IDisposable</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">private</span> <span class="kt">bool</span> <span class="n">_disposed</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">~</span><span class="n">Foo</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>        <span class="n">Dispose</span><span class="p">(</span><span class="k">false</span><span class="p">);</span> <span class="c1">// this is called automatically by the GC when you forget to call Dispose() explicitly.</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="k">public</span> <span class="k">void</span> <span class="nf">Dispose</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>        <span class="n">Dispose</span><span class="p">(</span><span class="k">true</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">GC</span><span class="p">.</span><span class="n">SuppressFinalize</span><span class="p">(</span><span class="k">this</span><span class="p">);</span> <span class="c1">// this prevents the GC from calling the finalizer, since you deterministically cleaned up resources already by calling Dispose().</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="k">protected</span> <span class="k">void</span> <span class="nf">Dispose</span><span class="p">(</span><span class="kt">bool</span> <span class="n">disposing</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">disposing</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>            <span class="c1">//dispose unmanaged resource</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>        <span class="n">_disposed</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Since I&rsquo;m on the subject of IDisposable, please for the love of God, use the keyword &lsquo;using&rsquo; whenever possible. It makes the code much cleaner, easier to read, and safer. Compare the following:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">public</span> <span class="k">void</span> <span class="nf">Print</span><span class="p">(</span><span class="kt">string</span> <span class="n">path</span><span class="p">)</span> <span class="c1">// implemented with using</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">try</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">using</span> <span class="p">(</span><span class="n">StreamReader</span> <span class="n">r</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StreamReader</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
-</span><span class='line'>        <span class="p">{</span>
-</span><span class='line'>            <span class="kt">string</span> <span class="n">line</span><span class="p">;</span>
-</span><span class='line'>            <span class="k">while</span> <span class="p">((</span><span class="n">line</span> <span class="p">=</span> <span class="n">r</span><span class="p">.</span><span class="n">ReadLine</span><span class="p">())</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span>
-</span><span class='line'>                <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">line</span><span class="p">);</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="k">catch</span> <span class="p">{</span> <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">public</span> <span class="k">void</span> <span class="nf">Print</span><span class="p">(</span><span class="kt">string</span> <span class="n">path</span><span class="p">)</span> <span class="c1">// implemented without</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="n">StreamReader</span> <span class="n">r</span> <span class="p">=</span> <span class="k">null</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">try</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="n">r</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StreamReader</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
-</span><span class='line'>        <span class="kt">string</span> <span class="n">line</span><span class="p">;</span>
-</span><span class='line'>        <span class="k">while</span> <span class="p">((</span><span class="n">line</span> <span class="p">=</span> <span class="n">r</span><span class="p">.</span><span class="n">ReadLine</span><span class="p">())</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span>
-</span><span class='line'>            <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">line</span><span class="p">);</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="k">catch</span> <span class="p">{</span> <span class="p">}</span>
-</span><span class='line'>    <span class="k">finally</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">r</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span>
-</span><span class='line'>            <span class="n">r</span><span class="p">.</span><span class="n">Close</span><span class="p">();</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I don&rsquo;t think I need to tell you the 1st section of code is much cleaner, robust, and easier to read than the 2nd section of code. The finally section is crucial as well. If you don&rsquo;t have this section, and some part of your code throws an exception, you probably just leaked resources. Just because .NET has a garbage collector does NOT mean you can be lazy about memory. You can and you will leak memory if you&rsquo;re not mindful of these things.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/16/">&larr; Older</a>
@@ -533,6 +431,10 @@ destroyed! (from a exiting the main function)</p>
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/30/1000-stars-in-1-month/">1000 stars in 1 month</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
@@ -560,10 +462,6 @@ destroyed! (from a exiting the main function)</p>
     
       <li class="post">
         <a href="/blog/2013/02/11/writing-macros-with-vim/">Writing Macros with Vim</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/02/10/love-affair-with-vim/">Love Affair with Vim</a>
       </li>
     
   </ul>

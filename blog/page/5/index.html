@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="In this part we’re going to fire up Expression Blend (the trial for version 5 can be found here) and do some UI work. In part 2, I created a simple &hellip;">
+  <meta name="description" content="Originally I wanted to avoid bringing in external libraries to keep the app as lean as possible, but then I realized that I would spend too much time &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,192 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/09/05/building-real-time-push-app-with-rx-4/">Building a Real-time Push App With Silverlight: Part 4</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-09-05T00:00:00+00:00" pubdate data-updated="true">Sep 5<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Originally I wanted to avoid bringing in external libraries to keep the app as lean as possible, but then I realized that I would spend too much time reinventing the wheel.  Twitter is deprecating basic authentication in the near future, which makes OAuth no longer optional.  Rather than writing yet another Twitter client (if you’re curious I found a great reference <a href="http://chris.59north.com/post/2009/09/16/SilverTweet-e28093-Building-a-Silverlight-Twitter-client-part-1.aspx">here</a>), I fired up <a href="http://nuget.org/">NuGet</a> and brought in <a href="http://linqtotwitter.codeplex.com/">LinqToTwitter</a>, and while I’m there I brought in <a href="http://code.google.com/p/autofac/">Autofac</a> and <a href="http://caliburnmicro.codeplex.com/">Caliburn.Micro</a> as well.</p>
+
+<p>Naturally, LinqToTwitter will work nicely with Rx because as name implies it uses LINQ heavily.  Caliburn.Micro is a MVVM library which I’ve always wanted an excuse to try because of features like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;ListBox</span> <span class="na">cal:Message.Attach=</span><span class="s">&quot;[Event Loaded] = [LoadList($dataContext)]&quot;</span> <span class="nt">/&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That’s only scratching the surface of what Caliburn can do, so it will be a fresh breath of air to see what else it can do.</p>
+
+<p>By default, Caliburn uses MEF to wire up its bootstrapper.  After adding a couple <code>[Import]</code>s and <code>[Export]</code>s, I knew it wasn’t for me.  It works well for writing plugins, i.e. <em>external</em> dependencies because of its built-in assembly scanning capabilities, but for injecting <em>internal</em> dependencies, other IoC containers do a much better job of that.  I used Castle Windsor in past projects, but for a change I’m going to use Autofac which I haven’t used since v2 came out.</p>
+
+<p>When this was all said and done the View was the only thing that didn’t change.  Everything underneath either changed radically or was deleted altogether (because LinqToTwitter provided it).  I added OAuth support and registered my application with Twitter, and with that was the birth of Ping Pong.</p>
+
+<p>This took much longer than expected.  Silverlight 5 RC just came out and it broke pretty much any container (including MEF) for OOB because of a TypeLoadException.  I haven’t been using too many v5 features, so for the time being I downgraded to v4 to get the project working until RC2 comes out.</p>
+
+<p>Integrating LinqToTwitter was a challenge.  The project site has a lot of good documentation, but most of it was for desktop, not Silverlight, and because of that I banged my head a couple times.  I wish I grabbed the source code earlier because it’s there where you’ll find hundreds of working examples (in code!) to do everything with the library (and in Silverlight).</p>
+
+<p>After all that, PingPong now has 3 columns (home, public, sampling) that <em>dynamically resizes</em> (it’s surprising that <a href="http://metrotwit.com">MetroTwit</a> is the only client that does this&hellip;) to the window size.</p>
+
+<p><img src="http://lh4.ggpht.com/-f1uQ63FwyoI/TmU-fK3WfQI/AAAAAAAAAGc/Y26EvwnXy_4/image_thumb%25255B15%25255D.png?imgmax=800" alt="img" /></p>
+
+<p>Oh, and there’s pictures now!  The streaming time line takes significantly more CPU now that it has to load images, but we’re still sitting at around 5-10% for what is continuously streaming data and loading pictures.  Not too shabby!  (It took a couple tries to get a PG-13 screenshot from the public/streaming time lines&hellip;)</p>
+
+<p>To conclude this post in the series, I’m going to talk about converting an asynchronous operation into an Observable that does not follow any predefined pattern.</p>
+
+<h1>Creating an Observable</h1>
+
+<p>One of Silverlight’s limitations is that almost everything needs to be an asynchronous call.  In regards to LinqToTwitter, something like this will fail (but work on desktop):</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="kt">var</span> <span class="n">tweets</span> <span class="p">=</span> <span class="p">(</span><span class="k">from</span> <span class="n">t</span> <span class="k">in</span> <span class="n">context</span><span class="p">.</span><span class="n">Status</span>
+</span><span class='line'>              <span class="k">where</span> <span class="n">t</span><span class="p">.</span><span class="n">Type</span> <span class="p">==</span> <span class="n">StatusType</span><span class="p">.</span><span class="n">Public</span>
+</span><span class='line'>              <span class="k">select</span> <span class="n">t</span><span class="p">).</span><span class="n">ToArray</span><span class="p">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>On Silverlight you will get a single empty element.  To get it working, there is an extension method that comes with the library, and you use it like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="p">(</span><span class="k">from</span> <span class="n">t</span> <span class="k">in</span> <span class="n">context</span><span class="p">.</span><span class="n">Status</span>
+</span><span class='line'> <span class="k">where</span> <span class="n">t</span><span class="p">.</span><span class="n">Type</span> <span class="p">==</span> <span class="n">StatusType</span><span class="p">.</span><span class="n">Public</span>
+</span><span class='line'>  <span class="k">select</span> <span class="n">t</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">.</span><span class="n">AsyncCallback</span><span class="p">(</span><span class="n">tweets</span> <span class="p">=&gt;</span> <span class="p">{</span> <span class="cm">/* do something with it */</span> <span class="p">})</span>
+</span><span class='line'>  <span class="p">.</span><span class="n">FirstOrDefault</span><span class="p">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Code is self-explanatory.  The <code>FirstOrDefault()</code> exists only to initiate the expression, otherwise it wouldn’t do anything.  So now the question is how do we convert that into an Rx Observable?</p>
+
+<p>Every time I write an Rx query I try to use the least amount of state as possible.  This helps to keep the number unexpected anomalies to a minimum.  In the following section of code, I was able to get it down to 2 fields: <code>_sinceId</code>, and <code>Context</code>.  There is probably some operator that will let me save the sinceId variable from one observable to the next but I wasn’t able to figure it out.  In any case, I came up with this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="n">_subscription</span> <span class="p">=</span>
+</span><span class='line'>    <span class="n">Observable</span><span class="p">.</span><span class="n">Create</span><span class="p">&lt;</span><span class="n">Tweet</span><span class="p">&gt;(</span>
+</span><span class='line'>        <span class="n">ob</span> <span class="p">=&gt;</span> <span class="n">Observable</span><span class="p">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromSeconds</span><span class="p">(</span><span class="m">60</span><span class="p">))</span>
+</span><span class='line'>            <span class="p">.</span><span class="n">StartWith</span><span class="p">(-</span><span class="m">1</span><span class="p">)</span>
+</span><span class='line'>            <span class="p">.</span><span class="n">SubscribeOnThreadPool</span><span class="p">()</span>
+</span><span class='line'>            <span class="p">.</span><span class="n">Subscribe</span><span class="p">(</span><span class="n">_</span> <span class="p">=&gt;</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="kt">ulong</span> <span class="n">sinceId</span><span class="p">;</span>
+</span><span class='line'>                <span class="p">(</span><span class="kt">ulong</span><span class="p">.</span><span class="n">TryParse</span><span class="p">(</span><span class="n">_sinceId</span><span class="p">,</span> <span class="k">out</span> <span class="n">sinceId</span><span class="p">)</span>
+</span><span class='line'>                    <span class="p">?</span> <span class="n">Context</span><span class="p">.</span><span class="n">Status</span><span class="p">.</span><span class="n">Where</span><span class="p">(</span><span class="n">s</span> <span class="p">=&gt;</span> <span class="n">s</span><span class="p">.</span><span class="n">Type</span> <span class="p">==</span> <span class="n">statusType</span> <span class="p">&amp;&amp;</span> <span class="n">s</span><span class="p">.</span><span class="n">Count</span> <span class="p">==</span> <span class="m">200</span><span class="p">)</span>
+</span><span class='line'>                    <span class="p">:</span> <span class="n">Context</span><span class="p">.</span><span class="n">Status</span><span class="p">.</span><span class="n">Where</span><span class="p">(</span><span class="n">s</span> <span class="p">=&gt;</span> <span class="n">s</span><span class="p">.</span><span class="n">Type</span> <span class="p">==</span> <span class="n">statusType</span> <span class="p">&amp;&amp;</span> <span class="n">s</span><span class="p">.</span><span class="n">Count</span> <span class="p">==</span> <span class="m">200</span> <span class="p">&amp;&amp;</span> <span class="n">s</span><span class="p">.</span><span class="n">SinceID</span> <span class="p">==</span> <span class="n">sinceId</span><span class="p">))</span>
+</span><span class='line'>                <span class="p">.</span><span class="n">AsyncCallback</span><span class="p">(</span><span class="n">statuses</span> <span class="p">=&gt;</span>
+</span><span class='line'>                <span class="p">{</span>
+</span><span class='line'>                    <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">status</span> <span class="k">in</span> <span class="n">statuses</span><span class="p">)</span>
+</span><span class='line'>                    <span class="p">{</span>
+</span><span class='line'>                        <span class="n">ob</span><span class="p">.</span><span class="n">OnNext</span><span class="p">(</span><span class="k">new</span> <span class="n">Tweet</span><span class="p">(</span><span class="n">status</span><span class="p">));</span>
+</span><span class='line'>                        <span class="n">_sinceId</span> <span class="p">=</span> <span class="n">status</span><span class="p">.</span><span class="n">StatusID</span><span class="p">;</span>
+</span><span class='line'>                    <span class="p">}</span>
+</span><span class='line'>                <span class="p">})</span>
+</span><span class='line'>                <span class="p">.</span><span class="n">FirstOrDefault</span><span class="p">();</span> <span class="c1">// materalize the results</span>
+</span><span class='line'>            <span class="p">}))</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">DispatcherSubscribe</span><span class="p">(</span><span class="n">SubscribeToTweet</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That contains some custom code:</p>
+
+<ul>
+<li>Context:  is a TwitterContext from LinqToTwitter</li>
+<li>DispatcherSubscribe:  is a helper extension method which Subscribes on the ThreadPool, Observes on the Dispatcher, and then Subscribes with the specified action</li>
+<li>SubscribeToTweet: a method in the base class which adds to a ObservableCollection so the UI gets updated</li>
+</ul>
+
+
+<p>To translate the code, here is a basic flow of what’s happening:</p>
+
+<ol>
+<li>Observable.Create wraps the subscription of another Observable.  It provides access to an IObserver <code>ob</code> which lets you explicitly invoke OnNext().</li>
+<li>Observable.Interval will raise an observable every 60 seconds.</li>
+<li>The subscription of Observable.Interval will query the TwitterContext for the next set of tweets.</li>
+<li>Inside the AsyncCallback, it invokes <code>ob.OnNext</code>as well as keeps track of the ID so the next time it queries it only gets newer tweets.</li>
+<li>Finally, <code>DispatcherSubscribe</code> will take the <code>Tweet</code> object and add it to an <code>ObservableCollection&lt;Tweet&gt;</code>, which notifies the UI.</li>
+</ol>
+
+
+<p>As always, you should “clean up your garbage”.  In this respect I was pretty impressed with Rx as it was able to clean up the entire chain of observables with a single call to <code>_subscription.Dispose()</code>.  Nice!</p>
+
+<p>In the next post I’m going to switch back to UI and completely restyle the application.  The code will hit GitHub soon as well (I promise!).  Stay tuned&hellip;</p>
+
+<h2>Comments</h2>
+
+
+<div class='comments'>
+<div class='comment'>
+<div class='author'>bling</div>
+<div class='content'>
+Looks like the same StartWith() trick is needed for Observable.Generate.<br /><br />I played around with Observable.Generate and all the expressions I came up looked pretty complicated in comparison with what I originally had.  This is mainly because I need to call OnNext() inside the AsyncCallback, so all solutions either had external Subjects or obscure ways of passing an IObserver around&#8230;<br /><br />Maybe I&#39;m overcomplicating things so if you can come up with an example it&#39;d be greatly appreciated.  I&#39;m still a Rx newbie&#8230;<br /><br />Thanks!</div>
+</div>
+<div class='comment'>
+<div class='author'>bling</div>
+<div class='content'>
+Thanks!  I didn&#39;t know about that overload.<br /><br />Is there a way to make it start immediately, like the StartWith(-1) in the original expression?<br /><br />Observable.Generate(<br />   0, <br />   _ =&gt; true,<br />   _ =&gt; _,<br />   _ =&gt;<br />   {<br />     // this doesn&#39;t get called until 60 seconds passes first&#8230;<br />     return 0;<br />   }, <br />   _ =&gt; TimeSpan.FromSeconds(60));</div>
+</div>
+<div class='comment'>
+<div class='author'>jwooley</div>
+<div class='content'>
+Rather than the custom Observable generator with Iterval, why not use Observable.Generate passing in a timespan of 60 seconds?</div>
+</div>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -860,63 +1046,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/08/16/adding-scripting-to-your-tool-belt/">Adding Scripting to Your Tool Belt</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-08-16T00:00:00+00:00" pubdate data-updated="true">Aug 16<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>One of the most important things for any developer is to be well rounded.  They should know about functional, imperative, object-oriented, aspect-oriented programming, among others.  They should know the difference between dynamic and static languages.  They should know the difference between scripting, interpreted, compiled languages.</p>
-
-<p>Why?  It opens your mindset.  It lets you see things in a different light, which ultimately changes the way you will write your code, and for the better.</p>
-
-<p>The best example is when C# introduced lambdas and LINQ.  All of a sudden, the masses saw the benefits of functional programming style and how it <em>greatly</em> makes code succinct.</p>
-
-<p>Here, I give an example of what knowing a little about Powershell did to save me a lot of time.</p>
-
-<p>I use git-tfs to make my day job a little less painful every day, because I cannot stand TFS, at all.  In their latest release, they decided not to tag every changeset.  I like my things consistent, so I decided to go back in history to untag all the changesets.</p>
-
-<p>Unfortunately, git doesn&rsquo;t have a mass untag, and you must untag each branch individually with <code>git tag -d name_of_tag</code>.</p>
-
-<p>This is how you do it with Powershell:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='powershell'><span class='line'><span class="n">50000</span><span class="p">..</span><span class="n">40000</span> <span class="p">|</span> <span class="p">%</span> <span class="p">{</span> <span class="n">git</span> <span class="n">tag</span> <span class="n">-d</span> <span class="s2">&quot;tfs/default/C$_&quot;</span> <span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>50000..40000 creates an list of numbers from 50,000 to 40,000, then it gets piped <code>|</code> into a foreach loop <code>%</code> to run the git tag command by generating the tag name with the current loop item <code>$_</code>.</p>
-
-<p>Why was this awesome?  I didn&rsquo;t have to open up Visual Studio, or a text editor, or anything.  I just typed it into the shell.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -932,6 +1061,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/30/1000-stars-in-1-month/">1000 stars in 1 month</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
@@ -959,10 +1092,6 @@
     
       <li class="post">
         <a href="/blog/2013/02/11/writing-macros-with-vim/">Writing Macros with Vim</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/02/10/love-affair-with-vim/">Love Affair with Vim</a>
       </li>
     
   </ul>

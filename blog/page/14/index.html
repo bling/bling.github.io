@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="I suppose I should give a disclaimer since I am not an expert with Vault, and my opinions may be completely due to my lack of understanding of the &hellip;">
+  <meta name="description" content="I&rsquo;ve always wanted to do this, and finally I&rsquo;ve gotten around to doing it. Here&rsquo;s a super duper simple implementation of a working &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,153 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/04/27/simple-thread-pool-implementation-1/">A Simple Thread Pool Implementation</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-04-27T00:00:00+00:00" pubdate data-updated="true">Apr 27<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve always wanted to do this, and finally I&rsquo;ve gotten around to doing it.  Here&rsquo;s a super duper simple implementation of a working thread pool.  I named in ThreadQueue just so it&rsquo;s clearly discernible from the one provided by the framework.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">ThreadQueue</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">static</span> <span class="n">Queue</span><span class="p">&lt;</span><span class="n">WorkItem</span><span class="p">&gt;</span> <span class="n">_queue</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Queue</span><span class="p">&lt;</span><span class="n">WorkItem</span><span class="p">&gt;();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">struct</span> <span class="nc">WorkItem</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">public</span> <span class="n">WaitCallback</span> <span class="n">Worker</span><span class="p">;</span>
+</span><span class='line'>        <span class="k">public</span> <span class="kt">object</span> <span class="n">State</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">static</span> <span class="nf">ThreadQueue</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="m">25</span><span class="p">;</span> <span class="p">++</span><span class="n">i</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="n">Thread</span> <span class="n">t</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="p">(</span><span class="n">ThreadWorker</span><span class="p">);</span>
+</span><span class='line'>            <span class="n">t</span><span class="p">.</span><span class="n">IsBackground</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+</span><span class='line'>            <span class="n">t</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">static</span> <span class="k">void</span> <span class="nf">ThreadWorker</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">while</span> <span class="p">(</span><span class="k">true</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="n">WorkItem</span> <span class="n">wi</span><span class="p">;</span>
+</span><span class='line'>            <span class="k">lock</span> <span class="p">(</span><span class="n">_queue</span><span class="p">)</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="k">while</span> <span class="p">(</span><span class="n">_queue</span><span class="p">.</span><span class="n">Count</span> <span class="p">==</span> <span class="m">0</span><span class="p">)</span>
+</span><span class='line'>                <span class="p">{</span>
+</span><span class='line'>                    <span class="n">Monitor</span><span class="p">.</span><span class="n">Wait</span><span class="p">(</span><span class="n">_queue</span><span class="p">);</span>
+</span><span class='line'>                <span class="p">}</span>
+</span><span class='line'>                <span class="n">wi</span> <span class="p">=</span> <span class="n">_queue</span><span class="p">.</span><span class="n">Dequeue</span><span class="p">();</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>            <span class="n">wi</span><span class="p">.</span><span class="n">Worker</span><span class="p">(</span><span class="n">wi</span><span class="p">.</span><span class="n">State</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">QueueUserWorkItem</span><span class="p">(</span><span class="n">WaitCallback</span> <span class="n">callBack</span><span class="p">,</span> <span class="kt">object</span> <span class="n">state</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">WorkItem</span> <span class="n">wi</span> <span class="p">=</span> <span class="k">new</span> <span class="n">WorkItem</span><span class="p">();</span>
+</span><span class='line'>        <span class="n">wi</span><span class="p">.</span><span class="n">Worker</span> <span class="p">=</span> <span class="n">callBack</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">wi</span><span class="p">.</span><span class="n">State</span> <span class="p">=</span> <span class="n">state</span><span class="p">;</span>
+</span><span class='line'>        <span class="k">lock</span> <span class="p">(</span><span class="n">_queue</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="n">_queue</span><span class="p">.</span><span class="n">Enqueue</span><span class="p">(</span><span class="n">wi</span><span class="p">);</span>
+</span><span class='line'>            <span class="n">Monitor</span><span class="p">.</span><span class="n">Pulse</span><span class="p">(</span><span class="n">_queue</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As you can see, it&rsquo;s very short and very simple.  Basically, if it&rsquo;s not used, no threads are started, so in a sense it is lazy.  When you use it for the first time, the static initializer will start up 25 threads, and put them all into waiting state (because the queue will initially be empty).  When something needs to be done, it is added to the queue, and then it pulses a waiting thread to perform some work.</p>
+
+<p>And just to warn you, if the worker delegate throws an exception it will crash the pool&hellip;.so if you want to avoid that you will need to wrap the wi.Worker(wi.State) with a try/catch.</p>
+
+<p>I guess at this point you may wonder why one should even bother writing a thread pool.  For one, it&rsquo;s a great exercise and will probably strengthen your understanding of how to write multithreaded applications.  The above thread pool is probably one of the simplest use-cases for Monitor.Pulse and Monitor.Wait, which are crucial for writing high-performance threaded applications.</p>
+
+<p>Another reason is that the .NET ThreadPool is optimized for many quick ending tasks.  All asynchronous operations are done with the ThreadPool (think BeginInvoke, EndInvoke, BeginRead, EndRead, etc.).  It is not well-suited for any operation that takes a long time to complete.  MSDN recommends that you use a full-blown thread to do that.  Unfortunately, there&rsquo;s a relatively big cost of creating threads, which is why we have thread pools in the first place!  Hence, to solve this problem, we can write our own thread pool which contains some alive and waiting threads to performing longer operations, without clogging the .NET ThreadPool.</p>
+
+<p>In my next post I&rsquo;ll compare the above implementation&rsquo;s performance against the built-in ThreadPool.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -297,48 +444,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/04/09/digsby/">Digsby</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-04-09T00:00:00+00:00" pubdate data-updated="true">Apr 9<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>it&rsquo;s pretty sweet.  you can connect to every IM service known to man, and it even checks all your email, facebook, and twitter too with nice popup notifications!</p>
-
-<p>it only works for windows at the moment, but the guys over there are working hard and pushing out updates very frequently.  i&rsquo;m alpha testing and even so i haven&rsquo;t seen any crashes or any major problems.  there have been the minor quarks here and there, but that&rsquo;s to be expected when you&rsquo;re alpha testing.  check it out at digsby.com</p>
-
-<p>also, you can embed a chat client into your website&hellip;like this:</p>
-
-<p><embed width="210" src="http://w.digsby.com/dw.swf?c=ib6uqdcarp1k1t23" wmode="transparent" height="300" type="application/x-shockwave-flash"></embed></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/15/">&larr; Older</a>
@@ -354,6 +459,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/30/1000-stars-in-1-month/">1000 stars in 1 month</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
@@ -381,10 +490,6 @@
     
       <li class="post">
         <a href="/blog/2013/02/11/writing-macros-with-vim/">Writing Macros with Vim</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/02/10/love-affair-with-vim/">Love Affair with Vim</a>
       </li>
     
   </ul>

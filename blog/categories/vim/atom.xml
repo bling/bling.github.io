@@ -4,7 +4,7 @@
   <title><![CDATA[Category: vim | bling on software development]]></title>
   <link href="http://bling.github.io//blog/categories/vim/atom.xml" rel="self"/>
   <link href="http://bling.github.io//"/>
-  <updated>2013-07-30T14:12:26+00:00</updated>
+  <updated>2013-08-19T14:25:44+00:00</updated>
   <id>http://bling.github.io//</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
@@ -12,6 +12,129 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Modularizing VimScript]]></title>
+    <link href="http://bling.github.io//blog/2013/08/16/modularizing-vimscript/"/>
+    <updated>2013-08-16T20:22:00+00:00</updated>
+    <id>http://bling.github.io//blog/2013/08/16/modularizing-vimscript</id>
+    <content type="html"><![CDATA[<h1>The prerequisites</h1>
+
+<p>First off, there are two very good resources that are required reading in addition to what&rsquo;s provided in the official documentation.  Steve Losh&rsquo;s <a href="http://learnvimscriptthehardway.stevelosh.com/">Learn Vim the Hard Way</a> is an excellent book and I highly recommend it.  The <a href="http://www.ibm.com/developerworks/library/l-vim-script-1/">IBM Series</a> by Dr. Damian Conway is another great resource.  Without these I would not have been able to do what I have achieved, so thanks to them!</p>
+
+<h1>Where I started</h1>
+
+<p>When I first wrote <a href="https://github.com/bling/vim-bufferline">vim-bufferline</a> and <a href="https://github.com/bling/vim-airline">vim-airline</a> I was very much a newbie Vim scripter and I tried to follow as many existing patterns as possible.  It was evident that the community at large had a very &ldquo;C-like&rdquo; mentality, in that most things were done with functions declared in the global scope (I don&rsquo;t know if this still holds true for modern C development, but as an expression I think people will get what I&rsquo;m saying).  Many of the older scripts (pre GitHub) tended to be large, single file plugins which lived under the <code>plugin</code> folder.  For example, <a href="http://www.vim.org/scripts/script.php?script_id=2438">EasyGrep</a> is a 3000+ line plugin that helps you search and replace in Vim.</p>
+
+<!-- more -->
+
+
+<p>Most tutorials also taught writing functions in this fashion (most likely due to simplicity).  For example, this is from <a href="http://www.ibm.com/developerworks/library/l-vim-script-1/">part 1</a> of the IBM developer series:</p>
+
+<p>``` vim
+function! ToggleSyntax()
+   if exists(&ldquo;g:syntax_on&rdquo;)</p>
+
+<pre><code>  syntax off
+</code></pre>
+
+<p>   else</p>
+
+<pre><code>  syntax enable
+</code></pre>
+
+<p>   endif
+endfunction
+nmap <silent> ;s :call ToggleSyntax()<CR>
+```</p>
+
+<p>We all have to start somewhere, but what I found was that these patterns and practices followed beyond their original intention and into plugins.</p>
+
+<p>I think part of the problem is that Vim has a very unique scoping system, in that you can scope variables to a script, window, or buffer, for example.  People ended up using this as a form of encapsulation:</p>
+
+<p>`&ldquo; vim
+let s:text = &rdquo;</p>
+
+<p>function! s:somefile#set_text(val)
+  let s:text = a:val
+endfunction</p>
+
+<p>function! g:somefile#get_text()
+  return s:text
+endfunction
+```</p>
+
+<p>The <code>g:</code> variables are your exposed public API, and the <code>s:</code> variables are private.  That&rsquo;s all good, but <em>everything is still global!</em></p>
+
+<h1>Where I am now</h1>
+
+<p>There is nothing particular wrong with the approach of using global variables and functions.  Many complex software systems have been designed this way with much success, and often times, they perform much faster than counterparts with &ldquo;objects&rdquo; and &ldquo;polymorphism&rdquo;.</p>
+
+<p>Nonetheless, everything has pros and cons, and the cost of maintenance goes up when you have a bunch of global variables interacting with each other.</p>
+
+<p>The more VimScript I wrote the more I sought for a way to manage complexity and splitting up my code into smaller, manageable pieces.</p>
+
+<h1>Modularizing VimScript</h1>
+
+<p>Let&rsquo;s take a look at how we can create an object that is transient, has state, and contains methods you can invoke, like any modern OOP language can do.</p>
+
+<p>``` vim
+function! myobject#new()
+  let obj = {}
+  let obj._cats = []</p>
+
+<p>  function! obj.add_cat()</p>
+
+<pre><code>call add(self._cats, '(^.^)')
+</code></pre>
+
+<p>  endfunction</p>
+
+<p>  function! obj.meow()</p>
+
+<pre><code>for cat in self._cats
+  echo cat
+endfor
+</code></pre>
+
+<p>  endfunction</p>
+
+<p>  return obj
+endfunction</p>
+
+<p>&ldquo; somewhere else
+let x = myobject#new()
+call x.add_cat()
+call x.meow()
+```</p>
+
+<p>This might look familiar to some of you.  Yes, it&rsquo;s almost the same as the <a href="https://www.google.com/search?q=javascript+module+pattern">JavaScript Module Pattern</a>.  Unfortunately, closures are not supported, but otherwise all of the usual benefits apply here, mainly controlled visibility into private state <strong>and</strong> <strong><em>transience!</em></strong></p>
+
+<p>You can even take this concept further and replicate &ldquo;static&rdquo; functions:</p>
+
+<p>``` vim
+function! s:object#private_static()
+endfunction</p>
+
+<p>function! g:object#public_static()
+endfunction</p>
+
+<p>function! g:object#new()
+  let obj = {}</p>
+
+<p>  function! obj.public()
+  endfunction</p>
+
+<p>  function! obj._private()
+  endfunction</p>
+
+<p>  return obj
+endfunction
+```</p>
+
+<p>Yep, same story as JavaScript here &mdash; <code>_</code> variables/functions are &ldquo;private&rdquo;.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[1000 stars in 1 month]]></title>
@@ -264,86 +387,6 @@ nnoremap &lt;space&gt;s :Unite -quick-match buffer&lt;cr&gt;
 <h1>Finale</h1>
 
 <p>And that&rsquo;s all I got for now.  I&rsquo;m still learning more about what this plugin can do, but it&rsquo;s definitely earned its place in my vim toolbox.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Writing Macros with Vim]]></title>
-    <link href="http://bling.github.io//blog/2013/02/11/writing-macros-with-vim/"/>
-    <updated>2013-02-11T00:00:00+00:00</updated>
-    <id>http://bling.github.io//blog/2013/02/11/writing-macros-with-vim</id>
-    <content type="html"><![CDATA[<p>First, let’s start with a Javascript function:
-``` javascript
-function foo(hello, world,</p>
-
-<pre><code>         how, are,
-         you) {
-</code></pre>
-
-<p>}
-<code>
-Now let’s convert that to the following:
-</code> javascript
-function foo(parameters) {</p>
-
-<pre><code>var hello = parameters.hello;
-var world = parameters.world;
-var how = parameters.how;
-var are = parameters.are;
-var you = parameters.you;
-</code></pre>
-
-<p>}
-<code>
-Here are the macros I used to do this:
-</code> vim
-let @r=&lsquo;di(iparameters^[/{^M2o^[kpg<code>[v</code>]Jgv:s/\s//g<sup>M0</sup>:try|exe &ldquo;norm! @q&rdquo;|endtry<sup>MA</sup>;^[V:s/,/;\r/g<sup>Mv</sup>``=&rsquo;
-let @q=&lsquo;ywivar ^[pa = parameters.^[f,^[l@q&rsquo;
-```</p>
-
-<!--more-->
-
-
-<p>Note that if you copy paste the above into your vimrc it will not work. The <code>^[</code> and <code>^M</code> found are actually single characters, not two. To input this properly you will need to chord it in input mode with <code>&lt;Ctrl-V&gt;</code>. So for <code>&lt;Esc&gt;</code> you would chord <code>&lt;Ctrl+V&gt;&lt;Ctrl+[&gt;</code>.</p>
-
-<p>So, when I&rsquo;m inside the parameters of the function, I can hit <code>@r</code> and it will perform the refactoring. Now let’s break it down step by step.</p>
-
-<h1>@q The first macro</h1>
-
-<p>This is a recursive macro which takes something like <code>a,b,c</code> and turns it into <code>var a = p.a,var b = p.b,var c = p.c</code>. Let’s see how that’s done.</p>
-
-<ol>
-<li><code>yw</code> <code>i</code> <code>var</code> <code>&lt;Esc&gt;</code> <code>p</code> Yanks the word and enter insert mode, type var, exit insert mode and paste the just yanked word.</li>
-<li><code>a = parameters.</code> Append and fill in parameters.</li>
-<li><code>&lt;Esc&gt;</code> <code>f</code>, <code>l</code> Exit insert mode, find the next <code>,</code></li>
-<li><code>l</code> <code>@q</code> Adjust the cursor position and recursively call itself.</li>
-</ol>
-
-
-<p>Recursive macros terminate when the first error occurs. In this macro, that error is when there are no more commas left.</p>
-
-<h1>@r The second macro</h1>
-
-<p>The is the macro that should be invoked, and references the <code>@q</code> macro.</p>
-
-<ol>
-<li><code>di(</code> Deletes everything inside the brackets.</li>
-<li><code>i</code> parameters Enter insert mode and type parameters.</li>
-<li><code>&lt;Esc&gt;</code> <code>/{</code> <code>&lt;CR&gt;</code> Leaves insert mode and finds the next brace.</li>
-<li><code>2o</code> <code>&lt;Esc&gt;</code> <code>k</code> <code>p</code> Creates two empty lines and pastes what we deleted into the first line.</li>
-<li><code>g`[v`]</code> <code>J</code> Visually select what we just pasted and join them all into a single line.</li>
-<li><code>gv</code> <code>:s/\s//g</code> <code>&lt;CR&gt;</code> Reselect the visually and delete all whitespace.</li>
-<li><code>0</code> Move to the beginning of the line.</li>
-<li><code>:try|exe "norm! @q"|endtry</code> <code>&lt;CR&gt;</code> Macros will terminate on the first error, even if referencing another macro. Wrapping the other macro with try|endtry swallows the error and lets the current macro continue.</li>
-<li><code>A;</code> <code>&lt;Esc&gt;</code> Append ; to the end of the line.</li>
-<li><code>V</code> <code>:s/,/;\r/g</code> <code>&lt;CR&gt;</code> Visually select the line, replace with carriage returns.</li>
-<li><code>v=``</code>  Visually select from the current cursor position back to where it was originally was, and format.</li>
-</ol>
-
-
-<p>Now is this the best way to do it? Probably not. I would not be surprised if someone was able to do it with less keystrokes or a single macro.  But hey, it was fun learning experience, and ultimately I turned all of that into two keystrokes that can be reused many times.</p>
-
-<p>I posted this on <a href="http://vimgolf.com/challenges/511991607729fb0002000003">vimgolf</a> so let’s see how other people solved the same refactoring!</p>
 ]]></content>
   </entry>
   

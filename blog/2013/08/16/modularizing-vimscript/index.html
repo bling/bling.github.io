@@ -1,0 +1,470 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Modularizing VimScript - bling on software development</title>
+  <meta name="author" content="Bailey Ling">
+
+  
+  <meta name="description" content="The prerequisites First off, there are two very good resources that are required reading in addition to what&rsquo;s provided in the official &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://bling.github.io//blog/2013/08/16/modularizing-vimscript">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="bling on software development" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic|Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
+
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38439430-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">bling on software development</a></h1>
+  
+    <h2>when pragmatism meets minimalism</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:bling.github.io/" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Modularizing VimScript</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-16T20:22:00+00:00" pubdate data-updated="true">Aug 16<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h1>The prerequisites</h1>
+
+<p>First off, there are two very good resources that are required reading in addition to what&rsquo;s provided in the official documentation.  Steve Losh&rsquo;s <a href="http://learnvimscriptthehardway.stevelosh.com/">Learn Vim the Hard Way</a> is an excellent book and I highly recommend it.  The <a href="http://www.ibm.com/developerworks/library/l-vim-script-1/">IBM Series</a> by Dr. Damian Conway is another great resource.  Without these I would not have been able to do what I have achieved, so thanks to them!</p>
+
+<h1>Where I started</h1>
+
+<p>When I first wrote <a href="https://github.com/bling/vim-bufferline">vim-bufferline</a> and <a href="https://github.com/bling/vim-airline">vim-airline</a> I was very much a newbie Vim scripter and I tried to follow as many existing patterns as possible.  It was evident that the community at large had a very &ldquo;C-like&rdquo; mentality, in that most things were done with functions declared in the global scope (I don&rsquo;t know if this still holds true for modern C development, but as an expression I think people will get what I&rsquo;m saying).  Many of the older scripts (pre GitHub) tended to be large, single file plugins which lived under the <code>plugin</code> folder.  For example, <a href="http://www.vim.org/scripts/script.php?script_id=2438">EasyGrep</a> is a 3000+ line plugin that helps you search and replace in Vim.</p>
+
+<!-- more -->
+
+
+<p>Most tutorials also taught writing functions in this fashion (most likely due to simplicity).  For example, this is from <a href="http://www.ibm.com/developerworks/library/l-vim-script-1/">part 1</a> of the IBM developer series:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='vim'><span class='line'><span class="k">function</span><span class="p">!</span> ToggleSyntax<span class="p">()</span>
+</span><span class='line'>   <span class="k">if</span> exists<span class="p">(</span><span class="s2">&quot;g:syntax_on&quot;</span><span class="p">)</span>
+</span><span class='line'>      <span class="nb">syntax</span> off
+</span><span class='line'>   <span class="k">else</span>
+</span><span class='line'>      <span class="nb">syntax</span> enable
+</span><span class='line'>   <span class="k">endif</span>
+</span><span class='line'><span class="k">endfunction</span>
+</span><span class='line'>nmap <span class="p">&lt;</span><span class="k">silent</span><span class="p">&gt;</span> ;<span class="k">s</span> :<span class="k">call</span> ToggleSyntax<span class="p">()&lt;</span>CR<span class="p">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We all have to start somewhere, but what I found was that these patterns and practices followed beyond their original intention and into plugins.</p>
+
+<p>I think part of the problem is that Vim has a very unique scoping system, in that you can scope variables to a script, window, or buffer, for example.  People ended up using this as a form of encapsulation:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='vim'><span class='line'><span class="k">let</span> <span class="k">s</span>:text <span class="p">=</span> <span class="s1">&#39;&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">function</span><span class="p">!</span> <span class="k">s</span>:somefile#set_text<span class="p">(</span>val<span class="p">)</span>
+</span><span class='line'>  <span class="k">let</span> <span class="k">s</span>:text <span class="p">=</span> <span class="k">a</span>:val
+</span><span class='line'><span class="k">endfunction</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">function</span><span class="p">!</span> <span class="k">g</span>:somefile#get_text<span class="p">()</span>
+</span><span class='line'>  <span class="k">return</span> <span class="k">s</span>:text
+</span><span class='line'><span class="k">endfunction</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The <code>g:</code> variables are your exposed public API, and the <code>s:</code> variables are private.  That&rsquo;s all good, but <em>everything is still global!</em></p>
+
+<h1>Where I am now</h1>
+
+<p>There is nothing particular wrong with the approach of using global variables and functions.  Many complex software systems have been designed this way with much success, and often times, they perform much faster than counterparts with &ldquo;objects&rdquo; and &ldquo;polymorphism&rdquo;.</p>
+
+<p>Nonetheless, everything has pros and cons, and the cost of maintenance goes up when you have a bunch of global variables interacting with each other.</p>
+
+<p>The more VimScript I wrote the more I sought for a way to manage complexity and splitting up my code into smaller, manageable pieces.</p>
+
+<h1>Modularizing VimScript</h1>
+
+<p>Let&rsquo;s take a look at how we can create an object that is transient, has state, and contains methods you can invoke, like any modern OOP language can do.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='vim'><span class='line'><span class="k">function</span><span class="p">!</span> myobject#<span class="k">new</span><span class="p">()</span>
+</span><span class='line'>  <span class="k">let</span> obj <span class="p">=</span> {}
+</span><span class='line'>  <span class="k">let</span> obj._cats <span class="p">=</span> []
+</span><span class='line'>
+</span><span class='line'>  <span class="k">function</span><span class="p">!</span> obj.add_cat<span class="p">()</span>
+</span><span class='line'>    <span class="k">call</span> add<span class="p">(</span>self._cats<span class="p">,</span> <span class="s1">&#39;(^.^)&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">endfunction</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">function</span><span class="p">!</span> obj.meow<span class="p">()</span>
+</span><span class='line'>    <span class="k">for</span> <span class="k">cat</span> <span class="k">in</span> self._cats
+</span><span class='line'>      echo <span class="k">cat</span>
+</span><span class='line'>    <span class="k">endfor</span>
+</span><span class='line'>  <span class="k">endfunction</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">return</span> obj
+</span><span class='line'><span class="k">endfunction</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&quot; somewhere else</span>
+</span><span class='line'><span class="k">let</span> <span class="k">x</span> <span class="p">=</span> myobject#<span class="k">new</span><span class="p">()</span>
+</span><span class='line'><span class="k">call</span> <span class="k">x</span>.add_cat<span class="p">()</span>
+</span><span class='line'><span class="k">call</span> <span class="k">x</span>.meow<span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This might look familiar to some of you.  Yes, it&rsquo;s almost the same as the <a href="https://www.google.com/search?q=javascript+module+pattern">JavaScript Module Pattern</a>.  Unfortunately, closures are not supported, but otherwise all of the usual benefits apply here, mainly controlled visibility into private state <strong>and</strong> <strong><em>transience!</em></strong></p>
+
+<p>You can even take this concept further and replicate &ldquo;static&rdquo; functions:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='vim'><span class='line'><span class="k">function</span><span class="p">!</span> <span class="k">s</span>:object#private_static<span class="p">()</span>
+</span><span class='line'><span class="k">endfunction</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">function</span><span class="p">!</span> <span class="k">g</span>:object#public_static<span class="p">()</span>
+</span><span class='line'><span class="k">endfunction</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">function</span><span class="p">!</span> <span class="k">g</span>:object#<span class="k">new</span><span class="p">()</span>
+</span><span class='line'>  <span class="k">let</span> obj <span class="p">=</span> {}
+</span><span class='line'>
+</span><span class='line'>  <span class="k">function</span><span class="p">!</span> obj.public<span class="p">()</span>
+</span><span class='line'>  <span class="k">endfunction</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">function</span><span class="p">!</span> obj._private<span class="p">()</span>
+</span><span class='line'>  <span class="k">endfunction</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">return</span> obj
+</span><span class='line'><span class="k">endfunction</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Yep, same story as JavaScript here &mdash; <code>_</code> variables/functions are &ldquo;private&rdquo;.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Bailey Ling</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-16T20:22:00+00:00" pubdate data-updated="true">Aug 16<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/vim/'>vim</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bling.github.io//blog/2013/08/16/modularizing-vimscript/" data-via="blingcoder" data-counturl="http://bling.github.io//blog/2013/08/16/modularizing-vimscript/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/07/30/1000-stars-in-1-month/" title="Previous Post: 1000 stars in 1 month">&laquo; 1000 stars in 1 month</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/08/16/modularizing-vimscript/">Modularizing VimScript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/30/1000-stars-in-1-month/">1000 stars in 1 month</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/15/flight-of-an-open-source-project/">The flight of an open-source project</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/">Unite.vim, The plugin you didn't know you need</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/19/on-typescript/">On TypeScript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript/">.NET/WPF to HTML/CSS/Javscript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/10/jumping-on-the-hacker-blog-bandwagon/">Jumping on the hacker blog bandwagon</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/bling">@bling</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'bling',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Bailey Ling -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'blingdev';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://bling.github.io//blog/2013/08/16/modularizing-vimscript/';
+        var disqus_url = 'http://bling.github.io//blog/2013/08/16/modularizing-vimscript/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

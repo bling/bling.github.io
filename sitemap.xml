@@ -331,8 +331,12 @@
         <lastmod>2013-07-30T14:11:37+00:00</lastmod>
     </url>
     <url>
+        <loc>http://bling.github.io//blog/2013/08/16/modularizing-vimscript/</loc>
+        <lastmod>2013-08-19T14:25:08+00:00</lastmod>
+    </url>
+    <url>
         <loc>http://bling.github.io//blog/archives/</loc>
-        <lastmod>2013-07-30T14:11:37+00:00</lastmod>
+        <lastmod>2013-08-19T14:25:08+00:00</lastmod>
     </url>
     <url>
         <loc>http://bling.github.io//robots.txt</loc>
@@ -340,6 +344,6 @@
     </url>
     <url>
         <loc>http://bling.github.io//</loc>
-        <lastmod>2013-07-30T14:11:37+00:00</lastmod>
+        <lastmod>2013-08-19T14:25:08+00:00</lastmod>
     </url>
 </urlset>

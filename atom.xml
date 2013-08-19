@@ -4,7 +4,7 @@
   <title><![CDATA[bling on software development]]></title>
   <link href="http://bling.github.io//atom.xml" rel="self"/>
   <link href="http://bling.github.io//"/>
-  <updated>2013-07-30T14:12:26+00:00</updated>
+  <updated>2013-08-19T14:25:44+00:00</updated>
   <id>http://bling.github.io//</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
@@ -12,6 +12,172 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Modularizing VimScript]]></title>
+    <link href="http://bling.github.io//blog/2013/08/16/modularizing-vimscript/"/>
+    <updated>2013-08-16T20:22:00+00:00</updated>
+    <id>http://bling.github.io//blog/2013/08/16/modularizing-vimscript</id>
+    <content type="html"><![CDATA[<h1>The prerequisites</h1>
+
+<p>First off, there are two very good resources that are required reading in addition to what&rsquo;s provided in the official documentation.  Steve Losh&rsquo;s <a href="http://learnvimscriptthehardway.stevelosh.com/">Learn Vim the Hard Way</a> is an excellent book and I highly recommend it.  The <a href="http://www.ibm.com/developerworks/library/l-vim-script-1/">IBM Series</a> by Dr. Damian Conway is another great resource.  Without these I would not have been able to do what I have achieved, so thanks to them!</p>
+
+<h1>Where I started</h1>
+
+<p>When I first wrote <a href="https://github.com/bling/vim-bufferline">vim-bufferline</a> and <a href="https://github.com/bling/vim-airline">vim-airline</a> I was very much a newbie Vim scripter and I tried to follow as many existing patterns as possible.  It was evident that the community at large had a very &ldquo;C-like&rdquo; mentality, in that most things were done with functions declared in the global scope (I don&rsquo;t know if this still holds true for modern C development, but as an expression I think people will get what I&rsquo;m saying).  Many of the older scripts (pre GitHub) tended to be large, single file plugins which lived under the <code>plugin</code> folder.  For example, <a href="http://www.vim.org/scripts/script.php?script_id=2438">EasyGrep</a> is a 3000+ line plugin that helps you search and replace in Vim.</p>
+
+<!-- more -->
+
+
+<p>Most tutorials also taught writing functions in this fashion (most likely due to simplicity).  For example, this is from <a href="http://www.ibm.com/developerworks/library/l-vim-script-1/">part 1</a> of the IBM developer series:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='vim'><span class='line'><span class="k">function</span><span class="p">!</span> ToggleSyntax<span class="p">()</span>
+</span><span class='line'>   <span class="k">if</span> exists<span class="p">(</span><span class="s2">&quot;g:syntax_on&quot;</span><span class="p">)</span>
+</span><span class='line'>      <span class="nb">syntax</span> off
+</span><span class='line'>   <span class="k">else</span>
+</span><span class='line'>      <span class="nb">syntax</span> enable
+</span><span class='line'>   <span class="k">endif</span>
+</span><span class='line'><span class="k">endfunction</span>
+</span><span class='line'>nmap <span class="p">&lt;</span><span class="k">silent</span><span class="p">&gt;</span> ;<span class="k">s</span> :<span class="k">call</span> ToggleSyntax<span class="p">()&lt;</span>CR<span class="p">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We all have to start somewhere, but what I found was that these patterns and practices followed beyond their original intention and into plugins.</p>
+
+<p>I think part of the problem is that Vim has a very unique scoping system, in that you can scope variables to a script, window, or buffer, for example.  People ended up using this as a form of encapsulation:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='vim'><span class='line'><span class="k">let</span> <span class="k">s</span>:text <span class="p">=</span> <span class="s1">&#39;&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">function</span><span class="p">!</span> <span class="k">s</span>:somefile#set_text<span class="p">(</span>val<span class="p">)</span>
+</span><span class='line'>  <span class="k">let</span> <span class="k">s</span>:text <span class="p">=</span> <span class="k">a</span>:val
+</span><span class='line'><span class="k">endfunction</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">function</span><span class="p">!</span> <span class="k">g</span>:somefile#get_text<span class="p">()</span>
+</span><span class='line'>  <span class="k">return</span> <span class="k">s</span>:text
+</span><span class='line'><span class="k">endfunction</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The <code>g:</code> variables are your exposed public API, and the <code>s:</code> variables are private.  That&rsquo;s all good, but <em>everything is still global!</em></p>
+
+<h1>Where I am now</h1>
+
+<p>There is nothing particular wrong with the approach of using global variables and functions.  Many complex software systems have been designed this way with much success, and often times, they perform much faster than counterparts with &ldquo;objects&rdquo; and &ldquo;polymorphism&rdquo;.</p>
+
+<p>Nonetheless, everything has pros and cons, and the cost of maintenance goes up when you have a bunch of global variables interacting with each other.</p>
+
+<p>The more VimScript I wrote the more I sought for a way to manage complexity and splitting up my code into smaller, manageable pieces.</p>
+
+<h1>Modularizing VimScript</h1>
+
+<p>Let&rsquo;s take a look at how we can create an object that is transient, has state, and contains methods you can invoke, like any modern OOP language can do.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='vim'><span class='line'><span class="k">function</span><span class="p">!</span> myobject#<span class="k">new</span><span class="p">()</span>
+</span><span class='line'>  <span class="k">let</span> obj <span class="p">=</span> {}
+</span><span class='line'>  <span class="k">let</span> obj._cats <span class="p">=</span> []
+</span><span class='line'>
+</span><span class='line'>  <span class="k">function</span><span class="p">!</span> obj.add_cat<span class="p">()</span>
+</span><span class='line'>    <span class="k">call</span> add<span class="p">(</span>self._cats<span class="p">,</span> <span class="s1">&#39;(^.^)&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">endfunction</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">function</span><span class="p">!</span> obj.meow<span class="p">()</span>
+</span><span class='line'>    <span class="k">for</span> <span class="k">cat</span> <span class="k">in</span> self._cats
+</span><span class='line'>      echo <span class="k">cat</span>
+</span><span class='line'>    <span class="k">endfor</span>
+</span><span class='line'>  <span class="k">endfunction</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">return</span> obj
+</span><span class='line'><span class="k">endfunction</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&quot; somewhere else</span>
+</span><span class='line'><span class="k">let</span> <span class="k">x</span> <span class="p">=</span> myobject#<span class="k">new</span><span class="p">()</span>
+</span><span class='line'><span class="k">call</span> <span class="k">x</span>.add_cat<span class="p">()</span>
+</span><span class='line'><span class="k">call</span> <span class="k">x</span>.meow<span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This might look familiar to some of you.  Yes, it&rsquo;s almost the same as the <a href="https://www.google.com/search?q=javascript+module+pattern">JavaScript Module Pattern</a>.  Unfortunately, closures are not supported, but otherwise all of the usual benefits apply here, mainly controlled visibility into private state <strong>and</strong> <strong><em>transience!</em></strong></p>
+
+<p>You can even take this concept further and replicate &ldquo;static&rdquo; functions:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='vim'><span class='line'><span class="k">function</span><span class="p">!</span> <span class="k">s</span>:object#private_static<span class="p">()</span>
+</span><span class='line'><span class="k">endfunction</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">function</span><span class="p">!</span> <span class="k">g</span>:object#public_static<span class="p">()</span>
+</span><span class='line'><span class="k">endfunction</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">function</span><span class="p">!</span> <span class="k">g</span>:object#<span class="k">new</span><span class="p">()</span>
+</span><span class='line'>  <span class="k">let</span> obj <span class="p">=</span> {}
+</span><span class='line'>
+</span><span class='line'>  <span class="k">function</span><span class="p">!</span> obj.public<span class="p">()</span>
+</span><span class='line'>  <span class="k">endfunction</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">function</span><span class="p">!</span> obj._private<span class="p">()</span>
+</span><span class='line'>  <span class="k">endfunction</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">return</span> obj
+</span><span class='line'><span class="k">endfunction</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Yep, same story as JavaScript here &mdash; <code>_</code> variables/functions are &ldquo;private&rdquo;.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[1000 stars in 1 month]]></title>
@@ -1194,194 +1360,6 @@ Hi Bailey! Nice thoughtful article - I have a foot in both camps, so I&#39;m gla
 <p>Anyways, the beauty of XAML is that I can try something else entirely without any changes to the code, so I’ll try another theme in the future.</p>
 
 <p>I’m about 90% ready to release code to GitHub along with the first public alpha version.  Stay tuned!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Building a Real-time Push App with Silverlight: Part 5]]></title>
-    <link href="http://bling.github.io//blog/2011/09/08/building-real-time-push-app-with-rx-5/"/>
-    <updated>2011-09-08T00:00:00+00:00</updated>
-    <id>http://bling.github.io//blog/2011/09/08/building-real-time-push-app-with-rx-5</id>
-    <content type="html"><![CDATA[<p>I planned on this post to be about UI, but I’m going to defer that until the next post.  I said from the start of this series that I would document about everything about building the application from scratch, including my struggles.</p>
-
-<p>And with that I want to mention something that got me scratching my head one too many times.  It was with how I used LinqToTwitter.  Here is the source code which you can immediately copy/paste into a blank project to reproduce:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">MainPage</span> <span class="p">:</span> <span class="n">UserControl</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">private</span> <span class="k">readonly</span> <span class="n">TwitterContext</span> <span class="n">_context</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TwitterContext</span><span class="p">();</span>
-</span><span class='line'>    <span class="k">private</span> <span class="k">readonly</span> <span class="n">ViewModel</span> <span class="n">_vm1</span><span class="p">,</span> <span class="n">_vm2</span><span class="p">,</span> <span class="n">_vm3</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">public</span> <span class="nf">MainPage</span><span class="p">()</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="n">InitializeComponent</span><span class="p">();</span>
-</span><span class='line'>        <span class="n">_vm1</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ViewModel</span><span class="p">(</span><span class="n">_context</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">_vm2</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ViewModel</span><span class="p">(</span><span class="n">_context</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">_vm3</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ViewModel</span><span class="p">(</span><span class="n">_context</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">_vm1</span><span class="p">.</span><span class="n">Callback</span> <span class="p">+=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Callback of VM1: &quot;</span> <span class="p">+</span> <span class="n">_vm1</span><span class="p">.</span><span class="n">LocalState</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">_vm2</span><span class="p">.</span><span class="n">Callback</span> <span class="p">+=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Callback of VM2: &quot;</span> <span class="p">+</span> <span class="n">_vm2</span><span class="p">.</span><span class="n">LocalState</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">_vm3</span><span class="p">.</span><span class="n">Callback</span> <span class="p">+=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Callback of VM3: &quot;</span> <span class="p">+</span> <span class="n">_vm3</span><span class="p">.</span><span class="n">LocalState</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">_vm1</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
-</span><span class='line'>        <span class="n">_vm2</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
-</span><span class='line'>        <span class="n">_vm3</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">ViewModel</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">private</span> <span class="k">readonly</span> <span class="n">TwitterContext</span> <span class="n">_context</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">public</span> <span class="k">event</span> <span class="n">Action</span> <span class="n">Callback</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">public</span> <span class="kt">int</span> <span class="n">LocalState</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">public</span> <span class="nf">ViewModel</span><span class="p">(</span><span class="n">TwitterContext</span> <span class="n">context</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="n">_context</span> <span class="p">=</span> <span class="n">context</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">public</span> <span class="k">void</span> <span class="nf">Start</span><span class="p">()</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="kt">var</span> <span class="n">query</span> <span class="p">=</span> <span class="p">(</span><span class="k">from</span> <span class="n">s</span> <span class="k">in</span> <span class="n">_context</span><span class="p">.</span><span class="n">Status</span>
-</span><span class='line'>                <span class="k">where</span> <span class="n">s</span><span class="p">.</span><span class="n">Type</span> <span class="p">==</span> <span class="n">StatusType</span><span class="p">.</span><span class="n">Public</span> <span class="p">&amp;&amp;</span> <span class="n">s</span><span class="p">.</span><span class="n">Count</span> <span class="p">==</span> <span class="m">10</span>
-</span><span class='line'>                <span class="k">select</span> <span class="n">s</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Hash code of ViewModel: &quot;</span> <span class="p">+</span> <span class="n">query</span><span class="p">.</span><span class="n">GetHashCode</span><span class="p">());</span>
-</span><span class='line'>        <span class="n">query</span><span class="p">.</span><span class="n">AsyncCallback</span><span class="p">(</span><span class="n">statuses</span> <span class="p">=&gt;</span>
-</span><span class='line'>                <span class="p">{</span>
-</span><span class='line'>                <span class="n">LocalState</span><span class="p">++;</span>
-</span><span class='line'>                <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Hash code inside callback: &quot;</span> <span class="p">+</span> <span class="n">GetHashCode</span><span class="p">());</span>
-</span><span class='line'>                <span class="n">Callback</span><span class="p">();</span>
-</span><span class='line'>                <span class="p">}).</span><span class="n">FirstOrDefault</span><span class="p">();</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now, if you run this, you will see that only <em>one</em> of the view models will get its state updated.  Huh?!</p>
-
-<p>How is that possible?  I started getting paranoid so I even added the local state variable “just in case.”</p>
-
-<p>Well, I had to look into the source code of LinqToTwitter to figure out exactly what happened.  Here is the code for AsyncCallback:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">public</span> <span class="k">static</span> <span class="n">IQueryable</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="n">AsyncCallback</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span><span class="k">this</span> <span class="n">IQueryable</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="n">queryType</span><span class="p">,</span> <span class="n">Action</span><span class="p">&lt;</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;&gt;</span> <span class="n">callback</span><span class="p">)</span>
-</span><span class='line'> <span class="p">{</span>
-</span><span class='line'>     <span class="p">(</span><span class="n">queryType</span><span class="p">.</span><span class="n">Provider</span> <span class="k">as</span> <span class="n">TwitterQueryProvider</span><span class="p">)</span>
-</span><span class='line'>         <span class="p">.</span><span class="n">Context</span>
-</span><span class='line'>         <span class="p">.</span><span class="n">TwitterExecutor</span>
-</span><span class='line'>         <span class="p">.</span><span class="n">AsyncCallback</span> <span class="p">=</span> <span class="n">callback</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>     <span class="k">return</span> <span class="n">queryType</span><span class="p">;</span>
-</span><span class='line'> <span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>See what happened?  The callback gets overwritten every time you call this method.  Even though the call to <code>FirstOrDefault</code>() causes all 3 expressions to evaluate, only the last view model will get values because that’s the with the callback attached.</p>
-
-<p>Lesson of the day: The AsyncCallback extension method for LinqToTwitter is not thread-safe.</p>
-
-<p>So&hellip;the question is, how do we make it thread safe?  I just replaced wrapped the AsyncCallback with another extension method:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">private</span> <span class="k">static</span> <span class="k">readonly</span> <span class="n">AutoResetEvent</span> <span class="n">_twitterEvt</span> <span class="p">=</span> <span class="k">new</span> <span class="n">AutoResetEvent</span><span class="p">(</span><span class="k">true</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="n">AsyncTwitterCallback</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span><span class="k">this</span> <span class="n">IQueryable</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="n">twitter</span><span class="p">,</span> <span class="n">Action</span><span class="p">&lt;</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;&gt;</span> <span class="n">callback</span><span class="p">)</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="n">Observable</span><span class="p">.</span><span class="n">Start</span><span class="p">(()</span> <span class="p">=&gt;</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="n">_twitterEvt</span><span class="p">.</span><span class="n">WaitOne</span><span class="p">();</span>
-</span><span class='line'>        <span class="n">twitter</span><span class="p">.</span><span class="n">AsyncCallback</span><span class="p">(</span><span class="n">results</span> <span class="p">=&gt;</span>
-</span><span class='line'>        <span class="p">{</span>
-</span><span class='line'>            <span class="k">try</span>
-</span><span class='line'>            <span class="p">{</span>
-</span><span class='line'>                <span class="n">callback</span><span class="p">(</span><span class="n">results</span><span class="p">);</span>
-</span><span class='line'>            <span class="p">}</span>
-</span><span class='line'>            <span class="k">finally</span>
-</span><span class='line'>            <span class="p">{</span>
-</span><span class='line'>                <span class="n">_twitterEvt</span><span class="p">.</span><span class="n">Set</span><span class="p">();</span>
-</span><span class='line'>            <span class="p">}</span>
-</span><span class='line'>        <span class="p">}).</span><span class="n">FirstOrDefault</span><span class="p">();</span>
-</span><span class='line'>    <span class="p">});</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Nothing complicated – just a simple wait handle to ensure only 1 thread can go through at a time.</p>
-
-<p>Hopefully upstream fixes this, or at least documents it.</p>
 ]]></content>
   </entry>
   

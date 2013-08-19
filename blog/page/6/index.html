@@ -9,7 +9,11 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="One of the most important things for any developer is to be well rounded. They should know about functional, imperative, object-oriented, aspect- &hellip;">
+  <meta name="description" content="Let’s say you have something like this: 1
+2
+3
+public void MyClass { public ILog Logger { get; set; }
+} And you simply want Unity to inject an &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +81,114 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/08/19/injecting-logger-instances-via-unity/">Injecting Logger Instances via Convention With Unity</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-19T00:00:00+00:00" pubdate data-updated="true">Aug 19<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Let’s say you have something like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">public</span> <span class="k">void</span> <span class="n">MyClass</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">public</span> <span class="n">ILog</span> <span class="n">Logger</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And you simply want Unity to inject an instance of <code>ILog</code> such that its name is <code>requestingDependency.GetType().FullName</code>, which in this case would be <code>Full.Namespace.MyClass</code>.</p>
+
+<p>I&rsquo;ll leave it up to the exercise of the reader, but if you search for &lsquo;log4net and Unity&rsquo; you will find some working solutions which IMO are way too long to solve this.  I have obviously taken for granted the features of Windsor and Autofac too much because I expected something like this to be easily done in 2-3 lines of code.</p>
+
+<p>After a lot of cursing I&rsquo;ve come up with something that&rsquo;s almost as short and gets the job done:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">LoggingExtension</span> <span class="p">:</span> <span class="n">UnityContainerExtension</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">Initialize</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="p">.</span><span class="n">Context</span><span class="p">.</span><span class="n">Strategies</span><span class="p">.</span><span class="n">AddNew</span><span class="p">(</span><span class="n">UnityBuildStage</span><span class="p">.</span><span class="n">PreCreation</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">private</span> <span class="k">class</span> <span class="nc">LogBuilderStrategy</span> <span class="p">:</span> <span class="n">BuilderStrategy</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">private</span> <span class="k">readonly</span> <span class="n">Stack</span> <span class="n">buildKeys</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Stack</span><span class="p">();</span>
+</span><span class='line'>        <span class="k">public</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">PreBuildUp</span><span class="p">(</span><span class="n">IBuilderContext</span> <span class="n">context</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="kt">var</span> <span class="n">type</span> <span class="p">=</span> <span class="p">((</span><span class="n">NamedTypeBuildKey</span><span class="p">)</span><span class="n">context</span><span class="p">.</span><span class="n">BuildKey</span><span class="p">).</span><span class="n">Type</span><span class="p">;</span>
+</span><span class='line'>            <span class="k">if</span> <span class="p">(</span><span class="n">type</span> <span class="p">==</span> <span class="k">typeof</span><span class="p">(</span><span class="n">ILog</span><span class="p">))</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">buildKeys</span><span class="p">.</span><span class="n">Count</span> <span class="p">&lt;</span> <span class="m">1</span><span class="p">)</span>
+</span><span class='line'>                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">InvalidOperationException</span><span class="p">(</span><span class="s">&quot;Log instances cannot be resolved directly.&quot;</span><span class="p">);</span>
+</span><span class='line'>                <span class="n">context</span><span class="p">.</span><span class="n">Existing</span> <span class="p">=</span> <span class="n">LogManager</span><span class="p">.</span><span class="n">GetLog</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">buildKeys</span><span class="p">.</span><span class="n">Peek</span><span class="p">());</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>            <span class="k">this</span><span class="p">.</span><span class="n">buildKeys</span><span class="p">.</span><span class="n">Push</span><span class="p">(</span><span class="n">type</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="k">public</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">PostBuildUp</span><span class="p">(</span><span class="n">IBuilderContext</span> <span class="n">context</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="k">this</span><span class="p">.</span><span class="n">buildKeys</span><span class="p">.</span><span class="n">Pop</span><span class="p">();</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you noticed, I had to cast to <code>NamedTypeBuildKey</code>, which unfortunately means I’m still stuck with Unity 1.2&hellip;</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -324,60 +436,6 @@ Nice post! Gonna check out XAML Intellisense Presenter, All Margins, and PowerGU
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/04/17/integrating-dependencypropertyweaver/">Integrating DependencyPropertyWeaver Into Your Build</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-04-17T00:00:00+00:00" pubdate data-updated="true">Apr 17<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-<p>See the <a href="http://blingcode.blogspot.com/2011/04/introducing-dependencypropertyweaver.html">introduction</a> here.</p> <p>The MSBuild task as it stands currently by default will attempt to weave everything that it finds.&nbsp; This is probably not optimal in most use cases, but any changes is a simple modification to the LINQ query in the code.&nbsp; For now, it’s only available in source format since there are bound to be bugs here and there, and once those get ironed out it’ll be easier to release a “point something” release.</p> <p>An example of how its used can be seen in the unit tests, in the project DependencyPropertyWeaver.Tests.Models.&nbsp; If you open it up in your favorite text editor, you will see this crucial line:</p><pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">&lt;</span><span style="color: #800000">Target</span> <span style="color: #ff0000">Name</span>=<span style="color: #0000ff">"AfterBuild"</span><span style="color: #0000ff">&gt;</span>
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    <span style="color: #0000ff">&lt;</span><span style="color: #800000">Exec</span> <span style="color: #ff0000">Command</span>=<span style="color: #0000ff">"C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe postbuild.proj /p:Files=DependencyPropertyWeaver.Tests.Models.dll"</span> <span style="color: #ff0000">WorkingDirectory</span>=<span style="color: #0000ff">"$(OutputPath)"</span> <span style="color: #0000ff">/&gt;</span>
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  <span style="color: #0000ff">&lt;/</span><span style="color: #800000">Target</span><span style="color: #0000ff">&gt;</span></pre></pre>
-<p>And the contents of <em>postbuild.proj</em> is simply this:</p><pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">&lt;?</span>xml version="1.0" encoding="utf-8"<span style="color: #0000ff">?&gt;</span>
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">&lt;</span><span style="color: #800000">Project</span> <span style="color: #ff0000">ToolsVersion</span>=<span style="color: #0000ff">"4.0"</span> <span style="color: #ff0000">DefaultTargets</span>=<span style="color: #0000ff">"Weave"</span> <span style="color: #ff0000">xmlns</span>=<span style="color: #0000ff">"http://schemas.microsoft.com/developer/msbuild/2003"</span><span style="color: #0000ff">&gt;</span>
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  <span style="color: #0000ff">&lt;</span><span style="color: #800000">UsingTask</span> <span style="color: #ff0000">TaskName</span>=<span style="color: #0000ff">"DependencyPropertyWeaver.DependencyPropertyWeaverTask"</span>
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">             <span style="color: #ff0000">AssemblyFile</span>=<span style="color: #0000ff">"DependencyPropertyWeaver.dll"</span> <span style="color: #0000ff">/&gt;</span>
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  <span style="color: #0000ff">&lt;</span><span style="color: #800000">Target</span> <span style="color: #ff0000">Name</span>=<span style="color: #0000ff">"Weave"</span><span style="color: #0000ff">&gt;</span>
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    <span style="color: #0000ff">&lt;</span><span style="color: #800000">ItemGroup</span><span style="color: #0000ff">&gt;</span>
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">      <span style="color: #0000ff">&lt;</span><span style="color: #800000">Input</span> <span style="color: #ff0000">Include</span>=<span style="color: #0000ff">"$(Files)"</span> <span style="color: #0000ff">/&gt;</span>
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    <span style="color: #0000ff">&lt;/</span><span style="color: #800000">ItemGroup</span><span style="color: #0000ff">&gt;</span>
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    <span style="color: #0000ff">&lt;</span><span style="color: #800000">DependencyPropertyWeaverTask</span> <span style="color: #ff0000">Files</span>=<span style="color: #0000ff">"@(Input)"</span> <span style="color: #0000ff">/&gt;</span>
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  <span style="color: #0000ff">&lt;/</span><span style="color: #800000">Target</span><span style="color: #0000ff">&gt;</span>
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">&lt;/</span><span style="color: #800000">Project</span><span style="color: #0000ff">&gt;</span></pre></pre>
-<p>The <em>AfterBuild</em> target is a special target with MSBuild, which, as the name implies, will run after the target has been built.&nbsp; In this case, after the project is completed, it will invoke another MSBuild instance to perform the weaving.&nbsp; Invoking a new MSBuild process is required because the &lt;UsingTask&gt; will load the assembly into the current AppDomain, and once loaded it cannot be unloaded.</p>
-<p>If you don’t mind the unloading part, you can simply add the &lt;UsingTask&gt; directly into the project file and invoked the &lt;DependencyPropertyWeaverTask&gt; there, and avoid the hassle of having a separate file.</p>
-<p>Currently, the DependencyPropertyWeaverTask supports the <em>TypePatternMatch</em> and <em>AttributePatternMatch</em>, which as the names imply will use regular expression filtering on type names or properties with the attribute you want to weave.&nbsp; If these properties are null, they are ignored.</p>
-<p>Next on the feature list is weaving attached properties ;-)</p>  </div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -393,6 +451,10 @@ Nice post! Gonna check out XAML Intellisense Presenter, All Margins, and PowerGU
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/08/16/modularizing-vimscript/">Modularizing VimScript</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/07/30/1000-stars-in-1-month/">1000 stars in 1 month</a>
@@ -420,10 +482,6 @@ Nice post! Gonna check out XAML Intellisense Presenter, All Margins, and PowerGU
     
       <li class="post">
         <a href="/blog/2013/04/10/jumping-on-the-hacker-blog-bandwagon/">Jumping on the hacker blog bandwagon</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/02/11/writing-macros-with-vim/">Writing Macros with Vim</a>
       </li>
     
   </ul>

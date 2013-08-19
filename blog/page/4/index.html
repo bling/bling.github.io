@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="This is going to be the last post that concludes my series on building a real-time push app with Silverlight. Any additional posts would likely be &hellip;">
+  <meta name="description" content="I have a whole series dedicated to blogging about how I wrote a Twitter client from scratch, but if I want anyone to actually use it, I better do &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,43 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/10/09/pingpong-twitter-client/">ping.pong Twitter Client</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-10-09T00:00:00+00:00" pubdate data-updated="true">Oct 9<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+<p>I have a whole <a href="http://blingcode.blogspot.com/2011/09/push-driven-development-with-reactive.html">series</a> dedicated to blogging about how I wrote a Twitter client from scratch, but if I want anyone to actually use it, I better do some advertising :-D.</p> <p>ping.pong is a fast and lightweight Twitter client written in Silverlight.&nbsp; As of this moment it targets v4 but will likely target v5 whenever that is released.</p> <p>Here are some highlights…</p> <h3>Visually Pleasing</h3> <p><img style="background-image: none; border-right-width: 0px; padding-left: 0px; padding-right: 0px; display: block; float: none; border-top-width: 0px; border-bottom-width: 0px; margin-left: auto; border-left-width: 0px; margin-right: auto; padding-top: 0px" title="image" border="0" alt="image" src="http://lh3.ggpht.com/-9wwcsDIu5Yg/TpHayG-NVXI/AAAAAAAAAHg/-Jo9iq0ghOA/image%25255B15%25255D.png?imgmax=800" width="377" height="280"></p> <p>The UI is based on your typical column-based design.&nbsp; The column widths will automatically resize to take up all available horizontal space.&nbsp; There is no horizontal scrolling.</p> <h3><strong>Access to the Streaming API</strong></h3> <p>No more rate limits!&nbsp; Your timeline is connected directly with Twitter’s streaming API, which means whenever someone you follow tweets you will know about it in almost near real-time.&nbsp; Searching is also done through the streaming API.</p> <h3>Fast &amp; Lightweight</h3> <p>ping.pong was built to run fast with low CPU utilization.&nbsp; Even when stream searching for “e” (yes, the letter E), the CPU usage stays under 15%.&nbsp; The maximum number of tweets that Twitter sends appears to be 50 per second.</p> <h3>Conversations</h3> <p>ping.pong will quickly show an entire tweet conversation by navigating reply tags back to the original tweet that started it all.</p> <h3>Free &amp; Open Source</h3> <p>The full source code for ping.pong can be found on <a href="https://github.com/bling/Ping.Pong">GitHub</a>.&nbsp; You can compile it, make modifications as you please, and run it yourself.&nbsp; The only thing missing is the consumer keys which uniquely identifies this client from another.&nbsp; You can generate them through Twitter once you have a developer account.</p> <h3>Installer</h3> <p>The latest and greatest can be quickly installed from <a href="http://dl.dropbox.com/u/2072014/Ping.Pong/PingPongTestPage.html">here</a>.&nbsp; Check back periodically for updates!</p>  </div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -481,221 +518,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/09/08/building-real-time-push-app-with-rx-5/">Building a Real-time Push App With Silverlight: Part 5</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-09-08T00:00:00+00:00" pubdate data-updated="true">Sep 8<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I planned on this post to be about UI, but I’m going to defer that until the next post.  I said from the start of this series that I would document about everything about building the application from scratch, including my struggles.</p>
-
-<p>And with that I want to mention something that got me scratching my head one too many times.  It was with how I used LinqToTwitter.  Here is the source code which you can immediately copy/paste into a blank project to reproduce:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">MainPage</span> <span class="p">:</span> <span class="n">UserControl</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">private</span> <span class="k">readonly</span> <span class="n">TwitterContext</span> <span class="n">_context</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TwitterContext</span><span class="p">();</span>
-</span><span class='line'>    <span class="k">private</span> <span class="k">readonly</span> <span class="n">ViewModel</span> <span class="n">_vm1</span><span class="p">,</span> <span class="n">_vm2</span><span class="p">,</span> <span class="n">_vm3</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">public</span> <span class="nf">MainPage</span><span class="p">()</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="n">InitializeComponent</span><span class="p">();</span>
-</span><span class='line'>        <span class="n">_vm1</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ViewModel</span><span class="p">(</span><span class="n">_context</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">_vm2</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ViewModel</span><span class="p">(</span><span class="n">_context</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">_vm3</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ViewModel</span><span class="p">(</span><span class="n">_context</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">_vm1</span><span class="p">.</span><span class="n">Callback</span> <span class="p">+=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Callback of VM1: &quot;</span> <span class="p">+</span> <span class="n">_vm1</span><span class="p">.</span><span class="n">LocalState</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">_vm2</span><span class="p">.</span><span class="n">Callback</span> <span class="p">+=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Callback of VM2: &quot;</span> <span class="p">+</span> <span class="n">_vm2</span><span class="p">.</span><span class="n">LocalState</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">_vm3</span><span class="p">.</span><span class="n">Callback</span> <span class="p">+=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Callback of VM3: &quot;</span> <span class="p">+</span> <span class="n">_vm3</span><span class="p">.</span><span class="n">LocalState</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">_vm1</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
-</span><span class='line'>        <span class="n">_vm2</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
-</span><span class='line'>        <span class="n">_vm3</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">ViewModel</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">private</span> <span class="k">readonly</span> <span class="n">TwitterContext</span> <span class="n">_context</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">public</span> <span class="k">event</span> <span class="n">Action</span> <span class="n">Callback</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">public</span> <span class="kt">int</span> <span class="n">LocalState</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">public</span> <span class="nf">ViewModel</span><span class="p">(</span><span class="n">TwitterContext</span> <span class="n">context</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="n">_context</span> <span class="p">=</span> <span class="n">context</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">public</span> <span class="k">void</span> <span class="nf">Start</span><span class="p">()</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="kt">var</span> <span class="n">query</span> <span class="p">=</span> <span class="p">(</span><span class="k">from</span> <span class="n">s</span> <span class="k">in</span> <span class="n">_context</span><span class="p">.</span><span class="n">Status</span>
-</span><span class='line'>                <span class="k">where</span> <span class="n">s</span><span class="p">.</span><span class="n">Type</span> <span class="p">==</span> <span class="n">StatusType</span><span class="p">.</span><span class="n">Public</span> <span class="p">&amp;&amp;</span> <span class="n">s</span><span class="p">.</span><span class="n">Count</span> <span class="p">==</span> <span class="m">10</span>
-</span><span class='line'>                <span class="k">select</span> <span class="n">s</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Hash code of ViewModel: &quot;</span> <span class="p">+</span> <span class="n">query</span><span class="p">.</span><span class="n">GetHashCode</span><span class="p">());</span>
-</span><span class='line'>        <span class="n">query</span><span class="p">.</span><span class="n">AsyncCallback</span><span class="p">(</span><span class="n">statuses</span> <span class="p">=&gt;</span>
-</span><span class='line'>                <span class="p">{</span>
-</span><span class='line'>                <span class="n">LocalState</span><span class="p">++;</span>
-</span><span class='line'>                <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Hash code inside callback: &quot;</span> <span class="p">+</span> <span class="n">GetHashCode</span><span class="p">());</span>
-</span><span class='line'>                <span class="n">Callback</span><span class="p">();</span>
-</span><span class='line'>                <span class="p">}).</span><span class="n">FirstOrDefault</span><span class="p">();</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now, if you run this, you will see that only <em>one</em> of the view models will get its state updated.  Huh?!</p>
-
-<p>How is that possible?  I started getting paranoid so I even added the local state variable “just in case.”</p>
-
-<p>Well, I had to look into the source code of LinqToTwitter to figure out exactly what happened.  Here is the code for AsyncCallback:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">public</span> <span class="k">static</span> <span class="n">IQueryable</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="n">AsyncCallback</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span><span class="k">this</span> <span class="n">IQueryable</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="n">queryType</span><span class="p">,</span> <span class="n">Action</span><span class="p">&lt;</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;&gt;</span> <span class="n">callback</span><span class="p">)</span>
-</span><span class='line'> <span class="p">{</span>
-</span><span class='line'>     <span class="p">(</span><span class="n">queryType</span><span class="p">.</span><span class="n">Provider</span> <span class="k">as</span> <span class="n">TwitterQueryProvider</span><span class="p">)</span>
-</span><span class='line'>         <span class="p">.</span><span class="n">Context</span>
-</span><span class='line'>         <span class="p">.</span><span class="n">TwitterExecutor</span>
-</span><span class='line'>         <span class="p">.</span><span class="n">AsyncCallback</span> <span class="p">=</span> <span class="n">callback</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>     <span class="k">return</span> <span class="n">queryType</span><span class="p">;</span>
-</span><span class='line'> <span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>See what happened?  The callback gets overwritten every time you call this method.  Even though the call to <code>FirstOrDefault</code>() causes all 3 expressions to evaluate, only the last view model will get values because that’s the with the callback attached.</p>
-
-<p>Lesson of the day: The AsyncCallback extension method for LinqToTwitter is not thread-safe.</p>
-
-<p>So&hellip;the question is, how do we make it thread safe?  I just replaced wrapped the AsyncCallback with another extension method:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">private</span> <span class="k">static</span> <span class="k">readonly</span> <span class="n">AutoResetEvent</span> <span class="n">_twitterEvt</span> <span class="p">=</span> <span class="k">new</span> <span class="n">AutoResetEvent</span><span class="p">(</span><span class="k">true</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="n">AsyncTwitterCallback</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span><span class="k">this</span> <span class="n">IQueryable</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="n">twitter</span><span class="p">,</span> <span class="n">Action</span><span class="p">&lt;</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;&gt;</span> <span class="n">callback</span><span class="p">)</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="n">Observable</span><span class="p">.</span><span class="n">Start</span><span class="p">(()</span> <span class="p">=&gt;</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="n">_twitterEvt</span><span class="p">.</span><span class="n">WaitOne</span><span class="p">();</span>
-</span><span class='line'>        <span class="n">twitter</span><span class="p">.</span><span class="n">AsyncCallback</span><span class="p">(</span><span class="n">results</span> <span class="p">=&gt;</span>
-</span><span class='line'>        <span class="p">{</span>
-</span><span class='line'>            <span class="k">try</span>
-</span><span class='line'>            <span class="p">{</span>
-</span><span class='line'>                <span class="n">callback</span><span class="p">(</span><span class="n">results</span><span class="p">);</span>
-</span><span class='line'>            <span class="p">}</span>
-</span><span class='line'>            <span class="k">finally</span>
-</span><span class='line'>            <span class="p">{</span>
-</span><span class='line'>                <span class="n">_twitterEvt</span><span class="p">.</span><span class="n">Set</span><span class="p">();</span>
-</span><span class='line'>            <span class="p">}</span>
-</span><span class='line'>        <span class="p">}).</span><span class="n">FirstOrDefault</span><span class="p">();</span>
-</span><span class='line'>    <span class="p">});</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Nothing complicated – just a simple wait handle to ensure only 1 thread can go through at a time.</p>
-
-<p>Hopefully upstream fixes this, or at least documents it.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -711,6 +533,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/08/16/modularizing-vimscript/">Modularizing VimScript</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/07/30/1000-stars-in-1-month/">1000 stars in 1 month</a>
@@ -738,10 +564,6 @@
     
       <li class="post">
         <a href="/blog/2013/04/10/jumping-on-the-hacker-blog-bandwagon/">Jumping on the hacker blog bandwagon</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/02/11/writing-macros-with-vim/">Writing Macros with Vim</a>
       </li>
     
   </ul>

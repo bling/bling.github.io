@@ -110,6 +110,9 @@ endfunction
 
 Yep, same story as JavaScript here -- `_` variables/functions are "private".
 
+# Where from here?
+
+Does this mean we should throw out procedural programming and go full on object oriented?  Hell no.  [This][7] is what happens when you go too far!  But we should always take a look at what we're doing and use the best tool and technique for the job.  Sometimes that's procedural, other times it's object-oriented.  It pays to be flexible.
 
 [1]: http://learnvimscriptthehardway.stevelosh.com/
 [2]: http://www.ibm.com/developerworks/library/l-vim-script-1/
@@ -117,4 +120,4 @@ Yep, same story as JavaScript here -- `_` variables/functions are "private".
 [4]: https://www.google.com/search?q=javascript+module+pattern
 [5]: https://github.com/bling/vim-bufferline
 [6]: https://github.com/bling/vim-airline
-
+[7]: http://static.springsource.org/spring/docs/2.5.x/api/org/springframework/aop/framework/AbstractSingletonProxyFactoryBean.html

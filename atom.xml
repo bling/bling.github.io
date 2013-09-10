@@ -4,7 +4,7 @@
   <title><![CDATA[bling on software development]]></title>
   <link href="http://bling.github.io//atom.xml" rel="self"/>
   <link href="http://bling.github.io//"/>
-  <updated>2013-08-20T18:35:42+00:00</updated>
+  <updated>2013-09-10T01:59:40+00:00</updated>
   <id>http://bling.github.io//</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
@@ -12,6 +12,130 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Vim in Emacs Bootstrap]]></title>
+    <link href="http://bling.github.io//blog/2013/09/09/vim-in-emacs-bootstrap/"/>
+    <updated>2013-09-09T20:00:00+00:00</updated>
+    <id>http://bling.github.io//blog/2013/09/09/vim-in-emacs-bootstrap</id>
+    <content type="html"><![CDATA[<p>Did I wake up on the wrong side of the bed?</p>
+
+<p>My New Year&rsquo;s resolution for 2013 was to learn Vim. I was so new to Vim that I did not even know how to <a href="http://stackoverflow.com/questions/14107198/vim-delete-whitespace-between-2-lines">join lines</a> properly. However, I was diligent, patient, and stubborn enough to stick at it. It didn&rsquo;t take long for me to <a href="http://bling.github.io/blog/2013/02/10/love-affair-with-vim">fall in love</a>. I even ended up writing a <a href="https://github.com/bling/vim-airline">plugin</a> for Vim that got so popular that I was writing VimL as a second job.</p>
+
+<p>Sounds like I&rsquo;m pretty happy with Vim (and I am), so why am I trying Emacs?</p>
+
+<p>Curiosity is a major reason. But more I think the philosophy of Emacs fits my personality better. The Vim community is very much divided into two camps: the text editor people, and the people who try to turn Vim into an IDE. I am in the latter. My vim <a href="https://github.com/bling/dotvim">distribution</a> has over 90 plugins. While I haven&rsquo;t yet run into Vim&rsquo;s limitations of trying to use it this way, I can already see the walls coming up&hellip;</p>
+
+<p>But here&rsquo;s the thing, I&rsquo;m addicted to <strong>modal editing</strong>, not Vim.<!-- more --> It just so happens that Vim is the best implementation of modal editing, but Emacs has something that does a pretty damn good job too! And it&rsquo;s none other than <a href="http://www.emacswiki.org/emacs/Evil">evil-mode</a>.</p>
+
+<p>With evil-mode, it&rsquo;s finally possible to have the best of both worlds. The power of modal editing with the near limitless extensibility of Emacs.</p>
+
+<p>And as an added bonus I can finally have an excuse to learn a Lisp dialect. I discovered with Vim that customizing your editor is an incredible catalyst for learning a new language. It wasn&rsquo;t my intention to memorize a sizable portion of the VimL standard library when I started using Vim, but it happened anyway once I started tweaking and customizing&hellip;</p>
+
+<p>My goal is that by the end of this post you&rsquo;ll have a working Emacs installation with Vim keybindings out of the box.</p>
+
+<h1>Back to Basics</h1>
+
+<p>The best way to learn is to start from scratch. And so I did exactly that starting with the built-in tutorial <code>C-h t</code>. While the purpose of this blog post is to get modal editing working in Emacs, you&rsquo;re not going to be able to make <em>everything</em> modal, so you still need to know basic commands to navigate around.</p>
+
+<h1>Things you need to know</h1>
+
+<p>There are a couple important Emacs keys that you should know.</p>
+
+<ul>
+<li><code>C-g</code> is the universal &ldquo;get me out of here&rdquo; key, equivalent to <code>C-c</code> in Vim.</li>
+<li><code>C-h</code> is the &ldquo;help&rdquo; prefix. <code>C-h C-h</code> will show you all possible options. I&rsquo;ve found that I use <code>C-h f</code> very often, which is used to lookup help for functions.</li>
+<li><code>C-x</code> is a also very important, as it&rsquo;s the prefix for many common things like saving and finding files.</li>
+<li><code>C-c</code> by <a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Binding-Conventions.html">convention</a> are used for many things, including the equivalent of <code>&lt;leader&gt;</code> for user customizations when followed by letters, but also for major and minor mode bindings.</li>
+</ul>
+
+
+<h1>Setting up your &ldquo;vimrc&rdquo;</h1>
+
+<p>In Emacs, this is the <code>~/.emacs</code> file. But just like in Vim, where you usually have a <code>~/.vim</code> directory for various plugins and configuration, Emacs has the <code>~/.emacs.d</code> directory. As an added bonus, <code>~/.emacs.d/init.el</code> is automatically loaded, so if you put your dotfiles up on GitHub it&rsquo;s as simple as cloning it to <code>~/.emacs.d</code>.</p>
+
+<h1>What&rsquo;s with the (((())))?</h1>
+
+<p>Going through the documentation is one thing, but making the first change to your <code>~/.emacs.d/init.el</code> file is daunting, at least for me it was. While Vim also has its own scripting language, VimL, it is much more newbie friendly.</p>
+
+<p>How do you turn on line numbers? You add <code>set number</code> to your vimrc. It&rsquo;s simple, straightforward, and obvious. You don&rsquo;t even know you&rsquo;re scripting in Vim; it just looks like a configuration file at this point. How do you do that in Emacs? First you search on Google, which links you to this <a href="http://www.emacswiki.org/emacs/LineNumbers">EmacsWiki</a> article. If that doesn&rsquo;t scare you from using Emacs I don&rsquo;t know what will.</p>
+
+<p>The short answer is, you add <code>(global-linum-mode t)</code> to your <code>init.el</code> file. Right off the bat the questions would be, is that a variable, a function? What is <code>t</code>?</p>
+
+<p>Configuring Emacs throws you into Lisp from the get go, so what you want to do is actually read <a href="http://www.gnu.org/software/emacs/manual/eintr.html">Introduction to Programming in Emacs Lisp</a>.</p>
+
+<h1>Lisp basics</h1>
+
+<p>You&rsquo;re going to be seeing a lot of Lisp, so let&rsquo;s summarize the basics:</p>
+
+<ul>
+<li><code>set</code> will set a variable, but you will rarely see this.</li>
+<li><code>setq</code> is <em>very</em> frequently seen. The q stands for quote, which will sidetrack you to understanding what a <a href="http://stackoverflow.com/questions/134887/when-to-use-quote-in-lisp">quote</a> is.</li>
+<li><code>setq-default</code> sets a variable if it&rsquo;s not already set/overridden.</li>
+<li><code>defun</code> defines a function.</li>
+<li><code>-p</code> by convention is added to functions that return true or false (the p stands for predicate).</li>
+</ul>
+
+
+<p>Now that things are a bit more readable, we can begin setting up our configuration to get evil-mode installed.</p>
+
+<h1>Package management</h1>
+
+<p>Emacs 24 comes with built-in <a href="http://www.emacswiki.org/emacs/ELP">package management</a>. The default GNU repository doesn&rsquo;t really have many packages, but luckily there&rsquo;s a community driven repository named <a href="http://melpa.milkbox.net/">MELPA</a> where up to date packages are built directly from GitHub.</p>
+
+<p>So, let&rsquo;s add the MELPA into our <code>~/.emacs.d/init.el</code> file:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='cl'><span class='line'><span class="c1">;;; this loads the package manager</span>
+</span><span class='line'><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;package</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">;;; here there&#39;s a variable named package-archives, and we are adding the MELPA repository to it</span>
+</span><span class='line'><span class="p">(</span><span class="nv">add-to-list</span> <span class="ss">&#39;package-archives</span>
+</span><span class='line'>             <span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;melpa&quot;</span> <span class="o">.</span> <span class="s">&quot;http://melpa.milkbox.net/packages/&quot;</span><span class="p">)</span> <span class="no">t</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">;;; loads packages and activates them</span>
+</span><span class='line'><span class="p">(</span><span class="nv">package-initialize</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>OK, straightforward so far.</p>
+
+<h1>Installing evil</h1>
+
+<p>Next up is the all important <code>M-x</code> binding. This is sort of like Vim&rsquo;s <code>:</code> where you can type commands. Here we are going to do a <code>M-x package-refresh-contents RET</code>. In Emacs, <code>RET</code> is the convention for <code>&lt;CR&gt;</code>. This will refresh the repository of available packages. And finally, <code>M-x package-install RET evil RET</code>.</p>
+
+<p>And now it&rsquo;s installed!</p>
+
+<p>It&rsquo;s not enabled by default, so we need to append the following lines to our <code>init.el</code> file:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='cl'><span class='line'><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;evil</span><span class="p">)</span>
+</span><span class='line'><span class="p">(</span><span class="nv">evil-mode</span> <span class="no">t</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Finally, <code>C-x C-c</code> to quit Emacs and restart it. If you&rsquo;re feeling adventerous you can use <code>M-x eval-buffer RET</code> instead.</p>
+
+<h1>Finale</h1>
+
+<p>Congratulations! You have a working Emacs installation with Vim modal editing!</p>
+
+<p>You may notice that in addition to <code>C-c</code>, <code>C-h</code>, and <code>C-x</code> that I mentioned earlier, <code>C-u</code> will not scroll up half a page as you would expect. This is because by default this is mapped to the Emacs <code>universal-argument</code> function, which is used for repeating. You can of course customize all of this, but I&rsquo;ll let you take it from here&hellip;</p>
+
+<p>And so there you have it!</p>
+
+<p>TLDR: <code>git clone https://github.com/bling/emacs-evil-bootstrap.git ~/.emacs.d</code> will automate this entire blog post and let you try Vim in Emacs in 10-20 seconds.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Modularizing VimScript]]></title>
@@ -1321,49 +1445,6 @@ Hi Bailey! Nice thoughtful article - I have a foot in both camps, so I&#39;m gla
     <id>http://bling.github.io//blog/2011/09/16/building-real-time-push-app-with-rx-7</id>
     <content type="html"><![CDATA[<div class='post'>
 <h3></h3> <h3>Infrastructure Refactor</h3> <p>A lot of things changed internally, and I mean….a lot….</p> <p>From an infrastructure standpoint, I decided to remove the dependency on LinqToTwitter, and I replaced it with <a href="https://github.com/danielcrenna/hammock">Hammock</a>.&nbsp; A couple things led me to this decision, one being the Silverlight support wasn’t as good as I’d hoped, and the streaming API implementation was limited.&nbsp; After reading the Twitter documentation I realized that the REST API was super simple and I’d be better off writing a simple interface to it.</p> <p>I heard good things about Hammock, so I decided to give that one a try (I wasn’t going to go as far as reimplementing OAuth).&nbsp; It was pretty easy to set up and in the end I was able to get Twitter working again and with less lines of code compared to the beginning of the refactor.</p> <h3>Goals</h3> <p>I had a couple goals for this project:</p> <ul> <li><strong>Learn:</strong>&nbsp; I was a complete newbie to Reactive Extensions when I started but now I understand it enough to hit the ground running with it.&nbsp; I’m still learning about more conventions available to Caliburn.Micro.  <li><strong>UX:</strong>&nbsp; I wanted to learn a little more about interface design.&nbsp; I wanted to know how little changes to gradients, shadows, colors, etc. could have a radically effect in the end result.  <li><strong>Performance:</strong>&nbsp; It should be fast.&nbsp; It should be able to react to real-time data.&nbsp; And it should do it with low CPU utilization.  <li><strong>Concise:</strong>&nbsp; I am a huge advocate for KISS.&nbsp; I like convention over configuration.&nbsp; I like implementing something in 2 lines of code rather than 20 (assuming it’s not cryptic).&nbsp; As I was writing the app and refactoring, if there was an opportunity to remove a line of code, I did it.&nbsp; The result is that the app currently consists of less than 500 lines of code as of this post (excluding XAML).</li></ul> <h3>Tidbits</h3> <p>What are some interest things I learned?</p> <ul> <li>System.Json is an amazing assembly.&nbsp; All you need to do is invoke JsonValue.Parse on a string and it will create a JsonValue for you, which will be a dictionary of key/value pairs.&nbsp; What’s more, by doing something like “string s = json[“text”]” will do an explicit conversion <strong>and unescape JSON characters</strong>, and <strong>only</strong> via the explicit operator.&nbsp; Calling ToString(), even though converting it to a string, will not unescape.&nbsp; This was completely undocumented and only found when I looked at the source code via Resharper’s external sources feature.  <li>Rx is awesome.&nbsp; When I ran into performance problems of trying to stream tweets from the world that contained the letter ‘a’ all I had to do was add an operator to improve the performance (in this case it was Buffer).&nbsp; It should be noted that it is <em>very important</em> to understand what Rx is doing underneath the hood to realize its benefits.&nbsp; Rx lets you refactor 30 lines of async code into 1 operator, but it’s still doing that 30 lines of code – you just don’t see it.  <li>I really, <em>really</em>, like the conventions available from Caliburn.&nbsp; Some of the features that come out of the box from this very small library saves me from writing a lot of boilerplate code like commands, triggers, and evening bindings (Caliburn will auto bind x:Name to a property).  <li>Twitter’s documentation for <a href="https://dev.twitter.com/docs/streaming-api/user-streams">user streams</a> currently sucks and some trial and error was required to get it working.</li></ul> <p>What is the end result of all this effort?&nbsp; We have a styled Twitter app that can update your status, pull your home/mentions timeline, and most importantly will <strong>stream all subsequent tweets</strong>.&nbsp; There’s no pulling and no limits.&nbsp; You will get a tweet of everyone you follow in real-time as it happens.</p> <p>Moreover, there’s a feature to connect to the Streaming API to search Twitter for <em>anything</em>.&nbsp; To get an idea of what we’re talking about, here’s a full screenshot of it:</p> <p><img style="background-image: none; border-right-width: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh4.ggpht.com/-tB6iLGL85aE/TnNOi7hdq9I/AAAAAAAAAHE/wGjkyHQzYKs/image%25255B20%25255D.png?imgmax=800" width="578" height="328"></p> <p>You read that right.&nbsp; I’m streaming any tweet in the world that has the words ‘and’, ‘the’, ‘yes’, <strong>or</strong> ‘no’ in them.&nbsp; This is streaming around 400kB/s continuously and CPU utilization is under 25%.&nbsp; The tweets are coming so fast it’s impossible to read them (at a rate of 50 tweets/second), so ideally you’d want to specify realistic search terms.</p> <p>Moreover, the majority of the performance cost is actually downloading all the profile images.&nbsp; If I take took out pictures I could stream any tweet in the world that has the letter ‘e’ in it at under 10% CPU.&nbsp; It looks like Twitter limits the rate of tweets to 50 tweets/second because that was the rate for this one as well.</p> <p>Features are minimalistic.&nbsp; You can update your status, but you can’t DM, you can’t RT, you can’t do any of the normal things.&nbsp; My original goal was not to write another Twitter client, but it’s actually quite fun to do so, so I’ll probably eventually get all features in.</p> <p>And as promised, it’s up on <a href="https://github.com/bling/Ping.Pong">GitHub</a>, and version 0.0.0.1 <strong>alpha</strong> (yes! expect bugs!!) is available in the downloads section.&nbsp; Or, here’s a direct link to the XAP file on my <a href="http://dl.dropbox.com/u/2072014/Ping.Pong/PingPongTestPage.html">Dropbox</a>.&nbsp; Have fun!</p>  </div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Building a Real-time Push App with Silverlight: Part 6]]></title>
-    <link href="http://bling.github.io//blog/2011/09/13/building-real-time-push-app-with-rx-6/"/>
-    <updated>2011-09-13T00:00:00+00:00</updated>
-    <id>http://bling.github.io//blog/2011/09/13/building-real-time-push-app-with-rx-6</id>
-    <content type="html"><![CDATA[<p>Back to the UI!</p>
-
-<p>For this post I’m going to restyle the tweets.  Recall that they currently look like this:</p>
-
-<p><img src="http://lh4.ggpht.com/-ooxWWcVmX9w/Tm7icHgdN_I/AAAAAAAAAGo/wQ3qnvYAeWw/image_thumb2.png?imgmax=800" alt="img" /></p>
-
-<p>The gradient background is currently #FFEEEEEE to #FFDDDDDD.  For this post I’m going to talk about a very powerful tool in a designer’s arsenal: <em>transparency</em>.</p>
-
-<p>Your first may be to think “big deal”, but just like programmers can use base classes and injection to share common code, designers can use transparency to achieve a similar effect.</p>
-
-<p>Let’s change change the color to be black, and tweak only the alpha.  I’m going to set the colors to be #11000000 to #22000000 on a white background.  This is the result:</p>
-
-<p><img src="http://lh6.ggpht.com/-Ev-xA7pMsak/Tm7icnmllQI/AAAAAAAAAGw/xMZM3yNsGZA/image_thumb5.png?imgmax=800" alt="img" /></p>
-
-<p>Looks almost identical doesn’t it?  However, by doing this we have dramatically improved the reusability of the gradient.  Here’s what happens when I change the background to be a different color:</p>
-
-<p><img src="http://lh3.ggpht.com/-uPxkKsog7xU/Tm7ic2vJhpI/AAAAAAAAAG4/J-PMDfe_6EM/image_thumb8.png?imgmax=800" alt="img" /></p>
-
-<p>I just changed one variable to do that.  If I wanted to provide different themes for my application it would be <em>extremely</em> easy to do that if all the data templates were built with transparencies.  In fact, I just slap on a ColorPicker and I’d be done!</p>
-
-<p>Even though it’d be easy to do this, any application that is dominated by one color gets boring very quickly. Most applications that look nice tend to focus around two dominant colors that contrast well against each other. Black and white are very common because they contrast well with a large variety of colors, but you can also have things like blue/green, purple/orange, etc.  As always, as long as you’re consistent you’ll likely have a good result.</p>
-
-<p>Now, the flip side of the equation is also possible.  This is where you have something that exists already and then you put a transparent layer on top of it, creating a lightening or dimming effect.  In my experience I’ve found this to be inferior because it tends to wash out colors.  In the example above, if I applied a slightly transparent layer over top of the tweet, my picture and text would be negatively affected.  This is nonetheless a very useful trick, like with mouse over effects where you want a quick and cheap way of conveying information to the user.</p>
-
-<p>Now, let’s take a big detour and restyle the entire application and go with a completely different theme.  I also wanted try something besides Apple and Microsoft inspired designs, which was more difficult than expected because I guess I’m not as creative as I thought I was :&ndash;).  Coming up with a good design takes a long time, and frequently you need some sort of inspiration.  Twitter in general is a very simple application, so the best designs are simple as well.</p>
-
-<p>In an attempt to try to come up with something “cool” and “unique”, I started with the idea of elevated boxes layered on top of each other.  Here’s a before and after once I was done:</p>
-
-<p><img src="http://lh5.ggpht.com/-Mz_J4B2JDLM/Tm7idcOBx-I/AAAAAAAAAHA/7FGeCgmZzek/image_thumb11.png?imgmax=800" alt="img" /></p>
-
-<p>The redesign went through many iterations.  I showed it to friends and colleagues and got mixed feelings.  Some liked it.  Some thought it was too noisy.  And herein revealed a problem with complex designs – they are hard to get right!  That, and they tend to divide audience into those that really like it, and those that really don’t.</p>
-
-<p>Anyways, the beauty of XAML is that I can try something else entirely without any changes to the code, so I’ll try another theme in the future.</p>
-
-<p>I’m about 90% ready to release code to GitHub along with the first public alpha version.  Stay tuned!</p>
 ]]></content>
   </entry>
   

@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="I have a whole series dedicated to blogging about how I wrote a Twitter client from scratch, but if I want anyone to actually use it, I better do &hellip;">
+  <meta name="description" content="Ever since MEF was conceived, despite the authors saying that it is not an IoC container, it has since evolved to become one of the more popular IoC &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,66 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/10/31/my-thoughts-on-mef/">My Thoughts on MEF</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-10-31T00:00:00+00:00" pubdate data-updated="true">Oct 31<span>st</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+<p>Ever since MEF was conceived, despite the authors saying that it is <strong>not<em> </em></strong>an IoC container, it has since evolved to become one of the more popular IoC containers.&nbsp; I’ve always avoided it because I disagree with using attributes, and I’ve had no reason to use it over Autofac or Windsor.</p> <p>Recently, I found a reason to use it – Metro-style applications only support MEF so far.&nbsp; My Twitter client ping.pong uses Autofac as the IoC container.&nbsp; It uses some very basic functionality like factories and hooks.&nbsp; To my surprise, MEF has no support for either of these.</p> <p>Coming across these limitations solidifies my opinion that MEF is a plugin container, not an IoC container.</p> <p>First let’s take a look at automated factories. What I mean is that by registering Foo, like so:</p> <div id="codeSnippetWrapper"> <div style="border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: #f4f4f4; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: 'Courier New', courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px" id="codeSnippet"><pre style="border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: white; margin: 0em; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: 'Courier New', courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px">container.RegisterType&lt;Foo&gt;();</pre><!--CRLF--></div></div>
+<p>the container will automatically provide us a Func&lt;Foo&gt; without explicitly having to register it. This can be useful when you want to create an instance of Foo some time in the future rather than at constructor time.&nbsp; You can do this with MEF via an ExportFactory&lt;T&gt;, but it’s limited because you cannot override dependencies at resolve time.</p>
+<p>For example, let’s say Foo has a constructor of Foo(Bar1, Bar2, Bar3). With MEF, you have no control at resolution time what the Bars are. A container that has support for automated factories (like Autofac and Castle Windsor), will let you resolve a Func&lt;Bar1, Foo&gt;, which lets you override Bar1 at resolve time. Similarly, you can resolve a Func&lt;Bar1, Bar2, Bar3, Foo&gt; and override all dependencies. Any dependencies not overridden fall back to their configuration in the bootstrapper. This is a <em>very</em> useful feature, and coupled with the scoping features for automatic disposal it opens up many doors for elegant solutions for what otherwise are complicated problems.</p>
+<p>On to the second point; MEF has limited extension points. This one sounds odd since MEF is all about designing decoupled plugins so surely it should have extension points! The problem here is that MEF is designed as an explicit API (attributes are required) rather than an implicit API. In Autofac, you can scan an assembly and register every type. In MEF, every class needs to have an [Export] on it.&nbsp; It also baffles my mind why [ImportingConstructor] is required even when there’s only one constructor. All this explicitness means you lose a bunch of “free” extension points that typical IoC containers have, like this:</p>
+<div id="codeSnippetWrapper">
+<div style="border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: #f4f4f4; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: 'Courier New', courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px" id="codeSnippet"><pre style="border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: white; margin: 0em; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: 'Courier New', courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px">b.RegisterAssemblyTypes(GetType().Assembly)</pre><!--CRLF--><pre style="border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: #f4f4f4; margin: 0em; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: 'Courier New', courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px">  .OnActivated(x =&gt; x.Context.Resolve&lt;IEventAggregator&gt;().Subscribe(x.Instance));</pre><!--CRLF--></div></div>
+<p>What the code above is saying that every time <em>any</em> component is activated, it will subscribe to the event aggregator. If the component doesn’t IHandle&lt;&gt; any messages, it’s a no-op and continues on. If the instance does IHandle&lt;&gt; messages, this will ensure it’s hooked up.</p>
+<p>The closest thing I could find in MEF was IPartImportsSatisfiedNotification (yes, an interface, more explicitness!).&nbsp; It contains a single method OnImportsSatisfied() which gets called when the part is created.&nbsp; Needless to say, the one line of code from Autofac would translate into a method for every implementation of IHandle&lt;&gt;, and since OnImportsSatisfied() contains no contextual information, every component will need IEventAggregator injected just to be able to call Subscribe.</p>
+<p>To fully complete this example, Autofac has the following methods when registering a component: <em>OnRegistered, OnPreparing, OnActivating, OnActivated, </em>and<em> OnRelease</em>.&nbsp; Each of these methods gives you complete contextual information at the time it is called like access to the current scope of the container, the instance (if applicable), which component which requested the dependency, etc.&nbsp; This makes it almost too easy to extend the container.</p>
+<p>For MEF, the only real extension point is an ExportProvider.&nbsp; It is pretty low level (all it does is parse attributes for you) so to write anything similar for MEF requires a lot more code.&nbsp; To further illustrate this point, compare the interception modules from AutofacContrib and MefContrib.&nbsp; The Autofac implementation is a single file with a couple extension methods.&nbsp; The MEF implementation is an entire namespace, over multiple classes, not the mention that it also relies on other infrastructure code in MefContrib.&nbsp; Basically, the guys that wrote MefContrib had to write a mini-container within MEF.</p>
+<p>MEF is great for building <em><strong>extremely</strong> loosely coupled </em>applications.&nbsp; I don’t think it has any business in an application where you know and own all of the dependencies; there are simply better libraries for that.</p>  </div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>bling</div>
+<div class='content'>
+Thanks for the reply Nick!<br /><br />I have yet to check out all the new MEF features of 4.5, but it definitely looks very interesting with what&#39;s happening in the previews.<br /><br />The new RegistrationBuilder looks pretty good, especially since attributes are optional now, but that only solves wiring up the application.<br /><br />IMO, the most useful (and powerful) thing you can add is the equivalent of Autofac&#39;s IComponentContext &#8211; something that will let you easily hook into any part of the resolution chain from creation to disposal.<br /><br />Once that&#39;s in it&#39;ll be much easier to extend the container and use it for more &quot;advanced&quot; scenarios &#8211;and with less code.<br /><br />Cheers,<br />Bailey</div>
+</div>
+<div class='comment'>
+<div class='author'>Nick</div>
+<div class='content'>
+Hi Bailey! Nice thoughtful article - I have a foot in both camps, so I&#39;m glad that the Autofac extension points work for you, but I&#39;m also keen to close some of the gaps on the MEF side :)<br /><br />I am curious, have you had a chance to look at RegistrationBuilder, being delivered in the .NET 4.5 version of MEF? It opens up the possibility for us to support activation events like the ones you mention, although it doesn&#39;t as of writing.<br /><br />In case you didn&#39;t catch it, the release announcement is at: http://blogs.msdn.com/b/bclteam/archive/2011/10/27/what-s-new-in-mef-version-2-preview-4.aspx<br /><br />Thanks for writing this up anyway, it will give us something to think about.<br /><br />Regards,<br />Nick</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -448,76 +508,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/09/13/building-real-time-push-app-with-rx-6/">Building a Real-time Push App With Silverlight: Part 6</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-09-13T00:00:00+00:00" pubdate data-updated="true">Sep 13<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Back to the UI!</p>
-
-<p>For this post I’m going to restyle the tweets.  Recall that they currently look like this:</p>
-
-<p><img src="http://lh4.ggpht.com/-ooxWWcVmX9w/Tm7icHgdN_I/AAAAAAAAAGo/wQ3qnvYAeWw/image_thumb2.png?imgmax=800" alt="img" /></p>
-
-<p>The gradient background is currently #FFEEEEEE to #FFDDDDDD.  For this post I’m going to talk about a very powerful tool in a designer’s arsenal: <em>transparency</em>.</p>
-
-<p>Your first may be to think “big deal”, but just like programmers can use base classes and injection to share common code, designers can use transparency to achieve a similar effect.</p>
-
-<p>Let’s change change the color to be black, and tweak only the alpha.  I’m going to set the colors to be #11000000 to #22000000 on a white background.  This is the result:</p>
-
-<p><img src="http://lh6.ggpht.com/-Ev-xA7pMsak/Tm7icnmllQI/AAAAAAAAAGw/xMZM3yNsGZA/image_thumb5.png?imgmax=800" alt="img" /></p>
-
-<p>Looks almost identical doesn’t it?  However, by doing this we have dramatically improved the reusability of the gradient.  Here’s what happens when I change the background to be a different color:</p>
-
-<p><img src="http://lh3.ggpht.com/-uPxkKsog7xU/Tm7ic2vJhpI/AAAAAAAAAG4/J-PMDfe_6EM/image_thumb8.png?imgmax=800" alt="img" /></p>
-
-<p>I just changed one variable to do that.  If I wanted to provide different themes for my application it would be <em>extremely</em> easy to do that if all the data templates were built with transparencies.  In fact, I just slap on a ColorPicker and I’d be done!</p>
-
-<p>Even though it’d be easy to do this, any application that is dominated by one color gets boring very quickly. Most applications that look nice tend to focus around two dominant colors that contrast well against each other. Black and white are very common because they contrast well with a large variety of colors, but you can also have things like blue/green, purple/orange, etc.  As always, as long as you’re consistent you’ll likely have a good result.</p>
-
-<p>Now, the flip side of the equation is also possible.  This is where you have something that exists already and then you put a transparent layer on top of it, creating a lightening or dimming effect.  In my experience I’ve found this to be inferior because it tends to wash out colors.  In the example above, if I applied a slightly transparent layer over top of the tweet, my picture and text would be negatively affected.  This is nonetheless a very useful trick, like with mouse over effects where you want a quick and cheap way of conveying information to the user.</p>
-
-<p>Now, let’s take a big detour and restyle the entire application and go with a completely different theme.  I also wanted try something besides Apple and Microsoft inspired designs, which was more difficult than expected because I guess I’m not as creative as I thought I was :&ndash;).  Coming up with a good design takes a long time, and frequently you need some sort of inspiration.  Twitter in general is a very simple application, so the best designs are simple as well.</p>
-
-<p>In an attempt to try to come up with something “cool” and “unique”, I started with the idea of elevated boxes layered on top of each other.  Here’s a before and after once I was done:</p>
-
-<p><img src="http://lh5.ggpht.com/-Mz_J4B2JDLM/Tm7idcOBx-I/AAAAAAAAAHA/7FGeCgmZzek/image_thumb11.png?imgmax=800" alt="img" /></p>
-
-<p>The redesign went through many iterations.  I showed it to friends and colleagues and got mixed feelings.  Some liked it.  Some thought it was too noisy.  And herein revealed a problem with complex designs – they are hard to get right!  That, and they tend to divide audience into those that really like it, and those that really don’t.</p>
-
-<p>Anyways, the beauty of XAML is that I can try something else entirely without any changes to the code, so I’ll try another theme in the future.</p>
-
-<p>I’m about 90% ready to release code to GitHub along with the first public alpha version.  Stay tuned!</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -533,6 +523,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/09/09/vim-in-emacs-bootstrap/">Vim in Emacs Bootstrap</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/08/16/modularizing-vimscript/">Modularizing VimScript</a>
@@ -560,10 +554,6 @@
     
       <li class="post">
         <a href="/blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript/">.NET/WPF to HTML/CSS/Javscript</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/10/jumping-on-the-hacker-blog-bandwagon/">Jumping on the hacker blog bandwagon</a>
       </li>
     
   </ul>

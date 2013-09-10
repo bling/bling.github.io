@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="See the introduction here. The MSBuild task as it stands currently by default will attempt to weave everything that it finds.&nbsp; This is probably &hellip;">
+  <meta name="description" content="I spent a good few hours yesterday trying out a new programming font.&nbsp; It’s a personal thing.&nbsp; I like switch fonts every couple weeks, and &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,69 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/05/08/simple-app-to-preview-fonts/">Simple App to Preview Fonts</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-05-08T00:00:00+00:00" pubdate data-updated="true">May 8<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+<p>I spent a good few hours yesterday trying out a new programming font.&nbsp; It’s a personal thing.&nbsp; I like switch fonts every couple weeks, and while Consolas is an excellent font and I have nothing against it, to me, it’s….too simple.&nbsp; For most people, the defaults are just fine, and they can’t be bothered to try another font.&nbsp; But for me, I want my font to speak to me a little.&nbsp; But enough of that voodoo magic stuff.</p> <p>The problem with sites that survey fonts is that it’s hard to compare quickly one with the next.&nbsp; For example, this excellent article comparing <a href="http://www.codeproject.com/KB/work/FontSurvey.aspx">42 fonts</a> on CodeProject is one of the most comprehensive surveys, but even with that I can’t really tell if I prefer one font over another.&nbsp; So, since I’m going to be doing this from time to time, I wrote a quick WPF app.</p> <p>The XAML is simple, only this:</p><pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">&lt;</span><span style="color: #800000">StackPanel</span> <span style="color: #ff0000">Orientation</span>=<span style="color: #0000ff">"Horizontal"</span><span style="color: #0000ff">&gt;</span>
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  <span style="color: #0000ff">&lt;</span><span style="color: #800000">ListBox</span> <span style="color: #ff0000">IsSynchronizedWithCurrentItem</span>=<span style="color: #0000ff">"True"</span> 
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">           <span style="color: #ff0000">SelectedItem</span>=<span style="color: #0000ff">"{Binding CurrentFont}"</span>
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">           <span style="color: #ff0000">ItemsSource</span>=<span style="color: #0000ff">"{Binding Fonts}"</span> <span style="color: #0000ff">/&gt;</span>
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  <span style="color: #0000ff">&lt;</span><span style="color: #800000">TextBlock</span> <span style="color: #ff0000">FontFamily</span>=<span style="color: #0000ff">'{Binding CurrentFont}'</span> <span style="color: #ff0000">FontSize</span>=<span style="color: #0000ff">"14"</span> <span style="color: #ff0000">Text</span>=<span style="color: #0000ff">"{Binding Code}"</span> <span style="color: #0000ff">/&gt;</span>
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">&lt;/</span><span style="color: #800000">StackPanel</span><span style="color: #0000ff">&gt;</span></pre></pre>
+<p>And the code is just as simple, only this:</p><pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">public</span> <span style="color: #0000ff">class</span> ViewModel
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">{
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  <span style="color: #0000ff">public</span> <span style="color: #0000ff">static</span> <span style="color: #0000ff">readonly</span> DependencyProperty CurrentFontProperty = DependencyProperty.Register("<span style="color: #8b0000">CurrentFont</span>", <span style="color: #0000ff">typeof</span>(FontFamily), <span style="color: #0000ff">typeof</span>(ViewModel));
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"></pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  <span style="color: #0000ff">public</span> FontFamily CurrentFont
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  {
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    <span style="color: #0000ff">get</span> { <span style="color: #0000ff">return</span> (FontFamily)GetValue(CurrentFontProperty); }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    <span style="color: #0000ff">set</span> { SetValue(CurrentFontProperty, <span style="color: #0000ff">value</span>); }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"></pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  <span style="color: #0000ff">public</span> List&lt;FontFamily&gt; Fonts { <span style="color: #0000ff">get</span>; <span style="color: #0000ff">private</span> <span style="color: #0000ff">set</span>; }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"></pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  <span style="color: #0000ff">public</span> <span style="color: #0000ff">string</span> Code { <span style="color: #0000ff">get</span> { <span style="color: #0000ff">return</span> "<span style="color: #8b0000">insert what you want to see</span>"; } }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"></pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  <span style="color: #0000ff">public</span> ViewModel()
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  {
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    Fonts = <span style="color: #0000ff">new</span> List&lt;FontFamily&gt;();
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    Fonts.AddRange(System.Windows.Media.Fonts.SystemFontFamilies);
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">}</pre></pre>
+<p>And with this, you get something like this.&nbsp; The coding sample is taken from <a href="http://www.codinghorror.com/blog/2007/10/revisiting-programming-fonts.html">Coding Horror</a>.</p>
+<p><a href="http://lh6.ggpht.com/_WZr-_wsEf1c/Tca7-XGu9hI/AAAAAAAAADg/tMTpN66ytCU/s1600-h/image%5B8%5D.png"><img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh4.ggpht.com/_WZr-_wsEf1c/Tca7-v3TvHI/AAAAAAAAADk/3uSZ9J1z5mk/image_thumb%5B4%5D.png?imgmax=800" width="644" height="422"></a></p>
+
+<p>Yep, my current chosen font is <a href="http://www.fontsquirrel.com/fonts/BPmono">BPMono</a>.</p>
+<p>For the lazy, here’s the project on <a href="https://github.com/bling/FontSampler">GitHub</a>.</p>  </div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -356,43 +419,6 @@ For what it&#39;s worth, I found this helpful. I&#39;m new to Castle Windsor as 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/12/05/working-in-git-to-working-in-mercurial/">Working in Git to Working in Mercurial</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-12-05T00:00:00+00:00" pubdate data-updated="true">Dec 5<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-<p>I took the dive a couple weeks ago and learned how to use Git and fell in love with its simplicity.&nbsp; I don’t know what it is, but after using Git every day it actually started to <em>make sense</em> that <strong>git checkout </strong>is used for so many things, which is ironic because prior to using Git, every introductory tutorial I’ve read has always had me thinking, “checkout does what and what and what now??”.</p> <p>So why did I switch to Mercurial?&nbsp; I need to push/pull from a Subversion repository, and I work on Windows.&nbsp; General day to day work is great, but when I needed to <strong>git svn rebase</strong> or <strong>git svn dcommit</strong> it would take so long that I simply left to get coffee.&nbsp; What’s worse, no matter what I set for core.autocrlf I would <em>always</em> get some weird whitespace merging error, when nothing was wrong.&nbsp; It became a regular part of my workflow to just <strong>git rebase –skip</strong> everything because that’s what fixed things.&nbsp; Scary.</p> <p>The crappy Subversion and whitespace support (at least in Windows) led me to try Mercurial.&nbsp; After getting accustomed to Mercurial, they’re actually a lot more similar than they are different.</p> <p>First things first, you need to add the following to your mercurial.ini file in your home directory:</p> <blockquote> <p>[bookmarks]<br>track.current = True</p></blockquote> <p>Here’s a comparison of my typical Git workflow translated to Mercurial:</p> <table border="1" cellspacing="0" cellpadding="2" width="600"> <tbody> <tr> <td valign="top" width="201">&nbsp;</td> <td valign="top" width="199"><strong>Git</strong></td> <td valign="top" width="198"><strong>Mercurial</strong></td></tr> <tr> <td valign="top" width="201">Work on a new feature/bug</td> <td valign="top" width="199">git checkout –b new_feature</td> <td valign="top" width="198">hg book new_feature</td></tr> <tr> <td valign="top" width="201">Hack hack hack</td> <td valign="top" width="199">git add .</td> <td valign="top" width="198">&nbsp;</td></tr> <tr> <td valign="top" width="201">Commit</td> <td valign="top" width="199">git commit –m “done!”</td> <td valign="top" width="198">hg commit –m “done!”</td></tr> <tr> <td valign="top" width="201">Hack more and commit</td> <td valign="top" width="199">git commit –a –m “more hacking”</td> <td valign="top" width="198">hg commit –m “more hacking”</td></tr> <tr> <td valign="top" width="201">Sync with up stream</td> <td valign="top" width="199">git pull master</td> <td valign="top" width="198">hg pull</td></tr> <tr> <td valign="top" width="201">Merge</td> <td valign="top" width="199">git checkout master</td> <td valign="top" width="198">hg merge new_feature</td></tr> <tr> <td valign="top" width="201">&nbsp;</td> <td valign="top" width="199">git merge new_feature</td> <td valign="top" width="198">hg commit –m “merged”</td></tr> <tr> <td valign="top" width="201">Push</td> <td valign="top" width="199">git push</td> <td valign="top" width="198">hg push</td></tr></tbody></table> <p>Notice that they’re practically exactly the same?&nbsp; There are some minor differences.&nbsp; The obvious one being that you need to add into git’s index before committing.&nbsp; And the other I didn’t have to switch branches in Mercurial (more on that later).&nbsp; But aside from that, it’s pretty much the same, <strong>from a user’s point of view</strong>.&nbsp; Check this fantastic <a href="http://stackoverflow.com/questions/1598759/git-and-mercurial-compare-and-contrast">thread</a> on StackOverflow for one of the best comparisons on the net if you want to dive into technical details.</p> <p>So far, there are only two things that bother me having switched:<br>&nbsp; a) No fast-forward merge.&nbsp; You need to manually rebase and then commit.<br>&nbsp; b) No automatic commit after a conflict free merge.</p> <p>These are fairly minor annoyances, but can be scripted/aliased away.&nbsp; Or if you don’t like those defaults in Git, you can override them in the command arguments or set them in gitconfig.&nbsp; Mercurial similarly can change default arguments in its hgrc/mercurial.ini.</p> <p>One of the biggest advantages of Git is easily switching between all its local lightweight branches at lightning speed.&nbsp; Tangled source code is no more!&nbsp; I was confused with Mercurial’s bookmarks when I first used them because all it does is label your head with something.&nbsp; I don’t know why this is, but it is the same as <strong>git checkout –b</strong>, but for some reason I visualized Git “branching” the latest commit into two paths.&nbsp; But how do you do that if they’re the same?&nbsp; It should only branch <em>after</em> a commit which introduces changes, which is what Mercurial does.&nbsp; In this scenario, Mercurial is more explicit, whereas Git is implicit.</p> <p>Using bookmarks, you can mimic Git’s workflow like this:</p> <table border="1" cellspacing="0" cellpadding="2" width="594"> <tbody> <tr> <td valign="top" width="209">&nbsp;</td> <td valign="top" width="192"><strong>Git</strong></td> <td valign="top" width="191"><strong>Mercurial</strong></td></tr> <tr> <td valign="top" width="212">Create a bunch of ‘working areas’</td> <td valign="top" width="190">git branch feature1</td> <td valign="top" width="189">hg book feature1</td></tr> <tr> <td valign="top" width="214">&nbsp;</td> <td valign="top" width="190">git branch feature2</td> <td valign="top" width="189">hg book feature2</td></tr> <tr> <td valign="top" width="216">Switch/commit/hack/commit</td> <td valign="top" width="189">git checkout feature1</td> <td valign="top" width="188">hg up feature1</td></tr> <tr> <td valign="top" width="217">&nbsp;</td> <td valign="top" width="189">git commit –a –m “feature1”</td> <td valign="top" width="188">hg commit –m “feature1”</td></tr> <tr> <td valign="top" width="218">&nbsp;</td> <td valign="top" width="188">git checkout feature2</td> <td valign="top" width="187">hg up feature2</td></tr> <tr> <td valign="top" width="219">&nbsp;</td> <td valign="top" width="188">git commit –a –m “feature1”</td> <td valign="top" width="187">hg commit –m “feature2”</td></tr> <tr> <td valign="top" width="219">Sync up stream</td> <td valign="top" width="188">git pull master</td> <td valign="top" width="187">hg pull</td></tr> <tr> <td valign="top" width="219">&nbsp;</td> <td valign="top" width="188">git checkout master</td> <td valign="top" width="187">hg up default</td></tr> <tr> <td valign="top" width="219">Merge in 1 feature</td> <td valign="top" width="188">git merge feature1</td> <td valign="top" width="187">hg merge feature1</td></tr> <tr> <td valign="top" width="219">&nbsp;</td> <td valign="top" width="188">&nbsp;</td> <td valign="top" width="187">hg commit –m “merged”</td></tr> <tr> <td valign="top" width="219">Delete branch/bookmark</td> <td valign="top" width="188">git branch –d feature1</td> <td valign="top" width="187">hg book –d feature1</td></tr> <tr> <td valign="top" width="219">Push</td> <td valign="top" width="188">git push</td> <td valign="top" width="187">hg push –r tip</td></tr> <tr> <td valign="top" width="219">Switch back and hack again</td> <td valign="top" width="188">git checkout feature2</td> <td valign="top" width="188">hg up feature2</td></tr></tbody></table> <p>The <strong>–r tip</strong> switch on hg push might have raised an eyebrow.&nbsp; This is to tell Mercurial to push all changes that lead to the tip.&nbsp; This will include the changes in <em>feature1</em> that we just merged in, but exclude all the ones in <em>feature2</em>.&nbsp; If you issue a <strong>hg push</strong> it will complain and warn you that you’re going to create multiple heads on the remote repository.&nbsp; This is not what you want since there may be unfinished features, experimental branches, etc.&nbsp; Of course, you can force it anyways, but that’s not a good idea.</p> <p>At first, the tip was most confusing to me because I tried to associate it with Git’s master, which was simply not the case.&nbsp; Tip refers to the newest change that you know about.&nbsp; This can be on any branch or bookmark.&nbsp; Once I understood that, and <strong>stopped trying to create a Git master</strong> equivalent, everything was straightforward.</p> <p>So let’s start with an example.&nbsp; First I create a bookmark <em>feature1</em> after syncing, and then making a commit looks like this: </p> <p><a href="http://lh3.ggpht.com/_WZr-_wsEf1c/TPwPhlbcWDI/AAAAAAAAACo/3_P3Zvqu1pM/s1600-h/image%5B2%5D.png"><img style="background-image: none; border-right-width: 0px; margin: ; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh6.ggpht.com/_WZr-_wsEf1c/TPwPiMwJxgI/AAAAAAAAACs/DmZxxuMAb2k/image_thumb.png?imgmax=800" width="238" height="101"></a></p> <p>And then if you switch to <em>feature2</em> and make a commit, it becomes like this:</p> <p><a href="http://lh3.ggpht.com/_WZr-_wsEf1c/TPwPiUVV5WI/AAAAAAAAACw/9lf6dwKGApg/s1600-h/image%5B5%5D.png"><img style="background-image: none; border-right-width: 0px; margin: ; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh4.ggpht.com/_WZr-_wsEf1c/TPwPi48MmdI/AAAAAAAAAC0/cC_c0bvyvis/image_thumb%5B1%5D.png?imgmax=800" width="243" height="124"></a></p> <p>Here’s where you start thinking, “I don’t have a master which tracks upstream changes, how do I separate my local changes?”&nbsp; And now here’s a situation where Mercurial does more black magic than Git.&nbsp; If there are up stream changes, after issuing <strong>hg pull</strong>, this happens:</p> <p><a href="http://lh5.ggpht.com/_WZr-_wsEf1c/TPwPjPEMdfI/AAAAAAAAAC4/f2d3b4qfeCE/s1600-h/image%5B8%5D.png"><img style="background-image: none; border-right-width: 0px; margin: ; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh4.ggpht.com/_WZr-_wsEf1c/TPwPjRxmonI/AAAAAAAAAC8/IrEz8ig5Zo0/image_thumb%5B2%5D.png?imgmax=800" width="244" height="144"></a></p> <p>Mercurial automatically split my local changes into their own separate branches (actually, <em>heads</em> is the accurate term).&nbsp; After this operation, <strong>tip</strong> is now tracking the changes that I just pulled in from upstream, instead of my bookmark.</p> <p>From here, it’s simply <strong>hg up tip</strong> to switch to the “master” branch.&nbsp; Then a <strong>hg merge feature1; hg commit</strong>, and it becomes like this:</p> <p><a href="http://lh4.ggpht.com/_WZr-_wsEf1c/TPwPjoJRV0I/AAAAAAAAADA/PEV6bis7pJg/s1600-h/image%5B11%5D.png"><img style="background-image: none; border-right-width: 0px; margin: ; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh3.ggpht.com/_WZr-_wsEf1c/TPwPkIS-mgI/AAAAAAAAADE/labU8QL9AKQ/image_thumb%5B3%5D.png?imgmax=800" width="244" height="168"></a></p> <p>Then it’s simply <strong>hg push –r tip</strong>, and you’re good to go.&nbsp; Basically, if you bookmark every feature/bug you work on, then you should only have one branch that doesn’t have a bookmark, which is the same as the ‘master’ branch from Git.</p> <h4>What about Subversion?</h4> <p>Whoops, forgot why I switched in the first place.&nbsp; First, install <a href="http://bitbucket.org/durin42/hgsubversion/wiki/Home">hgsubversion</a>, after that’s set up, simply:</p> <p>hg clone <a href="http://path/to/subversion/repository">http://path/to/subversion/repository</a></p> <p>And then it’s just <strong>hg pull</strong> or <strong>hg push</strong>.&nbsp; Is it really that simple?&nbsp; Yes, yes it is.</p>  </div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/8/">&larr; Older</a>
@@ -408,6 +434,10 @@ For what it&#39;s worth, I found this helpful. I&#39;m new to Castle Windsor as 
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/09/09/vim-in-emacs-bootstrap/">Vim in Emacs Bootstrap</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/08/16/modularizing-vimscript/">Modularizing VimScript</a>
@@ -435,10 +465,6 @@ For what it&#39;s worth, I found this helpful. I&#39;m new to Castle Windsor as 
     
       <li class="post">
         <a href="/blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript/">.NET/WPF to HTML/CSS/Javscript</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/10/jumping-on-the-hacker-blog-bandwagon/">Jumping on the hacker blog bandwagon</a>
       </li>
     
   </ul>

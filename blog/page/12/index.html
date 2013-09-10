@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="It&rsquo;s unfortunate that I have to remove db4o from my project, but I can&rsquo;t say this was unexpected. The CTO finally came to me today to &hellip;">
+  <meta name="description" content="NHibernate is a beast let me tell you! I think I already mentioned this in the previous post, but NHibernate definitely has a VERY high learning &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,113 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/08/20/session-management-with-nhibernate-and-autofac-1/">Session Management With NHibernate and Autofac</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-08-20T00:00:00+00:00" pubdate data-updated="true">Aug 20<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+NHibernate is a beast let me tell you!  I think I already mentioned this in the previous post, but NHibernate definitely has a VERY high learning curve.  If it wasn&#8217;t for FluentNHibernate I&#8217;d probably still be struggling with XML mapping files right now.<br />
+<br />
+But anywho, it didn&#8217;t take long for me to run into very many problems with NHibernate.  It&#8217;s not really NHibernate&#8217;s fault, but more of maybe I&#8217;m trying to use the wrong tool for the job.<br />
+<br />
+I&#8217;m using DDD for my project, and there&#8217;s a clear separation between the client and the domain.  I got lazy and I didn&#8217;t make any DTOs for my entities, and just used the [DataContract] and [DataMember] to have WCF automatically generated &#8220;DTO&#8221;s for me (and in the options turn OFF reusing assemblies).<br />
+<br />
+(Disclaimer:  I am *not* by any means knowledgeable about NHibernate, but maybe, just maybe what I say here might point other people in the right direction)<br />
+<br />
+OK, all is good.  I can store my entities in the database, I can read them back.  So I fire up my client and read some users, and it blows up.  NHibernate by default lazy loads everything.  Here&#8217;s what I originally had in my UsersRepository<br />
+<pre>public IEnumerable&lt;User&gt; GetAll() {
+using (var session = _factory.OpenSession())
+return session.CreateCriteria&lt;User&gt;().List&lt;User&gt;();
+}
+</pre><br />
+It looks pretty innocent.  But it blows up.  Why?  If Users has a collection of other entities (which mine did), they are <span style="font-weight: bold;">not</span> loaded with the above code.  They are loaded on-demand, i.e. lazy loaded.  So when my WCF service finally returns the objects and serializes them, it pukes and throws an exception because the session was long closed already.<br />
+<br />
+Easy solution was to Not.LazyLoad() all my collections.  Now here&#8217;s what I&#8217;m thinking I might not be using the right tool for the job because I am purposely disabling one of the key features of NHibernate.  By default, caching is always enabled, and I couldn&#8217;t find anywhere how to globally turn it off.  You must go class by class.<br />
+<br />
+OK, so on to my next problem.  I soon ran into issues with entities not being unique.  I would have code like this in my UserService:<br />
+<pre>public void AddProduct(string username, Guid productId) {
+var user = _usersRepository.GetUser(username);
+var product = _productRepository.GetProduct(productId);
+user.Products.Add(product);
+_usersRepository.Store(user);
+}
+</pre><br />
+Again, this puked.  The problem here was after my GetUser call, inside my repository, like my first example, I had a using(session), which closed when the method ended.  Shortly after, I am trying to update the same user, but with a *different* session.  NHibernate doesn&#8217;t like this, an NHibernate.NonUniqueObjectException is thrown, and I had a new problem to deal with.<br />
+<br />
+It became clear I had to actively manage the sessions somehow, and the best place would be to have them in my services, which typically each method had a &#8220;unit of work&#8221; placed on them.<br />
+<br />
+So the goal I wanted to accomplish was to initiate a new session at the beginning of a service method, call a repository multiple times, close the session, and then exit the method.<br />
+<br />
+So how can we achieve that?<br />
+<br />
+I thought of a couple things, and the first thing I did actually was to use AOP style and use Autofac with Castle.DynamicProxy.  I created an interceptor for my service, and before invocation I opened a session, then manually called a property setter for a CurrentSession, and after invocation close the session.<br />
+<br />
+It did the job, but had some problems:<br />
+a) It did a little too much black magic for me.  All methods got intercepted.<br />
+b) I still had to manually set the CurrentSession property of my repositories.  Sooner or later I&#8217;m sure to run in the threading problems.<br />
+<br />
+After I got that half working I scrapped it and tried to come up with something better.  This is what I came up with:<br />
+<pre>public delegate IUsersRepository UsersRepositoryFactory(ISession session);
+
+public class UserService : IUserService {
+public UserService(ISessionFactory factory, UsersRepositoryFactory usersFactory) { ... }
+}
+
+public class UsersRepository : IUsersRepository {
+public UsersRepository(ISession session) { ... }
+}
+</pre><br />
+Now, when I call a method on my UserService, I do this:<br />
+<pre>public void AddProduct(string username, Guid productId) {
+using (var session = _factory.OpenSession()) {
+var userRepo = _userRepoFactory(session);
+var productRepo = _productFactory(session);
+...
+}
+}
+</pre><br />
+And, of course, the Autofac code:<br />
+<pre>b.Register&lt;UsersRepository&gt;().As&lt;IUsersRepository&gt;().FactoryScoped();
+b.RegisterGeneratedFactory&lt;UsersRepositoryFactory&gt;();
+</pre><br />
+More details on the delegate factory <a href="http://code.google.com/p/autofac/wiki/DelegateFactories">here</a>.  But basically, with Autofac I have told it to inject delegates into my UserService, and those delegates can create new instances of my user repository by passing in the current session.<br />
+<br />
+You&#8217;ll also notice I had a products repository as well.  With these delegate factories I can create up multiple repositories on the fly with the same session (and all the good NHibernate stuff that comes with that).<br />
+<br />
+Sure, there&#8217;s a whole bunch of using(var session) boilerplate now, but it&#8217;s explicit, clear, and allows for a lot of fine-grained control.<br />
+<br />
+EDIT: I have since dropped this approach and I&#8217;m currently injecting ISessions into my constructors by using Autofac&#8217;s container-scope (something that took me a while to understand).</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -383,68 +490,6 @@ Not only that. Castle has integration with logging, validation framework, much m
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/07/29/assimilated-by-altnet/">Assimilated by ALT.NET</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-07-29T00:00:00+00:00" pubdate data-updated="true">Jul 29<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>It feels good to be revitalized again!</p>
-
-<p>A couple months back I was very unhappy.  I was at a job I didn&rsquo;t particularly like.  The team I worked with was very rigid and used waterfall practices (even though it was a small 5 man team), and they were very resistant to change (I struggled to move them off SourceSafe, and failed).  It was time to job ship and try something else, but then the market crash hit and suddenly having money to put food on the table became a priority.</p>
-
-<p>Life got boring and dull.  I was writing C++ code (which didn&rsquo;t even use boost because it wasn&rsquo;t allowed), and .NET 2 code when 3.5 was out for 3 years already.</p>
-
-<p>I lost all drive to learn and grow, and after 8 hours of work I really didn&rsquo;t want to have anything to do with coding when I was home.</p>
-
-<p>Then my life changed&hellip;</p>
-
-<p>I found a new job, got hired, and it has been a HUGE turnaround.  I haven&rsquo;t been there long (almost done my 3 month probation), but I&rsquo;m finding myself working at home simply because I love what I&rsquo;m doing.</p>
-
-<p>The difference?  My new team actually wants to learn new things and continually improve.</p>
-
-<p>It is just under 3 months, and I have already helped my team implement branching conventions (rather than 2 week code freezes), unit testing conventions (rather than no conventions), and maintaining a CruiseControl.NET build server (rather than no build server).  It sure makes a HUGE difference when what you&rsquo;re doing is valued by your coworkers.</p>
-
-<p>In my 2nd month I was sent to my first conference, DevTeach in Vancouver, and I&rsquo;d probably consider this the biggest trigger of change in my way of thinking.  I was only away from the .NET community for about a year, but sitting in on the sessions with a panel of experts really drove home exactly how obsolete I already was.</p>
-
-<p>I&rsquo;ve heard of Test Driven Development.  But what&rsquo;s this Behavior Driven Development all about?  What&rsquo;s Domain Driven Development?  What is Inversion of Control and why should I care?</p>
-
-<p>And then I came across ALT.NET.  I first heard about it in James Kovacs&#8217; Vancouver DevTeach session on IoC containers, who was telling everyone about a ALT.NET conference that weekend after the DevTeach conference.  I had next to no knowledge about what ALT.NET was, so I skipped out on the conference because I had other obligations that weekend.  I wish I knew more about ALT.NET earlier, because I would have rescheduled my obligation so I could attend the conference!!</p>
-
-<p>It didn&rsquo;t take long for me to be fully immersed in everything the ALT.NET community has to offer, and I was reading up on anything and everything I could.  I practically had years of catchup to do.</p>
-
-<p>And then I was given my big break.  A completely new project with absolutely no dependencies on anything else was assigned to me.  It was going to be a massive n-tier project with web clients, windows clients, business logic, database, and anything else you could think of.  I got the chance to design something big from scratch.</p>
-
-<p>So now I&rsquo;m reading everything I can about domain driven development and making sure I don&rsquo;t do the classic Gang of Four mistake of overdesigning after reading ;)</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/13/">&larr; Older</a>
@@ -460,6 +505,10 @@ Not only that. Castle has integration with logging, validation framework, much m
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/09/09/vim-in-emacs-bootstrap/">Vim in Emacs Bootstrap</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/08/16/modularizing-vimscript/">Modularizing VimScript</a>
@@ -487,10 +536,6 @@ Not only that. Castle has integration with logging, validation framework, much m
     
       <li class="post">
         <a href="/blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript/">.NET/WPF to HTML/CSS/Javscript</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/10/jumping-on-the-hacker-blog-bandwagon/">Jumping on the hacker blog bandwagon</a>
       </li>
     
   </ul>

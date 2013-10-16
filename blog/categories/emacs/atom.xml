@@ -4,7 +4,7 @@
   <title><![CDATA[Category: emacs | bling on software development]]></title>
   <link href="http://bling.github.io/blog/categories/emacs/atom.xml" rel="self"/>
   <link href="http://bling.github.io/"/>
-  <updated>2013-10-16T13:19:23-04:00</updated>
+  <updated>2013-10-16T13:37:10-04:00</updated>
   <id>http://bling.github.io/</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Emacs as my Leader: evil-mode]]></title>
-    <link href="http://bling.github.io/blog/2013/10/16/emacs-as-my-evil-mode/"/>
+    <link href="http://bling.github.io/blog/2013/10/16/emacs-as-my-leader-evil-mode/"/>
     <updated>2013-10-16T12:54:00-04:00</updated>
-    <id>http://bling.github.io/blog/2013/10/16/emacs-as-my-evil-mode</id>
+    <id>http://bling.github.io/blog/2013/10/16/emacs-as-my-leader-evil-mode</id>
     <content type="html"><![CDATA[<p>Hey guys, I just wanted to post a quick demo video on <a href="https://gitorious.org/evil">evil-mode</a>.</p>
 
 <p>The video is targetted at intermediate/advanced Vim users, so if you&rsquo;re just starting out you might miss some things. But&hellip;hopefully it&rsquo;ll be an enjoyable watch regardless!</p>

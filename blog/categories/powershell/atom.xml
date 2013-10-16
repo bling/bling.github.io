@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: powershell | bling on software development]]></title>
-  <link href="http://bling.github.io//blog/categories/powershell/atom.xml" rel="self"/>
-  <link href="http://bling.github.io//"/>
-  <updated>2013-09-10T01:59:40+00:00</updated>
-  <id>http://bling.github.io//</id>
+  <link href="http://bling.github.io/blog/categories/powershell/atom.xml" rel="self"/>
+  <link href="http://bling.github.io/"/>
+  <updated>2013-10-16T13:19:23-04:00</updated>
+  <id>http://bling.github.io/</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[SnoopShell: Evolution]]></title>
-    <link href="http://bling.github.io//blog/2012/07/29/snoopshell-evolution/"/>
-    <updated>2012-07-29T00:00:00+00:00</updated>
-    <id>http://bling.github.io//blog/2012/07/29/snoopshell-evolution</id>
+    <link href="http://bling.github.io/blog/2012/07/29/snoopshell-evolution/"/>
+    <updated>2012-07-29T00:00:00-04:00</updated>
+    <id>http://bling.github.io/blog/2012/07/29/snoopshell-evolution</id>
     <content type="html"><![CDATA[<p>It’s been a while since I last announced <a href="http://blingcode.blogspot.com/2012/07/snoopshell-marriage-of-snoop-wpf-and.html">SnoopShell</a>, where I took some PowerShell and injected that into Snoop.  Well, I didn’t stop there!  I decided to continue working on it and adding more useful features.</p>
 
 <p>Well, a bunch of things have changed.  For one, it’s no longer targeted at .NET 4 and PS v3 anymore (and you’ll soon know why).  Second, there’s a bunch of new features!</p>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: emacs | bling on software development]]></title>
-  <link href="http://bling.github.io//blog/categories/emacs/atom.xml" rel="self"/>
-  <link href="http://bling.github.io//"/>
-  <updated>2013-09-10T01:59:40+00:00</updated>
-  <id>http://bling.github.io//</id>
+  <link href="http://bling.github.io/blog/categories/emacs/atom.xml" rel="self"/>
+  <link href="http://bling.github.io/"/>
+  <updated>2013-10-16T13:19:23-04:00</updated>
+  <id>http://bling.github.io/</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
     
@@ -14,10 +14,26 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Emacs as my Leader: evil-mode]]></title>
+    <link href="http://bling.github.io/blog/2013/10/16/emacs-as-my-evil-mode/"/>
+    <updated>2013-10-16T12:54:00-04:00</updated>
+    <id>http://bling.github.io/blog/2013/10/16/emacs-as-my-evil-mode</id>
+    <content type="html"><![CDATA[<p>Hey guys, I just wanted to post a quick demo video on <a href="https://gitorious.org/evil">evil-mode</a>.</p>
+
+<p>The video is targetted at intermediate/advanced Vim users, so if you&rsquo;re just starting out you might miss some things. But&hellip;hopefully it&rsquo;ll be an enjoyable watch regardless!</p>
+
+<iframe width="630" height="473" src="http://bling.github.io//www.youtube.com/embed/Uz_0i27wYbg" frameborder="0" allowfullscreen></iframe>
+
+
+<p>Let me know what you guys think of it!</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Vim in Emacs Bootstrap]]></title>
-    <link href="http://bling.github.io//blog/2013/09/09/vim-in-emacs-bootstrap/"/>
-    <updated>2013-09-09T20:00:00+00:00</updated>
-    <id>http://bling.github.io//blog/2013/09/09/vim-in-emacs-bootstrap</id>
+    <link href="http://bling.github.io/blog/2013/09/09/vim-in-emacs-bootstrap/"/>
+    <updated>2013-09-09T20:00:00-04:00</updated>
+    <id>http://bling.github.io/blog/2013/09/09/vim-in-emacs-bootstrap</id>
     <content type="html"><![CDATA[<p>Did I wake up on the wrong side of the bed?</p>
 
 <p>My New Year&rsquo;s resolution for 2013 was to learn Vim. I was so new to Vim that I did not even know how to <a href="http://stackoverflow.com/questions/14107198/vim-delete-whitespace-between-2-lines">join lines</a> properly. However, I was diligent, patient, and stubborn enough to stick at it. It didn&rsquo;t take long for me to <a href="http://bling.github.io/blog/2013/02/10/love-affair-with-vim">fall in love</a>. I even ended up writing a <a href="https://github.com/bling/vim-airline">plugin</a> for Vim that got so popular that I was writing VimL as a second job.</p>
@@ -103,7 +119,7 @@
 
 <h1>Installing evil</h1>
 
-<p>Next up is the all important <code>M-x</code> binding. This is sort of like Vim&rsquo;s <code>:</code> where you can type commands. Here we are going to do a <code>M-x package-refresh-contents RET</code>. In Emacs, <code>RET</code> is the convention for <code>&lt;CR&gt;</code>. This will refresh the repository of available packages. And finally, <code>M-x package-install RET evil RET</code>.</p>
+<p>Next up is the all important <code>M-x</code> binding (on modern keyboards M is the Alt key). This is sort of like Vim&rsquo;s <code>:</code> where you can type commands. Here we are going to do a <code>M-x package-refresh-contents RET</code>. In Emacs, <code>RET</code> is the convention for <code>&lt;CR&gt;</code>. This will refresh the repository of available packages. And finally, <code>M-x package-install RET evil RET</code>.</p>
 
 <p>And now it&rsquo;s installed!</p>
 
@@ -114,7 +130,7 @@
 (evil-mode t)
 </code></p>
 
-<p>Finally, <code>C-x C-c</code> to quit Emacs and restart it. If you&rsquo;re feeling adventerous you can use <code>M-x eval-buffer RET</code> instead.</p>
+<p>Finally, <code>C-x C-c</code> to quit Emacs and restart it. If you&rsquo;re feeling adventurous you can use <code>M-x eval-buffer RET</code> instead.</p>
 
 <h1>Finale</h1>
 

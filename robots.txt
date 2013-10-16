@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 
-Sitemap: http://bling.github.io//sitemap.xml 
+Sitemap: http://bling.github.io/sitemap.xml 

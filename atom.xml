@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[bling on software development]]></title>
-  <link href="http://bling.github.io//atom.xml" rel="self"/>
-  <link href="http://bling.github.io//"/>
-  <updated>2013-09-10T01:59:40+00:00</updated>
-  <id>http://bling.github.io//</id>
+  <link href="http://bling.github.io/atom.xml" rel="self"/>
+  <link href="http://bling.github.io/"/>
+  <updated>2013-10-16T13:19:23-04:00</updated>
+  <id>http://bling.github.io/</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
     
@@ -14,10 +14,26 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Emacs as my Leader: evil-mode]]></title>
+    <link href="http://bling.github.io/blog/2013/10/16/emacs-as-my-evil-mode/"/>
+    <updated>2013-10-16T12:54:00-04:00</updated>
+    <id>http://bling.github.io/blog/2013/10/16/emacs-as-my-evil-mode</id>
+    <content type="html"><![CDATA[<p>Hey guys, I just wanted to post a quick demo video on <a href="https://gitorious.org/evil">evil-mode</a>.</p>
+
+<p>The video is targetted at intermediate/advanced Vim users, so if you&rsquo;re just starting out you might miss some things. But&hellip;hopefully it&rsquo;ll be an enjoyable watch regardless!</p>
+
+<iframe width="630" height="473" src="http://bling.github.io//www.youtube.com/embed/Uz_0i27wYbg" frameborder="0" allowfullscreen></iframe>
+
+
+<p>Let me know what you guys think of it!</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Vim in Emacs Bootstrap]]></title>
-    <link href="http://bling.github.io//blog/2013/09/09/vim-in-emacs-bootstrap/"/>
-    <updated>2013-09-09T20:00:00+00:00</updated>
-    <id>http://bling.github.io//blog/2013/09/09/vim-in-emacs-bootstrap</id>
+    <link href="http://bling.github.io/blog/2013/09/09/vim-in-emacs-bootstrap/"/>
+    <updated>2013-09-09T20:00:00-04:00</updated>
+    <id>http://bling.github.io/blog/2013/09/09/vim-in-emacs-bootstrap</id>
     <content type="html"><![CDATA[<p>Did I wake up on the wrong side of the bed?</p>
 
 <p>My New Year&rsquo;s resolution for 2013 was to learn Vim. I was so new to Vim that I did not even know how to <a href="http://stackoverflow.com/questions/14107198/vim-delete-whitespace-between-2-lines">join lines</a> properly. However, I was diligent, patient, and stubborn enough to stick at it. It didn&rsquo;t take long for me to <a href="http://bling.github.io/blog/2013/02/10/love-affair-with-vim">fall in love</a>. I even ended up writing a <a href="https://github.com/bling/vim-airline">plugin</a> for Vim that got so popular that I was writing VimL as a second job.</p>
@@ -110,7 +126,7 @@
 
 <h1>Installing evil</h1>
 
-<p>Next up is the all important <code>M-x</code> binding. This is sort of like Vim&rsquo;s <code>:</code> where you can type commands. Here we are going to do a <code>M-x package-refresh-contents RET</code>. In Emacs, <code>RET</code> is the convention for <code>&lt;CR&gt;</code>. This will refresh the repository of available packages. And finally, <code>M-x package-install RET evil RET</code>.</p>
+<p>Next up is the all important <code>M-x</code> binding (on modern keyboards M is the Alt key). This is sort of like Vim&rsquo;s <code>:</code> where you can type commands. Here we are going to do a <code>M-x package-refresh-contents RET</code>. In Emacs, <code>RET</code> is the convention for <code>&lt;CR&gt;</code>. This will refresh the repository of available packages. And finally, <code>M-x package-install RET evil RET</code>.</p>
 
 <p>And now it&rsquo;s installed!</p>
 
@@ -123,7 +139,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Finally, <code>C-x C-c</code> to quit Emacs and restart it. If you&rsquo;re feeling adventerous you can use <code>M-x eval-buffer RET</code> instead.</p>
+<p>Finally, <code>C-x C-c</code> to quit Emacs and restart it. If you&rsquo;re feeling adventurous you can use <code>M-x eval-buffer RET</code> instead.</p>
 
 <h1>Finale</h1>
 
@@ -139,9 +155,9 @@
   
   <entry>
     <title type="html"><![CDATA[Modularizing VimScript]]></title>
-    <link href="http://bling.github.io//blog/2013/08/16/modularizing-vimscript/"/>
-    <updated>2013-08-16T20:22:00+00:00</updated>
-    <id>http://bling.github.io//blog/2013/08/16/modularizing-vimscript</id>
+    <link href="http://bling.github.io/blog/2013/08/16/modularizing-vimscript/"/>
+    <updated>2013-08-16T20:22:00-04:00</updated>
+    <id>http://bling.github.io/blog/2013/08/16/modularizing-vimscript</id>
     <content type="html"><![CDATA[<h1>The prerequisites</h1>
 
 <p>First off, there are two very good resources that are required reading in addition to what&rsquo;s provided in the official documentation.  Steve Losh&rsquo;s <a href="http://learnvimscriptthehardway.stevelosh.com/">Learn Vim the Hard Way</a> is an excellent book and I highly recommend it.  The <a href="http://www.ibm.com/developerworks/library/l-vim-script-1/">IBM Series</a> by Dr. Damian Conway is another great resource.  Without these I would not have been able to do what I have achieved, so thanks to them!</p>
@@ -309,9 +325,9 @@
   
   <entry>
     <title type="html"><![CDATA[1000 stars in 1 month]]></title>
-    <link href="http://bling.github.io//blog/2013/07/30/1000-stars-in-1-month/"/>
-    <updated>2013-07-30T21:26:00+00:00</updated>
-    <id>http://bling.github.io//blog/2013/07/30/1000-stars-in-1-month</id>
+    <link href="http://bling.github.io/blog/2013/07/30/1000-stars-in-1-month/"/>
+    <updated>2013-07-30T21:26:00-04:00</updated>
+    <id>http://bling.github.io/blog/2013/07/30/1000-stars-in-1-month</id>
     <content type="html"><![CDATA[<h1>1000 stars in 1 month</h1>
 
 <p>One month ago I pushed the first <a href="https://github.com/bling/vim-airline/commit/25b9d4d48bd8c0a3daf3859998825e2e55562f70">commit</a> of my plugin <a href="https://github.com/bling/vim-airline">vim-airline</a>.</p>
@@ -335,9 +351,9 @@
   
   <entry>
     <title type="html"><![CDATA[Smart tab expansions in Vim with expression mappings]]></title>
-    <link href="http://bling.github.io//blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/"/>
-    <updated>2013-07-21T20:38:00+00:00</updated>
-    <id>http://bling.github.io//blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings</id>
+    <link href="http://bling.github.io/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/"/>
+    <updated>2013-07-21T20:38:00-04:00</updated>
+    <id>http://bling.github.io/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings</id>
     <content type="html"><![CDATA[<p>I&rsquo;ve been having a small itch for a while now, and it&rsquo;s a very simple thing &mdash; I want to make my tab smarter.  This all starts with a dive into <a href="http://www.emmet.io">Emmet</a>.  To understand what it is, here&rsquo;s a quick introduction.  First, you type something using its syntax:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -421,9 +437,9 @@
   
   <entry>
     <title type="html"><![CDATA[The flight of an open-source project]]></title>
-    <link href="http://bling.github.io//blog/2013/07/15/flight-of-an-open-source-project/"/>
-    <updated>2013-07-15T10:00:00+00:00</updated>
-    <id>http://bling.github.io//blog/2013/07/15/flight-of-an-open-source-project</id>
+    <link href="http://bling.github.io/blog/2013/07/15/flight-of-an-open-source-project/"/>
+    <updated>2013-07-15T10:00:00-04:00</updated>
+    <id>http://bling.github.io/blog/2013/07/15/flight-of-an-open-source-project</id>
     <content type="html"><![CDATA[<h1>Welcome aboard!</h1>
 
 <p>Those were the words that a flight attendant said to me as a boarded a plane to visit Paris for a summer vacation of wine and cheese.  It was a long flight; about 8 hours.  This particular plane was older and didn&rsquo;t have the personal TVs installed yet.  What this meant was I didn&rsquo;t have any movies to distract me from working on a pet project I had going on.  This little project was a single vim file in my vimrc.</p>
@@ -487,9 +503,9 @@
   
   <entry>
     <title type="html"><![CDATA[Unite.vim, The plugin you didn't know you need]]></title>
-    <link href="http://bling.github.io//blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/"/>
-    <updated>2013-06-02T19:34:00+00:00</updated>
-    <id>http://bling.github.io//blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need</id>
+    <link href="http://bling.github.io/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/"/>
+    <updated>2013-06-02T19:34:00-04:00</updated>
+    <id>http://bling.github.io/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need</id>
     <content type="html"><![CDATA[<h1><a href="https://github.com/Shougo/unite.vim">Unite.vim</a></h1>
 
 <p>What is this?  If you&rsquo;ve never heard of this Vim plugin, then this post is for you.  This is one of those hidden gems in the Vim plugin world that is truly life changing.  I think this plugin is so awesome that I&rsquo;ve decided to write a post dedicated to it so that more people know about it.</p>
@@ -527,7 +543,7 @@
 </pre></td><td class='code'><pre><code class=''><span class='line'>nnoremap &lt;C-p&gt; :Unite file_rec/async&lt;cr&gt;</span></code></pre></td></tr></table></div></figure>
 
 
-<p><img class="center" src="http://bling.github.io//images/unite-ctrlp.gif"></p>
+<p><img class="center" src="http://bling.github.io/images/unite-ctrlp.gif"></p>
 
 <p>Did you notice the async flag?  Unite uses <a href="https://github.com/Shougo/vimproc.vim">vimproc</a> behind the scenes, which affords for searching while it populates the file list in the background.  That is amazing!</p>
 
@@ -537,7 +553,7 @@
 </pre></td><td class='code'><pre><code class=''><span class='line'>nnoremap &lt;space&gt;/ :Unite grep:.&lt;cr&gt;</span></code></pre></td></tr></table></div></figure>
 
 
-<p><img class="center" src="http://bling.github.io//images/unite-grep.gif"></p>
+<p><img class="center" src="http://bling.github.io/images/unite-grep.gif"></p>
 
 <p>Unite can be configured to use <code>grep</code>, <code>ack</code>, or <code>ag</code>; whichever is available.</p>
 
@@ -549,7 +565,7 @@
 </span><span class='line'>nnoremap &lt;space&gt;y :Unite history/yank&lt;cr&gt;</span></code></pre></td></tr></table></div></figure>
 
 
-<p><img class="center" src="http://bling.github.io//images/unite-yanks.gif"></p>
+<p><img class="center" src="http://bling.github.io/images/unite-yanks.gif"></p>
 
 <p>To be fair, unite cannot bind to a key to cycle the history, so it&rsquo;s not a 100% replacement.  However, if you only rarely use the yankring then this is a pretty good alternative.</p>
 
@@ -559,7 +575,7 @@
 </pre></td><td class='code'><pre><code class=''><span class='line'>nnoremap &lt;space&gt;s :Unite -quick-match buffer&lt;cr&gt;</span></code></pre></td></tr></table></div></figure>
 
 
-<p><img class="center" src="http://bling.github.io//images/unite-juggle.gif"></p>
+<p><img class="center" src="http://bling.github.io/images/unite-juggle.gif"></p>
 
 <p>Notice that <code>-quick-match</code> is just a flag, which means you can apply this to any source.</p>
 
@@ -575,9 +591,9 @@
   
   <entry>
     <title type="html"><![CDATA[On TypeScript]]></title>
-    <link href="http://bling.github.io//blog/2013/04/19/on-typescript/"/>
-    <updated>2013-04-19T23:31:00+00:00</updated>
-    <id>http://bling.github.io//blog/2013/04/19/on-typescript</id>
+    <link href="http://bling.github.io/blog/2013/04/19/on-typescript/"/>
+    <updated>2013-04-19T23:31:00-04:00</updated>
+    <id>http://bling.github.io/blog/2013/04/19/on-typescript</id>
     <content type="html"><![CDATA[<h1>What&rsquo;s the deal?</h1>
 
 <p>For the past week I&rsquo;ve been fortunate to work on an internal project which was purely greenfield and built on Node/Express on the backend, and AngularJS on the front-end.  It was a ton of fun and I learned a lot in the process, most particularly TypeScript and CoffeeScript.</p>
@@ -665,9 +681,9 @@
   
   <entry>
     <title type="html"><![CDATA[.NET/WPF to HTML/CSS/Javscript]]></title>
-    <link href="http://bling.github.io//blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript/"/>
-    <updated>2013-04-13T11:58:00+00:00</updated>
-    <id>http://bling.github.io//blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript</id>
+    <link href="http://bling.github.io/blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript/"/>
+    <updated>2013-04-13T11:58:00-04:00</updated>
+    <id>http://bling.github.io/blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript</id>
     <content type="html"><![CDATA[<h1>In the beginning&hellip;</h1>
 
 <p>For the vast majority of my career I&rsquo;d say I was a Microsoft guy.  I took Java in university and toyed around with Linux at home, but what paid the bills was my knowledge and expertise in Microsoft technologies that I&rsquo;ve built up over the years.</p>
@@ -727,7 +743,7 @@
 
 <h1>How much is your time worth?</h1>
 
-<p><img src="http://bling.github.io//images/editor-learning-curve.png"></p>
+<p><img src="http://bling.github.io/images/editor-learning-curve.png"></p>
 
 <p>I can vouch for this popular comic because I have tried every editor on there (yes even Emacs) and I can confirm that it is true.  There really is no contestant that can match the speed and flexibility of modal editing (and why most other editors out there have a vi emulation mode).  New users are often confused why the default mode in vim&rsquo;s default mode is&hellip;normal mode and not insert mode (like every other editor).</p>
 
@@ -869,9 +885,9 @@
   
   <entry>
     <title type="html"><![CDATA[Jumping on the hacker blog bandwagon]]></title>
-    <link href="http://bling.github.io//blog/2013/04/10/jumping-on-the-hacker-blog-bandwagon/"/>
-    <updated>2013-04-10T23:31:00+00:00</updated>
-    <id>http://bling.github.io//blog/2013/04/10/jumping-on-the-hacker-blog-bandwagon</id>
+    <link href="http://bling.github.io/blog/2013/04/10/jumping-on-the-hacker-blog-bandwagon/"/>
+    <updated>2013-04-10T23:31:00-04:00</updated>
+    <id>http://bling.github.io/blog/2013/04/10/jumping-on-the-hacker-blog-bandwagon</id>
     <content type="html"><![CDATA[<h1>Following the tutorial&hellip;</h1>
 
 <p>Not much to say here&hellip;I went to <a href="http://octopress.org">Octopress&#8217;</a> website, followed the instructions, and now I have a working blog.  Pretty cool.</p>
@@ -884,9 +900,9 @@
   
   <entry>
     <title type="html"><![CDATA[Writing Macros with Vim]]></title>
-    <link href="http://bling.github.io//blog/2013/02/11/writing-macros-with-vim/"/>
-    <updated>2013-02-11T00:00:00+00:00</updated>
-    <id>http://bling.github.io//blog/2013/02/11/writing-macros-with-vim</id>
+    <link href="http://bling.github.io/blog/2013/02/11/writing-macros-with-vim/"/>
+    <updated>2013-02-11T00:00:00-05:00</updated>
+    <id>http://bling.github.io/blog/2013/02/11/writing-macros-with-vim</id>
     <content type="html"><![CDATA[<p>First, let’s start with a Javascript function:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -976,9 +992,9 @@
   
   <entry>
     <title type="html"><![CDATA[Love Affair with Vim]]></title>
-    <link href="http://bling.github.io//blog/2013/02/10/love-affair-with-vim/"/>
-    <updated>2013-02-10T00:00:00+00:00</updated>
-    <id>http://bling.github.io//blog/2013/02/10/love-affair-with-vim</id>
+    <link href="http://bling.github.io/blog/2013/02/10/love-affair-with-vim/"/>
+    <updated>2013-02-10T00:00:00-05:00</updated>
+    <id>http://bling.github.io/blog/2013/02/10/love-affair-with-vim</id>
     <content type="html"><![CDATA[<p>It wasn&rsquo;t too long ago when I was a full-time C# developer and my environment was Visual Studio eight hours a day.  Then, I became a web developer over night cold turkey writing Javascript and CSS.  It&rsquo;s one of the benefits of working for a consulting company.</p>
 
 <p>You might think what does that have to do with the title of this post?  Well, originally my plan was to write a blog post contrasting on the differences between Javascript and C#, as well as the development environments and deployment platforms.  But really, what I really wanted to write about was Vim.</p>
@@ -1050,9 +1066,9 @@
   
   <entry>
     <title type="html"><![CDATA[SnoopShell: Evolution]]></title>
-    <link href="http://bling.github.io//blog/2012/07/29/snoopshell-evolution/"/>
-    <updated>2012-07-29T00:00:00+00:00</updated>
-    <id>http://bling.github.io//blog/2012/07/29/snoopshell-evolution</id>
+    <link href="http://bling.github.io/blog/2012/07/29/snoopshell-evolution/"/>
+    <updated>2012-07-29T00:00:00-04:00</updated>
+    <id>http://bling.github.io/blog/2012/07/29/snoopshell-evolution</id>
     <content type="html"><![CDATA[<p>It’s been a while since I last announced <a href="http://blingcode.blogspot.com/2012/07/snoopshell-marriage-of-snoop-wpf-and.html">SnoopShell</a>, where I took some PowerShell and injected that into Snoop.  Well, I didn’t stop there!  I decided to continue working on it and adding more useful features.</p>
 
 <p>Well, a bunch of things have changed.  For one, it’s no longer targeted at .NET 4 and PS v3 anymore (and you’ll soon know why).  Second, there’s a bunch of new features!</p>
@@ -1120,9 +1136,9 @@
   
   <entry>
     <title type="html"><![CDATA[SnoopShell: The marriage of Snoop WPF and PowerShell]]></title>
-    <link href="http://bling.github.io//blog/2012/07/01/snoopshell-marriage-of-snoop-wpf-and/"/>
-    <updated>2012-07-01T00:00:00+00:00</updated>
-    <id>http://bling.github.io//blog/2012/07/01/snoopshell-marriage-of-snoop-wpf-and</id>
+    <link href="http://bling.github.io/blog/2012/07/01/snoopshell-marriage-of-snoop-wpf-and/"/>
+    <updated>2012-07-01T00:00:00-04:00</updated>
+    <id>http://bling.github.io/blog/2012/07/01/snoopshell-marriage-of-snoop-wpf-and</id>
     <content type="html"><![CDATA[<div class='post'>
 <p>I was given the opportunity to review a couple chapters of the excellent book <a href="http://shop.oreilly.com/product/0636920024491.do">PowerShell for Developers</a>, written by my colleague <a href="http://dougfinke.com/blog/">Doug Finke</a>.&nbsp; One of the concepts in the book was embedding a PowerShell console into your application.&nbsp; This idea is ingenious and we added this feature to our client’s software, and so far it has increased our productivity and opened the doors to many possibilities.</p> <p>So what’s so cool about embedding a shell into your application?&nbsp; Well, for starters, one of the immediate advantages is that it gives you the opportunity to test your application at run time.&nbsp; If you are implementing the MVVM pattern then basically anything you can see in the UI is bound to some property in your view model.&nbsp; What if you could expose an instance of your view model to the PowerShell console?&nbsp; Yes, you would be able to interact with it directly, change values, and property change notification will kick in and update the UI.</p> <p>The possibilities start to open up from there.&nbsp; You can start scripting out common tasks – write once, run many times.&nbsp; Or you can write a full fledge test suite as a script, give it to a QA tester, and have them run through it as a special kind of integration testing, one that happens with live, real data.&nbsp; Or how about being able to modify code, <em>at runtime</em>, to try out an implementation without need to recompile or restart the application?&nbsp; Sounds pretty awesome to me!</p> <p>With this, I started thinking why don’t I try and add this to Snoop?&nbsp; It’s a staple tool for any WPF developer, and adding scripting capabilities to Snoop will make it even more useful.</p> <p>So, I sat down for a weekend and took a shot at it.&nbsp; And with that, SnoopShell was born!</p> <p>My fork of Snoop can be found here: <a href="https://github.com/bling/snoopwpf">https://github.com/bling/snoopwpf</a></p> <p>It’s still in super-duper alpha, so features/ideas are still getting formulated, but here’s a glimpse of what it can do now.</p> <p>The $root variable points to the root of the tree.&nbsp; As you can see, Snoop represents this as a ApplicationTreeItem, which has a bunch of properties, the important ones being IsSelected and IsExpanded.</p> <p><a href="http://lh6.ggpht.com/-G1xK0p7454U/T_CIl9YKnlI/AAAAAAAAAJg/z4SEb20go04/s1600-h/image%25255B29%25255D.png"><img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh4.ggpht.com/-NgT7mhbVSBY/T_CImZIe6NI/AAAAAAAAAJk/fkNeG2UGFH0/image_thumb%25255B17%25255D.png?imgmax=800" width="640" height="381"></a></p> <p>Let’s try interacting with the object by setting the IsExpanded to true.</p> <p><a href="http://lh4.ggpht.com/-uKcevwtnUO4/T_CImnGxyWI/AAAAAAAAAJo/5v1AZnM_SHw/s1600-h/image%25255B28%25255D.png"><img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh6.ggpht.com/-STnkYWGudRU/T_CInKa1nyI/AAAAAAAAAJs/qk92Zjm3BWU/image_thumb%25255B16%25255D.png?imgmax=800" width="640" height="383"></a></p> <p>So far so good.&nbsp; Now let’s find my username using Ctrl+Shift.&nbsp; The $selected variable is automatically synchronized with the selected item in the tree.</p> <p><a href="http://lh6.ggpht.com/-uUeaZMYbuDc/T_CInhNnmAI/AAAAAAAAAJw/Q--l4hrlEis/s1600-h/image%25255B27%25255D.png"><img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh6.ggpht.com/-hnDhWbHtn8w/T_CIoIzVSCI/AAAAAAAAAJ0/BiqbUMnfigM/image_thumb%25255B15%25255D.png?imgmax=800" width="640" height="379"></a></p>  <p>Let’s do some black magic and change my name.</p> <p><a href="http://lh6.ggpht.com/-hC4FVTnZDxc/T_CIoTrYfiI/AAAAAAAAAJ4/aQQGFbrxCzM/s1600-h/image%25255B26%25255D.png"><img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh3.ggpht.com/-RqOCvfsU6cU/T_CIo6zvtcI/AAAAAAAAAJ8/e8XMWPj60BM/image_thumb%25255B14%25255D.png?imgmax=800" width="640" height="382"></a></p> <p>Finally, let’s find every ListBox in the application.&nbsp; <em>Find-Item</em> is used to recursively find everything in the visual tree which is a ListBox.</p> <p><a href="http://lh6.ggpht.com/-nlycDcpP-bk/T_CIpXMcWxI/AAAAAAAAAKA/gIGruuduR9g/s1600-h/image%25255B25%25255D.png"><img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh3.ggpht.com/-oAB7IIj6LLY/T_CIqDPWS6I/AAAAAAAAAKE/aX1DNZnIOVo/image_thumb%25255B13%25255D.png?imgmax=800" width="640" height="367"></a></p> <p>And from here, it’s as simple as grabbing the <em>DataContext</em> of any control to get access to the view model.</p> <p>By the way, this is targeting PowerShell V3, so you will need to have the RC installed.</p> <p>Try it out and let me know what you think!</p>  </div>
 ]]></content>
@@ -1130,9 +1146,9 @@
   
   <entry>
     <title type="html"><![CDATA[N2N: .NET 2 Node: Part 1]]></title>
-    <link href="http://bling.github.io//blog/2012/06/08/n2n-net-2-node-part-1/"/>
-    <updated>2012-06-08T00:00:00+00:00</updated>
-    <id>http://bling.github.io//blog/2012/06/08/n2n-net-2-node-part-1</id>
+    <link href="http://bling.github.io/blog/2012/06/08/n2n-net-2-node-part-1/"/>
+    <updated>2012-06-08T00:00:00-04:00</updated>
+    <id>http://bling.github.io/blog/2012/06/08/n2n-net-2-node-part-1</id>
     <content type="html"><![CDATA[<div class='post'>
 Let’s get some actual coding done.&nbsp; If you want some basic prologue, check out the first part of my series <a href="http://blingcode.blogspot.com/2012/06/n2n-net-2-node.html">here</a>.<br>Anywho, let’s get to the meat of what we’re trying to accomplish.&nbsp; I will start with the typical C# class you would write, do the same in Javascript, and then again in C#, but using the style of Javascript using closures.<br>Here’s the use case:<br> <ul> <li>Handle a web request  <li>Check the MongoDB database to see if an entry exists and return it if available.  <li>Otherwise, query an external API for data, save it into MongoDB, and then return that. </li></ul> <p>This is a pretty standard straight-forward approach in web applications.&nbsp; If you’re not using MongoDB, you’ll be using memcache, Redis, or some other equivalent data store.<br><br>First, let’s implement an pseudo-code ASP.NET MVC controller which does the above:</p> <div id="codeSnippetWrapper"><pre style="border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: #f4f4f4; margin: 0em; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: 'Courier New', courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px" id="codeSnippet"><span style="color: #0000ff">public</span> <span style="color: #0000ff">class</span> QuoteController : Controller<br>{<br>    MongoCollection collection;<br>    IExternalApi external;<br><br>    <span style="color: #0000ff">public</span> ActionResult Get(<span style="color: #0000ff">string</span> symbol)<br>    {<br>        var quote = <span style="color: #0000ff">this</span>.collection.FindOne(<span style="color: #0000ff">new</span> { symbol });<br>        <span style="color: #0000ff">if</span> (quote == <span style="color: #0000ff">null</span>)<br>        {<br>            var json = <span style="color: #0000ff">this</span>.external.GetQuote(symbol);<br>            <span style="color: #0000ff">this</span>.collection.Save(json);<br>        }<br><br>        ViewBag.Quote = quote;<br>        <span style="color: #0000ff">return</span> View();<br>    }<br>}<br></pre><br></div>
 <p>Error handling and initialization are omitted for brevity, but it’s an otherwise straight-forward synchronous send JSON to the browser response.&nbsp; So how does something like this look in Node?&nbsp; First, let’s throw in a web framework.&nbsp; I picked Express because it seems to have the most traction right now.&nbsp; Again, for brevity I will omit a bunch of boot strapping code, and skip to the core logic.<br><br>
@@ -1145,9 +1161,9 @@ Let’s get some actual coding done.&nbsp; If you want some basic prologue, chec
   
   <entry>
     <title type="html"><![CDATA[N2N: .NET 2 Node]]></title>
-    <link href="http://bling.github.io//blog/2012/06/03/n2n-net-2-node/"/>
-    <updated>2012-06-03T00:00:00+00:00</updated>
-    <id>http://bling.github.io//blog/2012/06/03/n2n-net-2-node</id>
+    <link href="http://bling.github.io/blog/2012/06/03/n2n-net-2-node/"/>
+    <updated>2012-06-03T00:00:00-04:00</updated>
+    <id>http://bling.github.io/blog/2012/06/03/n2n-net-2-node</id>
     <content type="html"><![CDATA[<div class='post'>
 <p>Well, it’s been quite a while since I’ve blogged about…well…anything, and I figured it’s about time I get off my lazy butt and do something with my spare time on weekends.&nbsp; What better option than to see what all the hype is about Node?&nbsp; I had to do it sooner or later.</p> <p>As any newbie would do, they go to Google and type “nodejs tutorial”.&nbsp; <a href="http://www.nodebeginner.org/">The Node Beginner Book</a> came up first, so I went with that.&nbsp; It was an excellent tutorial.&nbsp; Prior to this I also skimmed through the book <a href="http://www.amazon.com/JavaScript-Good-Parts-Douglas-Crockford/dp/0596517742">JavaScript, The Good Parts</a>, so I had a basic understanding of the language syntax.</p> <p>One of the first oddities I noticed, was that NodeJS seems to have a convention of comma-first.&nbsp; You notice this immediately because most examples start with require(‘module’), and if they require more than one module, the second line is prefixed with a comma (as opposed to the more traditional comma at the end of the line).&nbsp; I apparently missed the <a href="https://gist.github.com/357981">discussion</a> by 2 years!&nbsp; It was still interesting nonetheless.</p> <p>As someone with a strong .NET background, I definitely experienced all the usual ‘gotchas’:</p> <ul> <li>== vs ===  <li>falsey values  <li>variable hoisting</li></ul> <p>Once you understand all of these things, Javascript isn’t so bad.&nbsp; Oh, and of course understanding closures will get you <em>a long</em> way in being effective with Javascript, because that’s what you need to use to do proper scoping.&nbsp; If C# didn’t have lambdas and closures it would have been a much longer journey to “get it”.</p> <p>Not too longer after, I deployed my first Heroku app running on NodeJS.</p> <p>Anyways, enough with the prologue…I won’t bore you with anymore beginner/tutorial stuff.</p> <p>Let’s get on with what I plan on doing over a multi-part blog series.&nbsp; When I build something on my own time, I can’t build something just for the hell of it to learn something….that’s not enough.&nbsp; If I build something it has to be useful – something that I (or someone else) will find valuable.</p> <p>I won’t reveal what it is yet, but it’s going to involve Node/MongoDB on the backend, with Backbone on the front-end.&nbsp; Should be fun :-)</p>  </div>
 ]]></content>
@@ -1155,9 +1171,9 @@ Let’s get some actual coding done.&nbsp; If you want some basic prologue, chec
   
   <entry>
     <title type="html"><![CDATA[My Thoughts on MEF]]></title>
-    <link href="http://bling.github.io//blog/2011/10/31/my-thoughts-on-mef/"/>
-    <updated>2011-10-31T00:00:00+00:00</updated>
-    <id>http://bling.github.io//blog/2011/10/31/my-thoughts-on-mef</id>
+    <link href="http://bling.github.io/blog/2011/10/31/my-thoughts-on-mef/"/>
+    <updated>2011-10-31T00:00:00-04:00</updated>
+    <id>http://bling.github.io/blog/2011/10/31/my-thoughts-on-mef</id>
     <content type="html"><![CDATA[<div class='post'>
 <p>Ever since MEF was conceived, despite the authors saying that it is <strong>not<em> </em></strong>an IoC container, it has since evolved to become one of the more popular IoC containers.&nbsp; I’ve always avoided it because I disagree with using attributes, and I’ve had no reason to use it over Autofac or Windsor.</p> <p>Recently, I found a reason to use it – Metro-style applications only support MEF so far.&nbsp; My Twitter client ping.pong uses Autofac as the IoC container.&nbsp; It uses some very basic functionality like factories and hooks.&nbsp; To my surprise, MEF has no support for either of these.</p> <p>Coming across these limitations solidifies my opinion that MEF is a plugin container, not an IoC container.</p> <p>First let’s take a look at automated factories. What I mean is that by registering Foo, like so:</p> <div id="codeSnippetWrapper"> <div style="border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: #f4f4f4; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: 'Courier New', courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px" id="codeSnippet"><pre style="border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: white; margin: 0em; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: 'Courier New', courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px">container.RegisterType&lt;Foo&gt;();</pre><!--CRLF--></div></div>
 <p>the container will automatically provide us a Func&lt;Foo&gt; without explicitly having to register it. This can be useful when you want to create an instance of Foo some time in the future rather than at constructor time.&nbsp; You can do this with MEF via an ExportFactory&lt;T&gt;, but it’s limited because you cannot override dependencies at resolve time.</p>
@@ -1188,9 +1204,9 @@ Hi Bailey! Nice thoughtful article - I have a foot in both camps, so I&#39;m gla
   
   <entry>
     <title type="html"><![CDATA[ping.pong Twitter Client]]></title>
-    <link href="http://bling.github.io//blog/2011/10/09/pingpong-twitter-client/"/>
-    <updated>2011-10-09T00:00:00+00:00</updated>
-    <id>http://bling.github.io//blog/2011/10/09/pingpong-twitter-client</id>
+    <link href="http://bling.github.io/blog/2011/10/09/pingpong-twitter-client/"/>
+    <updated>2011-10-09T00:00:00-04:00</updated>
+    <id>http://bling.github.io/blog/2011/10/09/pingpong-twitter-client</id>
     <content type="html"><![CDATA[<div class='post'>
 <p>I have a whole <a href="http://blingcode.blogspot.com/2011/09/push-driven-development-with-reactive.html">series</a> dedicated to blogging about how I wrote a Twitter client from scratch, but if I want anyone to actually use it, I better do some advertising :-D.</p> <p>ping.pong is a fast and lightweight Twitter client written in Silverlight.&nbsp; As of this moment it targets v4 but will likely target v5 whenever that is released.</p> <p>Here are some highlights…</p> <h3>Visually Pleasing</h3> <p><img style="background-image: none; border-right-width: 0px; padding-left: 0px; padding-right: 0px; display: block; float: none; border-top-width: 0px; border-bottom-width: 0px; margin-left: auto; border-left-width: 0px; margin-right: auto; padding-top: 0px" title="image" border="0" alt="image" src="http://lh3.ggpht.com/-9wwcsDIu5Yg/TpHayG-NVXI/AAAAAAAAAHg/-Jo9iq0ghOA/image%25255B15%25255D.png?imgmax=800" width="377" height="280"></p> <p>The UI is based on your typical column-based design.&nbsp; The column widths will automatically resize to take up all available horizontal space.&nbsp; There is no horizontal scrolling.</p> <h3><strong>Access to the Streaming API</strong></h3> <p>No more rate limits!&nbsp; Your timeline is connected directly with Twitter’s streaming API, which means whenever someone you follow tweets you will know about it in almost near real-time.&nbsp; Searching is also done through the streaming API.</p> <h3>Fast &amp; Lightweight</h3> <p>ping.pong was built to run fast with low CPU utilization.&nbsp; Even when stream searching for “e” (yes, the letter E), the CPU usage stays under 15%.&nbsp; The maximum number of tweets that Twitter sends appears to be 50 per second.</p> <h3>Conversations</h3> <p>ping.pong will quickly show an entire tweet conversation by navigating reply tags back to the original tweet that started it all.</p> <h3>Free &amp; Open Source</h3> <p>The full source code for ping.pong can be found on <a href="https://github.com/bling/Ping.Pong">GitHub</a>.&nbsp; You can compile it, make modifications as you please, and run it yourself.&nbsp; The only thing missing is the consumer keys which uniquely identifies this client from another.&nbsp; You can generate them through Twitter once you have a developer account.</p> <h3>Installer</h3> <p>The latest and greatest can be quickly installed from <a href="http://dl.dropbox.com/u/2072014/Ping.Pong/PingPongTestPage.html">here</a>.&nbsp; Check back periodically for updates!</p>  </div>
 ]]></content>
@@ -1198,28 +1214,28 @@ Hi Bailey! Nice thoughtful article - I have a foot in both camps, so I&#39;m gla
   
   <entry>
     <title type="html"><![CDATA[Push Driven Development with Reactive Extensions]]></title>
-    <link href="http://bling.github.io//blog/2011/09/29/push-driven-development-with-reactive/"/>
-    <updated>2011-09-29T00:00:00+00:00</updated>
-    <id>http://bling.github.io//blog/2011/09/29/push-driven-development-with-reactive</id>
+    <link href="http://bling.github.io/blog/2011/09/29/push-driven-development-with-reactive/"/>
+    <updated>2011-09-29T00:00:00-04:00</updated>
+    <id>http://bling.github.io/blog/2011/09/29/push-driven-development-with-reactive</id>
     <content type="html"><![CDATA[<p>This is going to be the last post that concludes my series on building a real-time push app with Silverlight.  Any additional posts would likely be outside the context of writing a push app and more about how I’m adding features to ping.pong, my Twitter app, so I think this is a good place to wrap up and talk generally from a top down overview of building a push-style application.</p>
 
 <p>Here’s a recap of everything discussed so far:</p>
 
-<p><a href="http://bling.github.io//blog/2011/08/26/building-real-time-push-app-with-rx-1">Part 1</a>: Basics – Creating an Observable around a basic HTTP web stream against Twitter’s streaming API</p>
+<p><a href="http://bling.github.io/blog/2011/08/26/building-real-time-push-app-with-rx-1">Part 1</a>: Basics – Creating an Observable around a basic HTTP web stream against Twitter’s streaming API</p>
 
-<p><a href="http://bling.github.io//blog/2011/08/26/building-real-time-push-app-with-rx-2">Part 2</a>: Subscription and Observation of Observables</p>
+<p><a href="http://bling.github.io/blog/2011/08/26/building-real-time-push-app-with-rx-2">Part 2</a>: Subscription and Observation of Observables</p>
 
-<p><a href="http://bling.github.io//blog/2011/08/28/building-real-time-push-app-with-rx-3">Part 3</a>:  Basics of UX design with a look at shadows and gradients.</p>
+<p><a href="http://bling.github.io/blog/2011/08/28/building-real-time-push-app-with-rx-3">Part 3</a>:  Basics of UX design with a look at shadows and gradients.</p>
 
-<p><a href="http://bling.github.io//blog/2011/09/05/building-real-time-push-app-with-rx-4">Part 4</a>:  Integrating with 3rd party libraries, notably Caliburn Micro and Linq2Twitter and how to achieve polling with observables.</p>
+<p><a href="http://bling.github.io/blog/2011/09/05/building-real-time-push-app-with-rx-4">Part 4</a>:  Integrating with 3rd party libraries, notably Caliburn Micro and Linq2Twitter and how to achieve polling with observables.</p>
 
-<p><a href="http://bling.github.io//blog/2011/09/08/building-real-time-push-app-with-rx-5">Part 5</a>:  A minor hick up with Linq2Twitter.</p>
+<p><a href="http://bling.github.io/blog/2011/09/08/building-real-time-push-app-with-rx-5">Part 5</a>:  A minor hick up with Linq2Twitter.</p>
 
-<p><a href="http://bling.github.io//blog/2011/09/13/building-real-time-push-app-with-rx-6">Part 6</a>:  Taking advantage of transparencies to improve the design and reusability of UX.</p>
+<p><a href="http://bling.github.io/blog/2011/09/13/building-real-time-push-app-with-rx-6">Part 6</a>:  Taking advantage of transparencies to improve the design and reusability of UX.</p>
 
-<p><a href="http://bling.github.io//blog/2011/09/16/building-real-time-push-app-with-rx-7">Part 7</a>:  A summary of all things encountered so far, replacing Linq2Twitter with Hammock, first release of code to <a href="https://github.com/bling/Ping.Pong">GitHub</a>, and a binary released capable pulling and streaming tweets from Twitter.</p>
+<p><a href="http://bling.github.io/blog/2011/09/16/building-real-time-push-app-with-rx-7">Part 7</a>:  A summary of all things encountered so far, replacing Linq2Twitter with Hammock, first release of code to <a href="https://github.com/bling/Ping.Pong">GitHub</a>, and a binary released capable pulling and streaming tweets from Twitter.</p>
 
-<p><a href="http://bling.github.io//blog/2011/09/21/building-real-time-push-app-with-rx-8">Part 8</a>:  Examples of using Caliburn Micro to easily resolve data bindings that otherwise would be much more effort.</p>
+<p><a href="http://bling.github.io/blog/2011/09/21/building-real-time-push-app-with-rx-8">Part 8</a>:  Examples of using Caliburn Micro to easily resolve data bindings that otherwise would be much more effort.</p>
 
 <p>And that leads us to this post…</p>
 
@@ -1357,9 +1373,9 @@ Hi Bailey! Nice thoughtful article - I have a foot in both camps, so I&#39;m gla
   
   <entry>
     <title type="html"><![CDATA[Building a Real-time Push App with Silverlight: Part 8]]></title>
-    <link href="http://bling.github.io//blog/2011/09/21/building-real-time-push-app-with-rx-8/"/>
-    <updated>2011-09-21T00:00:00+00:00</updated>
-    <id>http://bling.github.io//blog/2011/09/21/building-real-time-push-app-with-rx-8</id>
+    <link href="http://bling.github.io/blog/2011/09/21/building-real-time-push-app-with-rx-8/"/>
+    <updated>2011-09-21T00:00:00-04:00</updated>
+    <id>http://bling.github.io/blog/2011/09/21/building-real-time-push-app-with-rx-8</id>
     <content type="html"><![CDATA[<h1>Exploring Caliburn Micro</h1>
 
 <p>As I hinted in earlier posts, Caliburn Micro has some wicked conventions that makes for writing MVVM super easy, and it also have a very convenient syntax for hooking up events.  For example, the following:</p>
@@ -1435,16 +1451,6 @@ Hi Bailey! Nice thoughtful article - I have a foot in both camps, so I&#39;m gla
 <p>As always, you can install directly from <a href="http://dl.dropbox.com/u/2072014/Ping.Pong/PingPongTestPage.html">here</a>, or you can grab the code on the <a href="https://github.com/bling/Ping.Pong">GitHub</a> page!</p>
 
 <p>Next post will be about Rx from a very top level perspective and how it influenced my code from beginning to be experienced and all refactorings in between.  Stay tuned!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Building a Real-time Push App with Silverlight: Part 7]]></title>
-    <link href="http://bling.github.io//blog/2011/09/16/building-real-time-push-app-with-rx-7/"/>
-    <updated>2011-09-16T00:00:00+00:00</updated>
-    <id>http://bling.github.io//blog/2011/09/16/building-real-time-push-app-with-rx-7</id>
-    <content type="html"><![CDATA[<div class='post'>
-<h3></h3> <h3>Infrastructure Refactor</h3> <p>A lot of things changed internally, and I mean….a lot….</p> <p>From an infrastructure standpoint, I decided to remove the dependency on LinqToTwitter, and I replaced it with <a href="https://github.com/danielcrenna/hammock">Hammock</a>.&nbsp; A couple things led me to this decision, one being the Silverlight support wasn’t as good as I’d hoped, and the streaming API implementation was limited.&nbsp; After reading the Twitter documentation I realized that the REST API was super simple and I’d be better off writing a simple interface to it.</p> <p>I heard good things about Hammock, so I decided to give that one a try (I wasn’t going to go as far as reimplementing OAuth).&nbsp; It was pretty easy to set up and in the end I was able to get Twitter working again and with less lines of code compared to the beginning of the refactor.</p> <h3>Goals</h3> <p>I had a couple goals for this project:</p> <ul> <li><strong>Learn:</strong>&nbsp; I was a complete newbie to Reactive Extensions when I started but now I understand it enough to hit the ground running with it.&nbsp; I’m still learning about more conventions available to Caliburn.Micro.  <li><strong>UX:</strong>&nbsp; I wanted to learn a little more about interface design.&nbsp; I wanted to know how little changes to gradients, shadows, colors, etc. could have a radically effect in the end result.  <li><strong>Performance:</strong>&nbsp; It should be fast.&nbsp; It should be able to react to real-time data.&nbsp; And it should do it with low CPU utilization.  <li><strong>Concise:</strong>&nbsp; I am a huge advocate for KISS.&nbsp; I like convention over configuration.&nbsp; I like implementing something in 2 lines of code rather than 20 (assuming it’s not cryptic).&nbsp; As I was writing the app and refactoring, if there was an opportunity to remove a line of code, I did it.&nbsp; The result is that the app currently consists of less than 500 lines of code as of this post (excluding XAML).</li></ul> <h3>Tidbits</h3> <p>What are some interest things I learned?</p> <ul> <li>System.Json is an amazing assembly.&nbsp; All you need to do is invoke JsonValue.Parse on a string and it will create a JsonValue for you, which will be a dictionary of key/value pairs.&nbsp; What’s more, by doing something like “string s = json[“text”]” will do an explicit conversion <strong>and unescape JSON characters</strong>, and <strong>only</strong> via the explicit operator.&nbsp; Calling ToString(), even though converting it to a string, will not unescape.&nbsp; This was completely undocumented and only found when I looked at the source code via Resharper’s external sources feature.  <li>Rx is awesome.&nbsp; When I ran into performance problems of trying to stream tweets from the world that contained the letter ‘a’ all I had to do was add an operator to improve the performance (in this case it was Buffer).&nbsp; It should be noted that it is <em>very important</em> to understand what Rx is doing underneath the hood to realize its benefits.&nbsp; Rx lets you refactor 30 lines of async code into 1 operator, but it’s still doing that 30 lines of code – you just don’t see it.  <li>I really, <em>really</em>, like the conventions available from Caliburn.&nbsp; Some of the features that come out of the box from this very small library saves me from writing a lot of boilerplate code like commands, triggers, and evening bindings (Caliburn will auto bind x:Name to a property).  <li>Twitter’s documentation for <a href="https://dev.twitter.com/docs/streaming-api/user-streams">user streams</a> currently sucks and some trial and error was required to get it working.</li></ul> <p>What is the end result of all this effort?&nbsp; We have a styled Twitter app that can update your status, pull your home/mentions timeline, and most importantly will <strong>stream all subsequent tweets</strong>.&nbsp; There’s no pulling and no limits.&nbsp; You will get a tweet of everyone you follow in real-time as it happens.</p> <p>Moreover, there’s a feature to connect to the Streaming API to search Twitter for <em>anything</em>.&nbsp; To get an idea of what we’re talking about, here’s a full screenshot of it:</p> <p><img style="background-image: none; border-right-width: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh4.ggpht.com/-tB6iLGL85aE/TnNOi7hdq9I/AAAAAAAAAHE/wGjkyHQzYKs/image%25255B20%25255D.png?imgmax=800" width="578" height="328"></p> <p>You read that right.&nbsp; I’m streaming any tweet in the world that has the words ‘and’, ‘the’, ‘yes’, <strong>or</strong> ‘no’ in them.&nbsp; This is streaming around 400kB/s continuously and CPU utilization is under 25%.&nbsp; The tweets are coming so fast it’s impossible to read them (at a rate of 50 tweets/second), so ideally you’d want to specify realistic search terms.</p> <p>Moreover, the majority of the performance cost is actually downloading all the profile images.&nbsp; If I take took out pictures I could stream any tweet in the world that has the letter ‘e’ in it at under 10% CPU.&nbsp; It looks like Twitter limits the rate of tweets to 50 tweets/second because that was the rate for this one as well.</p> <p>Features are minimalistic.&nbsp; You can update your status, but you can’t DM, you can’t RT, you can’t do any of the normal things.&nbsp; My original goal was not to write another Twitter client, but it’s actually quite fun to do so, so I’ll probably eventually get all features in.</p> <p>And as promised, it’s up on <a href="https://github.com/bling/Ping.Pong">GitHub</a>, and version 0.0.0.1 <strong>alpha</strong> (yes! expect bugs!!) is available in the downloads section.&nbsp; Or, here’s a direct link to the XAP file on my <a href="http://dl.dropbox.com/u/2072014/Ping.Pong/PingPongTestPage.html">Dropbox</a>.&nbsp; Have fun!</p>  </div>
 ]]></content>
   </entry>
   

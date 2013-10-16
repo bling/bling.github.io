@@ -9,7 +9,15 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="It wasn&rsquo;t too long ago when I was a full-time C# developer and my environment was Visual Studio eight hours a day. Then, I became a web &hellip;">
+  <meta name="description" content="First, let’s start with a Javascript function: 1
+2
+3
+4
+function foo(hello, world, how, are, you) {
+} Now let’s convert that to the following: 1
+2
+3
+4 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +26,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://bling.github.io//blog/page/3">
+  <link rel="canonical" href="http://bling.github.io/blog/page/3">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="bling on software development" type="application/atom+xml">
@@ -62,7 +70,7 @@
   
 <form action="http://google.com/search" method="get">
   <fieldset role="search">
-    <input type="hidden" name="q" value="site:bling.github.io/" />
+    <input type="hidden" name="q" value="site:bling.github.io" />
     <input class="search" type="text" name="q" results="0" placeholder="Search"/>
   </fieldset>
 </form>
@@ -77,6 +85,86 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/02/11/writing-macros-with-vim/">Writing Macros With Vim</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-11T00:00:00-05:00" pubdate data-updated="true">Feb 11<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>First, let’s start with a Javascript function:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">foo</span><span class="p">(</span><span class="nx">hello</span><span class="p">,</span> <span class="nx">world</span><span class="p">,</span>
+</span><span class='line'>             <span class="nx">how</span><span class="p">,</span> <span class="nx">are</span><span class="p">,</span>
+</span><span class='line'>             <span class="nx">you</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now let’s convert that to the following:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">foo</span><span class="p">(</span><span class="nx">parameters</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">hello</span> <span class="o">=</span> <span class="nx">parameters</span><span class="p">.</span><span class="nx">hello</span><span class="p">;</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">world</span> <span class="o">=</span> <span class="nx">parameters</span><span class="p">.</span><span class="nx">world</span><span class="p">;</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">how</span> <span class="o">=</span> <span class="nx">parameters</span><span class="p">.</span><span class="nx">how</span><span class="p">;</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">are</span> <span class="o">=</span> <span class="nx">parameters</span><span class="p">.</span><span class="nx">are</span><span class="p">;</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">you</span> <span class="o">=</span> <span class="nx">parameters</span><span class="p">.</span><span class="nx">you</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here are the macros I used to do this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='vim'><span class='line'><span class="k">let</span> @<span class="k">r</span><span class="p">=</span><span class="s1">&#39;di(iparameters^[/\{^M2o^[kpg`[v`]Jgv:s/\s//g^M0:try|exe &quot;norm! @q&quot;|endtry^MA;^[V:s/,/;\r/g^Mv``=&#39;</span>
+</span><span class='line'><span class="k">let</span> @<span class="k">q</span><span class="p">=</span><span class="s1">&#39;ywivar ^[pa = parameters.^[f,^[l@q&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/02/11/writing-macros-with-vim/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -99,7 +187,7 @@
   
 
 
-<time datetime="2013-02-10T00:00:00+00:00" pubdate data-updated="true">Feb 10<span>th</span>, 2013</time>
+<time datetime="2013-02-10T00:00:00-05:00" pubdate data-updated="true">Feb 10<span>th</span>, 2013</time>
         
       </p>
     
@@ -146,7 +234,7 @@
   
 
 
-<time datetime="2012-07-29T00:00:00+00:00" pubdate data-updated="true">Jul 29<span>th</span>, 2012</time>
+<time datetime="2012-07-29T00:00:00-04:00" pubdate data-updated="true">Jul 29<span>th</span>, 2012</time>
         
       </p>
     
@@ -243,7 +331,7 @@
   
 
 
-<time datetime="2012-07-01T00:00:00+00:00" pubdate data-updated="true">Jul 1<span>st</span>, 2012</time>
+<time datetime="2012-07-01T00:00:00-04:00" pubdate data-updated="true">Jul 1<span>st</span>, 2012</time>
         
       </p>
     
@@ -280,7 +368,7 @@
   
 
 
-<time datetime="2012-06-08T00:00:00+00:00" pubdate data-updated="true">Jun 8<span>th</span>, 2012</time>
+<time datetime="2012-06-08T00:00:00-04:00" pubdate data-updated="true">Jun 8<span>th</span>, 2012</time>
         
       </p>
     
@@ -294,43 +382,6 @@ Let’s get some actual coding done.&nbsp; If you want some basic prologue, chec
 <div id="codeSnippetWrapper"><pre style="border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: #f4f4f4; margin: 0em; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: 'Courier New', courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px" id="codeSnippet">var QuoteService = function() {<br>    var mongoCollection; <span style="color: #008000">// new MongoCollection</span><br>    var external; <span style="color: #008000">// new External API</span><br><br>    <span style="color: #008000">// req/res are the request/response passed in by Node/Express</span><br>    <span style="color: #0000ff">this</span>.get = function(symbol, req, res) {<br>        mongoCollection.findOne({ symbol: symbol }, function(error, item) {<br>            <span style="color: #0000ff">if</span> (item === <span style="color: #0000ff">null</span>) {<br>                external.getQuote(symbol, function(error, result) {<br>                    mongoCollection.save(result);<br>                    req.write(result);<br>                    req.end();<br>                });<br>            } <span style="color: #0000ff">else</span> {<br>                req.write(item);<br>                req.end();<br>            }<br>        });<br>    };<br>};<br>module.exports = QuoteService;<br><br></pre><br></div>OK, looks a lot different!&nbsp; The first thing you’ll notice is that the class is actually a function.&nbsp; Javascript doesn’t have real classes like C# or Java, but you can simulate things like private and public members by using closures.&nbsp; In the code snippet above, <em>mongoCollection </em>and <em>external</em> are private variables.&nbsp; However, the <em>get</em> function is public because it’s prefixed with <em>this</em>.&nbsp; Finally, because Javascript has closures you can still access the private variables and retain their state.<br><br>Last but not least, as far as programming in Node is concerned, every function returns void.&nbsp; Node is extremely fast – but it is still single threaded, which means you need to take extreme care not to block on any operation.&nbsp; In summary, you need to get used to working with callbacks.&nbsp; In the example above, the callback for the Mongo query invokes another function, which again uses a callback for the result.&nbsp; Typically any errors are also passed through to the callback, so in place of try/catch blocks, you will be checking to see if the error parameter has a value.<br><br>To conclude, let’s write a C# version that mimics the Javascript style.<br><br>
 <div id="codeSnippetWrapper">
 <div id="codeSnippetWrapper"><pre style="border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: #f4f4f4; margin: 0em; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: 'Courier New', courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px" id="codeSnippet"><span style="color: #0000ff">public</span> <span style="color: #0000ff">static</span> <span style="color: #0000ff">void</span> Main(<span style="color: #0000ff">string</span>[] args)<br>{<br>    var QuoteService = <span style="color: #0000ff">new</span> Func&lt;dynamic&gt;(() =&gt; {<br>        var mongoCollection = <span style="color: #0000ff">new</span> MongoCollection();<br>        var external = <span style="color: #0000ff">new</span> IExternalApi();<br>        <span style="color: #0000ff">return</span> <span style="color: #0000ff">new</span><br>        {<br>            get = <span style="color: #0000ff">new</span> Action&lt;<span style="color: #0000ff">string</span>, Request, Response&gt;((symbol, req, res) =&gt;<br>            {<br>                mongoCollection.FindOne(<span style="color: #0000ff">new</span>{symbol}, (error, item) =&gt; {<br>                    <span style="color: #0000ff">if</span> (item == <span style="color: #0000ff">null</span>)<br>                    {<br>                        external.GetSymbol(symbol, (e, result) =&gt; {<br>                            mongoCollection.Save(result);<br>                            req.Write(result);<br>                            req.End();<br>                        });<br>                    }<br>                    <span style="color: #0000ff">else</span><br>                    {<br>                        req.Write(item);<br>                        req.End();<br>                    }<br>                });<br>            })<br>        }});<br>}</pre><br></div>100% valid C# syntax.<br><br>Would you ever want to do that in C#?&nbsp; Probably not.&nbsp; But if you need some mental conversion from C# to/from Javascript, I think it’s a good place to start.<br><br>In summary, Javascript is kind of like programming in C# using only anonymous classes, Action/Func, dynamic, declared all in the main method.</div></div></p>  </div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/06/03/n2n-net-2-node/">N2N: .NET 2 Node</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-03T00:00:00+00:00" pubdate data-updated="true">Jun 3<span>rd</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-<p>Well, it’s been quite a while since I’ve blogged about…well…anything, and I figured it’s about time I get off my lazy butt and do something with my spare time on weekends.&nbsp; What better option than to see what all the hype is about Node?&nbsp; I had to do it sooner or later.</p> <p>As any newbie would do, they go to Google and type “nodejs tutorial”.&nbsp; <a href="http://www.nodebeginner.org/">The Node Beginner Book</a> came up first, so I went with that.&nbsp; It was an excellent tutorial.&nbsp; Prior to this I also skimmed through the book <a href="http://www.amazon.com/JavaScript-Good-Parts-Douglas-Crockford/dp/0596517742">JavaScript, The Good Parts</a>, so I had a basic understanding of the language syntax.</p> <p>One of the first oddities I noticed, was that NodeJS seems to have a convention of comma-first.&nbsp; You notice this immediately because most examples start with require(‘module’), and if they require more than one module, the second line is prefixed with a comma (as opposed to the more traditional comma at the end of the line).&nbsp; I apparently missed the <a href="https://gist.github.com/357981">discussion</a> by 2 years!&nbsp; It was still interesting nonetheless.</p> <p>As someone with a strong .NET background, I definitely experienced all the usual ‘gotchas’:</p> <ul> <li>== vs ===  <li>falsey values  <li>variable hoisting</li></ul> <p>Once you understand all of these things, Javascript isn’t so bad.&nbsp; Oh, and of course understanding closures will get you <em>a long</em> way in being effective with Javascript, because that’s what you need to use to do proper scoping.&nbsp; If C# didn’t have lambdas and closures it would have been a much longer journey to “get it”.</p> <p>Not too longer after, I deployed my first Heroku app running on NodeJS.</p> <p>Anyways, enough with the prologue…I won’t bore you with anymore beginner/tutorial stuff.</p> <p>Let’s get on with what I plan on doing over a multi-part blog series.&nbsp; When I build something on my own time, I can’t build something just for the hell of it to learn something….that’s not enough.&nbsp; If I build something it has to be useful – something that I (or someone else) will find valuable.</p> <p>I won’t reveal what it is yet, but it’s going to involve Node/MongoDB on the backend, with Backbone on the front-end.&nbsp; Should be fun :-)</p>  </div>
 </div>
   
   
@@ -353,6 +404,10 @@ Let’s get some actual coding done.&nbsp; If you want some basic prologue, chec
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/10/16/emacs-as-my-evil-mode/">Emacs as my Leader: evil-mode</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/09/09/vim-in-emacs-bootstrap/">Vim in Emacs Bootstrap</a>
@@ -380,10 +435,6 @@ Let’s get some actual coding done.&nbsp; If you want some basic prologue, chec
     
       <li class="post">
         <a href="/blog/2013/04/19/on-typescript/">On TypeScript</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript/">.NET/WPF to HTML/CSS/Javscript</a>
       </li>
     
   </ul>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: cqrs | bling on software development]]></title>
-  <link href="http://bling.github.io//blog/categories/cqrs/atom.xml" rel="self"/>
-  <link href="http://bling.github.io//"/>
-  <updated>2013-09-10T01:59:40+00:00</updated>
-  <id>http://bling.github.io//</id>
+  <link href="http://bling.github.io/blog/categories/cqrs/atom.xml" rel="self"/>
+  <link href="http://bling.github.io/"/>
+  <updated>2013-10-16T13:19:23-04:00</updated>
+  <id>http://bling.github.io/</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[CQRS: Building a “Transactional” Event Store with MongoDB]]></title>
-    <link href="http://bling.github.io//blog/2010/12/04/cqrs-building-transactional-event-store/"/>
-    <updated>2010-12-04T00:00:00+00:00</updated>
-    <id>http://bling.github.io//blog/2010/12/04/cqrs-building-transactional-event-store</id>
+    <link href="http://bling.github.io/blog/2010/12/04/cqrs-building-transactional-event-store/"/>
+    <updated>2010-12-04T00:00:00-05:00</updated>
+    <id>http://bling.github.io/blog/2010/12/04/cqrs-building-transactional-event-store</id>
     <content type="html"><![CDATA[<div class='post'>
 <p>As you all already know if you’re familiar with MongoDB, is that it does not support transactions.&nbsp; The closest thing we have is atomic modifications of a single document.</p> <p>The Event Store in a CQRS architecture has the important responsibility of detecting concurrency violations, where two different sources try to update the same version of the aggregate.&nbsp; The one that gets it late should be denied changes into the store with an exception thrown.&nbsp; This ensures the integrity of the data.</p> <p>Here is a very simple typical implementation of appending events into the event store:</p><pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">public</span> <span style="color: #0000ff">void</span> Append(Guid id, <span style="color: #0000ff">long</span> expectedVersion, IEnumerable&lt;IEvent&gt; events)
 </pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">{
@@ -98,9 +98,9 @@ Awesome post.  <br /><br />When I started writing version 2.0 of my EventStore l
   
   <entry>
     <title type="html"><![CDATA[CQRS: Auto register event handlers]]></title>
-    <link href="http://bling.github.io//blog/2010/11/23/cqrs-auto-register-event-handlers/"/>
-    <updated>2010-11-23T00:00:00+00:00</updated>
-    <id>http://bling.github.io//blog/2010/11/23/cqrs-auto-register-event-handlers</id>
+    <link href="http://bling.github.io/blog/2010/11/23/cqrs-auto-register-event-handlers/"/>
+    <updated>2010-11-23T00:00:00-05:00</updated>
+    <id>http://bling.github.io/blog/2010/11/23/cqrs-auto-register-event-handlers</id>
     <content type="html"><![CDATA[<div class='post'>
 <p>I’m not going to go into detail about what the deal is about event handlers in a CQRS architecture, since a quick Google/Bing search will give plenty of very good information.&nbsp; What this post is about is a solution to the “how do I quickly register something to handle a bunch of events” without copying pasting all over the place. There are other solutions out there, like <a href="http://thinkbeforecoding.com/post/2009/11/03/Event-Sourcing-and-CQRS-Dispatch-options">this one</a>.&nbsp; Here’s something I came up with (took some concepts from my post on <a href="http://blingcode.blogspot.com/2010/10/yet-another-weak-event-for-wpf.html">Weak Events</a>).</p><pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">public</span> <span style="color: #0000ff">class</span> Aggregate
 </pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">{

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: logging | bling on software development]]></title>
-  <link href="http://bling.github.io//blog/categories/logging/atom.xml" rel="self"/>
-  <link href="http://bling.github.io//"/>
-  <updated>2013-09-10T01:59:40+00:00</updated>
-  <id>http://bling.github.io//</id>
+  <link href="http://bling.github.io/blog/categories/logging/atom.xml" rel="self"/>
+  <link href="http://bling.github.io/"/>
+  <updated>2013-10-16T13:19:23-04:00</updated>
+  <id>http://bling.github.io/</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Injecting Logger Instances Via Convention With Unity]]></title>
-    <link href="http://bling.github.io//blog/2011/08/19/injecting-logger-instances-via-unity/"/>
-    <updated>2011-08-19T00:00:00+00:00</updated>
-    <id>http://bling.github.io//blog/2011/08/19/injecting-logger-instances-via-unity</id>
+    <link href="http://bling.github.io/blog/2011/08/19/injecting-logger-instances-via-unity/"/>
+    <updated>2011-08-19T00:00:00-04:00</updated>
+    <id>http://bling.github.io/blog/2011/08/19/injecting-logger-instances-via-unity</id>
     <content type="html"><![CDATA[<p>Let’s say you have something like this:
 ``` csharp
 public void MyClass {</p>
@@ -69,9 +69,9 @@ If you noticed, I had to cast to</code>NamedTypeBuildKey`, which unfortunately m
   
   <entry>
     <title type="html"><![CDATA[Real World Performance Comparison: Enterprise Library Logging Block vs log4net]]></title>
-    <link href="http://bling.github.io//blog/2009/11/23/real-world-performance-comparison/"/>
-    <updated>2009-11-23T00:00:00+00:00</updated>
-    <id>http://bling.github.io//blog/2009/11/23/real-world-performance-comparison</id>
+    <link href="http://bling.github.io/blog/2009/11/23/real-world-performance-comparison/"/>
+    <updated>2009-11-23T00:00:00-05:00</updated>
+    <id>http://bling.github.io/blog/2009/11/23/real-world-performance-comparison</id>
     <content type="html"><![CDATA[<div class='post'>
 Any search on the web you find will consistently show log4net outperforming EL by a factor of around 4:1.&nbsp; Most of these tests are typically tight for/loops, and comments will end up saying things like “oh well that’s not a realistic test” or “well you shouldn’t be logging that much anyway”, etc etc.&nbsp; Well, let’s see how important choosing your logging infrastructure is in terms of overall system performance in a multithreaded application.<br />
 <br />

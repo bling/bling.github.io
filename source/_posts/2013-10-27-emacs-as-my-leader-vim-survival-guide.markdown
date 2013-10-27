@@ -30,7 +30,7 @@ There are a couple immediate advantages that Emacs has that Vim users have been 
 
 Here's a quick video illustrating the difference:
 
-<iframe width="420" height="315" src="//www.youtube.com/embed/TuHgGJV2QX0" frameborder="0" allowfullscreen></iframe>
+<iframe width="420" height="315" src="//www.youtube.com/embed/I6pvC3_zeP4" frameborder="0" allowfullscreen></iframe>
 
 In the video, [flycheck][7], [syntastic][6], [vim-dispatch][27], [ack.vim][36] and [ag.el][35] are used.
 

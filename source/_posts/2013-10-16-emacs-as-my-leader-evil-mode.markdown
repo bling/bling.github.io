@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Emacs as my Leader: evil-mode"
+title: "Emacs as my &lt;Leader&gt;: evil-mode"
 date: 2013-10-16 12:54
 comments: true
 categories: ['vim','emacs']

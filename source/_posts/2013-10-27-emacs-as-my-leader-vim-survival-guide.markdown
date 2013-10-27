@@ -159,13 +159,13 @@ To illustrate this point, [commandt][37] first came out early 2010, and [ctrlp][
 
 While popularity and internet stars as a metric does not necessarily correlate with the quality of a product, the side effects will definitely be felt if you use Emacs.
 
-For starters, for every Emacs colorscheme there will be at least 10 Vim colorschemes.  Good luck finding one that works well in the terminal.  I can count on one hand the number of themes I've found usable in the terminal (I use `monokai`).  The irony is that Emacs packages tend to understand your code a lot better, for example `js2-mode` is actually a full-blown parser, but Vim will still highlight more symbols because its colorschemes have more syntax rules.
+For starters, for every Emacs colorscheme there will be at least 10 Vim colorschemes.  Good luck finding one that works well in the terminal.  I can count on one hand the number of themes I've found usable in the terminal (I use `monokai`).  The irony is that Emacs packages tend to understand your code a lot better, for example `js2-mode` is actually a full-blown parser, but Vim will still highlight more symbols because its colorschemes will define a lot more syntax rules.  The best themes with the most rules for Emacs are currently `zenburn` and `solarized` (unfortunately I'm not a fan of either).
 
 Another effect of popularity is that plugins tend to have more bells and whistles than their Emacs counterparts.  This, coupled with the attitude of Vim plugin developers mentioned earlier, results in a impressive set of plugins that no other ecosystem can match.
 
 ## Vim is more user friendly
 
-I've mentioned before that if you want to use Emacs to its fullest potential, you *must* learn Lisp.  Unless you're lucky and the package you're using has a very active and responsive maintainer, you are better off trying to implement it on your own and then submit a pull request later.
+I've mentioned before that if you want to use Emacs to its fullest potential, you *must* learn Lisp.  Unless you're lucky and the package you're using has a very active and responsive maintainer, you are better off trying to implement that feature or bug on your own and then submit a pull request later.
 
 # Is it worth it?
 

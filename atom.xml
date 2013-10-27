@@ -4,7 +4,7 @@
   <title><![CDATA[bling on software development]]></title>
   <link href="http://bling.github.io/atom.xml" rel="self"/>
   <link href="http://bling.github.io/"/>
-  <updated>2013-10-27T14:37:52+00:00</updated>
+  <updated>2013-10-27T21:24:40+00:00</updated>
   <id>http://bling.github.io/</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
@@ -176,13 +176,13 @@
 
 <p>While popularity and internet stars as a metric does not necessarily correlate with the quality of a product, the side effects will definitely be felt if you use Emacs.</p>
 
-<p>For starters, for every Emacs colorscheme there will be at least 10 Vim colorschemes.  Good luck finding one that works well in the terminal.  I can count on one hand the number of themes I&rsquo;ve found usable in the terminal (I use <code>monokai</code>).  The irony is that Emacs packages tend to understand your code a lot better, for example <code>js2-mode</code> is actually a full-blown parser, but Vim will still highlight more symbols because its colorschemes have more syntax rules.</p>
+<p>For starters, for every Emacs colorscheme there will be at least 10 Vim colorschemes.  Good luck finding one that works well in the terminal.  I can count on one hand the number of themes I&rsquo;ve found usable in the terminal (I use <code>monokai</code>).  The irony is that Emacs packages tend to understand your code a lot better, for example <code>js2-mode</code> is actually a full-blown parser, but Vim will still highlight more symbols because its colorschemes will define a lot more syntax rules.  The best themes with the most rules for Emacs are currently <code>zenburn</code> and <code>solarized</code> (unfortunately I&rsquo;m not a fan of either).</p>
 
 <p>Another effect of popularity is that plugins tend to have more bells and whistles than their Emacs counterparts.  This, coupled with the attitude of Vim plugin developers mentioned earlier, results in a impressive set of plugins that no other ecosystem can match.</p>
 
 <h2>Vim is more user friendly</h2>
 
-<p>I&rsquo;ve mentioned before that if you want to use Emacs to its fullest potential, you <em>must</em> learn Lisp.  Unless you&rsquo;re lucky and the package you&rsquo;re using has a very active and responsive maintainer, you are better off trying to implement it on your own and then submit a pull request later.</p>
+<p>I&rsquo;ve mentioned before that if you want to use Emacs to its fullest potential, you <em>must</em> learn Lisp.  Unless you&rsquo;re lucky and the package you&rsquo;re using has a very active and responsive maintainer, you are better off trying to implement that feature or bug on your own and then submit a pull request later.</p>
 
 <h1>Is it worth it?</h1>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: emacs | bling on software development]]></title>
   <link href="http://bling.github.io/blog/categories/emacs/atom.xml" rel="self"/>
   <link href="http://bling.github.io/"/>
-  <updated>2013-10-16T13:37:10-04:00</updated>
+  <updated>2013-10-27T13:38:50+00:00</updated>
   <id>http://bling.github.io/</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
@@ -14,9 +14,189 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Emacs as my Leader: evil-mode]]></title>
+    <title type="html"><![CDATA[Emacs as my &lt;Leader&gt;: Vim Survival Guide]]></title>
+    <link href="http://bling.github.io/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/"/>
+    <updated>2013-10-27T12:00:00+00:00</updated>
+    <id>http://bling.github.io/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide</id>
+    <content type="html"><![CDATA[<p>Two months ago I blogged about switching from Vim to Emacs.  Today, Emacs is my main editor.  I&rsquo;ll try to keep this post short and to the point, because there is <em>a lot</em> to cover!  But by the end of this post you&rsquo;ll have to answer to the question whether you should give Emacs a try.</p>
+
+<h1>What is a text editor?</h1>
+
+<p>If we&rsquo;re just talking about using Emacs as a text editor, then there is no comparison; Vim beats it, period.  But is our job description a text editor?  No.  We are system administrators, software developers, web designers, etc.  A text editor is a tool that we use to do our job (or hobby).  And any tool should be replaced when a better option is available.</p>
+
+<p>One simple example is <code>grep</code>.  As a developer, you can immediately gain a productivity boost by replacing it with <a href="http://beyondgrep.com/">ack</a> or <a href="https://github.com/ggreer/the_silver_searcher">ag</a>.  Do they search faster than <code>grep</code>?  No.  But since they&rsquo;re so good at ignoring things (like your <code>.git</code> directory) that for practical purposes they end up saving you a lot of time.</p>
+
+<p>As a text editor, I think Emacs is quite terrible.  Its key bindings are notoriously bad to the point that something called Emacs pinky exists.  If you&rsquo;re an Emacs user not interested in Vim bindings you should seriously consider taking a look at <a href="https://github.com/chrisdone/god-mode">god-mode</a> or <a href="https://github.com/stephendavidmarsh/control-mode">control-mode</a>.  But where Emacs really excels is all of the things outside of text editing.</p>
+
+<blockquote><p>Emacs is a great operating system, if only it had a good text editor.</p></blockquote>
+
+<p>Well, the nice thing about an operating system is that you can write a text editor for it; that text editor is called <a href="https://gitorious.org/evil/evil">evil-mode</a>.</p>
+
+<p>Now, as a text editor, Vim is still better than evil-mode for obvious reasons, so if you&rsquo;re just swapping it out you&rsquo;re at a net loss of productivity in terms of text editing.  However, what you <em>gain</em> from all of the other things that Emacs can do far outweighs the missing features.</p>
+
+<!-- more -->
+
+
+<h1>Enough talk, give me real life examples!</h1>
+
+<p>There are a couple immediate advantages that Emacs has that Vim users have been requesting for a long time.  First, is asynchronous operations.  Second, is integration with background processes.  And third, multiple-monitor support.</p>
+
+<p>Here&rsquo;s a quick video illustrating the difference:</p>
+
+<iframe width="420" height="315" src="http://bling.github.io//www.youtube.com/embed/TuHgGJV2QX0" frameborder="0" allowfullscreen></iframe>
+
+
+<p>In the video, <a href="https://github.com/flycheck/flycheck">flycheck</a>, <a href="https://github.com/scrooloose/syntastic">syntastic</a>, <a href="https://github.com/tpope/vim-dispatch">vim-dispatch</a>, <a href="https://github.com/mileszs/ack.vim">ack.vim</a> and <a href="https://github.com/Wilfred/ag.el">ag.el</a> are used.</p>
+
+<h1>Zero to hero</h1>
+
+<p>OK, I&rsquo;ve caught your interest.  And now you want to use Emacs and be at the same efficiency as your Vim setup.  I&rsquo;ll be frank with you.  My Emacs setup right now is <em>still</em> not as efficient as my vim/tmux/zsh setup.  But I believe with enough time and tweaking I will eventually cross over, hence why I am sticking with it. But to get you started on the right track, here are steps to take.</p>
+
+<h2>Step 0: Install evil-mode</h2>
+
+<p>This is a given, but I figured I&rsquo;d mention it.  This is the magical package which gives you Vim bindings.</p>
+
+<p>Remember though that evil-mode is an <em>emulation</em> of Vim; it is <em>not</em> Vim!  For example, you might try <code>cas</code> and conclude that evil-mode is broken because it is changing a paragraph instead of a sentence.  That is, of course, until you realize that Emacs also has a notion of what a sentence is, and that the default value of <code>sentence-end-double-space</code> is true.  Long story short, evil-mode will use Emacs functionality where it makes sense, so if something is not working as expected there is usually a good reason for it.</p>
+
+<h2>Step 1: Resist the urge to Google it&hellip;initally</h2>
+
+<p>I wasted a lot of time doing the thing most people do first: Google it.  The problem here is that you will find EmacsWiki.  The second problem is that EmacsWiki will contain <em>a lot</em> of information, giving you the illusion that it is useful.  The third problem is that you will not know what it old and outdated, old and still useful, or new and useless.  Emacs has been around since 1976, so there is a lot of history go through.</p>
+
+<p>What you actually want to do is read the <a href="http://www.gnu.org/software/emacs/manual/">Emacs Manual</a>.  And you should also read <a href="http://www.gnu.org/software/emacs/manual/eintr.html">Introduction to Programming Emacs Lisp</a>.  If you are not going to learn how to program in Emacs Lisp, you should just stop now because you&rsquo;re severely limiting the potential of Emacs.</p>
+
+<h2>Step 2: Prepare for a world of hurt^H^H^H^Hlearning</h2>
+
+<p>Vim is difficult to learn because you&rsquo;re learning a new language on how to interact with text.  Emacs, however, is difficult to learn because there is <em>so much</em> to learn.  The <em>default</em> distribution includes a email client, IRC client, file explorer, shell, and even tetris.  You will literally be learning a new operating system.  And operating systems have many applications; Emacs is no different.  You can choose to learn only one application, the text editor, but if you do that you might as well just stick with Vim.</p>
+
+<h2>Step 3: Learn how to help the help</h2>
+
+<p>In Emacs, the prefix key for help is <code>C-h</code>.  What this means is you hit <code>C-h</code>, followed by another key to invoke help on something.  Typing <code>C-h C-h</code> will give you the full list of possibitilies.  When I first started, I found I used <code>f</code>unction and <code>v</code>ariable a lot.  In Emacs, <em>everything</em> is a function (this is Lisp after all), so you can find out a lot about Emacs by reading the descriptions of functions.</p>
+
+<h2>Step 4: Understanding key bindings</h2>
+
+<p>It&rsquo;s probably way too early to talk about this, but I feel this is a great way that describes the fundamental differences between customizing Vim vs customizing Emacs.</p>
+
+<p>First, let&rsquo;s take an extremely common customization in Vim, where the cursor is centered after jumping to the next match:</p>
+
+<p><code>vim
+nnoremap n nzz
+</code></p>
+
+<p>Emacs does not have a notion of recursive vs non-recursive bindings, so it cannot be configured in the same fashion as Vim (doing it with key bindings would require you to define a throw away keybinding in the middle).  However, the way you do it in Emacs is ultimately way more powerful and flexible.  One option is to do it like this:</p>
+
+<p><code>cl
+(defadvice evil-ex-search-next (after advice-for-evil-ex-search-next activate)
+  (evil-scroll-line-to-center (line-number-at-pos)))
+</code></p>
+
+<p>An advice lets you add behavior to an existing function without modifying it.  By default <code>n</code> is bound to the command <code>evil-ex-search-next</code>, so what we&rsquo;re doing here is giving it some advice, such that <em>after</em> the command is run, we center the line.  I&rsquo;m a huge advocate of aspect oriented programming so when I found that this was built into Lisp I was jumping with joy.</p>
+
+<p>Another option is you could bind <code>n</code> to a wrapper function which calls these two commands directly.</p>
+
+<p>While any path you take will be incredibly verbose in comparison to how Vim does it, there are a couple key take aways from this example.  One; every key is bound to a function (called a command in Emacs lingo).  Two; every function can be redefined entirely, or attached advice before, after, or around it.  Three; almost 80% of Emacs is written in Emacs Lisp.  This is where the &ldquo;infinitely extensible&rdquo; reputation comes from.</p>
+
+<h2>Step 5: Understanding major and minor modes</h2>
+
+<p>I&rsquo;ve mentioned that Emacs is an operating system multiple times now, but to drive the point home, I want to briefly discuss major and minor modes.  You can have a single major mode and multiple minor modes, although there is <a href="https://github.com/purcell/mmm-mode">mmm-mode</a> which allows you have multiple major modes.  A major mode is similar to <code>set filetype</code> from Vim, and a minor mode is similar to a plugin like <a href="https://github.com/tpope/vim-surround">vim-surround</a>, which spans all filetypes.  However, the biggest difference is that major modes in Emacs often change key bindings radically.</p>
+
+<p>For example, if you hit <code>M-x package-list-packages RET</code> it will open up the package manager buffer.  Inside this buffer, you can use <code>C-n</code> and <code>C-p</code> to move lines up and down, just like the default Emacs bindings.  But you can also hit <code>n</code> and <code>p</code> instead of the chords, and keys like <code>i</code>nstall, <code>d</code>elete, and <code>h</code>elp are available to you as well.  Emacs appears to be modal after all!</p>
+
+<p>Similarly, the customize buffer, via <code>M-x customize-group RET</code> also sets up its own modal bindings; <code>TAB</code> for example will jump to the next option.</p>
+
+<p>In Emacs it is common practice for modes to set up a host of bindings under the <code>C-c</code> prefix.  I&rsquo;m writing this post right now in <a href="http://jblevins.org/projects/markdown-mode/">markdown-mode</a>, so I can use <code>C-c C-u</code> to jump up a heading, but that binding will be completely different in a different mode.</p>
+
+<p>Essentially, activating a major-mode in Emacs is not much different from running a separate application on your operating system.</p>
+
+<p>This isn&rsquo;t to say that you can&rsquo;t do the same thing in Vim; in fact, email and IRC clients exist on Vim as well, but comparatively speaking these are rare due to the relative difficulty of implementation, and most are done as experiments.</p>
+
+<h2>Step 6: Actually getting work done</h2>
+
+<p>OK, so you&rsquo;ve read the manual, you&rsquo;ve learned the Emacs way, and you even know some basic Lisp now.  But unless you&rsquo;re getting paid to customize Emacs and write Lisp, you didn&rsquo;t get any work done yet.</p>
+
+<p>With that in mind, the first thing you will need to do is install all of the packages which replicate as most of your Vim setup as possible.</p>
+
+<h3>Auto-completion engines</h3>
+
+<p>I&rsquo;m torn between Emacs and Vim solutions.  With Vim, <a href="https://github.com/Valloric/YouCompleteMe">YouCompleteMe</a> and <a href="https://github.com/Shougo/neocomplete.vim">NeoComplete</a> offer amazing and fast fuzzy completion.  On Emacs, neither <a href="https://github.com/auto-complete/auto-complete">auto-complete</a> or <a href="https://github.com/company-mode/company-mode">company-mode</a> offer fuzzy completion yet.  auto-complete has a fuzzy match algorithm, but it has to be manually invoked, rendering it inferior to always-fuzzy-on.  While you have to give up fuzzy matching (for now), in exchange you get real documentation tooltips.  This is far superior to Vim&rsquo;s use of the preview window which ends up bouncing your cursor all over the place as the window shows and hides.</p>
+
+<p>company-mode has a unique take on auto-completion where it will reject keystrokes if it doesn&rsquo;t match any possibilities.  It can also search available completions and filter as well, something I&rsquo;ve not seen in any other completion engine.</p>
+
+<p>auto-complete is far more popular than company-mode, so you will find that more packages integrate with it, however it&rsquo;s pretty straightforward to write an adapter to get sources to work with company-mode.  I&rsquo;d say try both and see which one you like more!</p>
+
+<p>Snippets are another huge time saver.  In Vim, you got <a href="https://github.com/SirVer/ultisnips">UltiSnips</a> and <a href="https://github.com/Shougo/neosnippet.vim">NeoSnippet</a>, whereas on Emacs you only got one contender, <a href="https://github.com/capitaomorte/yasnippet">YASnippet</a>.</p>
+
+<h3>Moving around</h3>
+
+<p>Emacs out of the box has superior capabilities for navigation; the built-in package <a href="http://www.emacswiki.org/emacs/InteractivelyDoThings">ido</a> makes quick work of navigating files and buffers.  You can go a long way knowing just <code>C-x C-f</code> and <code>C-x b</code>.  However, most people will be used to the capabilities of <a href="https://github.com/kien/ctrlp.vim">ctrlp</a> and <a href="https://github.com/Shougo/unite.vim">unite</a>, which can recursively fuzzy search the project.  In Emacs, <a href="https://github.com/bbatsov/projectile">projectile</a> and <a href="https://github.com/d11wtq/fiplr">filpr</a> will do the trick.</p>
+
+<p>Another powerful package worth mentioning is <a href="https://github.com/emacs-helm/helm">helm</a>.  Although it shares many similarities with projectile, it also excels in areas that projectile does not, and vice versa, causing me to have both installed.  The situation is similar to me having both ctrlp and unite installed in Vim.</p>
+
+<h3>Fuzzy extended command search</h3>
+
+<p>Sublime Text has a very useful feature called the command palette.  It&rsquo;s a fuzzy searchable list of commands that you can use to operate on the current buffer.  Emacs has a very similar feature, called <code>M-x</code>, which is bound to <code>execute-extended-command</code>.  Unlike Sublime Text, it will not show you a list or description.  The default behavior requires you to type some things and use <code>TAB</code> completion.  Luckily, you can get half-way there by installing a package called <a href="https://github.com/nonsequitur/smex">smex</a>, which will give you the fuzzy searchable list (no descriptions though).</p>
+
+<p>This is a <em>very</em> <strong><em>very</em></strong> commonly used operation in Emacs.  It pains me that the <code>ALT</code> key is so hard to reach, requiring you to tuck your thumb under either hand on most keyboards.  The nice thing about Vim bindings though you can easily add normal mode mappings.  I have this bound to <code>SPC SPC</code>, so I can just double tap the space to run a command.</p>
+
+<h3>Memorizing key bindings</h3>
+
+<p>Emacs bindings are pretty hard to remember (not nearly as mnemonic as Vim keys).  Luckily, the most often used Emacs bindings are prefixed with <code>C-x</code> and <code>C-c</code>.  This actually makes mixing Emacs and Vim very easy, because you are only giving up decrementing a number (which you can easily rebind), and <code>C-c</code>, which most people will be using <code>Esc</code> anyway.</p>
+
+<p><a href="https://github.com/kbkbkbkb1/guide-key">guide-key</a> is an immensely useful package that will tell you all the available keys and what they are bound to after hitting a prefix key.</p>
+
+<h3>File browsers</h3>
+
+<p><a href="https://github.com/scrooloose/nerdtree">NERDTree</a> and <a href="https://github.com/Shougo/vimfiler.vim">vimfiler</a> are both excellent plugins for Vim that give you a file browser on the side.</p>
+
+<p>I think fuzzy searching is far more useful and productive way to navigate around, but file browsers hold a niche in my tool belt for when I&rsquo;m working a foreign project where I don&rsquo;t know where all the files are laid out.  I haven&rsquo;t spent much time with file browsers for Emacs, but there are many available.  The built-in <code>speedbar</code> will open up a new frame.  An additional package called <code>sr-speedbar</code> will take the speedbar and place it inside a split window instead.</p>
+
+<p>A new kid of the block, released just a couple weeks ago is <a href="https://github.com/sabof/project-explorer">project-explorer</a>, which looks very promising.</p>
+
+<h3>Your choice of language specific packages</h3>
+
+<p>Last but not least, you will need to install mode packages, e.g. <code>coffee-mode</code>, <code>stylus-mode</code>, <code>jade-mode</code>, <code>js2-mode</code> etc.</p>
+
+<h2>Step 7: Practice makes perfect</h2>
+
+<p>And of course, practice practice practice!</p>
+
+<h1>Some other things to consider</h1>
+
+<p>Here are some <em>subjective</em> opinions I have on some&hellip;softer things to consider&hellip;</p>
+
+<h2>Vim developers are <em>very</em> tenacious</h2>
+
+<p>There is no dispute that Emacs Lisp is by far the superior language when compared to VimScript, but that doesn&rsquo;t stop VimScript plugin developers from making some really amazing plugins and pushing the envelope.  Vim plugin developers always find a way, no matter how hacky the solution might be.  It&rsquo;s fun to be &ldquo;hacking&rdquo; instead of &ldquo;developing&rdquo; after all.</p>
+
+<p>To illustrate this point, <a href="https://github.com/wincent/Command-T">commandt</a> first came out early 2010, and <a href="https://github.com/kien/ctrlp.vim">ctrlp</a> came out third quarter of 2011.  <a href="https://github.com/bbatsov/projectile">projectile</a> and <a href="https://github.com/d11wtq/fiplr">fiplr</a> both got recursive fuzzy searching the summer of <strong>2013</strong> (yes, <em>this</em> year).</p>
+
+<h2>Vim is <em>much</em> more popular than Emacs</h2>
+
+<p>While popularity and internet stars as a metric does not necessarily correlate with the quality of a product, the side effects will definitely be felt if you use Emacs.</p>
+
+<p>For starters, for every Emacs colorscheme there will be at least 10 Vim colorschemes.  Good luck finding one that works well in the terminal.  I can count on one hand the number of themes I&rsquo;ve found usable in the terminal (I use <code>monokai</code>).  The irony is that Emacs packages tend to understand your code a lot better, for example <code>js2-mode</code> is actually a full-blown parser, but Vim will still highlight more symbols because its colorschemes have more syntax rules.</p>
+
+<p>Another effect of popularity is that plugins tend to have more bells and whistles than their Emacs counterparts.  This, coupled with the attitude of Vim plugin developers mentioned earlier, results in a impressive set of plugins that no other ecosystem can match.</p>
+
+<h2>Vim is more user friendly</h2>
+
+<p>I&rsquo;ve mentioned before that if you want to use Emacs to its fullest potential, you <em>must</em> learn Lisp.  Unless you&rsquo;re lucky and the package you&rsquo;re using has a very active and responsive maintainer, you are better off trying to implement it on your own and then submit a pull request later.</p>
+
+<h1>Is it worth it?</h1>
+
+<p>At the end of all of this, you&rsquo;re probably thinking to yourself, I&rsquo;m already at <code>X</code> level of productivity, will switching to Emacs get me to <code>X + Y</code>?</p>
+
+<p>One of the major reasons for me switching was an excuse to <a href="http://bling.github.io/blog/2013/09/09/vim-in-emacs-bootstrap/">learn a Lisp dialect</a>.  Let me tell you; this reason alone is worth it to try Emacs.  Lisp will make you a better programmer by giving you a new perspective.  It will also make you question why all the complicated imperative languages today still do not compare to the simplicity and power that was available to us over 30 years ago.</p>
+
+<p>Yes, the learning curve is high.  But fear not!  You do not have to start from scratch.  You already know Vim, so you got the text editing part covered, which leaves just learning how to do things in Emacs one feature at a time.  If you configure Emacs to use the same keybindings as your Vim config, as I have in my <a href="https://github.com/bling/dotvim">dotvim</a> and <a href="https://github.com/bling/dotemacs">dotemacs</a> configs, it becomes seamless to switch between the two.  Lastly, you are not picking Vim <em>or</em> Emacs, but rather you are picking Vim <em>and</em> Emacs!  Use the best tool for the job.</p>
+
+<p>For me, Emacs is my <code>&lt;leader&gt;</code> key, the set of customizations that are non-standard to Vim, just like <code>set nocompatible</code> is the set of customizations that are non-standard to Vi.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Emacs as my &lt;Leader&gt;: evil-mode]]></title>
     <link href="http://bling.github.io/blog/2013/10/16/emacs-as-my-leader-evil-mode/"/>
-    <updated>2013-10-16T12:54:00-04:00</updated>
+    <updated>2013-10-16T12:54:00+00:00</updated>
     <id>http://bling.github.io/blog/2013/10/16/emacs-as-my-leader-evil-mode</id>
     <content type="html"><![CDATA[<p>Hey guys, I just wanted to post a quick demo video on <a href="https://gitorious.org/evil">evil-mode</a>.</p>
 
@@ -32,7 +212,7 @@
   <entry>
     <title type="html"><![CDATA[Vim in Emacs Bootstrap]]></title>
     <link href="http://bling.github.io/blog/2013/09/09/vim-in-emacs-bootstrap/"/>
-    <updated>2013-09-09T20:00:00-04:00</updated>
+    <updated>2013-09-09T20:00:00+00:00</updated>
     <id>http://bling.github.io/blog/2013/09/09/vim-in-emacs-bootstrap</id>
     <content type="html"><![CDATA[<p>Did I wake up on the wrong side of the bed?</p>
 

@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="Apparently, setting IsUndoEnabled to false isn’t enough. You must also set UndoLimit=0 as well otherwise it&rsquo;ll still keep track of undo history &hellip;">
+  <meta name="description" content="Do you have some sort of ImmutableAttribute in your domain that you use to mark classes as immutable?&#160; Have you ever needed to enforce that &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +83,132 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2010/11/08/that-immutable-thing/">That Immutable Thing</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-11-08T00:00:00+00:00" pubdate data-updated="true">Nov 8<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+<p>Do you have some sort of ImmutableAttribute in your domain that you use to mark classes as immutable?&#160; Have you ever needed to enforce that contract?&#160; Checking for readonly fields isn’t enough?&#160; Well, this weekend I had a code spike that helped solve this problem in my current project.</p>  <p>For this project, I’m using the <a href="http://normproject.org">NoRM</a> driver for <a href="http://www.mongodb.org/">MongoDB</a>, and one of the limitations of the serializer is that all types must be classes, must have a default constructor, and all properties have a public setter.&#160; So, now the domain has a bunch of classes like this:</p>  <pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"><span style="color: #0000ff">public</span> <span style="color: #0000ff">class</span> UserCreatedEvent : IEvent
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">{
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">  <span style="color: #0000ff">public</span> <span style="color: #0000ff">string</span> Name { <span style="color: #0000ff">get</span>; <span style="color: #0000ff">set</span>; }
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">  <span style="color: #0000ff">public</span> UserCreatedEvent() { }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">  <span style="color: #0000ff">public</span> UserCreatedEvent(<span style="color: #0000ff">string</span> name) { Name = name; }
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">}</pre></pre>
+
+<p>That God for code snippets (or Resharper templates).&#160; With so many classes like this that need to get serialized, I wanted to extra sure that no code ever calls the setter method for the Name property.&#160; Thankfully, with some help of <a href="https://github.com/jbevain/cecil">Mono.Cecil</a>, it’s possible.</p>
+<p>First off, you need to define <em>ImmutableAttribute</em> and that add that do classes, and in my case, it is historical domain events that get serialized to an event store.</p>
+<p>Then, you just write a unit test which leverages the power of Mono.Cecil.&#160; It turned out to be pretty simple.&#160; Here’s the code:</p>
+
+<pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"><span style="color: #0000ff">using</span> System.Collections.Generic;
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"><span style="color: #0000ff">using</span> System.Linq;
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"><span style="color: #0000ff">using</span> Mono.Cecil;
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"><span style="color: #0000ff">using</span> Mono.Cecil.Cil;
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"><span style="color: #0000ff">using</span> NUnit.Framework;
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"></pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"><span style="color: #0000ff">namespace</span> blingcode
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">{
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">    [TestFixture]
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">    <span style="color: #0000ff">public</span> <span style="color: #0000ff">class</span> ImmutabilityTests
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">    {
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        <span style="color: #0000ff">private</span> <span style="color: #0000ff">static</span> <span style="color: #0000ff">readonly</span> MethodDefinition[] _setterMethods;
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        <span style="color: #0000ff">private</span> <span style="color: #0000ff">static</span> <span style="color: #0000ff">readonly</span> AssemblyDefinition[] _assemblies;
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"></pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        <span style="color: #0000ff">static</span> ImmutabilityTests()
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        {
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            _assemblies = <span style="color: #0000ff">new</span>[]
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            {
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                AssemblyDefinition.ReadAssembly(<span style="color: #0000ff">typeof</span>(Something).Assembly.Location),
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            };
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            _setterMethods = _assemblies
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                .SelectMany(a =&gt; a.Modules)
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                .SelectMany(m =&gt; m.Types)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                .Where(t =&gt; t.CustomAttributes.Any(attr =&gt; attr.AttributeType.Name.Contains(&quot;<span style="color: #8b0000">ImmutableAttribute</span>&quot;)))
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                .SelectMany(t =&gt; t.Properties)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                .Where(p =&gt; p.SetMethod != <span style="color: #0000ff">null</span>)
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                .Select(m =&gt; m.SetMethod)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                .ToArray();
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"></pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        [Test]
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        <span style="color: #0000ff">public</span> <span style="color: #0000ff">void</span> ClassesWith_ImmutableAttribute_ShouldNotUse_PropertySetters()
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        {
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            AssertForViolations(_assemblies
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                                    .SelectMany(a =&gt; a.Modules)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                                    .SelectMany(m =&gt; m.Types)
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                                    .Where(t =&gt; t.IsClass)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                                    .SelectMany(t =&gt; t.Methods));
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"></pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        [Test]
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        <span style="color: #0000ff">public</span> <span style="color: #0000ff">void</span> ThisFixtureActuallyWorks()
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        {
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            var assembly = AssemblyDefinition.ReadAssembly(<span style="color: #0000ff">typeof</span>(ImmutabilityTests).Assembly.Location);
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            var type = assembly.Modules.SelectMany(m =&gt; m.Types)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                .Where(t =&gt; t.IsClass &amp;&amp; t.FullName.Contains(GetType().FullName)).First();
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            <span style="color: #0000ff">try</span>
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            {
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                AssertForViolations(type.Methods);
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            }
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            <span style="color: #0000ff">catch</span> (AssertionException)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            {
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                Assert.Pass();
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            }
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"></pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        <span style="color: #0000ff">private</span> <span style="color: #0000ff">static</span> <span style="color: #0000ff">void</span> AssertForViolations(IEnumerable&lt;MethodDefinition&gt; potentialMethods)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        {
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            <span style="color: #0000ff">foreach</span> (var method <span style="color: #0000ff">in</span> potentialMethods.Where(m =&gt; m.HasBody))
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            {
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                <span style="color: #0000ff">foreach</span> (Instruction ins <span style="color: #0000ff">in</span> method.Body.Instructions.Where(ins =&gt; ins.OpCode == OpCodes.Callvirt))
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                {
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                    MemberReference mr = ins.Operand <span style="color: #0000ff">as</span> MemberReference;
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                    <span style="color: #0000ff">if</span> (mr != <span style="color: #0000ff">null</span>)
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                    {
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                        var result = _setterMethods.FirstOrDefault(m =&gt; m.FullName == mr.FullName);
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                        <span style="color: #0000ff">if</span> (result != <span style="color: #0000ff">null</span>)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                        {
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                            <span style="color: #0000ff">throw</span> <span style="color: #0000ff">new</span> AssertionException(result + &quot;<span style="color: #8b0000"> was invoked by </span>&quot; + method + &quot;<span style="color: #8b0000">, even though the type has the Immutable attribute.</span>&quot;);
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                        }
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                    }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">                }
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        }
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"></pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        <span style="color: #0000ff">private</span> <span style="color: #0000ff">void</span> InvokeCardSetters()
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        {
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            <span style="color: #008000">// this only exists to test that the test does indeed work</span>
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px"></pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            var c = <span style="color: #0000ff">new</span> SomeImmutableClass();
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">            c.SomeImmutableValue = 123;
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">        }
+</pre><pre style="background-color: #ffffff; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">    }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px">}</pre></pre>
+
+<p>Nothing too complicated.&#160; The main thing to look for is the <strong>callvirt</strong> method, which the C# compiler always generates for classes.&#160; Then, you match the operand to the method definition and viola!</p>  </div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2010/10/05/memory-leak-with-wpfs-richtextbox/">Memory Leak With WPF’s RichTextBox</a></h1>
     
     
@@ -99,7 +225,7 @@
   
 
 
-<time datetime="2010-10-05T00:00:00-04:00" pubdate data-updated="true">Oct 5<span>th</span>, 2010</time>
+<time datetime="2010-10-05T00:00:00+00:00" pubdate data-updated="true">Oct 5<span>th</span>, 2010</time>
         
       </p>
     
@@ -135,7 +261,7 @@
   
 
 
-<time datetime="2010-10-04T00:00:00-04:00" pubdate data-updated="true">Oct 4<span>th</span>, 2010</time>
+<time datetime="2010-10-04T00:00:00+00:00" pubdate data-updated="true">Oct 4<span>th</span>, 2010</time>
         
       </p>
     
@@ -484,7 +610,7 @@
   
 
 
-<time datetime="2010-05-14T00:00:00-04:00" pubdate data-updated="true">May 14<span>th</span>, 2010</time>
+<time datetime="2010-05-14T00:00:00+00:00" pubdate data-updated="true">May 14<span>th</span>, 2010</time>
         
       </p>
     
@@ -700,7 +826,7 @@ No wonder it is taking so long, you&#39;re doing it in very heavyweight fashion.
   
 
 
-<time datetime="2010-04-21T00:00:00-04:00" pubdate data-updated="true">Apr 21<span>st</span>, 2010</time>
+<time datetime="2010-04-21T00:00:00+00:00" pubdate data-updated="true">Apr 21<span>st</span>, 2010</time>
         
       </p>
     
@@ -737,265 +863,6 @@ Why did you want a class proxy for interface service?</div>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/04/05/windsordynamicproxymixin-powers/">Windsor/DynamicProxy/Mixin Powers!</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-04-05T00:00:00-04:00" pubdate data-updated="true">Apr 5<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-Hmmm, I couldn’t really think of a good title except that this blog post has a little bit of everything of the title.<br />
-<br />
-As with any multithreaded program, deadlocks are a huge pain in the butt, and when they happen it costs time, money, and stress.<br />
-<br />
-In my code base I’ve introduced something called an ExtendedLock, which basically has something like this inside:<br />
-<div class="csharpcode"><pre class="alt"><span class="lnum">   1:  </span><span class="kwrd">public</span> <span class="kwrd">class</span> ExtendedLock : IExtendedLock {</pre><pre><span class="lnum">   2:  </span>  <span class="kwrd">public</span> IDisposable Lock() {</pre><pre class="alt"><span class="lnum">   3:  </span>    <span class="kwrd">while</span> (!Monitor.TryEnter(<span class="kwrd">this</span>, 5000)) {</pre><pre><span class="lnum">   4:  </span>      IncrementLockTime();</pre><pre class="alt"><span class="lnum">   5:  </span>    }</pre><pre><span class="lnum">   6:  </span>    <span class="kwrd">return</span> <span class="kwrd">new</span> Disposer(() =&gt; Release());</pre><pre class="alt"><span class="lnum">   7:  </span>  }</pre><pre><span class="lnum">   8:    public event Deadlock;</span></pre><pre>9<span class="lnum">: </span>}</pre></div><style type="text/css">
-.csharpcode, .csharpcode pre
-{
-font-size: small;
-color: black;
-font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
-background-color: #ffffff;
-/*white-space: pre;*/
-}
-.csharpcode pre { margin: 0em; }
-.csharpcode .rem { color: #008000; }
-.csharpcode .kwrd { color: #0000ff; }
-.csharpcode .str { color: #006080; }
-.csharpcode .op { color: #0000c0; }
-.csharpcode .preproc { color: #cc6633; }
-.csharpcode .asp { background-color: #ffff00; }
-.csharpcode .html { color: #800000; }
-.csharpcode .attr { color: #ff0000; }
-.csharpcode .alt 
-{
-background-color: #f4f4f4;
-width: 100%;
-margin: 0em;
-}
-.csharpcode .lnum { color: #606060; }
-</style><br />
-<br />
-Pretty simple.&nbsp; IncrementLockTime, as the name implies keeps track of how long the current thread has been attempting to acquire the lock.&nbsp; It returns a Disposer which takes an Action, which releases the lock.&nbsp; This allows us to take advantage of the <b>using</b> syntax, and avoid boiler plate try/finally (oh, and it avoids typos in Monitor.Exit).&nbsp; After some configurable amount of time, if the lock cannot be acquired within, say, 2 minutes, it’s probably a good probability your application is blocked somewhere.<br />
-<br />
-Now, using this class basically means replacing lock(_syncRoot) type code with _elock.Lock().&nbsp; Also, I believe it’s a good candidate for “mixing” into any other component.&nbsp; Mixins are sort of like multiple-inheritance, but not.&nbsp; I like to think of mixins as a “can do” rather than “is a.”<br />
-<br />
-Now, we know that C# doesn’t let you do multiple inheritance, but with libraries like Castle’s DynamicProxy2, it lets you do something very similar, and is extremely powerful.&nbsp; In a sense, it will automatically generate the following code for you:<br />
-<br />
-<div class="csharpcode"><br />
-<pre class="alt"><span class="lnum">   1:  </span><span class="kwrd">public</span> <span class="kwrd">class</span> SomeService : ISomeService, IExtendedLock {</pre><pre><span class="lnum">   2:  </span>  IExtendedLock _lock = <span class="kwrd">new</span> ExtendedLock();</pre><pre class="alt"><span class="lnum">   3:  </span>  <span class="kwrd">public</span> <span class="kwrd">void</span> DoSomething() { }</pre><pre><span class="lnum">   4:  </span>  IDisposable IExtendedLock.Lock() { <span class="kwrd">return</span> _lock.Lock(); }</pre><pre class="alt"><span class="lnum">   5:  </span>}</pre><br />
-</div><style type="text/css">
-.csharpcode, .csharpcode pre
-{
-font-size: small;
-color: black;
-font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
-background-color: #ffffff;
-/*white-space: pre;*/
-}
-.csharpcode pre { margin: 0em; }
-.csharpcode .rem { color: #008000; }
-.csharpcode .kwrd { color: #0000ff; }
-.csharpcode .str { color: #006080; }
-.csharpcode .op { color: #0000c0; }
-.csharpcode .preproc { color: #cc6633; }
-.csharpcode .asp { background-color: #ffff00; }
-.csharpcode .html { color: #800000; }
-.csharpcode .attr { color: #ff0000; }
-.csharpcode .alt 
-{
-background-color: #f4f4f4;
-width: 100%;
-margin: 0em;
-}
-.csharpcode .lnum { color: #606060; }
-</style><style type="text/css">
-.csharpcode, .csharpcode pre
-{
-font-size: small;
-color: black;
-font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
-background-color: #ffffff;
-/*white-space: pre;*/
-}
-.csharpcode pre { margin: 0em; }
-.csharpcode .rem { color: #008000; }
-.csharpcode .kwrd { color: #0000ff; }
-.csharpcode .str { color: #006080; }
-.csharpcode .op { color: #0000c0; }
-.csharpcode .preproc { color: #cc6633; }
-.csharpcode .asp { background-color: #ffff00; }
-.csharpcode .html { color: #800000; }
-.csharpcode .attr { color: #ff0000; }
-.csharpcode .alt 
-{
-background-color: #f4f4f4;
-width: 100%;
-margin: 0em;
-}
-.csharpcode .lnum { color: #606060; }
-</style><br />
-<br />
-_lock is a private instance variable, SomeService implements IExtendedLock, and simply redirects all the interface methods to _lock.&nbsp; This seems pretty simple and straightforward, but becomes tedious when the type you want to mix in has many methods (as my actual IExtendedLock is).<br />
-<br />
-With Windsor/DynamicProxy, you can do this automatically with minimal amount of code.&nbsp; For example, first you define something like this:<br />
-<br />
-<pre class="csharpcode"><span class="kwrd">public</span> <span class="kwrd">interface</span> ILockableDictionary : IDictionary, IExtendedLock { }</pre><br />
-Then, you register it in the container:<br />
-<div class="csharpcode"><br />
-<pre class="alt"><span class="lnum">   1:  </span>var container = <span class="kwrd">new</span> WindsorContainer();</pre><pre><span class="lnum">   2:  </span>container.Register(Component.For(<span class="kwrd">typeof</span>(ILockableHashtable))</pre><pre class="alt"><span class="lnum">   3:  </span>                                   .LifeStyle.Transient</pre><pre><span class="lnum">   4:  </span>                                   .Activator&lt;LockableHashtableActivator&gt;());</pre></div><style type="text/css">
-.csharpcode, .csharpcode pre
-{
-font-size: small;
-color: black;
-font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
-background-color: #ffffff;
-/*white-space: pre;*/
-}
-.csharpcode pre { margin: 0em; }
-.csharpcode .rem { color: #008000; }
-.csharpcode .kwrd { color: #0000ff; }
-.csharpcode .str { color: #006080; }
-.csharpcode .op { color: #0000c0; }
-.csharpcode .preproc { color: #cc6633; }
-.csharpcode .asp { background-color: #ffff00; }
-.csharpcode .html { color: #800000; }
-.csharpcode .attr { color: #ff0000; }
-.csharpcode .alt 
-{
-background-color: #f4f4f4;
-width: 100%;
-margin: 0em;
-}
-.csharpcode .lnum { color: #606060; }
-</style><br />
-<br />
-Now, whenever you need an instance of a lockable hashtable you can simply do something like this:<br />
-<br />
-<pre class="csharpcode">var hash = container.Resolve&lt;ILockableHashtable&gt;();
-<span class="kwrd">using</span> (hash.Lock()) {
-hash[<span class="str">"1"</span>] = 1;
-}</pre><style type="text/css">
-.csharpcode, .csharpcode pre
-{
-font-size: small;
-color: black;
-font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
-background-color: #ffffff;
-/*white-space: pre;*/
-}
-.csharpcode pre { margin: 0em; }
-.csharpcode .rem { color: #008000; }
-.csharpcode .kwrd { color: #0000ff; }
-.csharpcode .str { color: #006080; }
-.csharpcode .op { color: #0000c0; }
-.csharpcode .preproc { color: #cc6633; }
-.csharpcode .asp { background-color: #ffff00; }
-.csharpcode .html { color: #800000; }
-.csharpcode .attr { color: #ff0000; }
-.csharpcode .alt 
-{
-background-color: #f4f4f4;
-width: 100%;
-margin: 0em;
-}
-.csharpcode .lnum { color: #606060; }
-</style><br />
-<br />
-You might be wondering why it’s worth all this trouble, and what’s wrong with regular locks and Monitor.&nbsp; For our system it’s pretty critical that it stays running 24/7, and every minute it’s down is money lost, so it is in our best interest to detect any problematic condition.<br />
-<br />
-Last but not least, here’s the important code that actually generates the proxy:<br />
-<div class="csharpcode"><br />
-<pre class="alt"><span class="lnum">   1:  </span><span class="kwrd">internal</span> <span class="kwrd">class</span> LockableHashtableActivator : DefaultComponentActivator</pre><pre><span class="lnum">   2:  </span>{</pre><pre class="alt"><span class="lnum">   3:  </span>    <span class="kwrd">public</span> LockableHashtableActivator(ComponentModel model, IKernel kernel, ComponentInstanceDelegate onCreation, ComponentInstanceDelegate onDestruction)</pre><pre><span class="lnum">   4:  </span>        : <span class="kwrd">base</span>(model, kernel, onCreation, onDestruction)</pre><pre class="alt"><span class="lnum">   5:  </span>    {</pre><pre><span class="lnum">   6:  </span>    }</pre><pre class="alt"><span class="lnum">   7:  </span>&nbsp;</pre><pre><span class="lnum">   8:  </span>    <span class="kwrd">public</span> <span class="kwrd">override</span> <span class="kwrd">object</span> Create(CreationContext context)</pre><pre class="alt"><span class="lnum">   9:  </span>    {</pre><pre><span class="lnum">  10:  </span>        IExtendedLock lockMixin = Kernel.Resolve&lt;IExtendedLock&gt;();</pre><pre class="alt"><span class="lnum">  11:  </span>&nbsp;</pre><pre><span class="lnum">  12:  </span>        <span class="rem">// an additional object we want to "mix" with the implementation to provide combined functionality</span></pre><pre class="alt"><span class="lnum">  13:  </span>        ProxyGenerationOptions options = <span class="kwrd">new</span> ProxyGenerationOptions();</pre><pre><span class="lnum">  14:  </span>        options.AddMixinInstance(lockMixin);</pre><pre class="alt"><span class="lnum">  15:  </span>        </pre><pre><span class="lnum">  16:  </span>        <span class="kwrd">return</span> Kernel.Resolve&lt;ProxyGenerator&gt;().CreateInterfaceProxyWithTarget(</pre><pre class="alt"><span class="lnum">  17:  </span>            <span class="kwrd">typeof</span>(IDictionary), <span class="rem">// the interface of the implementation</span></pre><pre><span class="lnum">  18:  </span>            <span class="kwrd">new</span>[] { <span class="kwrd">typeof</span>(ILockableHashtable) }, <span class="rem">// additional interfaces to use</span></pre><pre class="alt"><span class="lnum">  19:  </span>            Activator.CreateInstance&lt;Hashtable&gt;(), <span class="rem">// concrete implementation to mix into</span></pre><pre><span class="lnum">  20:  </span>            options);</pre><pre class="alt"><span class="lnum">  21:  </span>    }</pre><pre><span class="lnum">  22:  </span>}</pre><br />
-</div><style type="text/css">
-.csharpcode, .csharpcode pre
-{
-font-size: small;
-color: black;
-font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
-background-color: #ffffff;
-/*white-space: pre;*/
-}
-.csharpcode pre { margin: 0em; }
-.csharpcode .rem { color: #008000; }
-.csharpcode .kwrd { color: #0000ff; }
-.csharpcode .str { color: #006080; }
-.csharpcode .op { color: #0000c0; }
-.csharpcode .preproc { color: #cc6633; }
-.csharpcode .asp { background-color: #ffff00; }
-.csharpcode .html { color: #800000; }
-.csharpcode .attr { color: #ff0000; }
-.csharpcode .alt 
-{
-background-color: #f4f4f4;
-width: 100%;
-margin: 0em;
-}
-.csharpcode .lnum { color: #606060; }
-</style><style type="text/css">
-.csharpcode, .csharpcode pre
-{
-font-size: small;
-color: black;
-font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
-background-color: #ffffff;
-/*white-space: pre;*/
-}
-.csharpcode pre { margin: 0em; }
-.csharpcode .rem { color: #008000; }
-.csharpcode .kwrd { color: #0000ff; }
-.csharpcode .str { color: #006080; }
-.csharpcode .op { color: #0000c0; }
-.csharpcode .preproc { color: #cc6633; }
-.csharpcode .asp { background-color: #ffff00; }
-.csharpcode .html { color: #800000; }
-.csharpcode .attr { color: #ff0000; }
-.csharpcode .alt 
-{
-background-color: #f4f4f4;
-width: 100%;
-margin: 0em;
-}
-.csharpcode .lnum { color: #606060; }
-</style><br />
-For those who are familiar with Windsor and wondering why I didn’t use the fluent Proxy.Mixins method, it’s because those mixins are created once per registration.&nbsp; In this case, it is very important that each mixin (which is an extended lock), is transient, otherwise every lockable hashtable ends up with the same extended lock, which is just asking for trouble.</div>
-<h2>Comments</h2>
-<div class='comments'>
-<div class='comment'>
-<div class='author'>Krzysztof Koźmic</div>
-<div class='content'>
-actually, with the trunk version the limitation &quot;one mixin per registration&quot; was lifted off. Now Mixins behave pretty much like interceptors, which means they can have any lifestyle, including being transient.</div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/10/">&larr; Older</a>
@@ -1013,7 +880,11 @@ actually, with the trunk version the limitation &quot;one mixin per registration
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my Leader: evil-mode</a>
+        <a href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/">Emacs as my &lt;Leader&gt;: Vim Survival Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my &lt;Leader&gt;: evil-mode</a>
       </li>
     
       <li class="post">
@@ -1038,10 +909,6 @@ actually, with the trunk version the limitation &quot;one mixin per registration
     
       <li class="post">
         <a href="/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/">Unite.vim, The plugin you didn&#8217;t know you need</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/19/on-typescript/">On TypeScript</a>
       </li>
     
   </ul>

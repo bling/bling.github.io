@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ioc | bling on software development]]></title>
   <link href="http://bling.github.io/blog/categories/ioc/atom.xml" rel="self"/>
   <link href="http://bling.github.io/"/>
-  <updated>2013-10-16T13:37:10-04:00</updated>
+  <updated>2013-10-27T13:38:50+00:00</updated>
   <id>http://bling.github.io/</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[My Thoughts on MEF]]></title>
     <link href="http://bling.github.io/blog/2011/10/31/my-thoughts-on-mef/"/>
-    <updated>2011-10-31T00:00:00-04:00</updated>
+    <updated>2011-10-31T00:00:00+00:00</updated>
     <id>http://bling.github.io/blog/2011/10/31/my-thoughts-on-mef</id>
     <content type="html"><![CDATA[<div class='post'>
 <p>Ever since MEF was conceived, despite the authors saying that it is <strong>not<em> </em></strong>an IoC container, it has since evolved to become one of the more popular IoC containers.&nbsp; I’ve always avoided it because I disagree with using attributes, and I’ve had no reason to use it over Autofac or Windsor.</p> <p>Recently, I found a reason to use it – Metro-style applications only support MEF so far.&nbsp; My Twitter client ping.pong uses Autofac as the IoC container.&nbsp; It uses some very basic functionality like factories and hooks.&nbsp; To my surprise, MEF has no support for either of these.</p> <p>Coming across these limitations solidifies my opinion that MEF is a plugin container, not an IoC container.</p> <p>First let’s take a look at automated factories. What I mean is that by registering Foo, like so:</p> <div id="codeSnippetWrapper"> <div style="border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: #f4f4f4; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: 'Courier New', courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px" id="codeSnippet"><pre style="border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: white; margin: 0em; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: 'Courier New', courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px">container.RegisterType&lt;Foo&gt;();</pre><!--CRLF--></div></div>
@@ -54,7 +54,7 @@ Hi Bailey! Nice thoughtful article - I have a foot in both camps, so I&#39;m gla
   <entry>
     <title type="html"><![CDATA[Contextual Lifestyle with Castle Windsor]]></title>
     <link href="http://bling.github.io/blog/2010/05/14/contextual-lifestyle-with-castle/"/>
-    <updated>2010-05-14T00:00:00-04:00</updated>
+    <updated>2010-05-14T00:00:00+00:00</updated>
     <id>http://bling.github.io/blog/2010/05/14/contextual-lifestyle-with-castle</id>
     <content type="html"><![CDATA[<div class='post'>
 <b>EDIT:</b>&nbsp;As of version 3, scoped lifestyles are now a first class citizen supported out of the box (<a href="http://docs.castleproject.org/Windsor.Whats-New-In-Windsor-3.ashx">http://docs.castleproject.org/Windsor.Whats-New-In-Windsor-3.ashx</a>)<br />
@@ -248,7 +248,7 @@ No wonder it is taking so long, you&#39;re doing it in very heavyweight fashion.
   <entry>
     <title type="html"><![CDATA[Forcing Castle Windsor to Generate Class Proxies]]></title>
     <link href="http://bling.github.io/blog/2010/04/21/forcing-castle-windsor-to-generate/"/>
-    <updated>2010-04-21T00:00:00-04:00</updated>
+    <updated>2010-04-21T00:00:00+00:00</updated>
     <id>http://bling.github.io/blog/2010/04/21/forcing-castle-windsor-to-generate</id>
     <content type="html"><![CDATA[<div class='post'>
 I don't know why it took me so long to come up with this idea, but to save others potential headaches...have you ever thought "hmmmm, I registered this as an interface with an implementation, but I want Windsor to use a class proxy, not an interface proxy, how do I do that?"<br />
@@ -284,7 +284,7 @@ Why did you want a class proxy for interface service?</div>
   <entry>
     <title type="html"><![CDATA[Windsor/DynamicProxy/Mixin Powers!]]></title>
     <link href="http://bling.github.io/blog/2010/04/05/windsordynamicproxymixin-powers/"/>
-    <updated>2010-04-05T00:00:00-04:00</updated>
+    <updated>2010-04-05T00:00:00+00:00</updated>
     <id>http://bling.github.io/blog/2010/04/05/windsordynamicproxymixin-powers</id>
     <content type="html"><![CDATA[<div class='post'>
 Hmmm, I couldn’t really think of a good title except that this blog post has a little bit of everything of the title.<br />
@@ -521,7 +521,7 @@ actually, with the trunk version the limitation &quot;one mixin per registration
   <entry>
     <title type="html"><![CDATA[Autofac’s extremely powerful and flexible ContainerScope]]></title>
     <link href="http://bling.github.io/blog/2009/09/26/autofacs-extremely-powerful-containerscope/"/>
-    <updated>2009-09-26T00:00:00-04:00</updated>
+    <updated>2009-09-26T00:00:00+00:00</updated>
     <id>http://bling.github.io/blog/2009/09/26/autofacs-extremely-powerful-containerscope</id>
     <content type="html"><![CDATA[<div class='post'>
 I need to show some love and support for my favorite IoC tool because it’s most powerful feature needs more explaining.&nbsp; It’s not that the main site doesn’t provide a good explanation, because it does, but because most people don’t really understand what the solution is solving.<br />

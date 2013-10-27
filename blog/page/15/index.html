@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="I downloaded the kernel 2.6.29.1, and extracted it to the working folder. I figured this was an easy way to have a real-world scenario of changes ( &hellip;">
+  <meta name="description" content="I suppose I should give a disclaimer since I am not an expert with Vault, and my opinions may be completely due to my lack of understanding of the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +83,48 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2009/04/25/sourcegear-vault-part-4/">SourceGear Vault, Part 4, Conclusion</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-04-25T00:00:00+00:00" pubdate data-updated="true">Apr 25<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I suppose I should give a disclaimer since I am <em>not</em> an expert with Vault, and my opinions may be completely due to my lack of understanding of the system.  With that in mind, here&rsquo;s what my experience of using Vault has been so far.</p>
+
+<p>In general, it is not as fast as TortoiseSVN.  There are many operations in SVN that are instant, where the comparable operation in Vault is met with 10 seconds of &ldquo;beginning transaction&rdquo; and &ldquo;ending transaction&rdquo;, sometimes more.</p>
+
+<p>Feature-wise, Vault has much more to offer than Subversion does.  Basically, it can do most of what Subversion can do, plus features from SourceSafe (like sharing, pinning, labeling, etc.).  However, like I mentioned before, Vault has no offline support whatsoever, and you cannot generate patches, so it effectively cuts off any kind of outside collaboration.</p>
+
+<p>You could say that this is fine because SourceGear&rsquo;s target audience is small organizations where everyone will have access to the network anyway, but that doesn&rsquo;t mean that you won&rsquo;t be sent off to the middle of nowhere with no internet access and you need to fix bugs now!  Not to say that Subversion is much better in that scenario, but at least you can still revert back to the last updated version.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2009/04/24/sourcegear-vault-part-3/">SourceGear Vault, Part 3 (Performance vs Subversion)</a></h1>
     
     
@@ -99,7 +141,7 @@
   
 
 
-<time datetime="2009-04-24T00:00:00-04:00" pubdate data-updated="true">Apr 24<span>th</span>, 2009</time>
+<time datetime="2009-04-24T00:00:00+00:00" pubdate data-updated="true">Apr 24<span>th</span>, 2009</time>
         
       </p>
     
@@ -156,7 +198,7 @@
   
 
 
-<time datetime="2009-04-23T00:00:00-04:00" pubdate data-updated="true">Apr 23<span>rd</span>, 2009</time>
+<time datetime="2009-04-23T00:00:00+00:00" pubdate data-updated="true">Apr 23<span>rd</span>, 2009</time>
         
       </p>
     
@@ -228,7 +270,7 @@
   
 
 
-<time datetime="2009-04-22T00:00:00-04:00" pubdate data-updated="true">Apr 22<span>nd</span>, 2009</time>
+<time datetime="2009-04-22T00:00:00+00:00" pubdate data-updated="true">Apr 22<span>nd</span>, 2009</time>
         
       </p>
     
@@ -276,7 +318,7 @@
   
 
 
-<time datetime="2009-04-09T00:00:00-04:00" pubdate data-updated="true">Apr 9<span>th</span>, 2009</time>
+<time datetime="2009-04-09T00:00:00+00:00" pubdate data-updated="true">Apr 9<span>th</span>, 2009</time>
         
       </p>
     
@@ -290,132 +332,6 @@
 <p>also, you can embed a chat client into your website&hellip;like this:</p>
 
 <p><embed width="210" src="http://w.digsby.com/dw.swf?c=ib6uqdcarp1k1t23" wmode="transparent" height="300" type="application/x-shockwave-flash"></embed></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/04/09/cross-thread-operation-not-valid/">No More Cross Thread Violations!</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-04-09T00:00:00-04:00" pubdate data-updated="true">Apr 9<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>“Cross thread operation not valid: Control ### accessed from a thread other than the thread it was created.”</p>
-
-<p>Seriously, I don’t think there’s a single person who’s written UI programs for .NET that has not encountered this error.  Simply put, there is only 1 thread which does drawing on the screen, and if you try to change UI elements in a thread that’s not the UI thread, this exception is thrown.</p>
-
-<p>A very common example is a progress bar.  Let’s say you’re loading a file which takes a long time to process, so you want to notify the user with a progress bar.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'>  <span class="k">public</span> <span class="k">event</span> <span class="n">EventHandler</span><span class="p">&lt;</span><span class="n">IntEventArgs</span><span class="p">&gt;</span> <span class="n">ValueProcessed</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">private</span> <span class="k">void</span> <span class="nf">StartProcessing</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>    <span class="n">ValueProcessed</span> <span class="p">+=</span> <span class="n">ValueProcessedHandler</span><span class="p">;</span>
-</span><span class='line'>    <span class="n">Thread</span> <span class="n">t</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="p">(</span><span class="k">delegate</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="m">1000</span><span class="p">;</span> <span class="p">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="c1">// do stuff</span>
-</span><span class='line'>        <span class="n">ValueProcessed</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="k">new</span> <span class="n">IntEventArgs</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
-</span><span class='line'>    <span class="p">});</span>
-</span><span class='line'>    <span class="n">t</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>  <span class="k">private</span> <span class="k">void</span> <span class="nf">ValueProcessedHandler</span><span class="p">(</span><span class="kt">object</span> <span class="n">sender</span><span class="p">,</span> <span class="n">IntEventArgs</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="n">_progressBar</span><span class="p">.</span><span class="n">Value</span> <span class="p">=</span> <span class="n">e</span><span class="p">.</span><span class="n">Value</span><span class="p">;</span>
-</span><span class='line'>  <span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I left some implementation details out, but you can pretty much infer what IntEventArgs is, etc.  Once you try to set Value, it’ll throw an cross-thread exception.  A common pattern to solve this problem is this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'>  <span class="k">private</span> <span class="k">void</span> <span class="nf">ValueProcessedHandler</span><span class="p">(</span><span class="kt">object</span> <span class="n">sender</span><span class="p">,</span> <span class="n">IntEventArgs</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">InvokeRequired</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>      <span class="k">this</span><span class="p">.</span><span class="n">BeginInvoke</span><span class="p">(</span><span class="n">ValueProcessedHandler</span><span class="p">,</span> <span class="n">sender</span><span class="p">,</span> <span class="n">e</span><span class="p">);</span>
-</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span><span class='line'>      <span class="n">_progressBar</span><span class="p">.</span><span class="n">Value</span> <span class="p">=</span> <span class="n">e</span><span class="p">.</span><span class="n">Value</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>  <span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>It gets the job done…but frankly I’m too lazy to do that for every single GUI event handler I write.  Taking advantage of anonymous delegates we can write a simple wrapper delegate to do this automatically for us.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">static</span> <span class="k">class</span> <span class="nc">Program</span> <span class="p">{</span>
-</span><span class='line'>  <span class="k">public</span> <span class="k">static</span> <span class="n">EventHandler</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="n">AutoInvoke</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span><span class="n">EventHandler</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="n">handler</span><span class="p">)</span> <span class="k">where</span> <span class="n">T</span> <span class="p">:</span> <span class="n">EventArgs</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="nf">delegate</span><span class="p">(</span><span class="kt">object</span> <span class="n">sender</span><span class="p">,</span> <span class="n">T</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="n">Program</span><span class="p">.</span><span class="n">MainForm</span><span class="p">.</span><span class="n">InvokeRequired</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="n">Program</span><span class="p">.</span><span class="n">MainForm</span><span class="p">.</span><span class="n">BeginInvoke</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">sender</span><span class="p">,</span> <span class="n">e</span><span class="p">);</span>
-</span><span class='line'>      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span><span class='line'>        <span class="n">handler</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">e</span><span class="p">);</span>
-</span><span class='line'>      <span class="p">}</span>
-</span><span class='line'>    <span class="p">};</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This assumes that you set Program.MainForm to an instance to a Control, typically, as the name implies, the main form of your application.  Now, whenever you assign your event handlers, you can simply do this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="n">ValueProcessed</span> <span class="p">+=</span> <span class="n">Program</span><span class="p">.</span><span class="n">AutoInvoke</span><span class="p">&lt;</span><span class="n">IntEventArgs</span><span class="p">&gt;(</span><span class="n">ValueProcessedHandler</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Pretty neat!</p>
-
-<p>BTW, just a word of warning, if you plan on using the same thing to unsubscribe an event with &ndash;=, it&rsquo;s not going to work.  Unfortunately, calling the AutoInvoke method twice on the same input delegate returns 2 results where <code>.Equals</code> and <code>==</code> will return false.  To get around this you can use a Dictionary to cache the input delegate.</p>
 </div>
   
   
@@ -440,7 +356,11 @@
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my Leader: evil-mode</a>
+        <a href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/">Emacs as my &lt;Leader&gt;: Vim Survival Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my &lt;Leader&gt;: evil-mode</a>
       </li>
     
       <li class="post">
@@ -465,10 +385,6 @@
     
       <li class="post">
         <a href="/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/">Unite.vim, The plugin you didn&#8217;t know you need</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/19/on-typescript/">On TypeScript</a>
       </li>
     
   </ul>

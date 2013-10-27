@@ -4,7 +4,7 @@
   <title><![CDATA[Category: powershell | bling on software development]]></title>
   <link href="http://bling.github.io/blog/categories/powershell/atom.xml" rel="self"/>
   <link href="http://bling.github.io/"/>
-  <updated>2013-10-16T13:37:10-04:00</updated>
+  <updated>2013-10-27T13:38:50+00:00</updated>
   <id>http://bling.github.io/</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[SnoopShell: Evolution]]></title>
     <link href="http://bling.github.io/blog/2012/07/29/snoopshell-evolution/"/>
-    <updated>2012-07-29T00:00:00-04:00</updated>
+    <updated>2012-07-29T00:00:00+00:00</updated>
     <id>http://bling.github.io/blog/2012/07/29/snoopshell-evolution</id>
     <content type="html"><![CDATA[<p>It’s been a while since I last announced <a href="http://blingcode.blogspot.com/2012/07/snoopshell-marriage-of-snoop-wpf-and.html">SnoopShell</a>, where I took some PowerShell and injected that into Snoop.  Well, I didn’t stop there!  I decided to continue working on it and adding more useful features.</p>
 

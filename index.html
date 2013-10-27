@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="Hey guys, I just wanted to post a quick demo video on evil-mode. The video is targetted at intermediate/advanced Vim users, so if you&rsquo;re just &hellip;">
+  <meta name="description" content="Two months ago I blogged about switching from Vim to Emacs. Today, Emacs is my main editor. I&rsquo;ll try to keep this post short and to the point, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,7 +83,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as My Leader: Evil-mode</a></h1>
+      <h1 class="entry-title"><a href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/">Emacs as My &lt;Leader&gt;: Vim Survival Guide</a></h1>
     
     
       <p class="meta">
@@ -99,7 +99,62 @@
   
 
 
-<time datetime="2013-10-16T12:54:00-04:00" pubdate data-updated="true">Oct 16<span>th</span>, 2013</time>
+<time datetime="2013-10-27T12:00:00+00:00" pubdate data-updated="true">Oct 27<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Two months ago I blogged about switching from Vim to Emacs.  Today, Emacs is my main editor.  I&rsquo;ll try to keep this post short and to the point, because there is <em>a lot</em> to cover!  But by the end of this post you&rsquo;ll have to answer to the question whether you should give Emacs a try.</p>
+
+<h1>What is a text editor?</h1>
+
+<p>If we&rsquo;re just talking about using Emacs as a text editor, then there is no comparison; Vim beats it, period.  But is our job description a text editor?  No.  We are system administrators, software developers, web designers, etc.  A text editor is a tool that we use to do our job (or hobby).  And any tool should be replaced when a better option is available.</p>
+
+<p>One simple example is <code>grep</code>.  As a developer, you can immediately gain a productivity boost by replacing it with <a href="http://beyondgrep.com/">ack</a> or <a href="https://github.com/ggreer/the_silver_searcher">ag</a>.  Do they search faster than <code>grep</code>?  No.  But since they&rsquo;re so good at ignoring things (like your <code>.git</code> directory) that for practical purposes they end up saving you a lot of time.</p>
+
+<p>As a text editor, I think Emacs is quite terrible.  Its key bindings are notoriously bad to the point that something called Emacs pinky exists.  If you&rsquo;re an Emacs user not interested in Vim bindings you should seriously consider taking a look at <a href="https://github.com/chrisdone/god-mode">god-mode</a> or <a href="https://github.com/stephendavidmarsh/control-mode">control-mode</a>.  But where Emacs really excels is all of the things outside of text editing.</p>
+
+<blockquote><p>Emacs is a great operating system, if only it had a good text editor.</p></blockquote>
+
+<p>Well, the nice thing about an operating system is that you can write a text editor for it; that text editor is called <a href="https://gitorious.org/evil/evil">evil-mode</a>.</p>
+
+<p>Now, as a text editor, Vim is still better than evil-mode for obvious reasons, so if you&rsquo;re just swapping it out you&rsquo;re at a net loss of productivity in terms of text editing.  However, what you <em>gain</em> from all of the other things that Emacs can do far outweighs the missing features.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as My &lt;Leader&gt;: Evil-mode</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-16T12:54:00+00:00" pubdate data-updated="true">Oct 16<span>th</span>, 2013</time>
         
       </p>
     
@@ -142,7 +197,7 @@
   
 
 
-<time datetime="2013-09-09T20:00:00-04:00" pubdate data-updated="true">Sep 9<span>th</span>, 2013</time>
+<time datetime="2013-09-09T20:00:00+00:00" pubdate data-updated="true">Sep 9<span>th</span>, 2013</time>
         
       </p>
     
@@ -189,7 +244,7 @@
   
 
 
-<time datetime="2013-08-16T20:22:00-04:00" pubdate data-updated="true">Aug 16<span>th</span>, 2013</time>
+<time datetime="2013-08-16T20:22:00+00:00" pubdate data-updated="true">Aug 16<span>th</span>, 2013</time>
         
       </p>
     
@@ -236,7 +291,7 @@
   
 
 
-<time datetime="2013-07-30T21:26:00-04:00" pubdate data-updated="true">Jul 30<span>th</span>, 2013</time>
+<time datetime="2013-07-30T21:26:00+00:00" pubdate data-updated="true">Jul 30<span>th</span>, 2013</time>
         
       </p>
     
@@ -268,70 +323,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart Tab Expansions in Vim With Expression Mappings</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-21T20:38:00-04:00" pubdate data-updated="true">Jul 21<span>st</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve been having a small itch for a while now, and it&rsquo;s a very simple thing &mdash; I want to make my tab smarter.  This all starts with a dive into <a href="http://www.emmet.io">Emmet</a>.  To understand what it is, here&rsquo;s a quick introduction.  First, you type something using its syntax:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>div&gt;li*4</span></code></pre></td></tr></table></div></figure>
-
-
-<p>and after you &ldquo;expand&rdquo; it, usually with a hotkey, and it gets converted to</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;div&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;li&gt;&lt;/li&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;li&gt;&lt;/li&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;li&gt;&lt;/li&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;li&gt;&lt;/li&gt;</span>
-</span><span class='line'><span class="nt">&lt;/div&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>As you can imagine, this saves you <em>a lot</em> of typing and lets you prototype a web page (or CSS) in no time once you learn the syntax.  It is snippets on steriods!  The Sublime <a href="https://github.com/sergeche/emmet-sublime">plugin</a> handles this perfectly.  It maps <code>&lt;tab&gt;</code> as the expansion key.  Hitting tab after typing <code>div&gt;li*4</code> will expand it and put the cursor at the first <code>&lt;li&gt;|&lt;/li&gt;</code>.  Then after you type something, if you hit <code>&lt;tab&gt;</code> again, it will jump to the next <code>li</code>.  It is smart enough to know whether to expand or jump to the next tag.</p>
-
-<p>So how does this functionality look like in Vim?  </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -347,7 +338,11 @@
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my Leader: evil-mode</a>
+        <a href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/">Emacs as my &lt;Leader&gt;: Vim Survival Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my &lt;Leader&gt;: evil-mode</a>
       </li>
     
       <li class="post">
@@ -372,10 +367,6 @@
     
       <li class="post">
         <a href="/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/">Unite.vim, The plugin you didn&#8217;t know you need</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/19/on-typescript/">On TypeScript</a>
       </li>
     
   </ul>

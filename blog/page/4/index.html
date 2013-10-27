@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="Well, it’s been quite a while since I’ve blogged about…well…anything, and I figured it’s about time I get off my lazy butt and do something with my &hellip;">
+  <meta name="description" content="Let’s get some actual coding done.&nbsp; If you want some basic prologue, check out the first part of my series here.Anywho, let’s get to the meat &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +83,48 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2012/06/08/n2n-net-2-node-part-1/">N2N: .NET 2 Node: Part 1</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-08T00:00:00+00:00" pubdate data-updated="true">Jun 8<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+Let’s get some actual coding done.&nbsp; If you want some basic prologue, check out the first part of my series <a href="http://blingcode.blogspot.com/2012/06/n2n-net-2-node.html">here</a>.<br>Anywho, let’s get to the meat of what we’re trying to accomplish.&nbsp; I will start with the typical C# class you would write, do the same in Javascript, and then again in C#, but using the style of Javascript using closures.<br>Here’s the use case:<br> <ul> <li>Handle a web request  <li>Check the MongoDB database to see if an entry exists and return it if available.  <li>Otherwise, query an external API for data, save it into MongoDB, and then return that. </li></ul> <p>This is a pretty standard straight-forward approach in web applications.&nbsp; If you’re not using MongoDB, you’ll be using memcache, Redis, or some other equivalent data store.<br><br>First, let’s implement an pseudo-code ASP.NET MVC controller which does the above:</p> <div id="codeSnippetWrapper"><pre style="border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: #f4f4f4; margin: 0em; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: 'Courier New', courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px" id="codeSnippet"><span style="color: #0000ff">public</span> <span style="color: #0000ff">class</span> QuoteController : Controller<br>{<br>    MongoCollection collection;<br>    IExternalApi external;<br><br>    <span style="color: #0000ff">public</span> ActionResult Get(<span style="color: #0000ff">string</span> symbol)<br>    {<br>        var quote = <span style="color: #0000ff">this</span>.collection.FindOne(<span style="color: #0000ff">new</span> { symbol });<br>        <span style="color: #0000ff">if</span> (quote == <span style="color: #0000ff">null</span>)<br>        {<br>            var json = <span style="color: #0000ff">this</span>.external.GetQuote(symbol);<br>            <span style="color: #0000ff">this</span>.collection.Save(json);<br>        }<br><br>        ViewBag.Quote = quote;<br>        <span style="color: #0000ff">return</span> View();<br>    }<br>}<br></pre><br></div>
+<p>Error handling and initialization are omitted for brevity, but it’s an otherwise straight-forward synchronous send JSON to the browser response.&nbsp; So how does something like this look in Node?&nbsp; First, let’s throw in a web framework.&nbsp; I picked Express because it seems to have the most traction right now.&nbsp; Again, for brevity I will omit a bunch of boot strapping code, and skip to the core logic.<br><br>
+<div id="codeSnippetWrapper">
+<div id="codeSnippetWrapper"><pre style="border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: #f4f4f4; margin: 0em; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: 'Courier New', courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px" id="codeSnippet">var QuoteService = function() {<br>    var mongoCollection; <span style="color: #008000">// new MongoCollection</span><br>    var external; <span style="color: #008000">// new External API</span><br><br>    <span style="color: #008000">// req/res are the request/response passed in by Node/Express</span><br>    <span style="color: #0000ff">this</span>.get = function(symbol, req, res) {<br>        mongoCollection.findOne({ symbol: symbol }, function(error, item) {<br>            <span style="color: #0000ff">if</span> (item === <span style="color: #0000ff">null</span>) {<br>                external.getQuote(symbol, function(error, result) {<br>                    mongoCollection.save(result);<br>                    req.write(result);<br>                    req.end();<br>                });<br>            } <span style="color: #0000ff">else</span> {<br>                req.write(item);<br>                req.end();<br>            }<br>        });<br>    };<br>};<br>module.exports = QuoteService;<br><br></pre><br></div>OK, looks a lot different!&nbsp; The first thing you’ll notice is that the class is actually a function.&nbsp; Javascript doesn’t have real classes like C# or Java, but you can simulate things like private and public members by using closures.&nbsp; In the code snippet above, <em>mongoCollection </em>and <em>external</em> are private variables.&nbsp; However, the <em>get</em> function is public because it’s prefixed with <em>this</em>.&nbsp; Finally, because Javascript has closures you can still access the private variables and retain their state.<br><br>Last but not least, as far as programming in Node is concerned, every function returns void.&nbsp; Node is extremely fast – but it is still single threaded, which means you need to take extreme care not to block on any operation.&nbsp; In summary, you need to get used to working with callbacks.&nbsp; In the example above, the callback for the Mongo query invokes another function, which again uses a callback for the result.&nbsp; Typically any errors are also passed through to the callback, so in place of try/catch blocks, you will be checking to see if the error parameter has a value.<br><br>To conclude, let’s write a C# version that mimics the Javascript style.<br><br>
+<div id="codeSnippetWrapper">
+<div id="codeSnippetWrapper"><pre style="border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: #f4f4f4; margin: 0em; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: 'Courier New', courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px" id="codeSnippet"><span style="color: #0000ff">public</span> <span style="color: #0000ff">static</span> <span style="color: #0000ff">void</span> Main(<span style="color: #0000ff">string</span>[] args)<br>{<br>    var QuoteService = <span style="color: #0000ff">new</span> Func&lt;dynamic&gt;(() =&gt; {<br>        var mongoCollection = <span style="color: #0000ff">new</span> MongoCollection();<br>        var external = <span style="color: #0000ff">new</span> IExternalApi();<br>        <span style="color: #0000ff">return</span> <span style="color: #0000ff">new</span><br>        {<br>            get = <span style="color: #0000ff">new</span> Action&lt;<span style="color: #0000ff">string</span>, Request, Response&gt;((symbol, req, res) =&gt;<br>            {<br>                mongoCollection.FindOne(<span style="color: #0000ff">new</span>{symbol}, (error, item) =&gt; {<br>                    <span style="color: #0000ff">if</span> (item == <span style="color: #0000ff">null</span>)<br>                    {<br>                        external.GetSymbol(symbol, (e, result) =&gt; {<br>                            mongoCollection.Save(result);<br>                            req.Write(result);<br>                            req.End();<br>                        });<br>                    }<br>                    <span style="color: #0000ff">else</span><br>                    {<br>                        req.Write(item);<br>                        req.End();<br>                    }<br>                });<br>            })<br>        }});<br>}</pre><br></div>100% valid C# syntax.<br><br>Would you ever want to do that in C#?&nbsp; Probably not.&nbsp; But if you need some mental conversion from C# to/from Javascript, I think it’s a good place to start.<br><br>In summary, Javascript is kind of like programming in C# using only anonymous classes, Action/Func, dynamic, declared all in the main method.</div></div></p>  </div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2012/06/03/n2n-net-2-node/">N2N: .NET 2 Node</a></h1>
     
     
@@ -99,7 +141,7 @@
   
 
 
-<time datetime="2012-06-03T00:00:00-04:00" pubdate data-updated="true">Jun 3<span>rd</span>, 2012</time>
+<time datetime="2012-06-03T00:00:00+00:00" pubdate data-updated="true">Jun 3<span>rd</span>, 2012</time>
         
       </p>
     
@@ -136,7 +178,7 @@
   
 
 
-<time datetime="2011-10-31T00:00:00-04:00" pubdate data-updated="true">Oct 31<span>st</span>, 2011</time>
+<time datetime="2011-10-31T00:00:00+00:00" pubdate data-updated="true">Oct 31<span>st</span>, 2011</time>
         
       </p>
     
@@ -196,7 +238,7 @@ Hi Bailey! Nice thoughtful article - I have a foot in both camps, so I&#39;m gla
   
 
 
-<time datetime="2011-10-09T00:00:00-04:00" pubdate data-updated="true">Oct 9<span>th</span>, 2011</time>
+<time datetime="2011-10-09T00:00:00+00:00" pubdate data-updated="true">Oct 9<span>th</span>, 2011</time>
         
       </p>
     
@@ -233,7 +275,7 @@ Hi Bailey! Nice thoughtful article - I have a foot in both camps, so I&#39;m gla
   
 
 
-<time datetime="2011-09-29T00:00:00-04:00" pubdate data-updated="true">Sep 29<span>th</span>, 2011</time>
+<time datetime="2011-09-29T00:00:00+00:00" pubdate data-updated="true">Sep 29<span>th</span>, 2011</time>
         
       </p>
     
@@ -398,116 +440,6 @@ Hi Bailey! Nice thoughtful article - I have a foot in both camps, so I&#39;m gla
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/09/21/building-real-time-push-app-with-rx-8/">Building a Real-time Push App With Silverlight: Part 8</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-09-21T00:00:00-04:00" pubdate data-updated="true">Sep 21<span>st</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1>Exploring Caliburn Micro</h1>
-
-<p>As I hinted in earlier posts, Caliburn Micro has some wicked conventions that makes for writing MVVM super easy, and it also have a very convenient syntax for hooking up events.  For example, the following:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;Button</span> <span class="na">Content=</span><span class="s">&quot;R&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>   <span class="nt">&lt;i:Interaction.Triggers&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;i:EventTrigger</span> <span class="na">EventName=</span><span class="s">&quot;Click&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>           <span class="nt">&lt;i:InvokeCommandAction</span> <span class="na">Command=</span><span class="s">&quot;{Binding ReplyCommand}&quot;</span> <span class="na">CommandParameter=</span><span class="s">&quot;{Binding}&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;/i:EventTrigger&gt;</span>
-</span><span class='line'>   <span class="nt">&lt;/i:Interaction.Triggers&gt;</span>
-</span><span class='line'><span class="nt">&lt;/Button&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Can be rewritten like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;Button</span> <span class="na">Content=</span><span class="s">&quot;R&quot;</span> <span class="na">cal:Message.Attach=</span><span class="s">&quot;[Reply($dataContext)]&quot;</span> <span class="nt">/&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>There are some smarts going on here.  Caliburn Micro will default to the Click event for buttons.  For a full syntax, it would be <code>cal:Message.Attach="[Event Click] = [Reply($dataContext)]"</code>.  As you can imagine, that will call the Reply method and pass in the current data context.  You can also pass in other things like <code>$this</code>, <code>$source</code>, or <code>$executionContext</code> for full access to anything and everything Caliburn Micro itself has access to.</p>
-
-<p>The coolest thing about this is it gives you some wicked control over how your data context gets set.  Ever struggled with popup windows or data grids and using weird hacks to get the binding correct?  Caliburn Micro makes this very easy.  Here’s an example.</p>
-
-<ol>
-<li>I have a DataTemplate which renders the UI for the model Tweet.</li>
-<li>Tweet is just a simple class which holds only properties.</li>
-<li>Inside the DataTemplate, I have some buttons that when the user clicks will reply, retweet, quote, or direct message.</li>
-</ol>
-
-
-<p>The Tweet class is purely for modeling data, so adding any methods would be bad practice.  Also, since I’m in a DataTemplate I can’t easily reference another control with ElementName (in this case I need the containing parent’s DataContext).  And to add insult to injury, Silverlight 4 doesn’t have RelativeSource ancestor type.  So how do I solve this?</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;StackPanel</span> <span class="na">VerticalAlignment=</span><span class="s">&quot;Bottom&quot;</span> <span class="na">cal:Action.TargetWithoutContext=</span><span class="s">&quot;shell&quot;</span> <span class="na">Orientation=</span><span class="s">&quot;Horizontal&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;Button</span> <span class="na">Content=</span><span class="s">&quot;R&quot;</span> <span class="na">cal:Message.Attach=</span><span class="s">&quot;[Reply($dataContext)]&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;Button</span> <span class="na">Content=</span><span class="s">&quot;RT&quot;</span> <span class="na">cal:Message.Attach=</span><span class="s">&quot;[Retweet($dataContext)]&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;Button</span> <span class="na">Content=</span><span class="s">&quot;Q&quot;</span> <span class="na">cal:Message.Attach=</span><span class="s">&quot;[Quote($dataContext)]&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;Button</span> <span class="na">Content=</span><span class="s">&quot;DM&quot;</span> <span class="na">cal:Message.Attach=</span><span class="s">&quot;[DirectMessage($dataContext)]&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'><span class="nt">&lt;/StackPanel&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The secret is the attached property TargetWithoutContext.  As the name implies, it will set the target for all the ActionMessages attached to all the buttons, without setting the context.  If I used the Target attached property, it would set all of the Buttons’ data context to the same object – not what we want.  Since the Button’s data context remains intact, we can call “Reply($dataContext)”, which calls the Reply method on the target object (set on the StackPanel) and pass in the Tweet.  “shell” is the key of the service that I registered into the container.</p>
-
-<p>Originally I wanted this entire series to be able writing a fast push data app with Silverlight and Rx, and now I’m finding that I’m writing an entire Twitter client because it’s so much fun :&ndash;).</p>
-
-<p>I’m going to make another release soon.  While the first release was merely experimental, the next one will be useful enough to potentially use full time.  As you can probably tell with this blog post, it supports all the actions mentioned previously (and it’ll appear on mouse hover):</p>
-
-<p><img src="http://lh5.ggpht.com/-RIZG8I0_rik/TnqqmNCK-6I/AAAAAAAAAHM/-xU4_cj6iDg/image_thumb%25255B2%25255D.png?imgmax=800" alt="img" /></p>
-
-<p>The tweet box is much improved and shows you how many character you have left:</p>
-
-<p><img src="http://lh4.ggpht.com/-2VhCjjYrcoo/TnqqmstbbUI/AAAAAAAAAHU/zK65JB2shQw/image_thumb%25255B3%25255D.png?imgmax=800" alt="img" /></p>
-
-<p>And it’s smart enough to auto wrap http links via Twitter’s t.co service, and the counter takes that into account.  Some interesting things to note is that in the future <em>all links</em> will be wrapped t.co.  Looks like Twitter is trying to eat up bt.ly or something.</p>
-
-<p>Clicking on @users and #topics will automatically open a new timeline and subscribe to those tweets.  It is almost full featured enough to become my main Twitter client.  There are certain features still missing, and it’s purely based on when I have time to port them over.</p>
-
-<p>As always, you can install directly from <a href="http://dl.dropbox.com/u/2072014/Ping.Pong/PingPongTestPage.html">here</a>, or you can grab the code on the <a href="https://github.com/bling/Ping.Pong">GitHub</a> page!</p>
-
-<p>Next post will be about Rx from a very top level perspective and how it influenced my code from beginning to be experienced and all refactorings in between.  Stay tuned!</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -525,7 +457,11 @@ Hi Bailey! Nice thoughtful article - I have a foot in both camps, so I&#39;m gla
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my Leader: evil-mode</a>
+        <a href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/">Emacs as my &lt;Leader&gt;: Vim Survival Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my &lt;Leader&gt;: evil-mode</a>
       </li>
     
       <li class="post">
@@ -550,10 +486,6 @@ Hi Bailey! Nice thoughtful article - I have a foot in both camps, so I&#39;m gla
     
       <li class="post">
         <a href="/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/">Unite.vim, The plugin you didn&#8217;t know you need</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/19/on-typescript/">On TypeScript</a>
       </li>
     
   </ul>

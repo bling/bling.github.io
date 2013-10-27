@@ -4,7 +4,7 @@
   <title><![CDATA[bling on software development]]></title>
   <link href="http://bling.github.io/atom.xml" rel="self"/>
   <link href="http://bling.github.io/"/>
-  <updated>2013-10-16T13:37:10-04:00</updated>
+  <updated>2013-10-27T13:38:50+00:00</updated>
   <id>http://bling.github.io/</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
@@ -14,9 +14,192 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Emacs as my Leader: evil-mode]]></title>
+    <title type="html"><![CDATA[Emacs as my &lt;Leader&gt;: Vim Survival Guide]]></title>
+    <link href="http://bling.github.io/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/"/>
+    <updated>2013-10-27T12:00:00+00:00</updated>
+    <id>http://bling.github.io/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide</id>
+    <content type="html"><![CDATA[<p>Two months ago I blogged about switching from Vim to Emacs.  Today, Emacs is my main editor.  I&rsquo;ll try to keep this post short and to the point, because there is <em>a lot</em> to cover!  But by the end of this post you&rsquo;ll have to answer to the question whether you should give Emacs a try.</p>
+
+<h1>What is a text editor?</h1>
+
+<p>If we&rsquo;re just talking about using Emacs as a text editor, then there is no comparison; Vim beats it, period.  But is our job description a text editor?  No.  We are system administrators, software developers, web designers, etc.  A text editor is a tool that we use to do our job (or hobby).  And any tool should be replaced when a better option is available.</p>
+
+<p>One simple example is <code>grep</code>.  As a developer, you can immediately gain a productivity boost by replacing it with <a href="http://beyondgrep.com/">ack</a> or <a href="https://github.com/ggreer/the_silver_searcher">ag</a>.  Do they search faster than <code>grep</code>?  No.  But since they&rsquo;re so good at ignoring things (like your <code>.git</code> directory) that for practical purposes they end up saving you a lot of time.</p>
+
+<p>As a text editor, I think Emacs is quite terrible.  Its key bindings are notoriously bad to the point that something called Emacs pinky exists.  If you&rsquo;re an Emacs user not interested in Vim bindings you should seriously consider taking a look at <a href="https://github.com/chrisdone/god-mode">god-mode</a> or <a href="https://github.com/stephendavidmarsh/control-mode">control-mode</a>.  But where Emacs really excels is all of the things outside of text editing.</p>
+
+<blockquote><p>Emacs is a great operating system, if only it had a good text editor.</p></blockquote>
+
+<p>Well, the nice thing about an operating system is that you can write a text editor for it; that text editor is called <a href="https://gitorious.org/evil/evil">evil-mode</a>.</p>
+
+<p>Now, as a text editor, Vim is still better than evil-mode for obvious reasons, so if you&rsquo;re just swapping it out you&rsquo;re at a net loss of productivity in terms of text editing.  However, what you <em>gain</em> from all of the other things that Emacs can do far outweighs the missing features.</p>
+
+<!-- more -->
+
+
+<h1>Enough talk, give me real life examples!</h1>
+
+<p>There are a couple immediate advantages that Emacs has that Vim users have been requesting for a long time.  First, is asynchronous operations.  Second, is integration with background processes.  And third, multiple-monitor support.</p>
+
+<p>Here&rsquo;s a quick video illustrating the difference:</p>
+
+<iframe width="420" height="315" src="http://bling.github.io//www.youtube.com/embed/TuHgGJV2QX0" frameborder="0" allowfullscreen></iframe>
+
+
+<p>In the video, <a href="https://github.com/flycheck/flycheck">flycheck</a>, <a href="https://github.com/scrooloose/syntastic">syntastic</a>, <a href="https://github.com/tpope/vim-dispatch">vim-dispatch</a>, <a href="https://github.com/mileszs/ack.vim">ack.vim</a> and <a href="https://github.com/Wilfred/ag.el">ag.el</a> are used.</p>
+
+<h1>Zero to hero</h1>
+
+<p>OK, I&rsquo;ve caught your interest.  And now you want to use Emacs and be at the same efficiency as your Vim setup.  I&rsquo;ll be frank with you.  My Emacs setup right now is <em>still</em> not as efficient as my vim/tmux/zsh setup.  But I believe with enough time and tweaking I will eventually cross over, hence why I am sticking with it. But to get you started on the right track, here are steps to take.</p>
+
+<h2>Step 0: Install evil-mode</h2>
+
+<p>This is a given, but I figured I&rsquo;d mention it.  This is the magical package which gives you Vim bindings.</p>
+
+<p>Remember though that evil-mode is an <em>emulation</em> of Vim; it is <em>not</em> Vim!  For example, you might try <code>cas</code> and conclude that evil-mode is broken because it is changing a paragraph instead of a sentence.  That is, of course, until you realize that Emacs also has a notion of what a sentence is, and that the default value of <code>sentence-end-double-space</code> is true.  Long story short, evil-mode will use Emacs functionality where it makes sense, so if something is not working as expected there is usually a good reason for it.</p>
+
+<h2>Step 1: Resist the urge to Google it&hellip;initally</h2>
+
+<p>I wasted a lot of time doing the thing most people do first: Google it.  The problem here is that you will find EmacsWiki.  The second problem is that EmacsWiki will contain <em>a lot</em> of information, giving you the illusion that it is useful.  The third problem is that you will not know what it old and outdated, old and still useful, or new and useless.  Emacs has been around since 1976, so there is a lot of history go through.</p>
+
+<p>What you actually want to do is read the <a href="http://www.gnu.org/software/emacs/manual/">Emacs Manual</a>.  And you should also read <a href="http://www.gnu.org/software/emacs/manual/eintr.html">Introduction to Programming Emacs Lisp</a>.  If you are not going to learn how to program in Emacs Lisp, you should just stop now because you&rsquo;re severely limiting the potential of Emacs.</p>
+
+<h2>Step 2: Prepare for a world of hurt^H^H^H^Hlearning</h2>
+
+<p>Vim is difficult to learn because you&rsquo;re learning a new language on how to interact with text.  Emacs, however, is difficult to learn because there is <em>so much</em> to learn.  The <em>default</em> distribution includes a email client, IRC client, file explorer, shell, and even tetris.  You will literally be learning a new operating system.  And operating systems have many applications; Emacs is no different.  You can choose to learn only one application, the text editor, but if you do that you might as well just stick with Vim.</p>
+
+<h2>Step 3: Learn how to help the help</h2>
+
+<p>In Emacs, the prefix key for help is <code>C-h</code>.  What this means is you hit <code>C-h</code>, followed by another key to invoke help on something.  Typing <code>C-h C-h</code> will give you the full list of possibitilies.  When I first started, I found I used <code>f</code>unction and <code>v</code>ariable a lot.  In Emacs, <em>everything</em> is a function (this is Lisp after all), so you can find out a lot about Emacs by reading the descriptions of functions.</p>
+
+<h2>Step 4: Understanding key bindings</h2>
+
+<p>It&rsquo;s probably way too early to talk about this, but I feel this is a great way that describes the fundamental differences between customizing Vim vs customizing Emacs.</p>
+
+<p>First, let&rsquo;s take an extremely common customization in Vim, where the cursor is centered after jumping to the next match:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='vim'><span class='line'><span class="nb">nnoremap</span> <span class="k">n</span> nzz
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Emacs does not have a notion of recursive vs non-recursive bindings, so it cannot be configured in the same fashion as Vim (doing it with key bindings would require you to define a throw away keybinding in the middle).  However, the way you do it in Emacs is ultimately way more powerful and flexible.  One option is to do it like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='cl'><span class='line'><span class="p">(</span><span class="nv">defadvice</span> <span class="nv">evil-ex-search-next</span> <span class="p">(</span><span class="nv">after</span> <span class="nv">advice-for-evil-ex-search-next</span> <span class="nv">activate</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">(</span><span class="nv">evil-scroll-line-to-center</span> <span class="p">(</span><span class="nv">line-number-at-pos</span><span class="p">)))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>An advice lets you add behavior to an existing function without modifying it.  By default <code>n</code> is bound to the command <code>evil-ex-search-next</code>, so what we&rsquo;re doing here is giving it some advice, such that <em>after</em> the command is run, we center the line.  I&rsquo;m a huge advocate of aspect oriented programming so when I found that this was built into Lisp I was jumping with joy.</p>
+
+<p>Another option is you could bind <code>n</code> to a wrapper function which calls these two commands directly.</p>
+
+<p>While any path you take will be incredibly verbose in comparison to how Vim does it, there are a couple key take aways from this example.  One; every key is bound to a function (called a command in Emacs lingo).  Two; every function can be redefined entirely, or attached advice before, after, or around it.  Three; almost 80% of Emacs is written in Emacs Lisp.  This is where the &ldquo;infinitely extensible&rdquo; reputation comes from.</p>
+
+<h2>Step 5: Understanding major and minor modes</h2>
+
+<p>I&rsquo;ve mentioned that Emacs is an operating system multiple times now, but to drive the point home, I want to briefly discuss major and minor modes.  You can have a single major mode and multiple minor modes, although there is <a href="https://github.com/purcell/mmm-mode">mmm-mode</a> which allows you have multiple major modes.  A major mode is similar to <code>set filetype</code> from Vim, and a minor mode is similar to a plugin like <a href="https://github.com/tpope/vim-surround">vim-surround</a>, which spans all filetypes.  However, the biggest difference is that major modes in Emacs often change key bindings radically.</p>
+
+<p>For example, if you hit <code>M-x package-list-packages RET</code> it will open up the package manager buffer.  Inside this buffer, you can use <code>C-n</code> and <code>C-p</code> to move lines up and down, just like the default Emacs bindings.  But you can also hit <code>n</code> and <code>p</code> instead of the chords, and keys like <code>i</code>nstall, <code>d</code>elete, and <code>h</code>elp are available to you as well.  Emacs appears to be modal after all!</p>
+
+<p>Similarly, the customize buffer, via <code>M-x customize-group RET</code> also sets up its own modal bindings; <code>TAB</code> for example will jump to the next option.</p>
+
+<p>In Emacs it is common practice for modes to set up a host of bindings under the <code>C-c</code> prefix.  I&rsquo;m writing this post right now in <a href="http://jblevins.org/projects/markdown-mode/">markdown-mode</a>, so I can use <code>C-c C-u</code> to jump up a heading, but that binding will be completely different in a different mode.</p>
+
+<p>Essentially, activating a major-mode in Emacs is not much different from running a separate application on your operating system.</p>
+
+<p>This isn&rsquo;t to say that you can&rsquo;t do the same thing in Vim; in fact, email and IRC clients exist on Vim as well, but comparatively speaking these are rare due to the relative difficulty of implementation, and most are done as experiments.</p>
+
+<h2>Step 6: Actually getting work done</h2>
+
+<p>OK, so you&rsquo;ve read the manual, you&rsquo;ve learned the Emacs way, and you even know some basic Lisp now.  But unless you&rsquo;re getting paid to customize Emacs and write Lisp, you didn&rsquo;t get any work done yet.</p>
+
+<p>With that in mind, the first thing you will need to do is install all of the packages which replicate as most of your Vim setup as possible.</p>
+
+<h3>Auto-completion engines</h3>
+
+<p>I&rsquo;m torn between Emacs and Vim solutions.  With Vim, <a href="https://github.com/Valloric/YouCompleteMe">YouCompleteMe</a> and <a href="https://github.com/Shougo/neocomplete.vim">NeoComplete</a> offer amazing and fast fuzzy completion.  On Emacs, neither <a href="https://github.com/auto-complete/auto-complete">auto-complete</a> or <a href="https://github.com/company-mode/company-mode">company-mode</a> offer fuzzy completion yet.  auto-complete has a fuzzy match algorithm, but it has to be manually invoked, rendering it inferior to always-fuzzy-on.  While you have to give up fuzzy matching (for now), in exchange you get real documentation tooltips.  This is far superior to Vim&rsquo;s use of the preview window which ends up bouncing your cursor all over the place as the window shows and hides.</p>
+
+<p>company-mode has a unique take on auto-completion where it will reject keystrokes if it doesn&rsquo;t match any possibilities.  It can also search available completions and filter as well, something I&rsquo;ve not seen in any other completion engine.</p>
+
+<p>auto-complete is far more popular than company-mode, so you will find that more packages integrate with it, however it&rsquo;s pretty straightforward to write an adapter to get sources to work with company-mode.  I&rsquo;d say try both and see which one you like more!</p>
+
+<p>Snippets are another huge time saver.  In Vim, you got <a href="https://github.com/SirVer/ultisnips">UltiSnips</a> and <a href="https://github.com/Shougo/neosnippet.vim">NeoSnippet</a>, whereas on Emacs you only got one contender, <a href="https://github.com/capitaomorte/yasnippet">YASnippet</a>.</p>
+
+<h3>Moving around</h3>
+
+<p>Emacs out of the box has superior capabilities for navigation; the built-in package <a href="http://www.emacswiki.org/emacs/InteractivelyDoThings">ido</a> makes quick work of navigating files and buffers.  You can go a long way knowing just <code>C-x C-f</code> and <code>C-x b</code>.  However, most people will be used to the capabilities of <a href="https://github.com/kien/ctrlp.vim">ctrlp</a> and <a href="https://github.com/Shougo/unite.vim">unite</a>, which can recursively fuzzy search the project.  In Emacs, <a href="https://github.com/bbatsov/projectile">projectile</a> and <a href="https://github.com/d11wtq/fiplr">filpr</a> will do the trick.</p>
+
+<p>Another powerful package worth mentioning is <a href="https://github.com/emacs-helm/helm">helm</a>.  Although it shares many similarities with projectile, it also excels in areas that projectile does not, and vice versa, causing me to have both installed.  The situation is similar to me having both ctrlp and unite installed in Vim.</p>
+
+<h3>Fuzzy extended command search</h3>
+
+<p>Sublime Text has a very useful feature called the command palette.  It&rsquo;s a fuzzy searchable list of commands that you can use to operate on the current buffer.  Emacs has a very similar feature, called <code>M-x</code>, which is bound to <code>execute-extended-command</code>.  Unlike Sublime Text, it will not show you a list or description.  The default behavior requires you to type some things and use <code>TAB</code> completion.  Luckily, you can get half-way there by installing a package called <a href="https://github.com/nonsequitur/smex">smex</a>, which will give you the fuzzy searchable list (no descriptions though).</p>
+
+<p>This is a <em>very</em> <strong><em>very</em></strong> commonly used operation in Emacs.  It pains me that the <code>ALT</code> key is so hard to reach, requiring you to tuck your thumb under either hand on most keyboards.  The nice thing about Vim bindings though you can easily add normal mode mappings.  I have this bound to <code>SPC SPC</code>, so I can just double tap the space to run a command.</p>
+
+<h3>Memorizing key bindings</h3>
+
+<p>Emacs bindings are pretty hard to remember (not nearly as mnemonic as Vim keys).  Luckily, the most often used Emacs bindings are prefixed with <code>C-x</code> and <code>C-c</code>.  This actually makes mixing Emacs and Vim very easy, because you are only giving up decrementing a number (which you can easily rebind), and <code>C-c</code>, which most people will be using <code>Esc</code> anyway.</p>
+
+<p><a href="https://github.com/kbkbkbkb1/guide-key">guide-key</a> is an immensely useful package that will tell you all the available keys and what they are bound to after hitting a prefix key.</p>
+
+<h3>File browsers</h3>
+
+<p><a href="https://github.com/scrooloose/nerdtree">NERDTree</a> and <a href="https://github.com/Shougo/vimfiler.vim">vimfiler</a> are both excellent plugins for Vim that give you a file browser on the side.</p>
+
+<p>I think fuzzy searching is far more useful and productive way to navigate around, but file browsers hold a niche in my tool belt for when I&rsquo;m working a foreign project where I don&rsquo;t know where all the files are laid out.  I haven&rsquo;t spent much time with file browsers for Emacs, but there are many available.  The built-in <code>speedbar</code> will open up a new frame.  An additional package called <code>sr-speedbar</code> will take the speedbar and place it inside a split window instead.</p>
+
+<p>A new kid of the block, released just a couple weeks ago is <a href="https://github.com/sabof/project-explorer">project-explorer</a>, which looks very promising.</p>
+
+<h3>Your choice of language specific packages</h3>
+
+<p>Last but not least, you will need to install mode packages, e.g. <code>coffee-mode</code>, <code>stylus-mode</code>, <code>jade-mode</code>, <code>js2-mode</code> etc.</p>
+
+<h2>Step 7: Practice makes perfect</h2>
+
+<p>And of course, practice practice practice!</p>
+
+<h1>Some other things to consider</h1>
+
+<p>Here are some <em>subjective</em> opinions I have on some&hellip;softer things to consider&hellip;</p>
+
+<h2>Vim developers are <em>very</em> tenacious</h2>
+
+<p>There is no dispute that Emacs Lisp is by far the superior language when compared to VimScript, but that doesn&rsquo;t stop VimScript plugin developers from making some really amazing plugins and pushing the envelope.  Vim plugin developers always find a way, no matter how hacky the solution might be.  It&rsquo;s fun to be &ldquo;hacking&rdquo; instead of &ldquo;developing&rdquo; after all.</p>
+
+<p>To illustrate this point, <a href="https://github.com/wincent/Command-T">commandt</a> first came out early 2010, and <a href="https://github.com/kien/ctrlp.vim">ctrlp</a> came out third quarter of 2011.  <a href="https://github.com/bbatsov/projectile">projectile</a> and <a href="https://github.com/d11wtq/fiplr">fiplr</a> both got recursive fuzzy searching the summer of <strong>2013</strong> (yes, <em>this</em> year).</p>
+
+<h2>Vim is <em>much</em> more popular than Emacs</h2>
+
+<p>While popularity and internet stars as a metric does not necessarily correlate with the quality of a product, the side effects will definitely be felt if you use Emacs.</p>
+
+<p>For starters, for every Emacs colorscheme there will be at least 10 Vim colorschemes.  Good luck finding one that works well in the terminal.  I can count on one hand the number of themes I&rsquo;ve found usable in the terminal (I use <code>monokai</code>).  The irony is that Emacs packages tend to understand your code a lot better, for example <code>js2-mode</code> is actually a full-blown parser, but Vim will still highlight more symbols because its colorschemes have more syntax rules.</p>
+
+<p>Another effect of popularity is that plugins tend to have more bells and whistles than their Emacs counterparts.  This, coupled with the attitude of Vim plugin developers mentioned earlier, results in a impressive set of plugins that no other ecosystem can match.</p>
+
+<h2>Vim is more user friendly</h2>
+
+<p>I&rsquo;ve mentioned before that if you want to use Emacs to its fullest potential, you <em>must</em> learn Lisp.  Unless you&rsquo;re lucky and the package you&rsquo;re using has a very active and responsive maintainer, you are better off trying to implement it on your own and then submit a pull request later.</p>
+
+<h1>Is it worth it?</h1>
+
+<p>At the end of all of this, you&rsquo;re probably thinking to yourself, I&rsquo;m already at <code>X</code> level of productivity, will switching to Emacs get me to <code>X + Y</code>?</p>
+
+<p>One of the major reasons for me switching was an excuse to <a href="http://bling.github.io/blog/2013/09/09/vim-in-emacs-bootstrap/">learn a Lisp dialect</a>.  Let me tell you; this reason alone is worth it to try Emacs.  Lisp will make you a better programmer by giving you a new perspective.  It will also make you question why all the complicated imperative languages today still do not compare to the simplicity and power that was available to us over 30 years ago.</p>
+
+<p>Yes, the learning curve is high.  But fear not!  You do not have to start from scratch.  You already know Vim, so you got the text editing part covered, which leaves just learning how to do things in Emacs one feature at a time.  If you configure Emacs to use the same keybindings as your Vim config, as I have in my <a href="https://github.com/bling/dotvim">dotvim</a> and <a href="https://github.com/bling/dotemacs">dotemacs</a> configs, it becomes seamless to switch between the two.  Lastly, you are not picking Vim <em>or</em> Emacs, but rather you are picking Vim <em>and</em> Emacs!  Use the best tool for the job.</p>
+
+<p>For me, Emacs is my <code>&lt;leader&gt;</code> key, the set of customizations that are non-standard to Vim, just like <code>set nocompatible</code> is the set of customizations that are non-standard to Vi.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Emacs as my &lt;Leader&gt;: evil-mode]]></title>
     <link href="http://bling.github.io/blog/2013/10/16/emacs-as-my-leader-evil-mode/"/>
-    <updated>2013-10-16T12:54:00-04:00</updated>
+    <updated>2013-10-16T12:54:00+00:00</updated>
     <id>http://bling.github.io/blog/2013/10/16/emacs-as-my-leader-evil-mode</id>
     <content type="html"><![CDATA[<p>Hey guys, I just wanted to post a quick demo video on <a href="https://gitorious.org/evil">evil-mode</a>.</p>
 
@@ -32,7 +215,7 @@
   <entry>
     <title type="html"><![CDATA[Vim in Emacs Bootstrap]]></title>
     <link href="http://bling.github.io/blog/2013/09/09/vim-in-emacs-bootstrap/"/>
-    <updated>2013-09-09T20:00:00-04:00</updated>
+    <updated>2013-09-09T20:00:00+00:00</updated>
     <id>http://bling.github.io/blog/2013/09/09/vim-in-emacs-bootstrap</id>
     <content type="html"><![CDATA[<p>Did I wake up on the wrong side of the bed?</p>
 
@@ -156,7 +339,7 @@
   <entry>
     <title type="html"><![CDATA[Modularizing VimScript]]></title>
     <link href="http://bling.github.io/blog/2013/08/16/modularizing-vimscript/"/>
-    <updated>2013-08-16T20:22:00-04:00</updated>
+    <updated>2013-08-16T20:22:00+00:00</updated>
     <id>http://bling.github.io/blog/2013/08/16/modularizing-vimscript</id>
     <content type="html"><![CDATA[<h1>The prerequisites</h1>
 
@@ -326,7 +509,7 @@
   <entry>
     <title type="html"><![CDATA[1000 stars in 1 month]]></title>
     <link href="http://bling.github.io/blog/2013/07/30/1000-stars-in-1-month/"/>
-    <updated>2013-07-30T21:26:00-04:00</updated>
+    <updated>2013-07-30T21:26:00+00:00</updated>
     <id>http://bling.github.io/blog/2013/07/30/1000-stars-in-1-month</id>
     <content type="html"><![CDATA[<h1>1000 stars in 1 month</h1>
 
@@ -352,7 +535,7 @@
   <entry>
     <title type="html"><![CDATA[Smart tab expansions in Vim with expression mappings]]></title>
     <link href="http://bling.github.io/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/"/>
-    <updated>2013-07-21T20:38:00-04:00</updated>
+    <updated>2013-07-21T20:38:00+00:00</updated>
     <id>http://bling.github.io/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings</id>
     <content type="html"><![CDATA[<p>I&rsquo;ve been having a small itch for a while now, and it&rsquo;s a very simple thing &mdash; I want to make my tab smarter.  This all starts with a dive into <a href="http://www.emmet.io">Emmet</a>.  To understand what it is, here&rsquo;s a quick introduction.  First, you type something using its syntax:</p>
 
@@ -438,7 +621,7 @@
   <entry>
     <title type="html"><![CDATA[The flight of an open-source project]]></title>
     <link href="http://bling.github.io/blog/2013/07/15/flight-of-an-open-source-project/"/>
-    <updated>2013-07-15T10:00:00-04:00</updated>
+    <updated>2013-07-15T10:00:00+00:00</updated>
     <id>http://bling.github.io/blog/2013/07/15/flight-of-an-open-source-project</id>
     <content type="html"><![CDATA[<h1>Welcome aboard!</h1>
 
@@ -504,7 +687,7 @@
   <entry>
     <title type="html"><![CDATA[Unite.vim, The plugin you didn't know you need]]></title>
     <link href="http://bling.github.io/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/"/>
-    <updated>2013-06-02T19:34:00-04:00</updated>
+    <updated>2013-06-02T19:34:00+00:00</updated>
     <id>http://bling.github.io/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need</id>
     <content type="html"><![CDATA[<h1><a href="https://github.com/Shougo/unite.vim">Unite.vim</a></h1>
 
@@ -592,7 +775,7 @@
   <entry>
     <title type="html"><![CDATA[On TypeScript]]></title>
     <link href="http://bling.github.io/blog/2013/04/19/on-typescript/"/>
-    <updated>2013-04-19T23:31:00-04:00</updated>
+    <updated>2013-04-19T23:31:00+00:00</updated>
     <id>http://bling.github.io/blog/2013/04/19/on-typescript</id>
     <content type="html"><![CDATA[<h1>What&rsquo;s the deal?</h1>
 
@@ -682,7 +865,7 @@
   <entry>
     <title type="html"><![CDATA[.NET/WPF to HTML/CSS/Javscript]]></title>
     <link href="http://bling.github.io/blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript/"/>
-    <updated>2013-04-13T11:58:00-04:00</updated>
+    <updated>2013-04-13T11:58:00+00:00</updated>
     <id>http://bling.github.io/blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript</id>
     <content type="html"><![CDATA[<h1>In the beginning&hellip;</h1>
 
@@ -886,7 +1069,7 @@
   <entry>
     <title type="html"><![CDATA[Jumping on the hacker blog bandwagon]]></title>
     <link href="http://bling.github.io/blog/2013/04/10/jumping-on-the-hacker-blog-bandwagon/"/>
-    <updated>2013-04-10T23:31:00-04:00</updated>
+    <updated>2013-04-10T23:31:00+00:00</updated>
     <id>http://bling.github.io/blog/2013/04/10/jumping-on-the-hacker-blog-bandwagon</id>
     <content type="html"><![CDATA[<h1>Following the tutorial&hellip;</h1>
 
@@ -901,7 +1084,7 @@
   <entry>
     <title type="html"><![CDATA[Writing Macros with Vim]]></title>
     <link href="http://bling.github.io/blog/2013/02/11/writing-macros-with-vim/"/>
-    <updated>2013-02-11T00:00:00-05:00</updated>
+    <updated>2013-02-11T00:00:00+00:00</updated>
     <id>http://bling.github.io/blog/2013/02/11/writing-macros-with-vim</id>
     <content type="html"><![CDATA[<p>First, let’s start with a Javascript function:</p>
 
@@ -993,7 +1176,7 @@
   <entry>
     <title type="html"><![CDATA[Love Affair with Vim]]></title>
     <link href="http://bling.github.io/blog/2013/02/10/love-affair-with-vim/"/>
-    <updated>2013-02-10T00:00:00-05:00</updated>
+    <updated>2013-02-10T00:00:00+00:00</updated>
     <id>http://bling.github.io/blog/2013/02/10/love-affair-with-vim</id>
     <content type="html"><![CDATA[<p>It wasn&rsquo;t too long ago when I was a full-time C# developer and my environment was Visual Studio eight hours a day.  Then, I became a web developer over night cold turkey writing Javascript and CSS.  It&rsquo;s one of the benefits of working for a consulting company.</p>
 
@@ -1067,7 +1250,7 @@
   <entry>
     <title type="html"><![CDATA[SnoopShell: Evolution]]></title>
     <link href="http://bling.github.io/blog/2012/07/29/snoopshell-evolution/"/>
-    <updated>2012-07-29T00:00:00-04:00</updated>
+    <updated>2012-07-29T00:00:00+00:00</updated>
     <id>http://bling.github.io/blog/2012/07/29/snoopshell-evolution</id>
     <content type="html"><![CDATA[<p>It’s been a while since I last announced <a href="http://blingcode.blogspot.com/2012/07/snoopshell-marriage-of-snoop-wpf-and.html">SnoopShell</a>, where I took some PowerShell and injected that into Snoop.  Well, I didn’t stop there!  I decided to continue working on it and adding more useful features.</p>
 
@@ -1137,7 +1320,7 @@
   <entry>
     <title type="html"><![CDATA[SnoopShell: The marriage of Snoop WPF and PowerShell]]></title>
     <link href="http://bling.github.io/blog/2012/07/01/snoopshell-marriage-of-snoop-wpf-and/"/>
-    <updated>2012-07-01T00:00:00-04:00</updated>
+    <updated>2012-07-01T00:00:00+00:00</updated>
     <id>http://bling.github.io/blog/2012/07/01/snoopshell-marriage-of-snoop-wpf-and</id>
     <content type="html"><![CDATA[<div class='post'>
 <p>I was given the opportunity to review a couple chapters of the excellent book <a href="http://shop.oreilly.com/product/0636920024491.do">PowerShell for Developers</a>, written by my colleague <a href="http://dougfinke.com/blog/">Doug Finke</a>.&nbsp; One of the concepts in the book was embedding a PowerShell console into your application.&nbsp; This idea is ingenious and we added this feature to our client’s software, and so far it has increased our productivity and opened the doors to many possibilities.</p> <p>So what’s so cool about embedding a shell into your application?&nbsp; Well, for starters, one of the immediate advantages is that it gives you the opportunity to test your application at run time.&nbsp; If you are implementing the MVVM pattern then basically anything you can see in the UI is bound to some property in your view model.&nbsp; What if you could expose an instance of your view model to the PowerShell console?&nbsp; Yes, you would be able to interact with it directly, change values, and property change notification will kick in and update the UI.</p> <p>The possibilities start to open up from there.&nbsp; You can start scripting out common tasks – write once, run many times.&nbsp; Or you can write a full fledge test suite as a script, give it to a QA tester, and have them run through it as a special kind of integration testing, one that happens with live, real data.&nbsp; Or how about being able to modify code, <em>at runtime</em>, to try out an implementation without need to recompile or restart the application?&nbsp; Sounds pretty awesome to me!</p> <p>With this, I started thinking why don’t I try and add this to Snoop?&nbsp; It’s a staple tool for any WPF developer, and adding scripting capabilities to Snoop will make it even more useful.</p> <p>So, I sat down for a weekend and took a shot at it.&nbsp; And with that, SnoopShell was born!</p> <p>My fork of Snoop can be found here: <a href="https://github.com/bling/snoopwpf">https://github.com/bling/snoopwpf</a></p> <p>It’s still in super-duper alpha, so features/ideas are still getting formulated, but here’s a glimpse of what it can do now.</p> <p>The $root variable points to the root of the tree.&nbsp; As you can see, Snoop represents this as a ApplicationTreeItem, which has a bunch of properties, the important ones being IsSelected and IsExpanded.</p> <p><a href="http://lh6.ggpht.com/-G1xK0p7454U/T_CIl9YKnlI/AAAAAAAAAJg/z4SEb20go04/s1600-h/image%25255B29%25255D.png"><img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh4.ggpht.com/-NgT7mhbVSBY/T_CImZIe6NI/AAAAAAAAAJk/fkNeG2UGFH0/image_thumb%25255B17%25255D.png?imgmax=800" width="640" height="381"></a></p> <p>Let’s try interacting with the object by setting the IsExpanded to true.</p> <p><a href="http://lh4.ggpht.com/-uKcevwtnUO4/T_CImnGxyWI/AAAAAAAAAJo/5v1AZnM_SHw/s1600-h/image%25255B28%25255D.png"><img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh6.ggpht.com/-STnkYWGudRU/T_CInKa1nyI/AAAAAAAAAJs/qk92Zjm3BWU/image_thumb%25255B16%25255D.png?imgmax=800" width="640" height="383"></a></p> <p>So far so good.&nbsp; Now let’s find my username using Ctrl+Shift.&nbsp; The $selected variable is automatically synchronized with the selected item in the tree.</p> <p><a href="http://lh6.ggpht.com/-uUeaZMYbuDc/T_CInhNnmAI/AAAAAAAAAJw/Q--l4hrlEis/s1600-h/image%25255B27%25255D.png"><img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh6.ggpht.com/-hnDhWbHtn8w/T_CIoIzVSCI/AAAAAAAAAJ0/BiqbUMnfigM/image_thumb%25255B15%25255D.png?imgmax=800" width="640" height="379"></a></p>  <p>Let’s do some black magic and change my name.</p> <p><a href="http://lh6.ggpht.com/-hC4FVTnZDxc/T_CIoTrYfiI/AAAAAAAAAJ4/aQQGFbrxCzM/s1600-h/image%25255B26%25255D.png"><img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh3.ggpht.com/-RqOCvfsU6cU/T_CIo6zvtcI/AAAAAAAAAJ8/e8XMWPj60BM/image_thumb%25255B14%25255D.png?imgmax=800" width="640" height="382"></a></p> <p>Finally, let’s find every ListBox in the application.&nbsp; <em>Find-Item</em> is used to recursively find everything in the visual tree which is a ListBox.</p> <p><a href="http://lh6.ggpht.com/-nlycDcpP-bk/T_CIpXMcWxI/AAAAAAAAAKA/gIGruuduR9g/s1600-h/image%25255B25%25255D.png"><img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh3.ggpht.com/-oAB7IIj6LLY/T_CIqDPWS6I/AAAAAAAAAKE/aX1DNZnIOVo/image_thumb%25255B13%25255D.png?imgmax=800" width="640" height="367"></a></p> <p>And from here, it’s as simple as grabbing the <em>DataContext</em> of any control to get access to the view model.</p> <p>By the way, this is targeting PowerShell V3, so you will need to have the RC installed.</p> <p>Try it out and let me know what you think!</p>  </div>
@@ -1147,7 +1330,7 @@
   <entry>
     <title type="html"><![CDATA[N2N: .NET 2 Node: Part 1]]></title>
     <link href="http://bling.github.io/blog/2012/06/08/n2n-net-2-node-part-1/"/>
-    <updated>2012-06-08T00:00:00-04:00</updated>
+    <updated>2012-06-08T00:00:00+00:00</updated>
     <id>http://bling.github.io/blog/2012/06/08/n2n-net-2-node-part-1</id>
     <content type="html"><![CDATA[<div class='post'>
 Let’s get some actual coding done.&nbsp; If you want some basic prologue, check out the first part of my series <a href="http://blingcode.blogspot.com/2012/06/n2n-net-2-node.html">here</a>.<br>Anywho, let’s get to the meat of what we’re trying to accomplish.&nbsp; I will start with the typical C# class you would write, do the same in Javascript, and then again in C#, but using the style of Javascript using closures.<br>Here’s the use case:<br> <ul> <li>Handle a web request  <li>Check the MongoDB database to see if an entry exists and return it if available.  <li>Otherwise, query an external API for data, save it into MongoDB, and then return that. </li></ul> <p>This is a pretty standard straight-forward approach in web applications.&nbsp; If you’re not using MongoDB, you’ll be using memcache, Redis, or some other equivalent data store.<br><br>First, let’s implement an pseudo-code ASP.NET MVC controller which does the above:</p> <div id="codeSnippetWrapper"><pre style="border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: #f4f4f4; margin: 0em; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: 'Courier New', courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px" id="codeSnippet"><span style="color: #0000ff">public</span> <span style="color: #0000ff">class</span> QuoteController : Controller<br>{<br>    MongoCollection collection;<br>    IExternalApi external;<br><br>    <span style="color: #0000ff">public</span> ActionResult Get(<span style="color: #0000ff">string</span> symbol)<br>    {<br>        var quote = <span style="color: #0000ff">this</span>.collection.FindOne(<span style="color: #0000ff">new</span> { symbol });<br>        <span style="color: #0000ff">if</span> (quote == <span style="color: #0000ff">null</span>)<br>        {<br>            var json = <span style="color: #0000ff">this</span>.external.GetQuote(symbol);<br>            <span style="color: #0000ff">this</span>.collection.Save(json);<br>        }<br><br>        ViewBag.Quote = quote;<br>        <span style="color: #0000ff">return</span> View();<br>    }<br>}<br></pre><br></div>
@@ -1162,7 +1345,7 @@ Let’s get some actual coding done.&nbsp; If you want some basic prologue, chec
   <entry>
     <title type="html"><![CDATA[N2N: .NET 2 Node]]></title>
     <link href="http://bling.github.io/blog/2012/06/03/n2n-net-2-node/"/>
-    <updated>2012-06-03T00:00:00-04:00</updated>
+    <updated>2012-06-03T00:00:00+00:00</updated>
     <id>http://bling.github.io/blog/2012/06/03/n2n-net-2-node</id>
     <content type="html"><![CDATA[<div class='post'>
 <p>Well, it’s been quite a while since I’ve blogged about…well…anything, and I figured it’s about time I get off my lazy butt and do something with my spare time on weekends.&nbsp; What better option than to see what all the hype is about Node?&nbsp; I had to do it sooner or later.</p> <p>As any newbie would do, they go to Google and type “nodejs tutorial”.&nbsp; <a href="http://www.nodebeginner.org/">The Node Beginner Book</a> came up first, so I went with that.&nbsp; It was an excellent tutorial.&nbsp; Prior to this I also skimmed through the book <a href="http://www.amazon.com/JavaScript-Good-Parts-Douglas-Crockford/dp/0596517742">JavaScript, The Good Parts</a>, so I had a basic understanding of the language syntax.</p> <p>One of the first oddities I noticed, was that NodeJS seems to have a convention of comma-first.&nbsp; You notice this immediately because most examples start with require(‘module’), and if they require more than one module, the second line is prefixed with a comma (as opposed to the more traditional comma at the end of the line).&nbsp; I apparently missed the <a href="https://gist.github.com/357981">discussion</a> by 2 years!&nbsp; It was still interesting nonetheless.</p> <p>As someone with a strong .NET background, I definitely experienced all the usual ‘gotchas’:</p> <ul> <li>== vs ===  <li>falsey values  <li>variable hoisting</li></ul> <p>Once you understand all of these things, Javascript isn’t so bad.&nbsp; Oh, and of course understanding closures will get you <em>a long</em> way in being effective with Javascript, because that’s what you need to use to do proper scoping.&nbsp; If C# didn’t have lambdas and closures it would have been a much longer journey to “get it”.</p> <p>Not too longer after, I deployed my first Heroku app running on NodeJS.</p> <p>Anyways, enough with the prologue…I won’t bore you with anymore beginner/tutorial stuff.</p> <p>Let’s get on with what I plan on doing over a multi-part blog series.&nbsp; When I build something on my own time, I can’t build something just for the hell of it to learn something….that’s not enough.&nbsp; If I build something it has to be useful – something that I (or someone else) will find valuable.</p> <p>I won’t reveal what it is yet, but it’s going to involve Node/MongoDB on the backend, with Backbone on the front-end.&nbsp; Should be fun :-)</p>  </div>
@@ -1172,7 +1355,7 @@ Let’s get some actual coding done.&nbsp; If you want some basic prologue, chec
   <entry>
     <title type="html"><![CDATA[My Thoughts on MEF]]></title>
     <link href="http://bling.github.io/blog/2011/10/31/my-thoughts-on-mef/"/>
-    <updated>2011-10-31T00:00:00-04:00</updated>
+    <updated>2011-10-31T00:00:00+00:00</updated>
     <id>http://bling.github.io/blog/2011/10/31/my-thoughts-on-mef</id>
     <content type="html"><![CDATA[<div class='post'>
 <p>Ever since MEF was conceived, despite the authors saying that it is <strong>not<em> </em></strong>an IoC container, it has since evolved to become one of the more popular IoC containers.&nbsp; I’ve always avoided it because I disagree with using attributes, and I’ve had no reason to use it over Autofac or Windsor.</p> <p>Recently, I found a reason to use it – Metro-style applications only support MEF so far.&nbsp; My Twitter client ping.pong uses Autofac as the IoC container.&nbsp; It uses some very basic functionality like factories and hooks.&nbsp; To my surprise, MEF has no support for either of these.</p> <p>Coming across these limitations solidifies my opinion that MEF is a plugin container, not an IoC container.</p> <p>First let’s take a look at automated factories. What I mean is that by registering Foo, like so:</p> <div id="codeSnippetWrapper"> <div style="border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: #f4f4f4; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: 'Courier New', courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px" id="codeSnippet"><pre style="border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: white; margin: 0em; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: 'Courier New', courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px">container.RegisterType&lt;Foo&gt;();</pre><!--CRLF--></div></div>
@@ -1205,7 +1388,7 @@ Hi Bailey! Nice thoughtful article - I have a foot in both camps, so I&#39;m gla
   <entry>
     <title type="html"><![CDATA[ping.pong Twitter Client]]></title>
     <link href="http://bling.github.io/blog/2011/10/09/pingpong-twitter-client/"/>
-    <updated>2011-10-09T00:00:00-04:00</updated>
+    <updated>2011-10-09T00:00:00+00:00</updated>
     <id>http://bling.github.io/blog/2011/10/09/pingpong-twitter-client</id>
     <content type="html"><![CDATA[<div class='post'>
 <p>I have a whole <a href="http://blingcode.blogspot.com/2011/09/push-driven-development-with-reactive.html">series</a> dedicated to blogging about how I wrote a Twitter client from scratch, but if I want anyone to actually use it, I better do some advertising :-D.</p> <p>ping.pong is a fast and lightweight Twitter client written in Silverlight.&nbsp; As of this moment it targets v4 but will likely target v5 whenever that is released.</p> <p>Here are some highlights…</p> <h3>Visually Pleasing</h3> <p><img style="background-image: none; border-right-width: 0px; padding-left: 0px; padding-right: 0px; display: block; float: none; border-top-width: 0px; border-bottom-width: 0px; margin-left: auto; border-left-width: 0px; margin-right: auto; padding-top: 0px" title="image" border="0" alt="image" src="http://lh3.ggpht.com/-9wwcsDIu5Yg/TpHayG-NVXI/AAAAAAAAAHg/-Jo9iq0ghOA/image%25255B15%25255D.png?imgmax=800" width="377" height="280"></p> <p>The UI is based on your typical column-based design.&nbsp; The column widths will automatically resize to take up all available horizontal space.&nbsp; There is no horizontal scrolling.</p> <h3><strong>Access to the Streaming API</strong></h3> <p>No more rate limits!&nbsp; Your timeline is connected directly with Twitter’s streaming API, which means whenever someone you follow tweets you will know about it in almost near real-time.&nbsp; Searching is also done through the streaming API.</p> <h3>Fast &amp; Lightweight</h3> <p>ping.pong was built to run fast with low CPU utilization.&nbsp; Even when stream searching for “e” (yes, the letter E), the CPU usage stays under 15%.&nbsp; The maximum number of tweets that Twitter sends appears to be 50 per second.</p> <h3>Conversations</h3> <p>ping.pong will quickly show an entire tweet conversation by navigating reply tags back to the original tweet that started it all.</p> <h3>Free &amp; Open Source</h3> <p>The full source code for ping.pong can be found on <a href="https://github.com/bling/Ping.Pong">GitHub</a>.&nbsp; You can compile it, make modifications as you please, and run it yourself.&nbsp; The only thing missing is the consumer keys which uniquely identifies this client from another.&nbsp; You can generate them through Twitter once you have a developer account.</p> <h3>Installer</h3> <p>The latest and greatest can be quickly installed from <a href="http://dl.dropbox.com/u/2072014/Ping.Pong/PingPongTestPage.html">here</a>.&nbsp; Check back periodically for updates!</p>  </div>
@@ -1215,7 +1398,7 @@ Hi Bailey! Nice thoughtful article - I have a foot in both camps, so I&#39;m gla
   <entry>
     <title type="html"><![CDATA[Push Driven Development with Reactive Extensions]]></title>
     <link href="http://bling.github.io/blog/2011/09/29/push-driven-development-with-reactive/"/>
-    <updated>2011-09-29T00:00:00-04:00</updated>
+    <updated>2011-09-29T00:00:00+00:00</updated>
     <id>http://bling.github.io/blog/2011/09/29/push-driven-development-with-reactive</id>
     <content type="html"><![CDATA[<p>This is going to be the last post that concludes my series on building a real-time push app with Silverlight.  Any additional posts would likely be outside the context of writing a push app and more about how I’m adding features to ping.pong, my Twitter app, so I think this is a good place to wrap up and talk generally from a top down overview of building a push-style application.</p>
 
@@ -1368,89 +1551,6 @@ Hi Bailey! Nice thoughtful article - I have a foot in both camps, so I&#39;m gla
 <h1>Conclusion</h1>
 
 <p>Rx is a library unlike any other you will use.  With other libraries, you will add them to your solution, use a method here or there, and go on with your life.  With Rx, it will radically change the way you code and think in general.  It’s awesome.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Building a Real-time Push App with Silverlight: Part 8]]></title>
-    <link href="http://bling.github.io/blog/2011/09/21/building-real-time-push-app-with-rx-8/"/>
-    <updated>2011-09-21T00:00:00-04:00</updated>
-    <id>http://bling.github.io/blog/2011/09/21/building-real-time-push-app-with-rx-8</id>
-    <content type="html"><![CDATA[<h1>Exploring Caliburn Micro</h1>
-
-<p>As I hinted in earlier posts, Caliburn Micro has some wicked conventions that makes for writing MVVM super easy, and it also have a very convenient syntax for hooking up events.  For example, the following:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;Button</span> <span class="na">Content=</span><span class="s">&quot;R&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>   <span class="nt">&lt;i:Interaction.Triggers&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;i:EventTrigger</span> <span class="na">EventName=</span><span class="s">&quot;Click&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>           <span class="nt">&lt;i:InvokeCommandAction</span> <span class="na">Command=</span><span class="s">&quot;{Binding ReplyCommand}&quot;</span> <span class="na">CommandParameter=</span><span class="s">&quot;{Binding}&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;/i:EventTrigger&gt;</span>
-</span><span class='line'>   <span class="nt">&lt;/i:Interaction.Triggers&gt;</span>
-</span><span class='line'><span class="nt">&lt;/Button&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Can be rewritten like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;Button</span> <span class="na">Content=</span><span class="s">&quot;R&quot;</span> <span class="na">cal:Message.Attach=</span><span class="s">&quot;[Reply($dataContext)]&quot;</span> <span class="nt">/&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>There are some smarts going on here.  Caliburn Micro will default to the Click event for buttons.  For a full syntax, it would be <code>cal:Message.Attach="[Event Click] = [Reply($dataContext)]"</code>.  As you can imagine, that will call the Reply method and pass in the current data context.  You can also pass in other things like <code>$this</code>, <code>$source</code>, or <code>$executionContext</code> for full access to anything and everything Caliburn Micro itself has access to.</p>
-
-<p>The coolest thing about this is it gives you some wicked control over how your data context gets set.  Ever struggled with popup windows or data grids and using weird hacks to get the binding correct?  Caliburn Micro makes this very easy.  Here’s an example.</p>
-
-<ol>
-<li>I have a DataTemplate which renders the UI for the model Tweet.</li>
-<li>Tweet is just a simple class which holds only properties.</li>
-<li>Inside the DataTemplate, I have some buttons that when the user clicks will reply, retweet, quote, or direct message.</li>
-</ol>
-
-
-<p>The Tweet class is purely for modeling data, so adding any methods would be bad practice.  Also, since I’m in a DataTemplate I can’t easily reference another control with ElementName (in this case I need the containing parent’s DataContext).  And to add insult to injury, Silverlight 4 doesn’t have RelativeSource ancestor type.  So how do I solve this?</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;StackPanel</span> <span class="na">VerticalAlignment=</span><span class="s">&quot;Bottom&quot;</span> <span class="na">cal:Action.TargetWithoutContext=</span><span class="s">&quot;shell&quot;</span> <span class="na">Orientation=</span><span class="s">&quot;Horizontal&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;Button</span> <span class="na">Content=</span><span class="s">&quot;R&quot;</span> <span class="na">cal:Message.Attach=</span><span class="s">&quot;[Reply($dataContext)]&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;Button</span> <span class="na">Content=</span><span class="s">&quot;RT&quot;</span> <span class="na">cal:Message.Attach=</span><span class="s">&quot;[Retweet($dataContext)]&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;Button</span> <span class="na">Content=</span><span class="s">&quot;Q&quot;</span> <span class="na">cal:Message.Attach=</span><span class="s">&quot;[Quote($dataContext)]&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;Button</span> <span class="na">Content=</span><span class="s">&quot;DM&quot;</span> <span class="na">cal:Message.Attach=</span><span class="s">&quot;[DirectMessage($dataContext)]&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'><span class="nt">&lt;/StackPanel&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The secret is the attached property TargetWithoutContext.  As the name implies, it will set the target for all the ActionMessages attached to all the buttons, without setting the context.  If I used the Target attached property, it would set all of the Buttons’ data context to the same object – not what we want.  Since the Button’s data context remains intact, we can call “Reply($dataContext)”, which calls the Reply method on the target object (set on the StackPanel) and pass in the Tweet.  “shell” is the key of the service that I registered into the container.</p>
-
-<p>Originally I wanted this entire series to be able writing a fast push data app with Silverlight and Rx, and now I’m finding that I’m writing an entire Twitter client because it’s so much fun :&ndash;).</p>
-
-<p>I’m going to make another release soon.  While the first release was merely experimental, the next one will be useful enough to potentially use full time.  As you can probably tell with this blog post, it supports all the actions mentioned previously (and it’ll appear on mouse hover):</p>
-
-<p><img src="http://lh5.ggpht.com/-RIZG8I0_rik/TnqqmNCK-6I/AAAAAAAAAHM/-xU4_cj6iDg/image_thumb%25255B2%25255D.png?imgmax=800" alt="img" /></p>
-
-<p>The tweet box is much improved and shows you how many character you have left:</p>
-
-<p><img src="http://lh4.ggpht.com/-2VhCjjYrcoo/TnqqmstbbUI/AAAAAAAAAHU/zK65JB2shQw/image_thumb%25255B3%25255D.png?imgmax=800" alt="img" /></p>
-
-<p>And it’s smart enough to auto wrap http links via Twitter’s t.co service, and the counter takes that into account.  Some interesting things to note is that in the future <em>all links</em> will be wrapped t.co.  Looks like Twitter is trying to eat up bt.ly or something.</p>
-
-<p>Clicking on @users and #topics will automatically open a new timeline and subscribe to those tweets.  It is almost full featured enough to become my main Twitter client.  There are certain features still missing, and it’s purely based on when I have time to port them over.</p>
-
-<p>As always, you can install directly from <a href="http://dl.dropbox.com/u/2072014/Ping.Pong/PingPongTestPage.html">here</a>, or you can grab the code on the <a href="https://github.com/bling/Ping.Pong">GitHub</a> page!</p>
-
-<p>Next post will be about Rx from a very top level perspective and how it influenced my code from beginning to be experienced and all refactorings in between.  Stay tuned!</p>
 ]]></content>
   </entry>
   

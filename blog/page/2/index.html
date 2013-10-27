@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="Welcome aboard! Those were the words that a flight attendant said to me as a boarded a plane to visit Paris for a summer vacation of wine and cheese &hellip;">
+  <meta name="description" content="I&rsquo;ve been having a small itch for a while now, and it&rsquo;s a very simple thing &mdash; I want to make my tab smarter. This all starts with a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +83,70 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart Tab Expansions in Vim With Expression Mappings</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-21T20:38:00+00:00" pubdate data-updated="true">Jul 21<span>st</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve been having a small itch for a while now, and it&rsquo;s a very simple thing &mdash; I want to make my tab smarter.  This all starts with a dive into <a href="http://www.emmet.io">Emmet</a>.  To understand what it is, here&rsquo;s a quick introduction.  First, you type something using its syntax:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>div&gt;li*4</span></code></pre></td></tr></table></div></figure>
+
+
+<p>and after you &ldquo;expand&rdquo; it, usually with a hotkey, and it gets converted to</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;div&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;li&gt;&lt;/li&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;li&gt;&lt;/li&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;li&gt;&lt;/li&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;li&gt;&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As you can imagine, this saves you <em>a lot</em> of typing and lets you prototype a web page (or CSS) in no time once you learn the syntax.  It is snippets on steriods!  The Sublime <a href="https://github.com/sergeche/emmet-sublime">plugin</a> handles this perfectly.  It maps <code>&lt;tab&gt;</code> as the expansion key.  Hitting tab after typing <code>div&gt;li*4</code> will expand it and put the cursor at the first <code>&lt;li&gt;|&lt;/li&gt;</code>.  Then after you type something, if you hit <code>&lt;tab&gt;</code> again, it will jump to the next <code>li</code>.  It is smart enough to know whether to expand or jump to the next tag.</p>
+
+<p>So how does this functionality look like in Vim?  </div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2013/07/15/flight-of-an-open-source-project/">The Flight of an Open-source Project</a></h1>
     
     
@@ -99,7 +163,7 @@
   
 
 
-<time datetime="2013-07-15T10:00:00-04:00" pubdate data-updated="true">Jul 15<span>th</span>, 2013</time>
+<time datetime="2013-07-15T10:00:00+00:00" pubdate data-updated="true">Jul 15<span>th</span>, 2013</time>
         
       </p>
     
@@ -142,7 +206,7 @@
   
 
 
-<time datetime="2013-06-02T19:34:00-04:00" pubdate data-updated="true">Jun 2<span>nd</span>, 2013</time>
+<time datetime="2013-06-02T19:34:00+00:00" pubdate data-updated="true">Jun 2<span>nd</span>, 2013</time>
         
       </p>
     
@@ -189,7 +253,7 @@
   
 
 
-<time datetime="2013-04-19T23:31:00-04:00" pubdate data-updated="true">Apr 19<span>th</span>, 2013</time>
+<time datetime="2013-04-19T23:31:00+00:00" pubdate data-updated="true">Apr 19<span>th</span>, 2013</time>
         
       </p>
     
@@ -234,7 +298,7 @@
   
 
 
-<time datetime="2013-04-13T11:58:00-04:00" pubdate data-updated="true">Apr 13<span>th</span>, 2013</time>
+<time datetime="2013-04-13T11:58:00+00:00" pubdate data-updated="true">Apr 13<span>th</span>, 2013</time>
         
       </p>
     
@@ -258,48 +322,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/10/jumping-on-the-hacker-blog-bandwagon/">Jumping on the Hacker Blog Bandwagon</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-10T23:31:00-04:00" pubdate data-updated="true">Apr 10<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1>Following the tutorial&hellip;</h1>
-
-<p>Not much to say here&hellip;I went to <a href="http://octopress.org">Octopress&#8217;</a> website, followed the instructions, and now I have a working blog.  Pretty cool.</p>
-
-<p>It definitely feels liberating to blog using plain &lsquo;ol markdown text editing.</p>
-
-<p>So I guess the next step I&rsquo;ll do is import my existing blog content, and then add some personal styling to this thing :)</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -317,7 +339,11 @@
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my Leader: evil-mode</a>
+        <a href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/">Emacs as my &lt;Leader&gt;: Vim Survival Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my &lt;Leader&gt;: evil-mode</a>
       </li>
     
       <li class="post">
@@ -342,10 +368,6 @@
     
       <li class="post">
         <a href="/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/">Unite.vim, The plugin you didn&#8217;t know you need</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/19/on-typescript/">On TypeScript</a>
       </li>
     
   </ul>

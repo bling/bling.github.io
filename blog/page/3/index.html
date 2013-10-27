@@ -9,15 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="First, let’s start with a Javascript function: 1
-2
-3
-4
-function foo(hello, world, how, are, you) {
-} Now let’s convert that to the following: 1
-2
-3
-4 &hellip;">
+  <meta name="description" content="Following the tutorial&hellip; Not much to say here&hellip;I went to Octopress&#8217; website, followed the instructions, and now I have a working &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -91,6 +83,48 @@ function foo(hello, world, how, are, you) {
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013/04/10/jumping-on-the-hacker-blog-bandwagon/">Jumping on the Hacker Blog Bandwagon</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-10T23:31:00+00:00" pubdate data-updated="true">Apr 10<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1>Following the tutorial&hellip;</h1>
+
+<p>Not much to say here&hellip;I went to <a href="http://octopress.org">Octopress&#8217;</a> website, followed the instructions, and now I have a working blog.  Pretty cool.</p>
+
+<p>It definitely feels liberating to blog using plain &lsquo;ol markdown text editing.</p>
+
+<p>So I guess the next step I&rsquo;ll do is import my existing blog content, and then add some personal styling to this thing :)</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2013/02/11/writing-macros-with-vim/">Writing Macros With Vim</a></h1>
     
     
@@ -107,7 +141,7 @@ function foo(hello, world, how, are, you) {
   
 
 
-<time datetime="2013-02-11T00:00:00-05:00" pubdate data-updated="true">Feb 11<span>th</span>, 2013</time>
+<time datetime="2013-02-11T00:00:00+00:00" pubdate data-updated="true">Feb 11<span>th</span>, 2013</time>
         
       </p>
     
@@ -187,7 +221,7 @@ function foo(hello, world, how, are, you) {
   
 
 
-<time datetime="2013-02-10T00:00:00-05:00" pubdate data-updated="true">Feb 10<span>th</span>, 2013</time>
+<time datetime="2013-02-10T00:00:00+00:00" pubdate data-updated="true">Feb 10<span>th</span>, 2013</time>
         
       </p>
     
@@ -234,7 +268,7 @@ function foo(hello, world, how, are, you) {
   
 
 
-<time datetime="2012-07-29T00:00:00-04:00" pubdate data-updated="true">Jul 29<span>th</span>, 2012</time>
+<time datetime="2012-07-29T00:00:00+00:00" pubdate data-updated="true">Jul 29<span>th</span>, 2012</time>
         
       </p>
     
@@ -331,7 +365,7 @@ function foo(hello, world, how, are, you) {
   
 
 
-<time datetime="2012-07-01T00:00:00-04:00" pubdate data-updated="true">Jul 1<span>st</span>, 2012</time>
+<time datetime="2012-07-01T00:00:00+00:00" pubdate data-updated="true">Jul 1<span>st</span>, 2012</time>
         
       </p>
     
@@ -340,48 +374,6 @@ function foo(hello, world, how, are, you) {
 
   <div class="entry-content"><div class='post'>
 <p>I was given the opportunity to review a couple chapters of the excellent book <a href="http://shop.oreilly.com/product/0636920024491.do">PowerShell for Developers</a>, written by my colleague <a href="http://dougfinke.com/blog/">Doug Finke</a>.&nbsp; One of the concepts in the book was embedding a PowerShell console into your application.&nbsp; This idea is ingenious and we added this feature to our client’s software, and so far it has increased our productivity and opened the doors to many possibilities.</p> <p>So what’s so cool about embedding a shell into your application?&nbsp; Well, for starters, one of the immediate advantages is that it gives you the opportunity to test your application at run time.&nbsp; If you are implementing the MVVM pattern then basically anything you can see in the UI is bound to some property in your view model.&nbsp; What if you could expose an instance of your view model to the PowerShell console?&nbsp; Yes, you would be able to interact with it directly, change values, and property change notification will kick in and update the UI.</p> <p>The possibilities start to open up from there.&nbsp; You can start scripting out common tasks – write once, run many times.&nbsp; Or you can write a full fledge test suite as a script, give it to a QA tester, and have them run through it as a special kind of integration testing, one that happens with live, real data.&nbsp; Or how about being able to modify code, <em>at runtime</em>, to try out an implementation without need to recompile or restart the application?&nbsp; Sounds pretty awesome to me!</p> <p>With this, I started thinking why don’t I try and add this to Snoop?&nbsp; It’s a staple tool for any WPF developer, and adding scripting capabilities to Snoop will make it even more useful.</p> <p>So, I sat down for a weekend and took a shot at it.&nbsp; And with that, SnoopShell was born!</p> <p>My fork of Snoop can be found here: <a href="https://github.com/bling/snoopwpf">https://github.com/bling/snoopwpf</a></p> <p>It’s still in super-duper alpha, so features/ideas are still getting formulated, but here’s a glimpse of what it can do now.</p> <p>The $root variable points to the root of the tree.&nbsp; As you can see, Snoop represents this as a ApplicationTreeItem, which has a bunch of properties, the important ones being IsSelected and IsExpanded.</p> <p><a href="http://lh6.ggpht.com/-G1xK0p7454U/T_CIl9YKnlI/AAAAAAAAAJg/z4SEb20go04/s1600-h/image%25255B29%25255D.png"><img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh4.ggpht.com/-NgT7mhbVSBY/T_CImZIe6NI/AAAAAAAAAJk/fkNeG2UGFH0/image_thumb%25255B17%25255D.png?imgmax=800" width="640" height="381"></a></p> <p>Let’s try interacting with the object by setting the IsExpanded to true.</p> <p><a href="http://lh4.ggpht.com/-uKcevwtnUO4/T_CImnGxyWI/AAAAAAAAAJo/5v1AZnM_SHw/s1600-h/image%25255B28%25255D.png"><img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh6.ggpht.com/-STnkYWGudRU/T_CInKa1nyI/AAAAAAAAAJs/qk92Zjm3BWU/image_thumb%25255B16%25255D.png?imgmax=800" width="640" height="383"></a></p> <p>So far so good.&nbsp; Now let’s find my username using Ctrl+Shift.&nbsp; The $selected variable is automatically synchronized with the selected item in the tree.</p> <p><a href="http://lh6.ggpht.com/-uUeaZMYbuDc/T_CInhNnmAI/AAAAAAAAAJw/Q--l4hrlEis/s1600-h/image%25255B27%25255D.png"><img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh6.ggpht.com/-hnDhWbHtn8w/T_CIoIzVSCI/AAAAAAAAAJ0/BiqbUMnfigM/image_thumb%25255B15%25255D.png?imgmax=800" width="640" height="379"></a></p>  <p>Let’s do some black magic and change my name.</p> <p><a href="http://lh6.ggpht.com/-hC4FVTnZDxc/T_CIoTrYfiI/AAAAAAAAAJ4/aQQGFbrxCzM/s1600-h/image%25255B26%25255D.png"><img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh3.ggpht.com/-RqOCvfsU6cU/T_CIo6zvtcI/AAAAAAAAAJ8/e8XMWPj60BM/image_thumb%25255B14%25255D.png?imgmax=800" width="640" height="382"></a></p> <p>Finally, let’s find every ListBox in the application.&nbsp; <em>Find-Item</em> is used to recursively find everything in the visual tree which is a ListBox.</p> <p><a href="http://lh6.ggpht.com/-nlycDcpP-bk/T_CIpXMcWxI/AAAAAAAAAKA/gIGruuduR9g/s1600-h/image%25255B25%25255D.png"><img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh3.ggpht.com/-oAB7IIj6LLY/T_CIqDPWS6I/AAAAAAAAAKE/aX1DNZnIOVo/image_thumb%25255B13%25255D.png?imgmax=800" width="640" height="367"></a></p> <p>And from here, it’s as simple as grabbing the <em>DataContext</em> of any control to get access to the view model.</p> <p>By the way, this is targeting PowerShell V3, so you will need to have the RC installed.</p> <p>Try it out and let me know what you think!</p>  </div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/06/08/n2n-net-2-node-part-1/">N2N: .NET 2 Node: Part 1</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-08T00:00:00-04:00" pubdate data-updated="true">Jun 8<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-Let’s get some actual coding done.&nbsp; If you want some basic prologue, check out the first part of my series <a href="http://blingcode.blogspot.com/2012/06/n2n-net-2-node.html">here</a>.<br>Anywho, let’s get to the meat of what we’re trying to accomplish.&nbsp; I will start with the typical C# class you would write, do the same in Javascript, and then again in C#, but using the style of Javascript using closures.<br>Here’s the use case:<br> <ul> <li>Handle a web request  <li>Check the MongoDB database to see if an entry exists and return it if available.  <li>Otherwise, query an external API for data, save it into MongoDB, and then return that. </li></ul> <p>This is a pretty standard straight-forward approach in web applications.&nbsp; If you’re not using MongoDB, you’ll be using memcache, Redis, or some other equivalent data store.<br><br>First, let’s implement an pseudo-code ASP.NET MVC controller which does the above:</p> <div id="codeSnippetWrapper"><pre style="border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: #f4f4f4; margin: 0em; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: 'Courier New', courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px" id="codeSnippet"><span style="color: #0000ff">public</span> <span style="color: #0000ff">class</span> QuoteController : Controller<br>{<br>    MongoCollection collection;<br>    IExternalApi external;<br><br>    <span style="color: #0000ff">public</span> ActionResult Get(<span style="color: #0000ff">string</span> symbol)<br>    {<br>        var quote = <span style="color: #0000ff">this</span>.collection.FindOne(<span style="color: #0000ff">new</span> { symbol });<br>        <span style="color: #0000ff">if</span> (quote == <span style="color: #0000ff">null</span>)<br>        {<br>            var json = <span style="color: #0000ff">this</span>.external.GetQuote(symbol);<br>            <span style="color: #0000ff">this</span>.collection.Save(json);<br>        }<br><br>        ViewBag.Quote = quote;<br>        <span style="color: #0000ff">return</span> View();<br>    }<br>}<br></pre><br></div>
-<p>Error handling and initialization are omitted for brevity, but it’s an otherwise straight-forward synchronous send JSON to the browser response.&nbsp; So how does something like this look in Node?&nbsp; First, let’s throw in a web framework.&nbsp; I picked Express because it seems to have the most traction right now.&nbsp; Again, for brevity I will omit a bunch of boot strapping code, and skip to the core logic.<br><br>
-<div id="codeSnippetWrapper">
-<div id="codeSnippetWrapper"><pre style="border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: #f4f4f4; margin: 0em; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: 'Courier New', courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px" id="codeSnippet">var QuoteService = function() {<br>    var mongoCollection; <span style="color: #008000">// new MongoCollection</span><br>    var external; <span style="color: #008000">// new External API</span><br><br>    <span style="color: #008000">// req/res are the request/response passed in by Node/Express</span><br>    <span style="color: #0000ff">this</span>.get = function(symbol, req, res) {<br>        mongoCollection.findOne({ symbol: symbol }, function(error, item) {<br>            <span style="color: #0000ff">if</span> (item === <span style="color: #0000ff">null</span>) {<br>                external.getQuote(symbol, function(error, result) {<br>                    mongoCollection.save(result);<br>                    req.write(result);<br>                    req.end();<br>                });<br>            } <span style="color: #0000ff">else</span> {<br>                req.write(item);<br>                req.end();<br>            }<br>        });<br>    };<br>};<br>module.exports = QuoteService;<br><br></pre><br></div>OK, looks a lot different!&nbsp; The first thing you’ll notice is that the class is actually a function.&nbsp; Javascript doesn’t have real classes like C# or Java, but you can simulate things like private and public members by using closures.&nbsp; In the code snippet above, <em>mongoCollection </em>and <em>external</em> are private variables.&nbsp; However, the <em>get</em> function is public because it’s prefixed with <em>this</em>.&nbsp; Finally, because Javascript has closures you can still access the private variables and retain their state.<br><br>Last but not least, as far as programming in Node is concerned, every function returns void.&nbsp; Node is extremely fast – but it is still single threaded, which means you need to take extreme care not to block on any operation.&nbsp; In summary, you need to get used to working with callbacks.&nbsp; In the example above, the callback for the Mongo query invokes another function, which again uses a callback for the result.&nbsp; Typically any errors are also passed through to the callback, so in place of try/catch blocks, you will be checking to see if the error parameter has a value.<br><br>To conclude, let’s write a C# version that mimics the Javascript style.<br><br>
-<div id="codeSnippetWrapper">
-<div id="codeSnippetWrapper"><pre style="border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: #f4f4f4; margin: 0em; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: 'Courier New', courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px" id="codeSnippet"><span style="color: #0000ff">public</span> <span style="color: #0000ff">static</span> <span style="color: #0000ff">void</span> Main(<span style="color: #0000ff">string</span>[] args)<br>{<br>    var QuoteService = <span style="color: #0000ff">new</span> Func&lt;dynamic&gt;(() =&gt; {<br>        var mongoCollection = <span style="color: #0000ff">new</span> MongoCollection();<br>        var external = <span style="color: #0000ff">new</span> IExternalApi();<br>        <span style="color: #0000ff">return</span> <span style="color: #0000ff">new</span><br>        {<br>            get = <span style="color: #0000ff">new</span> Action&lt;<span style="color: #0000ff">string</span>, Request, Response&gt;((symbol, req, res) =&gt;<br>            {<br>                mongoCollection.FindOne(<span style="color: #0000ff">new</span>{symbol}, (error, item) =&gt; {<br>                    <span style="color: #0000ff">if</span> (item == <span style="color: #0000ff">null</span>)<br>                    {<br>                        external.GetSymbol(symbol, (e, result) =&gt; {<br>                            mongoCollection.Save(result);<br>                            req.Write(result);<br>                            req.End();<br>                        });<br>                    }<br>                    <span style="color: #0000ff">else</span><br>                    {<br>                        req.Write(item);<br>                        req.End();<br>                    }<br>                });<br>            })<br>        }});<br>}</pre><br></div>100% valid C# syntax.<br><br>Would you ever want to do that in C#?&nbsp; Probably not.&nbsp; But if you need some mental conversion from C# to/from Javascript, I think it’s a good place to start.<br><br>In summary, Javascript is kind of like programming in C# using only anonymous classes, Action/Func, dynamic, declared all in the main method.</div></div></p>  </div>
 </div>
   
   
@@ -406,7 +398,11 @@ Let’s get some actual coding done.&nbsp; If you want some basic prologue, chec
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my Leader: evil-mode</a>
+        <a href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/">Emacs as my &lt;Leader&gt;: Vim Survival Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my &lt;Leader&gt;: evil-mode</a>
       </li>
     
       <li class="post">
@@ -431,10 +427,6 @@ Let’s get some actual coding done.&nbsp; If you want some basic prologue, chec
     
       <li class="post">
         <a href="/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/">Unite.vim, The plugin you didn&#8217;t know you need</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/19/on-typescript/">On TypeScript</a>
       </li>
     
   </ul>

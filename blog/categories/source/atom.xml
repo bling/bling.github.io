@@ -4,7 +4,7 @@
   <title><![CDATA[Category: source | bling on software development]]></title>
   <link href="http://bling.github.io/blog/categories/source/atom.xml" rel="self"/>
   <link href="http://bling.github.io/"/>
-  <updated>2013-10-16T13:37:10-04:00</updated>
+  <updated>2013-10-27T13:38:50+00:00</updated>
   <id>http://bling.github.io/</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[SourceGear Vault, Part 4, Conclusion]]></title>
     <link href="http://bling.github.io/blog/2009/04/25/sourcegear-vault-part-4/"/>
-    <updated>2009-04-25T00:00:00-04:00</updated>
+    <updated>2009-04-25T00:00:00+00:00</updated>
     <id>http://bling.github.io/blog/2009/04/25/sourcegear-vault-part-4</id>
     <content type="html"><![CDATA[<p>I suppose I should give a disclaimer since I am <em>not</em> an expert with Vault, and my opinions may be completely due to my lack of understanding of the system.  With that in mind, here&rsquo;s what my experience of using Vault has been so far.</p>
 
@@ -31,7 +31,7 @@
   <entry>
     <title type="html"><![CDATA[SourceGear Vault, Part 3 (Performance vs Subversion)]]></title>
     <link href="http://bling.github.io/blog/2009/04/24/sourcegear-vault-part-3/"/>
-    <updated>2009-04-24T00:00:00-04:00</updated>
+    <updated>2009-04-24T00:00:00+00:00</updated>
     <id>http://bling.github.io/blog/2009/04/24/sourcegear-vault-part-3</id>
     <content type="html"><![CDATA[<p>I downloaded the kernel 2.6.29.1, and extracted it to the working folder.  I figured this was an easy way to have a real-world scenario of changes (albeit a little big since it is all changes that happened between 29 and 29.1).</p>
 
@@ -61,7 +61,7 @@
   <entry>
     <title type="html"><![CDATA[SourceGear Vault, Part 2 (Performance vs Subversion)]]></title>
     <link href="http://bling.github.io/blog/2009/04/23/sourcegear-vault-part-2/"/>
-    <updated>2009-04-23T00:00:00-04:00</updated>
+    <updated>2009-04-23T00:00:00+00:00</updated>
     <id>http://bling.github.io/blog/2009/04/23/sourcegear-vault-part-2</id>
     <content type="html"><![CDATA[<p>Obviously you can&rsquo;t compare something without performance numbers!  So in this post I&rsquo;ll post some performance numbers for the most common operations.  I&rsquo;ll be using the Linux kernel for no reason other than it&rsquo;s readily available and everyone knows about it.  The size of the code base is also relatively large (depending on who you ask).</p>
 
@@ -106,7 +106,7 @@
   <entry>
     <title type="html"><![CDATA[SourceGear Vault, Part 1]]></title>
     <link href="http://bling.github.io/blog/2009/04/22/sourcegear-vault-part-1/"/>
-    <updated>2009-04-22T00:00:00-04:00</updated>
+    <updated>2009-04-22T00:00:00+00:00</updated>
     <id>http://bling.github.io/blog/2009/04/22/sourcegear-vault-part-1</id>
     <content type="html"><![CDATA[<p>I&rsquo;ll be starting a new job soon, and the company is using SourceGear Vault, so I went ahead and downloaded the latest beta versions off the site (since it&rsquo;s free for single users) to see how it was like.</p>
 

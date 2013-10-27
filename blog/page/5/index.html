@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="Infrastructure Refactor A lot of things changed internally, and I mean….a lot…. From an infrastructure standpoint, I decided to remove the &hellip;">
+  <meta name="description" content="Exploring Caliburn Micro As I hinted in earlier posts, Caliburn Micro has some wicked conventions that makes for writing MVVM super easy, and it also &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +83,116 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2011/09/21/building-real-time-push-app-with-rx-8/">Building a Real-time Push App With Silverlight: Part 8</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-09-21T00:00:00+00:00" pubdate data-updated="true">Sep 21<span>st</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1>Exploring Caliburn Micro</h1>
+
+<p>As I hinted in earlier posts, Caliburn Micro has some wicked conventions that makes for writing MVVM super easy, and it also have a very convenient syntax for hooking up events.  For example, the following:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;Button</span> <span class="na">Content=</span><span class="s">&quot;R&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;i:Interaction.Triggers&gt;</span>
+</span><span class='line'>       <span class="nt">&lt;i:EventTrigger</span> <span class="na">EventName=</span><span class="s">&quot;Click&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>           <span class="nt">&lt;i:InvokeCommandAction</span> <span class="na">Command=</span><span class="s">&quot;{Binding ReplyCommand}&quot;</span> <span class="na">CommandParameter=</span><span class="s">&quot;{Binding}&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>       <span class="nt">&lt;/i:EventTrigger&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;/i:Interaction.Triggers&gt;</span>
+</span><span class='line'><span class="nt">&lt;/Button&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Can be rewritten like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;Button</span> <span class="na">Content=</span><span class="s">&quot;R&quot;</span> <span class="na">cal:Message.Attach=</span><span class="s">&quot;[Reply($dataContext)]&quot;</span> <span class="nt">/&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>There are some smarts going on here.  Caliburn Micro will default to the Click event for buttons.  For a full syntax, it would be <code>cal:Message.Attach="[Event Click] = [Reply($dataContext)]"</code>.  As you can imagine, that will call the Reply method and pass in the current data context.  You can also pass in other things like <code>$this</code>, <code>$source</code>, or <code>$executionContext</code> for full access to anything and everything Caliburn Micro itself has access to.</p>
+
+<p>The coolest thing about this is it gives you some wicked control over how your data context gets set.  Ever struggled with popup windows or data grids and using weird hacks to get the binding correct?  Caliburn Micro makes this very easy.  Here’s an example.</p>
+
+<ol>
+<li>I have a DataTemplate which renders the UI for the model Tweet.</li>
+<li>Tweet is just a simple class which holds only properties.</li>
+<li>Inside the DataTemplate, I have some buttons that when the user clicks will reply, retweet, quote, or direct message.</li>
+</ol>
+
+
+<p>The Tweet class is purely for modeling data, so adding any methods would be bad practice.  Also, since I’m in a DataTemplate I can’t easily reference another control with ElementName (in this case I need the containing parent’s DataContext).  And to add insult to injury, Silverlight 4 doesn’t have RelativeSource ancestor type.  So how do I solve this?</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;StackPanel</span> <span class="na">VerticalAlignment=</span><span class="s">&quot;Bottom&quot;</span> <span class="na">cal:Action.TargetWithoutContext=</span><span class="s">&quot;shell&quot;</span> <span class="na">Orientation=</span><span class="s">&quot;Horizontal&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;Button</span> <span class="na">Content=</span><span class="s">&quot;R&quot;</span> <span class="na">cal:Message.Attach=</span><span class="s">&quot;[Reply($dataContext)]&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;Button</span> <span class="na">Content=</span><span class="s">&quot;RT&quot;</span> <span class="na">cal:Message.Attach=</span><span class="s">&quot;[Retweet($dataContext)]&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;Button</span> <span class="na">Content=</span><span class="s">&quot;Q&quot;</span> <span class="na">cal:Message.Attach=</span><span class="s">&quot;[Quote($dataContext)]&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;Button</span> <span class="na">Content=</span><span class="s">&quot;DM&quot;</span> <span class="na">cal:Message.Attach=</span><span class="s">&quot;[DirectMessage($dataContext)]&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'><span class="nt">&lt;/StackPanel&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The secret is the attached property TargetWithoutContext.  As the name implies, it will set the target for all the ActionMessages attached to all the buttons, without setting the context.  If I used the Target attached property, it would set all of the Buttons’ data context to the same object – not what we want.  Since the Button’s data context remains intact, we can call “Reply($dataContext)”, which calls the Reply method on the target object (set on the StackPanel) and pass in the Tweet.  “shell” is the key of the service that I registered into the container.</p>
+
+<p>Originally I wanted this entire series to be able writing a fast push data app with Silverlight and Rx, and now I’m finding that I’m writing an entire Twitter client because it’s so much fun :&ndash;).</p>
+
+<p>I’m going to make another release soon.  While the first release was merely experimental, the next one will be useful enough to potentially use full time.  As you can probably tell with this blog post, it supports all the actions mentioned previously (and it’ll appear on mouse hover):</p>
+
+<p><img src="http://lh5.ggpht.com/-RIZG8I0_rik/TnqqmNCK-6I/AAAAAAAAAHM/-xU4_cj6iDg/image_thumb%25255B2%25255D.png?imgmax=800" alt="img" /></p>
+
+<p>The tweet box is much improved and shows you how many character you have left:</p>
+
+<p><img src="http://lh4.ggpht.com/-2VhCjjYrcoo/TnqqmstbbUI/AAAAAAAAAHU/zK65JB2shQw/image_thumb%25255B3%25255D.png?imgmax=800" alt="img" /></p>
+
+<p>And it’s smart enough to auto wrap http links via Twitter’s t.co service, and the counter takes that into account.  Some interesting things to note is that in the future <em>all links</em> will be wrapped t.co.  Looks like Twitter is trying to eat up bt.ly or something.</p>
+
+<p>Clicking on @users and #topics will automatically open a new timeline and subscribe to those tweets.  It is almost full featured enough to become my main Twitter client.  There are certain features still missing, and it’s purely based on when I have time to port them over.</p>
+
+<p>As always, you can install directly from <a href="http://dl.dropbox.com/u/2072014/Ping.Pong/PingPongTestPage.html">here</a>, or you can grab the code on the <a href="https://github.com/bling/Ping.Pong">GitHub</a> page!</p>
+
+<p>Next post will be about Rx from a very top level perspective and how it influenced my code from beginning to be experienced and all refactorings in between.  Stay tuned!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2011/09/16/building-real-time-push-app-with-rx-7/">Building a Real-time Push App With Silverlight: Part 7</a></h1>
     
     
@@ -99,7 +209,7 @@
   
 
 
-<time datetime="2011-09-16T00:00:00-04:00" pubdate data-updated="true">Sep 16<span>th</span>, 2011</time>
+<time datetime="2011-09-16T00:00:00+00:00" pubdate data-updated="true">Sep 16<span>th</span>, 2011</time>
         
       </p>
     
@@ -136,7 +246,7 @@
   
 
 
-<time datetime="2011-09-13T00:00:00-04:00" pubdate data-updated="true">Sep 13<span>th</span>, 2011</time>
+<time datetime="2011-09-13T00:00:00+00:00" pubdate data-updated="true">Sep 13<span>th</span>, 2011</time>
         
       </p>
     
@@ -206,7 +316,7 @@
   
 
 
-<time datetime="2011-09-08T00:00:00-04:00" pubdate data-updated="true">Sep 8<span>th</span>, 2011</time>
+<time datetime="2011-09-08T00:00:00+00:00" pubdate data-updated="true">Sep 8<span>th</span>, 2011</time>
         
       </p>
     
@@ -421,7 +531,7 @@
   
 
 
-<time datetime="2011-09-05T00:00:00-04:00" pubdate data-updated="true">Sep 5<span>th</span>, 2011</time>
+<time datetime="2011-09-05T00:00:00+00:00" pubdate data-updated="true">Sep 5<span>th</span>, 2011</time>
         
       </p>
     
@@ -586,223 +696,6 @@ Rather than the custom Observable generator with Iterval, why not use Observable
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/08/28/building-real-time-push-app-with-rx-3/">Building a Real-time Push App With Silverlight: Part 3</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-08-28T00:00:00-04:00" pubdate data-updated="true">Aug 28<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>In this part we’re going to fire up Expression Blend (the trial for version 5 can be found <a href="http://www.microsoft.com/download/en/details.aspx?displaylang=en&amp;amp;id=9503">here</a>) and do some UI work.</p>
-
-<p>In part 2, I created a simple Twitter client which connected to the streaming API, and connected to the sampling request which brings back random tweets.  Here is the data template:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;DataTemplate</span> <span class="na">x:Key=</span><span class="s">&quot;TweetDataTemplate&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;Grid</span> <span class="na">DataContext=</span><span class="s">&quot;{Binding}&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;Grid.RowDefinitions&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;RowDefinition</span> <span class="nt">/&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;RowDefinition</span> <span class="na">Height=</span><span class="s">&quot;Auto&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/Grid.RowDefinitions&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;TextBlock</span> <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span> <span class="na">FontSize=</span><span class="s">&quot;12&quot;</span> <span class="na">Text=</span><span class="s">&quot;{Binding Text}&quot;</span> <span class="na">TextWrapping=</span><span class="s">&quot;Wrap&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;TextBlock</span> <span class="na">Grid.Row=</span><span class="s">&quot;1&quot;</span>
-</span><span class='line'>                   <span class="na">HorizontalAlignment=</span><span class="s">&quot;Right&quot;</span>
-</span><span class='line'>                   <span class="na">VerticalAlignment=</span><span class="s">&quot;Bottom&quot;</span>
-</span><span class='line'>                   <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span>
-</span><span class='line'>                   <span class="na">FontSize=</span><span class="s">&quot;13.333&quot;</span>
-</span><span class='line'>                   <span class="na">Foreground=</span><span class="s">&quot;BlueViolet&quot;</span>
-</span><span class='line'>                   <span class="na">Text=</span><span class="s">&quot;{Binding ScreenName}&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;TextBlock</span> <span class="na">Grid.Row=</span><span class="s">&quot;1&quot;</span>
-</span><span class='line'>                   <span class="na">HorizontalAlignment=</span><span class="s">&quot;Left&quot;</span>
-</span><span class='line'>                   <span class="na">VerticalAlignment=</span><span class="s">&quot;Bottom&quot;</span>
-</span><span class='line'>                   <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span>
-</span><span class='line'>                   <span class="na">FontSize=</span><span class="s">&quot;9.333&quot;</span>
-</span><span class='line'>                   <span class="na">Foreground=</span><span class="s">&quot;DarkCyan&quot;</span>
-</span><span class='line'>                   <span class="na">Text=</span><span class="s">&quot;{Binding CreatedAt}&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/Grid&gt;</span>
-</span><span class='line'><span class="nt">&lt;/DataTemplate&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This renders into something like this:</p>
-
-<p><img src="http://lh4.ggpht.com/-ul4umD_jKFs/Tlq_U7HuoLI/AAAAAAAAAFg/pOhMiaqmxcE/s1600/image%25255B4%25255D.png" alt="img" /></p>
-
-<p>The text is randomly generated from Blend’s <a href="http://lmgtfy.com/?q=blend+sample+data">sample</a> capability, which is totally awesome as it allows designers to see what they’re working with, and keeps the sample data separate from the real data.</p>
-
-<p>While design is a matter of personal taste, and you’re bound to get disagreements between different people, if you follow some basic rules you’ll satisfy a greater audience.</p>
-
-<ul>
-<li>Subtle gradients and small shadows
-
-<ul>
-<li>If you take a look at all the nice interfaces, they tend to use very slight gradients and small shadows.  Most of the time you don’t even notice unless you look closely.</li>
-<li>I think Microsoft’s Metro design is beautiful.  Reason?  It emphasizes text over decorations (like gradients and shadows).  This tends to lead to very clean design because there’s very little opportunity to abuse gradients and shadows.</li>
-</ul>
-</li>
-<li>Realism and light sources
-
-<ul>
-<li>Continuing on with gradients and shadows, they should be realistic.  Look at your design from a 3D point of view.  Apply a light source from a certain angle, and then apply your shadows relative to that light source.</li>
-<li>Convey distance properly
-
-<ul>
-<li>Darker shadows imply being closer to the background, whereas lighter shadows imply being further away.  Use blurring to add emphasis to the distance.  <img src="http://lh5.ggpht.com/-YvKRal5ToEw/Tlr6OrRIS4I/AAAAAAAAAFs/AAg79v6y2Cc/image_thumb%25255B14%25255D.png?imgmax=800" alt="eg" /></li>
-<li>If you overlap planes you should apply these rules to each individual plane.  Don’t use the same border for everything.  Think about how it would look like in real life if you laid it out like that with pieces of paper.  The shadow sizes for that will be different, so you should do the same.</li>
-<li>Also keep in mind that the shadows used above are <em>way</em> too much for any application.  Be subtle!</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Consistent theme
-
-<ul>
-<li>This one seems obvious but nothing is worse than having a nice looking application bring up an unskinned dialog.</li>
-</ul>
-</li>
-<li>Usability
-
-<ul>
-<li>If the design doesn’t serve a purpose to make it more usable, it shouldn’t be there.  Even something as simple as black on white follows this – you do that so you can read text.  However, even something as simple as that can be improved.  Take a look at why the Kindle is so successful.  The readability is better because of the lower contrast between the black and light-brown background.</li>
-</ul>
-</li>
-</ul>
-
-
-<p>With these starting points, let’s redesign the data template.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;DataTemplate</span> <span class="na">x:Key=</span><span class="s">&quot;TweetDataTemplate&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>   <span class="nt">&lt;Grid&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;Grid.Background&gt;</span>
-</span><span class='line'>           <span class="nt">&lt;LinearGradientBrush</span> <span class="na">StartPoint=</span><span class="s">&quot;0.5,0&quot;</span> <span class="na">EndPoint=</span><span class="s">&quot;0.5,1&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>               <span class="nt">&lt;GradientStop</span> <span class="na">Color=</span><span class="s">&quot;#FFDADADA&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>               <span class="nt">&lt;GradientStop</span> <span class="na">Offset=</span><span class="s">&quot;1&quot;</span> <span class="na">Color=</span><span class="s">&quot;#FFC8C8C8&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>           <span class="nt">&lt;/LinearGradientBrush&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;/Grid.Background&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;Grid.RowDefinitions&gt;</span>
-</span><span class='line'>           <span class="nt">&lt;RowDefinition</span> <span class="nt">/&gt;</span>
-</span><span class='line'>           <span class="nt">&lt;RowDefinition</span> <span class="na">Height=</span><span class="s">&quot;Auto&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;/Grid.RowDefinitions&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;TextBlock</span> <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span> <span class="na">FontSize=</span><span class="s">&quot;12&quot;</span> <span class="na">Text=</span><span class="s">&quot;{Binding Text}&quot;</span> <span class="na">TextWrapping=</span><span class="s">&quot;Wrap&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;TextBlock</span> <span class="na">Grid.Row=</span><span class="s">&quot;1&quot;</span>
-</span><span class='line'>                  <span class="na">HorizontalAlignment=</span><span class="s">&quot;Right&quot;</span>
-</span><span class='line'>                  <span class="na">VerticalAlignment=</span><span class="s">&quot;Bottom&quot;</span>
-</span><span class='line'>                  <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span>
-</span><span class='line'>                  <span class="na">FontSize=</span><span class="s">&quot;13.333&quot;</span>
-</span><span class='line'>                  <span class="na">Foreground=</span><span class="s">&quot;BlueViolet&quot;</span>
-</span><span class='line'>                  <span class="na">Text=</span><span class="s">&quot;{Binding ScreenName}&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;TextBlock</span> <span class="na">Grid.Row=</span><span class="s">&quot;1&quot;</span>
-</span><span class='line'>                  <span class="na">HorizontalAlignment=</span><span class="s">&quot;Left&quot;</span>
-</span><span class='line'>                  <span class="na">VerticalAlignment=</span><span class="s">&quot;Bottom&quot;</span>
-</span><span class='line'>                  <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span>
-</span><span class='line'>                  <span class="na">FontSize=</span><span class="s">&quot;9.333&quot;</span>
-</span><span class='line'>                  <span class="na">Foreground=</span><span class="s">&quot;#FF003D8F&quot;</span>
-</span><span class='line'>                  <span class="na">Text=</span><span class="s">&quot;{Binding CreatedAt}&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;Border</span> <span class="na">Grid.RowSpan=</span><span class="s">&quot;2&quot;</span> <span class="na">BorderBrush=</span><span class="s">&quot;#FF999999&quot;</span> <span class="na">BorderThickness=</span><span class="s">&quot;0,0,0,1&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;Border</span> <span class="na">Grid.RowSpan=</span><span class="s">&quot;2&quot;</span> <span class="na">BorderBrush=</span><span class="s">&quot;White&quot;</span> <span class="na">BorderThickness=</span><span class="s">&quot;0,1,0,0&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>   <span class="nt">&lt;/Grid&gt;</span>
-</span><span class='line'><span class="nt">&lt;/DataTemplate&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>After these changes, it looks like this:</p>
-
-<p><img src="http://lh5.ggpht.com/-fTL8wgr5ebs/Tlr6PGkqyeI/AAAAAAAAAF0/O98iakwvqGc/image_thumb%25255B17%25255D.png?imgmax=800" alt="eg" /></p>
-
-<p>Did you notice the gradient?  You might think after seeing it here to adjust the gradients more so you can see it.  That would be a mistake.  See below.</p>
-
-<p><img src="http://lh6.ggpht.com/--uPF_IEo6LM/Tlr6PpL9YDI/AAAAAAAAAF8/UxqCqYW3Wl4/image_thumb%25255B47%25255D.png?imgmax=800" alt="eg" /></p>
-
-<p>The above is the exact same thing, but stacked vertically three times.  When this happens the subtle difference between the top and bottom of the control is more pronounced, so it looks like multiple panels are aligned together.</p>
-
-<p>However, there’s still a little touch you can add.  The white and gray borders are only 1 pixel high, but that’s the little touch needed to make it look crisp.</p>
-
-<p><img src="http://lh3.ggpht.com/-QHLW-sKfPfI/Tlr6P_c9qLI/AAAAAAAAAGE/kJ0Z8VgS3xg/image_thumb%25255B44%25255D.png?imgmax=800" alt="eg" /></p>
-
-<p>Finally, let’s see the before and after (or eh&hellip;rather after and before, because I took the screenshot backwards :P):</p>
-
-<p><img src="http://lh6.ggpht.com/-tzZ8AVtNv0M/Tlr6QmHJHnI/AAAAAAAAAGM/H1SYEqT6cis/image_thumb%25255B50%25255D.png?imgmax=800" alt="eg" /></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -820,7 +713,11 @@ Rather than the custom Observable generator with Iterval, why not use Observable
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my Leader: evil-mode</a>
+        <a href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/">Emacs as my &lt;Leader&gt;: Vim Survival Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my &lt;Leader&gt;: evil-mode</a>
       </li>
     
       <li class="post">
@@ -845,10 +742,6 @@ Rather than the custom Observable generator with Iterval, why not use Observable
     
       <li class="post">
         <a href="/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/">Unite.vim, The plugin you didn&#8217;t know you need</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/19/on-typescript/">On TypeScript</a>
       </li>
     
   </ul>

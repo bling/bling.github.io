@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="Ooops, I forgot to mention that it&#8217;s easily mockable as well. public class UserService : IUserService { public UserService(ISessionFactory &hellip;">
+  <meta name="description" content="Inevitably as a project gets more complicated, you will need to start using more features of your IoC container. Autofac has built-in support for &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +83,93 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2009/09/07/member-injection-module-for-autofac/">Member Injection Module for Autofac</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-09-07T00:00:00+00:00" pubdate data-updated="true">Sep 7<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+Inevitably as a project gets more complicated, you will need to start using more features of your IoC container.  Autofac has built-in support for property injection by hooking into the OnActivating or OnActivated events, which basically set all public properties (or only those which are unset).
+
+However, I didn&#8217;t really like this because once you start using properties, it&#8217;s not as clear cut as constructors that you are using injection.  It becomes hard to manage later on when you have many properties which some should be injected and others should be manually set in code.  Autofac&#8217;s inject all or only-null approach doesn&#8217;t fit the bill when a class gets a little more complicated.
+
+I set up to fix this by writing a custom module, and it turned out to be very very simple.  With attributes, we can mimic functionality that&#8217;s used in Ninject.
+
+Here&#8217;s the module code:
+<pre>
+public class MemberInjectionModule : IModule
+{
+  public void Configure(IContainer container)
+  {
+    container.ComponentRegistered += (oo, ee) =>
+      ee.ComponentRegistration.Activated += (o, e) =>
+    {
+      const BindingFlags flags = BindingFlags.Instance |
+                                 BindingFlags.NonPublic |
+                                 BindingFlags.Public;
+      var type = e.Instance.GetType();
+      foreach (var field in type.GetFields(flags))
+      {
+        if (field.GetCustomAttributes(typeof(InjectedAttribute), true).Length > 0)
+          field.SetValue(e.Instance, e.Context.Resolve(field.FieldType));
+      }
+      foreach (var prop in type.GetProperties(flags))
+      {
+        if (prop.GetCustomAttributes(typeof(InjectedAttribute), true).Length > 0)
+        {
+          if (prop.GetIndexParameters().Length > 0)
+            throw new InvalidOperationException("Indexed properties cannot be injected.");
+
+          prop.SetValue(e.Instance, e.Context.Resolve(prop.PropertyType), null);
+        }
+      }
+    };
+  }
+}
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+public class InjectedAttribute : Attribute { }
+</pre>
+And that&#8217;s it!  Pretty basic reflection here stuff here, but as you can see&#8230;iterate through all fields and properties (including privates), and try to resolve them.
+
+Now, you can just RegisterModule(new MemberInjectionModule()), and inside your services you simply annotate your properties/fields with the [Injected] attribute, like so:
+<pre>
+public class SomeService : ISomeService
+{
+  [Injected]
+  protected ISomeOtherService SomeOtherService { get; set; }
+}
+</pre>
+And now, it&#8217;s a very clear cut way of explicitly defining which properties (and fields) should be injected.  Also, it&#8217;s also a simple string property away defined in the attribute if you want to specify a named service, which I&#8217;ll leave the the reader to implement :)</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2009/08/21/session-management-with-nhibernate-and-autofac-2/">Session Management With NHibernate and Autofac: Corollary</a></h1>
     
     
@@ -99,7 +186,7 @@
   
 
 
-<time datetime="2009-08-21T00:00:00-04:00" pubdate data-updated="true">Aug 21<span>st</span>, 2009</time>
+<time datetime="2009-08-21T00:00:00+00:00" pubdate data-updated="true">Aug 21<span>st</span>, 2009</time>
         
       </p>
     
@@ -149,7 +236,7 @@ So what I&#8217;ve basically done is insert a lambda expression into the constru
   
 
 
-<time datetime="2009-08-20T00:00:00-04:00" pubdate data-updated="true">Aug 20<span>th</span>, 2009</time>
+<time datetime="2009-08-20T00:00:00+00:00" pubdate data-updated="true">Aug 20<span>th</span>, 2009</time>
         
       </p>
     
@@ -256,7 +343,7 @@ EDIT: I have since dropped this approach and I&#8217;m currently injecting ISess
   
 
 
-<time datetime="2009-08-18T00:00:00-04:00" pubdate data-updated="true">Aug 18<span>th</span>, 2009</time>
+<time datetime="2009-08-18T00:00:00+00:00" pubdate data-updated="true">Aug 18<span>th</span>, 2009</time>
         
       </p>
     
@@ -309,7 +396,7 @@ EDIT: I have since dropped this approach and I&#8217;m currently injecting ISess
   
 
 
-<time datetime="2009-08-15T00:00:00-04:00" pubdate data-updated="true">Aug 15<span>th</span>, 2009</time>
+<time datetime="2009-08-15T00:00:00+00:00" pubdate data-updated="true">Aug 15<span>th</span>, 2009</time>
         
       </p>
     
@@ -394,110 +481,6 @@ There&#39;s a few of us floating around who&#39;ve found, like, and use Lokad.Sh
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/08/08/dynamic-proxies/">Dynamic Proxies</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-08-08T00:00:00-04:00" pubdate data-updated="true">Aug 8<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content">Life has sure been a roller coaster lately ever since I started working on my new project.  I&#8217;ve learned a lot about WCF in the past week.  There&#8217;s really nothing that can teach you faster than trying something out yourself.
-
-I&#8217;ve joined the ranks of countless others who have had to deal with implementing service behaviors to handle WCF exceptions (because by default thrown exceptions fault the communication channel), realized that WCF proxy clients breaks the &#8216;using&#8217; keyword because someone thought it was a good idea to throw exceptions in Dispose(), and even Unity&#8217;s InterfaceInterceptor not <a href="http://unity.codeplex.com/WorkItem/View.aspx?WorkItemId=3685">supporting more than 1 interface</a>!
-
-But now that we&#8217;re talking about proxies, I&#8217;ve been thinking for a while about switching out Unity with a more mature IoC container like Windsor or StructureMap.  There are little touches that other containers have that I miss in Unity.  For example, auto-wiring.
-
-But then again, the integration that Unity has with the rest of the Enterprise Library is very nice, of which I&#8217;m using the Logging and Exception Policy blocks, so it made sense in a way that everything in my bin folder just had Microsoft.Practices.*.dll
-
-But now I&#8217;m seriously reconsidering.
-<pre>
-public interface ITestService {
-  int Count { get; set; }
-  void DoWork();
-  bool ShouldDoWork();
-}
-public class TestService : ITestService {
-  public int Count { get; set; }
-  public void DoWork() { ++Count; }
-  bool ShouldDoWork() { return true; }
-}
-public void HowDoTheyCompare() {
-  var unity = (ITestService)new Microsoft.Practices.Unity.InterceptionExtension.InterfaceInterceptor()
-                   .CreateProxy(typeof(ITestService), new TestService());
-  var castle = new Castle.DynamicProxy.ProxyGenerator()
-                   .CreateInterfaceProxyWithTarget&lt;ITestService&gt;(new TestService());
-
-  Thread.Sleep(1000);
-
-  Stopwatch sw = new Stopwatch();
-  sw.Start();
-  for (int i = 0; i < 1000000; ++i) { if (unity.ShouldDoWork()) unity.DoWork(); }
-  sw.Stop();
-  Console.WriteLine("unity: " + sw.ElapsedMilliseconds);
-  sw.Reset();
-  sw.Start();
-  for (int i = 0; i < 1000000; ++i) { if (castle.ShouldDoWork()) castle.DoWork(); }
-  sw.Stop();
-  Console.WriteLine("castle: " + sw.ElapsedMilliseconds);
-}
-</pre>
-Results?
-unity: 1787
-castle: 136
-
-From this test it looks like the Unity interception is 13x slower&#8230;.but wait!  I mentioned before that Unity has a bug where it can only proxy one interface&#8230;.so to resolve that we would need to use the TransparentProxyInterceptor.
-
-Let&#8217;s change it and test again&#8230;
-
-unity: 30462
-castle: 142
-
-Hmmmm&#8230;.214x slower.
-
-I guess we can try the VirtualMethodInterceptor for completeness.  After making all methods virtual, here&#8217;s the results.
-
-unity: 3843
-castle: 132
-
-Still 29x slower.
-
-Whatever DynamicProxy is doing&#8230;it&#8217;s orders of magnitude faster than what Unity&#8217;s doing.</div>
-<h2>Comments</h2>
-<div class='comments'>
-<div class='comment'>
-<div class='author'>Krzysztof Koźmic (2)</div>
-<div class='content'>
-Not only that. Castle has integration with logging, validation framework, much more mature and powerful IoC container, and also nice proxy library.</div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/13/">&larr; Older</a>
@@ -515,7 +498,11 @@ Not only that. Castle has integration with logging, validation framework, much m
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my Leader: evil-mode</a>
+        <a href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/">Emacs as my &lt;Leader&gt;: Vim Survival Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my &lt;Leader&gt;: evil-mode</a>
       </li>
     
       <li class="post">
@@ -540,10 +527,6 @@ Not only that. Castle has integration with logging, validation framework, much m
     
       <li class="post">
         <a href="/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/">Unite.vim, The plugin you didn&#8217;t know you need</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/19/on-typescript/">On TypeScript</a>
       </li>
     
   </ul>

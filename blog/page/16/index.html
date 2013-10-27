@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="Why doesn&rsquo;t C++ have garbage collection? Simply put, it doesn&rsquo;t need it. C++ has something called Resource Acquisition Is Initialization &hellip;">
+  <meta name="description" content="“Cross thread operation not valid: Control ### accessed from a thread other than the thread it was created.” Seriously, I don’t think there’s a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +83,132 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2009/04/09/cross-thread-operation-not-valid/">No More Cross Thread Violations!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-04-09T00:00:00+00:00" pubdate data-updated="true">Apr 9<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>“Cross thread operation not valid: Control ### accessed from a thread other than the thread it was created.”</p>
+
+<p>Seriously, I don’t think there’s a single person who’s written UI programs for .NET that has not encountered this error.  Simply put, there is only 1 thread which does drawing on the screen, and if you try to change UI elements in a thread that’s not the UI thread, this exception is thrown.</p>
+
+<p>A very common example is a progress bar.  Let’s say you’re loading a file which takes a long time to process, so you want to notify the user with a progress bar.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'>  <span class="k">public</span> <span class="k">event</span> <span class="n">EventHandler</span><span class="p">&lt;</span><span class="n">IntEventArgs</span><span class="p">&gt;</span> <span class="n">ValueProcessed</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">private</span> <span class="k">void</span> <span class="nf">StartProcessing</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">ValueProcessed</span> <span class="p">+=</span> <span class="n">ValueProcessedHandler</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">Thread</span> <span class="n">t</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="p">(</span><span class="k">delegate</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="m">1000</span><span class="p">;</span> <span class="p">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// do stuff</span>
+</span><span class='line'>        <span class="n">ValueProcessed</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="k">new</span> <span class="n">IntEventArgs</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'>    <span class="n">t</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">private</span> <span class="k">void</span> <span class="nf">ValueProcessedHandler</span><span class="p">(</span><span class="kt">object</span> <span class="n">sender</span><span class="p">,</span> <span class="n">IntEventArgs</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">_progressBar</span><span class="p">.</span><span class="n">Value</span> <span class="p">=</span> <span class="n">e</span><span class="p">.</span><span class="n">Value</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I left some implementation details out, but you can pretty much infer what IntEventArgs is, etc.  Once you try to set Value, it’ll throw an cross-thread exception.  A common pattern to solve this problem is this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'>  <span class="k">private</span> <span class="k">void</span> <span class="nf">ValueProcessedHandler</span><span class="p">(</span><span class="kt">object</span> <span class="n">sender</span><span class="p">,</span> <span class="n">IntEventArgs</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">InvokeRequired</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">this</span><span class="p">.</span><span class="n">BeginInvoke</span><span class="p">(</span><span class="n">ValueProcessedHandler</span><span class="p">,</span> <span class="n">sender</span><span class="p">,</span> <span class="n">e</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>      <span class="n">_progressBar</span><span class="p">.</span><span class="n">Value</span> <span class="p">=</span> <span class="n">e</span><span class="p">.</span><span class="n">Value</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It gets the job done…but frankly I’m too lazy to do that for every single GUI event handler I write.  Taking advantage of anonymous delegates we can write a simple wrapper delegate to do this automatically for us.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">static</span> <span class="k">class</span> <span class="nc">Program</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">public</span> <span class="k">static</span> <span class="n">EventHandler</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="n">AutoInvoke</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span><span class="n">EventHandler</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="n">handler</span><span class="p">)</span> <span class="k">where</span> <span class="n">T</span> <span class="p">:</span> <span class="n">EventArgs</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nf">delegate</span><span class="p">(</span><span class="kt">object</span> <span class="n">sender</span><span class="p">,</span> <span class="n">T</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="n">Program</span><span class="p">.</span><span class="n">MainForm</span><span class="p">.</span><span class="n">InvokeRequired</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">Program</span><span class="p">.</span><span class="n">MainForm</span><span class="p">.</span><span class="n">BeginInvoke</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">sender</span><span class="p">,</span> <span class="n">e</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">handler</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">e</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This assumes that you set Program.MainForm to an instance to a Control, typically, as the name implies, the main form of your application.  Now, whenever you assign your event handlers, you can simply do this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="n">ValueProcessed</span> <span class="p">+=</span> <span class="n">Program</span><span class="p">.</span><span class="n">AutoInvoke</span><span class="p">&lt;</span><span class="n">IntEventArgs</span><span class="p">&gt;(</span><span class="n">ValueProcessedHandler</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Pretty neat!</p>
+
+<p>BTW, just a word of warning, if you plan on using the same thing to unsubscribe an event with &ndash;=, it&rsquo;s not going to work.  Unfortunately, calling the AutoInvoke method twice on the same input delegate returns 2 results where <code>.Equals</code> and <code>==</code> will return false.  To get around this you can use a Dictionary to cache the input delegate.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2008/10/24/garbage-collection-and-c/">Garbage Collection and C++</a></h1>
     
     
@@ -99,7 +225,7 @@
   
 
 
-<time datetime="2008-10-24T00:00:00-04:00" pubdate data-updated="true">Oct 24<span>th</span>, 2008</time>
+<time datetime="2008-10-24T00:00:00+00:00" pubdate data-updated="true">Oct 24<span>th</span>, 2008</time>
         
       </p>
     
@@ -178,7 +304,7 @@ destroyed! (from a exiting the main function)</p>
   
 
 
-<time datetime="2008-09-30T00:00:00-04:00" pubdate data-updated="true">Sep 30<span>th</span>, 2008</time>
+<time datetime="2008-09-30T00:00:00+00:00" pubdate data-updated="true">Sep 30<span>th</span>, 2008</time>
         
       </p>
     
@@ -227,7 +353,7 @@ destroyed! (from a exiting the main function)</p>
   
 
 
-<time datetime="2008-09-20T00:00:00-04:00" pubdate data-updated="true">Sep 20<span>th</span>, 2008</time>
+<time datetime="2008-09-20T00:00:00+00:00" pubdate data-updated="true">Sep 20<span>th</span>, 2008</time>
         
       </p>
     
@@ -269,7 +395,7 @@ destroyed! (from a exiting the main function)</p>
   
 
 
-<time datetime="2008-09-17T00:00:00-04:00" pubdate data-updated="true">Sep 17<span>th</span>, 2008</time>
+<time datetime="2008-09-17T00:00:00+00:00" pubdate data-updated="true">Sep 17<span>th</span>, 2008</time>
         
       </p>
     
@@ -392,56 +518,6 @@ destroyed! (from a exiting the main function)</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/09/11/importance-of-color-schemes/">The Importance of Color Schemes</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2008-09-11T00:00:00-04:00" pubdate data-updated="true">Sep 11<span>th</span>, 2008</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>It is surprising to me how few people use custom color schemes and just stick with the IDE defaults.  I&rsquo;m not saying that the ones shipped with Visual Studio are bad, quite the contrary.  They are good, but it can be better.</p>
-
-<p>Since VS2005, we&rsquo;ve been given the option of having different colors for classes, value types, delegates, enumerations, and interfaces.  I consider this to be one of the single most useful features in the IDE.</p>
-
-<p>Let&rsquo;s take a look at the following comparison:</p>
-
-<p><img src="http://i34.tinypic.com/t8uky1.png" alt="comparison" /></p>
-
-<p>The first thing you&rsquo;ll probably notice is that I program on a black background.  I find this to be easier on the eyes.  It takes some getting used to at first, but once you go black you don&rsquo;t go back :&ndash;)</p>
-
-<p>These are the colors I use (or slight variations) and it helps me tremendously in keeping track of what&rsquo;s what.  It also prevents the need to use any ugly prefixes for any variable names.  Another reason I use a black background is that it&rsquo;s much easier to tell the difference between different shades of colors on a black background than it is on a white background.</p>
-
-<p>Anyways, it should be clear that my custom color scheme provides <em>much</em> more information than the default color scheme.  At an immediate glance of the code you know exactly what is a delegate and what is a class.  There is no dependence on the name or anything else.  And since we can read colors faster than we can read words, this will increase your productivity.</p>
-
-<p>The most important one, in my opinion, is the one that differentiates reference types from value types.  C# lets you declare instances on the heap or on the stack, although they have the same syntax.  The compiler is smart enough to tell the difference though, so you should take advantage of that and have the colors different.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/17/">&larr; Older</a>
@@ -459,7 +535,11 @@ destroyed! (from a exiting the main function)</p>
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my Leader: evil-mode</a>
+        <a href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/">Emacs as my &lt;Leader&gt;: Vim Survival Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my &lt;Leader&gt;: evil-mode</a>
       </li>
     
       <li class="post">
@@ -484,10 +564,6 @@ destroyed! (from a exiting the main function)</p>
     
       <li class="post">
         <a href="/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/">Unite.vim, The plugin you didn&#8217;t know you need</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/19/on-typescript/">On TypeScript</a>
       </li>
     
   </ul>

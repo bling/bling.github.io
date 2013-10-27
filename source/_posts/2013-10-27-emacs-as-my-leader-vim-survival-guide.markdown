@@ -44,7 +44,7 @@ This is a given, but I figured I'd mention it.  This is the magical package whic
 
 Remember though that evil-mode is an *emulation* of Vim; it is *not* Vim!  For example, you might try `cas` and conclude that evil-mode is broken because it is changing a paragraph instead of a sentence.  That is, of course, until you realize that Emacs also has a notion of what a sentence is, and that the default value of `sentence-end-double-space` is true.  Long story short, evil-mode will use Emacs functionality where it makes sense, so if something is not working as expected there is usually a good reason for it.
 
-## Step 1: Resist the urge to Google it...initally
+## Step 1: Resist the urge to Google it...initially
 
 I wasted a lot of time doing the thing most people do first: Google it.  The problem here is that you will find EmacsWiki.  The second problem is that EmacsWiki will contain *a lot* of information, giving you the illusion that it is useful.  The third problem is that you will not know what it old and outdated, old and still useful, or new and useless.  Emacs has been around since 1976, so there is a lot of history go through.
 
@@ -56,7 +56,7 @@ Vim is difficult to learn because you're learning a new language on how to inter
 
 ## Step 3: Learn how to help the help
 
-In Emacs, the prefix key for help is `C-h`.  What this means is you hit `C-h`, followed by another key to invoke help on something.  Typing `C-h C-h` will give you the full list of possibitilies.  When I first started, I found I used `f`unction and `v`ariable a lot.  In Emacs, *everything* is a function (this is Lisp after all), so you can find out a lot about Emacs by reading the descriptions of functions.
+In Emacs, the prefix key for help is `C-h`.  What this means is you hit `C-h`, followed by another key to invoke help on something.  Typing `C-h C-h` will give you the full list of possibilities.  When I first started, I found I used `f`unction and `v`ariable a lot.  In Emacs, *everything* is a function (this is Lisp after all), so you can find out a lot about Emacs by reading the descriptions of functions.
 
 ## Step 4: Understanding key bindings
 
@@ -68,7 +68,7 @@ First, let's take an extremely common customization in Vim, where the cursor is 
 nnoremap n nzz
 ```
 
-Emacs does not have a notion of recursive vs non-recursive bindings, so it cannot be configured in the same fashion as Vim (doing it with key bindings would require you to define a throw away keybinding in the middle).  However, the way you do it in Emacs is ultimately way more powerful and flexible.  One option is to do it like this:
+Emacs does not have a notion of recursive vs non-recursive bindings, so it cannot be configured in the same fashion as Vim (doing it with key bindings would require you to define a throw away key binding in the middle).  However, the way you do it in Emacs is ultimately way more powerful and flexible.  One option is to do it like this:
 
 ``` cl
 (defadvice evil-ex-search-next (after advice-for-evil-ex-search-next activate)

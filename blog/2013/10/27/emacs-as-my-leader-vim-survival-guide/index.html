@@ -143,7 +143,7 @@
 
 <p>Remember though that evil-mode is an <em>emulation</em> of Vim; it is <em>not</em> Vim!  For example, you might try <code>cas</code> and conclude that evil-mode is broken because it is changing a paragraph instead of a sentence.  That is, of course, until you realize that Emacs also has a notion of what a sentence is, and that the default value of <code>sentence-end-double-space</code> is true.  Long story short, evil-mode will use Emacs functionality where it makes sense, so if something is not working as expected there is usually a good reason for it.</p>
 
-<h2>Step 1: Resist the urge to Google it&hellip;initally</h2>
+<h2>Step 1: Resist the urge to Google it&hellip;initially</h2>
 
 <p>I wasted a lot of time doing the thing most people do first: Google it.  The problem here is that you will find EmacsWiki.  The second problem is that EmacsWiki will contain <em>a lot</em> of information, giving you the illusion that it is useful.  The third problem is that you will not know what it old and outdated, old and still useful, or new and useless.  Emacs has been around since 1976, so there is a lot of history go through.</p>
 
@@ -155,7 +155,7 @@
 
 <h2>Step 3: Learn how to help the help</h2>
 
-<p>In Emacs, the prefix key for help is <code>C-h</code>.  What this means is you hit <code>C-h</code>, followed by another key to invoke help on something.  Typing <code>C-h C-h</code> will give you the full list of possibitilies.  When I first started, I found I used <code>f</code>unction and <code>v</code>ariable a lot.  In Emacs, <em>everything</em> is a function (this is Lisp after all), so you can find out a lot about Emacs by reading the descriptions of functions.</p>
+<p>In Emacs, the prefix key for help is <code>C-h</code>.  What this means is you hit <code>C-h</code>, followed by another key to invoke help on something.  Typing <code>C-h C-h</code> will give you the full list of possibilities.  When I first started, I found I used <code>f</code>unction and <code>v</code>ariable a lot.  In Emacs, <em>everything</em> is a function (this is Lisp after all), so you can find out a lot about Emacs by reading the descriptions of functions.</p>
 
 <h2>Step 4: Understanding key bindings</h2>
 
@@ -168,7 +168,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Emacs does not have a notion of recursive vs non-recursive bindings, so it cannot be configured in the same fashion as Vim (doing it with key bindings would require you to define a throw away keybinding in the middle).  However, the way you do it in Emacs is ultimately way more powerful and flexible.  One option is to do it like this:</p>
+<p>Emacs does not have a notion of recursive vs non-recursive bindings, so it cannot be configured in the same fashion as Vim (doing it with key bindings would require you to define a throw away key binding in the middle).  However, the way you do it in Emacs is ultimately way more powerful and flexible.  One option is to do it like this:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>

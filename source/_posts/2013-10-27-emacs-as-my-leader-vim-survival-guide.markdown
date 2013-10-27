@@ -133,9 +133,9 @@ Emacs bindings are pretty hard to remember (not nearly as mnemonic as Vim keys).
 
 [NERDTree][23] and [vimfiler][24] are both excellent plugins for Vim that give you a file browser on the side.
 
-I think fuzzy searching is far more useful and productive way to navigate around, but file browsers hold a niche in my tool belt for when I'm working a foreign project where I don't know where all the files are laid out.  I haven't spent much time with file browsers for Emacs, but there are many available.  The built-in `speedbar` will open up a new frame.  An additional package called `sr-speedbar` will take the speedbar and place it inside a split window instead.
+I think fuzzy searching is a far more useful and productive way to navigate around, but file browsers hold a niche in my tool belt for when I'm working a foreign project where I don't know where all the files are laid out.  I haven't spent much time with file browsers for Emacs, but there are many available.  The built-in `speedbar` will open up a new frame.  An installable package named `sr-speedbar` will take the speedbar and place it inside a split window instead.
 
-A new kid of the block, released just a couple weeks ago is [project-explorer][26], which looks very promising.
+A new kid of the block, released just a couple weeks ago is [project-explorer][26], also looks very promising.
 
 ### Your choice of language specific packages
 
@@ -173,7 +173,7 @@ At the end of all of this, you're probably thinking to yourself, I'm already at 
 
 One of the major reasons for me switching was an excuse to [learn a Lisp dialect][39].  Let me tell you; this reason alone is worth it to try Emacs.  Lisp will make you a better programmer by giving you a new perspective.  It will also make you question why all the complicated imperative languages today still do not compare to the simplicity and power that was available to us over 30 years ago.
 
-Yes, the learning curve is high.  But fear not!  You do not have to start from scratch.  You already know Vim, so you got the text editing part covered, which leaves just learning how to do things in Emacs one feature at a time.  If you configure Emacs to use the same keybindings as your Vim config, as I have in my [dotvim][32] and [dotemacs][33] configs, it becomes seamless to switch between the two.  Lastly, you are not picking Vim *or* Emacs, but rather you are picking Vim *and* Emacs!  Use the best tool for the job.
+Yes, the learning curve is high.  But fear not!  You do not have to start from scratch.  You already know Vim, so you got the text editing part covered, which leaves just learning how to do things in Emacs one feature at a time.  If you configure Emacs to use the same key bindings as your Vim config, as I have in my [dotvim][32] and [dotemacs][33] configs, it becomes seamless to switch between the two.  Lastly, you are not picking Vim *or* Emacs, but rather you are picking Vim *and* Emacs!  Use the best tool for the job.
 
 For me, Emacs is my `<leader>` key, the set of customizations that are non-standard to Vim, just like `set nocompatible` is the set of customizations that are non-standard to Vi.
 

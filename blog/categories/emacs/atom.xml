@@ -4,7 +4,7 @@
   <title><![CDATA[Category: emacs | bling on software development]]></title>
   <link href="http://bling.github.io/blog/categories/emacs/atom.xml" rel="self"/>
   <link href="http://bling.github.io/"/>
-  <updated>2013-10-27T22:16:15+00:00</updated>
+  <updated>2014-01-21T18:17:05+00:00</updated>
   <id>http://bling.github.io/</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
@@ -12,6 +12,92 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Asynchronous Eval in Emacs with Stylus and Skewer]]></title>
+    <link href="http://bling.github.io/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/"/>
+    <updated>2014-01-21T16:41:16+00:00</updated>
+    <id>http://bling.github.io/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer</id>
+    <content type="html"><![CDATA[<p>You haven&rsquo;t experienced Emacs if you haven&rsquo;t experienced the power of <code>C-x C-e</code>.  This is the magical keybinding which evalulates the current line.  Another useful companion is <code>C-M-x</code>, which evaluates the current function.</p>
+
+<p>Lisp dialects naturally work with these patterns seamlessly, and once I figured out the possibilities of this I got addicted and wanted it available in <em>all</em> of my languages.  It&rsquo;s like having a debugger available all the time.  But unlike debuggers where you inspect and change variables at run time, and then need to translate your changes back to code, in Lisp you just edit the code directly and eval (and repeat until you like the result).</p>
+
+<h1>Adapting the Pattern to Stylus</h1>
+
+<p>Anyone doing serious web development will not be writing CSS directly.  There are many compelling alternatives; the 3 most popular being SASS/Compass, LESS, and Stylus.  On my current project I&rsquo;m using Stylus, so I adapted this workflow to it.</p>
+
+<p>First, let&rsquo;s start with <a href="https://github.com/skeeto/skewer-mode">skewer-mode</a>.  This minor mode lets you connect to a real browser and evaluate to it.  It can evaluate Javascript or CSS on the fly.  It even has a bookmarklet script that allows you to evaluate arbitrary code against <em>any</em> website.  Yes, that is amazing!</p>
+
+<p>However, it only supports CSS&hellip;so how am I going to use my beloved eval against Stylus code?</p>
+
+<h1>The First Attempt</h1>
+
+<p>The first thing I did was do the simplest thing &mdash; convert Stylus to CSS and show it in a temporary buffer.  This turned out to be pretty straightforward.  I came up with the following code snippet:</p>
+
+<p>``` cl
+(defun stylus-compile-and-show-region (start end)
+  (interactive &ldquo;r&rdquo;)
+  (call-process-region start end &ldquo;stylus&rdquo; nil (get-buffer-create &ldquo;<em>Stylus</em>&rdquo;))
+  (display-buffer &ldquo;<em>Stylus</em>&rdquo;)
+  (with-current-buffer &ldquo;<em>Stylus</em>&rdquo;</p>
+
+<pre><code>(css-mode)))
+</code></pre>
+
+<p>```</p>
+
+<p>Easy!  It creates an interactive command which takes in a region, then calls out to the external <code>stylus</code> command and puts the output into a buffer named <code>*Stylus*</code>, and finally shows it and enables <code>css-mode</code>.</p>
+
+<p>Now, I just switch to that buffer and <code>C-x C-e</code> to my heart&rsquo;s content!  But there was a problem here&hellip;.Anything I change in the CSS buffer I would have to translate it back to Stylus, which was very annoying, and I might as well do it in the browser directly with Dev Tools if I&rsquo;m going to do that.</p>
+
+<p>Let&rsquo;s fix that.</p>
+
+<h1>Evaluating Stylus Directly</h1>
+
+<p>First things first, I realized that I don&rsquo;t need to show a buffer to interact with it.  So evaluating from Stylus directly actually involved replacing one line of code.  Instead of <code>(display-buffer)</code>, I put in <code>(skewer-css-eval-buffer)</code>, and viola!!  Now I can eval any Stylus code and have it appear in the browser!</p>
+
+<p>For brevity I&rsquo;ve excluded other necessary code like emptying the buffer before compiling Stylus, but you get the idea.</p>
+
+<p>But, there was one last itch I still needed to scratch&hellip;</p>
+
+<h1>It was blocking!</h1>
+
+<p>All things considered, blocking the UI for 1 second isn&rsquo;t the end of the world.  But it was enough of an annoyance that I felt compelled to fix it!</p>
+
+<p>And with that, I started reading the documentation.  I wish Emacs would provide a categorzied listing of all functions (instead of the <a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Index.html#Index">alphabetical listing</a>), because finding what I needed took longer than expected (if you know of such a listing please let me know).</p>
+
+<p>I eventually stumbled across <code>start-process</code>, which lets you control asynchronous processes.  Digging through the documentation further, I was able to find <code>set-process-sentinel</code>.</p>
+
+<p>And with that, the following snippet was born:</p>
+
+<p>``` cl
+(defun stylus-eval-region-async (begin end)
+  (let ((process (start-process &ldquo;stylus&rdquo; &ldquo;<em>Stylus</em>&rdquo; &ldquo;stylus&rdquo;)))</p>
+
+<pre><code>(set-process-sentinel process 'stylus-process-sentinel)
+(process-send-region process begin end)
+(process-send-eof process)))
+</code></pre>
+
+<p>(defun stylus-process-sentinel (process event)
+  (when (equal event &ldquo;finished\n&rdquo;)</p>
+
+<pre><code>(with-current-buffer "*Stylus*"
+  (css-mode)
+  (skewer-css-eval-buffer))))
+</code></pre>
+
+<p>```</p>
+
+<p>Basically, what&rsquo;s happening here is that I&rsquo;m starting an asynchronous process which writes all output into the <code>*Stylus*</code> buffer.  I send the region as input into the process, and finally, when the process terminates, which is detected by the sentinel function, it evaluates the buffer.</p>
+
+<p>And now I can eval to my heart&rsquo;s content without blocking!</p>
+
+<p>The full source code (with emptying buffers and other housekeeping) can be found in my <a href="https://github.com/bling/dotemacs/blob/master/config/init-stylus.el">dotemacs</a>.</p>
+
+<p>If you haven&rsquo;t already noticed, this is not specific to Stylus and will work with any program which works with stdin/stdout!  Enjoy.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Emacs as my &lt;Leader&gt;: Vim Survival Guide]]></title>

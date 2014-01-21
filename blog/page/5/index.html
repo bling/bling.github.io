@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="Exploring Caliburn Micro As I hinted in earlier posts, Caliburn Micro has some wicked conventions that makes for writing MVVM super easy, and it also &hellip;">
+  <meta name="description" content="This is going to be the last post that concludes my series on building a real-time push app with Silverlight. Any additional posts would likely be &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,192 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/09/29/push-driven-development-with-reactive/">Push Driven Development With Reactive Extensions</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-09-29T00:00:00+00:00" pubdate data-updated="true">Sep 29<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is going to be the last post that concludes my series on building a real-time push app with Silverlight.  Any additional posts would likely be outside the context of writing a push app and more about how I’m adding features to ping.pong, my Twitter app, so I think this is a good place to wrap up and talk generally from a top down overview of building a push-style application.</p>
+
+<p>Here’s a recap of everything discussed so far:</p>
+
+<p><a href="/blog/2011/08/26/building-real-time-push-app-with-rx-1">Part 1</a>: Basics – Creating an Observable around a basic HTTP web stream against Twitter’s streaming API</p>
+
+<p><a href="/blog/2011/08/26/building-real-time-push-app-with-rx-2">Part 2</a>: Subscription and Observation of Observables</p>
+
+<p><a href="/blog/2011/08/28/building-real-time-push-app-with-rx-3">Part 3</a>:  Basics of UX design with a look at shadows and gradients.</p>
+
+<p><a href="/blog/2011/09/05/building-real-time-push-app-with-rx-4">Part 4</a>:  Integrating with 3rd party libraries, notably Caliburn Micro and Linq2Twitter and how to achieve polling with observables.</p>
+
+<p><a href="/blog/2011/09/08/building-real-time-push-app-with-rx-5">Part 5</a>:  A minor hick up with Linq2Twitter.</p>
+
+<p><a href="/blog/2011/09/13/building-real-time-push-app-with-rx-6">Part 6</a>:  Taking advantage of transparencies to improve the design and reusability of UX.</p>
+
+<p><a href="/blog/2011/09/16/building-real-time-push-app-with-rx-7">Part 7</a>:  A summary of all things encountered so far, replacing Linq2Twitter with Hammock, first release of code to <a href="https://github.com/bling/Ping.Pong">GitHub</a>, and a binary released capable pulling and streaming tweets from Twitter.</p>
+
+<p><a href="/blog/2011/09/21/building-real-time-push-app-with-rx-8">Part 8</a>:  Examples of using Caliburn Micro to easily resolve data bindings that otherwise would be much more effort.</p>
+
+<p>And that leads us to this post…</p>
+
+<h1>PDD (Push Driven Development)</h1>
+
+<p>One of the main goals of this series is to create a performant Silverlight app based on push principles, as opposed to more traditional pull principles.  To that effect, ping.pong has performed remarkably well and is limited only by Twitter’s throttling, which currently appears to be maximum of 50 tweets per second via the streaming API.</p>
+
+<p>Writing the application from a push-driven mindset was definitely unintuitive at first, and I had to refactor (actually rewrite is more accurate) the code many times to move closer to a world where the application is simply <em>reacting</em> to events thrown at it (as opposed to asking the world for events).</p>
+
+<p>To be absolutely clear on what I mean on the differences between push and pull, here’s a comparison:</p>
+
+<table border="0" cellspacing="0" cellpadding="2" width="100%"> <tbody> <tr> <td valign="top"><strong>Pulling</strong></td> <td valign="top"><strong>Push</strong></td></tr> <tr> <td valign="top" width="50%">var e = tweets.GetEnumerator();<br>while (e.MoveNext()) <strong>// is there more?<br></strong>{<br>  e.Current; <strong>// get current<br></strong>  DoSomething(e.Current);<br>}</td> <td valign="top" width="50%">IObservable&lt;Data&gt; data = /* get source */<br><br><strong>// whenever data comes, do something</strong><br>data.Subscribe(DoSometing); <br></td></tr></tbody></table>
+
+
+<p></p>
+
+<p>On the pulling side, the caller is much more concerned with the logic on how to process each message.  It needs to <em>repeatedly</em> ask the world, &ldquo;hey, is there more data?&rdquo;.</p>
+
+<p>On the push side, the caller merely asks the world, &ldquo;hey, give me data when you get some&rdquo;.</p>
+
+<p>Twitter is a perfect example because their APIs have both a pulling and pushing models.  Traditional clients poll continuously all the time, and many had configurable options to try to stay under the 200 API calls per hour limit.  Most of Twitter’s API still consists of pulling, but the user’s home line and searching can be streamed in near real time via the streaming API, aka. push.  Streaming tweets effectively removes the API call limit.</p>
+
+<h1>Push and Pull with Reactive Extensions</h1>
+
+<p>The beauty of Rx is that regardless of whether it is actually pushing or pulling, the API will look same:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="n">IObservable</span><span class="p">&lt;</span><span class="n">Tweet</span><span class="p">&gt;</span> <span class="n">tweets</span> <span class="p">=</span> <span class="n">_client</span><span class="p">.</span><span class="n">GetHomeTimeline</span><span class="p">();</span>
+</span><span class='line'><span class="n">tweets</span><span class="p">.</span><span class="n">Subscribe</span><span class="p">(</span><span class="n">t</span> <span class="p">=&gt;</span> <span class="p">{</span> <span class="cm">/* do something with the tweet */</span> <span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As far as the caller is concerned, it doesn’t care (or needs to know) whether the <code>GetHomeTimeline</code> method is polling Twitter or streaming from Twitter.  All it needs to know is <em>when</em> a tweet comes it will <em>react</em> and do something in the Subscribe action.</p>
+
+<p>In fact, Subscribe simply means &ldquo;when you have data, call this&rdquo;, but that could also be immediately, which would be analogous to IEnumerable.</p>
+
+<p>However, if that was the only thing Rx provided it wouldn’t be as popular as it is, because other pub/sub solutions like the EventAggregator already provide a viable asynchronous solution.</p>
+
+<p>Unlocking Rx’s power comes with its multitude of operators.  Here’s an example:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">public</span> <span class="k">static</span> <span class="n">IObservable</span><span class="p">&lt;</span><span class="n">Tweet</span><span class="p">&gt;</span> <span class="n">GetStreamingStatuses</span><span class="p">(</span><span class="k">this</span> <span class="n">TwitterClient</span> <span class="n">client</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">client</span><span class="p">.</span><span class="n">GetHomeTimeline</span><span class="p">()</span>
+</span><span class='line'>      <span class="p">.</span><span class="n">Merge</span><span class="p">(</span><span class="n">client</span><span class="p">.</span><span class="n">GetMentions</span><span class="p">())</span>
+</span><span class='line'>      <span class="p">.</span><span class="n">Concat</span><span class="p">(</span><span class="n">client</span><span class="p">.</span><span class="n">GetStreamingHomeline</span><span class="p">());</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>GetHomeTimeline</code> and <code>GetMentions</code> initiate once-only pull style API calls, while <code>GetStreamingHomeline</code> will initiate a sticky connection and stream subsequent tweets down the pipe.</p>
+
+<p>The <code>Merge</code> operator is defined as this: &ldquo;Merges an observable sequence of observable sequences into an observable sequence.&rdquo;</p>
+
+<p>I think a better description would be &ldquo;whenever there is data from any of the sources, push it through&rdquo;.  In the example above, this would translate to whenever a tweet comes from either the home timeline or the mentions timeline, give me a Tweet (first-come-first-push), followed by anything from the streaming timeline.</p>
+
+<p>And there lies one of the greatest beauties of Rx.  <em>All</em> of the complexity lies solely on setting up the stream and operators.  And that, also, is its disadvantage.</p>
+
+<h1>Rx Complexity</h1>
+
+<p>Let’s take a look at the <a href="http://msdn.microsoft.com/en-us/library/hh212146(v=VS.103">Concat</a>.aspx) operator, defined as: &ldquo;Concatenates two observable sequences.&rdquo;  In the remarks sections it states this: &ldquo;The Concat operator runs the first sequence to completion. Then, the second sequence is run to completion effectively concatenating the second sequence to the end of the first sequence.&rdquo;</p>
+
+<p>Let’s try it out:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="kt">var</span> <span class="n">a</span> <span class="p">=</span> <span class="n">Observable</span><span class="p">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromSeconds</span><span class="p">(</span><span class="m">1</span><span class="p">)).</span><span class="n">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">ToString</span><span class="p">());</span>
+</span><span class='line'><span class="kt">var</span> <span class="n">b</span> <span class="p">=</span> <span class="n">Observable</span><span class="p">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromSeconds</span><span class="p">(</span><span class="m">1</span><span class="p">)).</span><span class="n">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="s">&quot;s&quot;</span> <span class="p">+</span> <span class="n">x</span><span class="p">);</span>
+</span><span class='line'><span class="n">a</span><span class="p">.</span><span class="n">Concat</span><span class="p">(</span><span class="n">b</span><span class="p">).</span><span class="n">Subscribe</span><span class="p">(</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">);</span>
+</span><span class='line'><span class="c1">// output: 0, 1, 2, 3, 4...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As expected, only numbers are printed because the first sequence never ends, so it won’t concatenate the second one.  Let’s modify it so that it does finish:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="kt">int</span> <span class="n">count</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+</span><span class='line'><span class="kt">var</span> <span class="n">a</span> <span class="p">=</span> <span class="n">Observable</span><span class="p">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromSeconds</span><span class="p">(</span><span class="m">1</span><span class="p">))</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">TakeWhile</span><span class="p">(</span><span class="n">_</span> <span class="p">=&gt;</span> <span class="p">++</span><span class="n">count</span> <span class="p">&lt;</span> <span class="m">5</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">ToString</span><span class="p">());</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note, that using <code>Observable.Generate</code> is preferred because it doesn’t introduce an external variable, but I stuck with Interval so the code looks similar to the second observable.  As expected again, it will print &ldquo;0, 1, 2, s0, s1, s2&rdquo;.</p>
+
+<p>OK, let’s spice things up.  Let’s make <code>b</code> a ConnectableObservable by using the <a href="http://msdn.microsoft.com/en-us/library/hh229126(v=VS.103">Publish</a>.aspx) operator, and immediately call <code>Connect</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="kt">int</span> <span class="n">count</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+</span><span class='line'><span class="kt">var</span> <span class="n">a</span> <span class="p">=</span> <span class="n">Observable</span><span class="p">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromSeconds</span><span class="p">(</span><span class="m">1</span><span class="p">))</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">TakeWhile</span><span class="p">(</span><span class="n">_</span> <span class="p">=&gt;</span> <span class="p">++</span><span class="n">count</span> <span class="p">&lt;</span> <span class="m">5</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">ToString</span><span class="p">());</span>
+</span><span class='line'><span class="kt">var</span> <span class="n">b</span> <span class="p">=</span> <span class="n">Observable</span><span class="p">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromSeconds</span><span class="p">(</span><span class="m">1</span><span class="p">)).</span><span class="n">Select</span><span class="p">(</span><span class="n">_</span> <span class="p">=&gt;</span> <span class="s">&quot;s&quot;</span> <span class="p">+</span> <span class="n">_</span><span class="p">).</span><span class="n">Publish</span><span class="p">();</span>
+</span><span class='line'><span class="n">b</span><span class="p">.</span><span class="n">Connect</span><span class="p">();</span>
+</span><span class='line'><span class="n">a</span><span class="p">.</span><span class="n">Concat</span><span class="p">(</span><span class="n">b</span><span class="p">).</span><span class="n">Subscribe</span><span class="p">(</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>What do you think the output of this will be?  The answer is &ldquo;0, 1, 2, 3, <em>s5, s6, s7</em>, &hellip;&rdquo;</p>
+
+<p>Despite using the same <code>Concat</code> operator, the result can be very different depending on the source observables.  If you use the <a href="http://msdn.microsoft.com/en-us/library/hh229288(v=VS.103">Replay</a>.aspx) operator, it would have printed &ldquo;0, 1, 2, 3, s0, s1, s2, &hellip;&rdquo;</p>
+
+<p>Years and years of working in synchronous programming models have trained us to think in synchronous ways, and I picked Concat specifically because Concat also exists in the enumerable world.  Observable sequences are asynchronous, so we never know exactly <em>when</em> data comes at us, only what to do when it does.  And because streams occur at different times, when you combine them together there are many many ways of doing so (CombineLatest, Merge, Zip, are just a few).</p>
+
+<p>The greatest hurdle to working in Rx is to know what the different combinations do.  This takes time and practice.  <a href="http://mnajder.blogspot.com/2010/03/rxsandbox-v1.html">RxTools</a> is a great learning tool to test out what all the operators do.</p>
+
+<h1>Unit Testing</h1>
+
+<p>Last but not least, Rx can make it easier to write unit tests.  The concept is easy: take some inputs and test the output.  In practice this is complicated because applications typically carry a lot of state with them.  Even with dependency injection and mocking frameworks I’ve seen a lot of code where for every assert there is 10 lines of mock setup code.</p>
+
+<p>So how does it make it easier to test?  It reduces what you need to test to a single method, Subscribe, which takes one input, an <code>IObservable&lt;T&gt;</code></p>
+
+<h1>Conclusion</h1>
+
+<p>Rx is a library unlike any other you will use.  With other libraries, you will add them to your solution, use a method here or there, and go on with your life.  With Rx, it will radically change the way you code and think in general.  It’s awesome.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -510,192 +696,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/09/05/building-real-time-push-app-with-rx-4/">Building a Real-time Push App With Silverlight: Part 4</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-09-05T00:00:00+00:00" pubdate data-updated="true">Sep 5<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Originally I wanted to avoid bringing in external libraries to keep the app as lean as possible, but then I realized that I would spend too much time reinventing the wheel.  Twitter is deprecating basic authentication in the near future, which makes OAuth no longer optional.  Rather than writing yet another Twitter client (if you’re curious I found a great reference <a href="http://chris.59north.com/post/2009/09/16/SilverTweet-e28093-Building-a-Silverlight-Twitter-client-part-1.aspx">here</a>), I fired up <a href="http://nuget.org/">NuGet</a> and brought in <a href="http://linqtotwitter.codeplex.com/">LinqToTwitter</a>, and while I’m there I brought in <a href="http://code.google.com/p/autofac/">Autofac</a> and <a href="http://caliburnmicro.codeplex.com/">Caliburn.Micro</a> as well.</p>
-
-<p>Naturally, LinqToTwitter will work nicely with Rx because as name implies it uses LINQ heavily.  Caliburn.Micro is a MVVM library which I’ve always wanted an excuse to try because of features like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;ListBox</span> <span class="na">cal:Message.Attach=</span><span class="s">&quot;[Event Loaded] = [LoadList($dataContext)]&quot;</span> <span class="nt">/&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>That’s only scratching the surface of what Caliburn can do, so it will be a fresh breath of air to see what else it can do.</p>
-
-<p>By default, Caliburn uses MEF to wire up its bootstrapper.  After adding a couple <code>[Import]</code>s and <code>[Export]</code>s, I knew it wasn’t for me.  It works well for writing plugins, i.e. <em>external</em> dependencies because of its built-in assembly scanning capabilities, but for injecting <em>internal</em> dependencies, other IoC containers do a much better job of that.  I used Castle Windsor in past projects, but for a change I’m going to use Autofac which I haven’t used since v2 came out.</p>
-
-<p>When this was all said and done the View was the only thing that didn’t change.  Everything underneath either changed radically or was deleted altogether (because LinqToTwitter provided it).  I added OAuth support and registered my application with Twitter, and with that was the birth of Ping Pong.</p>
-
-<p>This took much longer than expected.  Silverlight 5 RC just came out and it broke pretty much any container (including MEF) for OOB because of a TypeLoadException.  I haven’t been using too many v5 features, so for the time being I downgraded to v4 to get the project working until RC2 comes out.</p>
-
-<p>Integrating LinqToTwitter was a challenge.  The project site has a lot of good documentation, but most of it was for desktop, not Silverlight, and because of that I banged my head a couple times.  I wish I grabbed the source code earlier because it’s there where you’ll find hundreds of working examples (in code!) to do everything with the library (and in Silverlight).</p>
-
-<p>After all that, PingPong now has 3 columns (home, public, sampling) that <em>dynamically resizes</em> (it’s surprising that <a href="http://metrotwit.com">MetroTwit</a> is the only client that does this&hellip;) to the window size.</p>
-
-<p><img src="http://lh4.ggpht.com/-f1uQ63FwyoI/TmU-fK3WfQI/AAAAAAAAAGc/Y26EvwnXy_4/image_thumb%25255B15%25255D.png?imgmax=800" alt="img" /></p>
-
-<p>Oh, and there’s pictures now!  The streaming time line takes significantly more CPU now that it has to load images, but we’re still sitting at around 5-10% for what is continuously streaming data and loading pictures.  Not too shabby!  (It took a couple tries to get a PG-13 screenshot from the public/streaming time lines&hellip;)</p>
-
-<p>To conclude this post in the series, I’m going to talk about converting an asynchronous operation into an Observable that does not follow any predefined pattern.</p>
-
-<h1>Creating an Observable</h1>
-
-<p>One of Silverlight’s limitations is that almost everything needs to be an asynchronous call.  In regards to LinqToTwitter, something like this will fail (but work on desktop):</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="kt">var</span> <span class="n">tweets</span> <span class="p">=</span> <span class="p">(</span><span class="k">from</span> <span class="n">t</span> <span class="k">in</span> <span class="n">context</span><span class="p">.</span><span class="n">Status</span>
-</span><span class='line'>              <span class="k">where</span> <span class="n">t</span><span class="p">.</span><span class="n">Type</span> <span class="p">==</span> <span class="n">StatusType</span><span class="p">.</span><span class="n">Public</span>
-</span><span class='line'>              <span class="k">select</span> <span class="n">t</span><span class="p">).</span><span class="n">ToArray</span><span class="p">();</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>On Silverlight you will get a single empty element.  To get it working, there is an extension method that comes with the library, and you use it like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="p">(</span><span class="k">from</span> <span class="n">t</span> <span class="k">in</span> <span class="n">context</span><span class="p">.</span><span class="n">Status</span>
-</span><span class='line'> <span class="k">where</span> <span class="n">t</span><span class="p">.</span><span class="n">Type</span> <span class="p">==</span> <span class="n">StatusType</span><span class="p">.</span><span class="n">Public</span>
-</span><span class='line'>  <span class="k">select</span> <span class="n">t</span><span class="p">)</span>
-</span><span class='line'>  <span class="p">.</span><span class="n">AsyncCallback</span><span class="p">(</span><span class="n">tweets</span> <span class="p">=&gt;</span> <span class="p">{</span> <span class="cm">/* do something with it */</span> <span class="p">})</span>
-</span><span class='line'>  <span class="p">.</span><span class="n">FirstOrDefault</span><span class="p">();</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Code is self-explanatory.  The <code>FirstOrDefault()</code> exists only to initiate the expression, otherwise it wouldn’t do anything.  So now the question is how do we convert that into an Rx Observable?</p>
-
-<p>Every time I write an Rx query I try to use the least amount of state as possible.  This helps to keep the number unexpected anomalies to a minimum.  In the following section of code, I was able to get it down to 2 fields: <code>_sinceId</code>, and <code>Context</code>.  There is probably some operator that will let me save the sinceId variable from one observable to the next but I wasn’t able to figure it out.  In any case, I came up with this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="n">_subscription</span> <span class="p">=</span>
-</span><span class='line'>    <span class="n">Observable</span><span class="p">.</span><span class="n">Create</span><span class="p">&lt;</span><span class="n">Tweet</span><span class="p">&gt;(</span>
-</span><span class='line'>        <span class="n">ob</span> <span class="p">=&gt;</span> <span class="n">Observable</span><span class="p">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromSeconds</span><span class="p">(</span><span class="m">60</span><span class="p">))</span>
-</span><span class='line'>            <span class="p">.</span><span class="n">StartWith</span><span class="p">(-</span><span class="m">1</span><span class="p">)</span>
-</span><span class='line'>            <span class="p">.</span><span class="n">SubscribeOnThreadPool</span><span class="p">()</span>
-</span><span class='line'>            <span class="p">.</span><span class="n">Subscribe</span><span class="p">(</span><span class="n">_</span> <span class="p">=&gt;</span>
-</span><span class='line'>            <span class="p">{</span>
-</span><span class='line'>                <span class="kt">ulong</span> <span class="n">sinceId</span><span class="p">;</span>
-</span><span class='line'>                <span class="p">(</span><span class="kt">ulong</span><span class="p">.</span><span class="n">TryParse</span><span class="p">(</span><span class="n">_sinceId</span><span class="p">,</span> <span class="k">out</span> <span class="n">sinceId</span><span class="p">)</span>
-</span><span class='line'>                    <span class="p">?</span> <span class="n">Context</span><span class="p">.</span><span class="n">Status</span><span class="p">.</span><span class="n">Where</span><span class="p">(</span><span class="n">s</span> <span class="p">=&gt;</span> <span class="n">s</span><span class="p">.</span><span class="n">Type</span> <span class="p">==</span> <span class="n">statusType</span> <span class="p">&amp;&amp;</span> <span class="n">s</span><span class="p">.</span><span class="n">Count</span> <span class="p">==</span> <span class="m">200</span><span class="p">)</span>
-</span><span class='line'>                    <span class="p">:</span> <span class="n">Context</span><span class="p">.</span><span class="n">Status</span><span class="p">.</span><span class="n">Where</span><span class="p">(</span><span class="n">s</span> <span class="p">=&gt;</span> <span class="n">s</span><span class="p">.</span><span class="n">Type</span> <span class="p">==</span> <span class="n">statusType</span> <span class="p">&amp;&amp;</span> <span class="n">s</span><span class="p">.</span><span class="n">Count</span> <span class="p">==</span> <span class="m">200</span> <span class="p">&amp;&amp;</span> <span class="n">s</span><span class="p">.</span><span class="n">SinceID</span> <span class="p">==</span> <span class="n">sinceId</span><span class="p">))</span>
-</span><span class='line'>                <span class="p">.</span><span class="n">AsyncCallback</span><span class="p">(</span><span class="n">statuses</span> <span class="p">=&gt;</span>
-</span><span class='line'>                <span class="p">{</span>
-</span><span class='line'>                    <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">status</span> <span class="k">in</span> <span class="n">statuses</span><span class="p">)</span>
-</span><span class='line'>                    <span class="p">{</span>
-</span><span class='line'>                        <span class="n">ob</span><span class="p">.</span><span class="n">OnNext</span><span class="p">(</span><span class="k">new</span> <span class="n">Tweet</span><span class="p">(</span><span class="n">status</span><span class="p">));</span>
-</span><span class='line'>                        <span class="n">_sinceId</span> <span class="p">=</span> <span class="n">status</span><span class="p">.</span><span class="n">StatusID</span><span class="p">;</span>
-</span><span class='line'>                    <span class="p">}</span>
-</span><span class='line'>                <span class="p">})</span>
-</span><span class='line'>                <span class="p">.</span><span class="n">FirstOrDefault</span><span class="p">();</span> <span class="c1">// materalize the results</span>
-</span><span class='line'>            <span class="p">}))</span>
-</span><span class='line'>    <span class="p">.</span><span class="n">DispatcherSubscribe</span><span class="p">(</span><span class="n">SubscribeToTweet</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>That contains some custom code:</p>
-
-<ul>
-<li>Context:  is a TwitterContext from LinqToTwitter</li>
-<li>DispatcherSubscribe:  is a helper extension method which Subscribes on the ThreadPool, Observes on the Dispatcher, and then Subscribes with the specified action</li>
-<li>SubscribeToTweet: a method in the base class which adds to a ObservableCollection so the UI gets updated</li>
-</ul>
-
-
-<p>To translate the code, here is a basic flow of what’s happening:</p>
-
-<ol>
-<li>Observable.Create wraps the subscription of another Observable.  It provides access to an IObserver <code>ob</code> which lets you explicitly invoke OnNext().</li>
-<li>Observable.Interval will raise an observable every 60 seconds.</li>
-<li>The subscription of Observable.Interval will query the TwitterContext for the next set of tweets.</li>
-<li>Inside the AsyncCallback, it invokes <code>ob.OnNext</code>as well as keeps track of the ID so the next time it queries it only gets newer tweets.</li>
-<li>Finally, <code>DispatcherSubscribe</code> will take the <code>Tweet</code> object and add it to an <code>ObservableCollection&lt;Tweet&gt;</code>, which notifies the UI.</li>
-</ol>
-
-
-<p>As always, you should “clean up your garbage”.  In this respect I was pretty impressed with Rx as it was able to clean up the entire chain of observables with a single call to <code>_subscription.Dispose()</code>.  Nice!</p>
-
-<p>In the next post I’m going to switch back to UI and completely restyle the application.  The code will hit GitHub soon as well (I promise!).  Stay tuned&hellip;</p>
-
-<h2>Comments</h2>
-
-
-<div class='comments'>
-<div class='comment'>
-<div class='author'>bling</div>
-<div class='content'>
-Looks like the same StartWith() trick is needed for Observable.Generate.<br /><br />I played around with Observable.Generate and all the expressions I came up looked pretty complicated in comparison with what I originally had.  This is mainly because I need to call OnNext() inside the AsyncCallback, so all solutions either had external Subjects or obscure ways of passing an IObserver around&#8230;<br /><br />Maybe I&#39;m overcomplicating things so if you can come up with an example it&#39;d be greatly appreciated.  I&#39;m still a Rx newbie&#8230;<br /><br />Thanks!</div>
-</div>
-<div class='comment'>
-<div class='author'>bling</div>
-<div class='content'>
-Thanks!  I didn&#39;t know about that overload.<br /><br />Is there a way to make it start immediately, like the StartWith(-1) in the original expression?<br /><br />Observable.Generate(<br />   0, <br />   _ =&gt; true,<br />   _ =&gt; _,<br />   _ =&gt;<br />   {<br />     // this doesn&#39;t get called until 60 seconds passes first&#8230;<br />     return 0;<br />   }, <br />   _ =&gt; TimeSpan.FromSeconds(60));</div>
-</div>
-<div class='comment'>
-<div class='author'>jwooley</div>
-<div class='content'>
-Rather than the custom Observable generator with Iterval, why not use Observable.Generate passing in a timespan of 60 seconds?</div>
-</div>
-</div>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -711,6 +711,10 @@ Rather than the custom Observable generator with Iterval, why not use Observable
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/">Asynchronous Eval in Emacs with Stylus and Skewer</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/">Emacs as my &lt;Leader&gt;: Vim Survival Guide</a>
@@ -738,10 +742,6 @@ Rather than the custom Observable generator with Iterval, why not use Observable
     
       <li class="post">
         <a href="/blog/2013/07/15/flight-of-an-open-source-project/">The flight of an open-source project</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/">Unite.vim, The plugin you didn&#8217;t know you need</a>
       </li>
     
   </ul>
@@ -786,7 +786,7 @@ Rather than the custom Observable generator with Iterval, why not use Observable
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - Bailey Ling -
+  Copyright &copy; 2014 - Bailey Ling -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

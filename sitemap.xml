@@ -343,12 +343,18 @@
         <lastmod>2013-10-27T22:15:59+00:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://bling.github.io/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/
+        </loc>
+        <lastmod>2014-01-21T17:59:58+00:00</lastmod>
+    </url>
+    <url>
         <loc>http://bling.github.io/blog/archives/</loc>
-        <lastmod>2013-10-27T22:15:59+00:00</lastmod>
+        <lastmod>2014-01-21T17:59:58+00:00</lastmod>
     </url>
     <url>
         <loc>http://bling.github.io/</loc>
-        <lastmod>2013-10-27T22:15:59+00:00</lastmod>
+        <lastmod>2014-01-21T17:59:58+00:00</lastmod>
     </url>
     <url>
         <loc>http://bling.github.io/robots.txt</loc>

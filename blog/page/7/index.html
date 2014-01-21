@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="It’s been a while since I last blogged, but I want to get back into it….I just haven’t thought about what I wanna blog about yet.&nbsp; I’m thinking &hellip;">
+  <meta name="description" content="One of the most important things for any developer is to be well rounded. They should know about functional, imperative, object-oriented, aspect- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,63 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/08/16/adding-scripting-to-your-tool-belt/">Adding Scripting to Your Tool Belt</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-16T00:00:00+00:00" pubdate data-updated="true">Aug 16<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>One of the most important things for any developer is to be well rounded.  They should know about functional, imperative, object-oriented, aspect-oriented programming, among others.  They should know the difference between dynamic and static languages.  They should know the difference between scripting, interpreted, compiled languages.</p>
+
+<p>Why?  It opens your mindset.  It lets you see things in a different light, which ultimately changes the way you will write your code, and for the better.</p>
+
+<p>The best example is when C# introduced lambdas and LINQ.  All of a sudden, the masses saw the benefits of functional programming style and how it <em>greatly</em> makes code succinct.</p>
+
+<p>Here, I give an example of what knowing a little about Powershell did to save me a lot of time.</p>
+
+<p>I use git-tfs to make my day job a little less painful every day, because I cannot stand TFS, at all.  In their latest release, they decided not to tag every changeset.  I like my things consistent, so I decided to go back in history to untag all the changesets.</p>
+
+<p>Unfortunately, git doesn&rsquo;t have a mass untag, and you must untag each branch individually with <code>git tag -d name_of_tag</code>.</p>
+
+<p>This is how you do it with Powershell:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='powershell'><span class='line'><span class="n">50000</span><span class="p">..</span><span class="n">40000</span> <span class="p">|</span> <span class="p">%</span> <span class="p">{</span> <span class="n">git</span> <span class="n">tag</span> <span class="n">-d</span> <span class="s2">&quot;tfs/default/C$_&quot;</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>50000..40000 creates an list of numbers from 50,000 to 40,000, then it gets piped <code>|</code> into a foreach loop <code>%</code> to run the git tag command by generating the tag name with the current loop item <code>$_</code>.</p>
+
+<p>Why was this awesome?  I didn&rsquo;t have to open up Visual Studio, or a text editor, or anything.  I just typed it into the shell.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -321,119 +378,6 @@ Nice post! Gonna check out XAML Intellisense Presenter, All Margins, and PowerGU
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/04/15/introducing-dependencypropertyweaver/">Introducing DependencyPropertyWeaver</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-04-15T00:00:00+00:00" pubdate data-updated="true">Apr 15<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-<p>As part of my demonstration for the NYC .NET Meetup in the next couple of days, I prepared some material to show how to use Mono.Cecil to manually weave IL as a post-build step.&nbsp; It solves the problem of what I call “WPF Verbosity Hell”: the thing that makes your eyes bleed and makes God kill a kitten every time you declare a new property.</p> <p>Since <a href="http://code.google.com/p/notifypropertyweaver/">notifypropertyweaver</a> already exists, I figured I’d release the other side of the coin, dependencypropertyweaver.&nbsp; I just pushed my changes onto <a href="https://github.com/bling/dependencypropertyweaver">GitHub</a>.</p> <p>There are a couple of reasons to use dependency properties rather than regular properties with INotifyPropertyChanged.&nbsp; If you’re using WPF they make more sense because they perform faster and they give you a lot of extra bells and whistles for free.&nbsp; However, the INPC route tends to be more popular because it doesn’t bring in the dependency of WPF.</p> <p>IL post-build weaving solves the dependency problem because you can selectively choose to weave only the assemblies that get deployed with WPF, and you could even weave INPC into your service layer, and DPs into your client layer.&nbsp; That’s the power of post-build processes.</p> <p>While this little project initially started out as a simple demonstration of using <a href="http://www.mono-project.com/Cecil">Mono.Cecil</a> to perform low-level aspect oriented principles, it didn’t take much more work to tidy things up and make it ‘releasable’ into the wild, so I did just that, and open sourced it.</p> <p>The concept is simple.&nbsp; You take something like this:</p><pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    <span style="color: #0000ff">public</span> <span style="color: #0000ff">class</span> Student
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    {
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">        <span style="color: #0000ff">public</span> <span style="color: #0000ff">string</span> Name { <span style="color: #0000ff">get</span>; <span style="color: #0000ff">set</span>; }
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">        <span style="color: #0000ff">public</span> <span style="color: #0000ff">int</span> Age { <span style="color: #0000ff">get</span>; <span style="color: #0000ff">set</span>; }
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    }</pre></pre>
-<style type="text/css">.csharpcode, .csharpcode pre
-{
-	font-size: small;
-	color: black;
-	font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
-	background-color: #ffffff;
-	/*white-space: pre;*/
-}
-.csharpcode pre { margin: 0em; }
-.csharpcode .rem { color: #008000; }
-.csharpcode .kwrd { color: #0000ff; }
-.csharpcode .str { color: #006080; }
-.csharpcode .op { color: #0000c0; }
-.csharpcode .preproc { color: #cc6633; }
-.csharpcode .asp { background-color: #ffff00; }
-.csharpcode .html { color: #800000; }
-.csharpcode .attr { color: #ff0000; }
-.csharpcode .alt 
-{
-	background-color: #f4f4f4;
-	width: 100%;
-	margin: 0em;
-}
-.csharpcode .lnum { color: #606060; }
-</style>
-
-<p>And DependencyPropertyWeaver will turn it into this:</p><pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">         <span style="color: #0000ff">public</span> <span style="color: #0000ff">class</span> Student : DependencyObject
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">	{
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">		<span style="color: #0000ff">public</span> <span style="color: #0000ff">static</span> <span style="color: #0000ff">readonly</span> DependencyProperty NameDependencyProperty = DependencyProperty.Register("<span style="color: #8b0000">Name</span>", <span style="color: #0000ff">typeof</span>(<span style="color: #0000ff">string</span>), <span style="color: #0000ff">typeof</span>(Student));
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">		<span style="color: #0000ff">public</span> <span style="color: #0000ff">static</span> <span style="color: #0000ff">readonly</span> DependencyProperty AgeDependencyProperty = DependencyProperty.Register("<span style="color: #8b0000">Age</span>", <span style="color: #0000ff">typeof</span>(<span style="color: #0000ff">int</span>), <span style="color: #0000ff">typeof</span>(Student));
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">		<span style="color: #0000ff">public</span> <span style="color: #0000ff">string</span> Name
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">		{
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">			[CompilerGenerated]
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">			<span style="color: #0000ff">get</span>
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">			{
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">				<span style="color: #0000ff">return</span> (<span style="color: #0000ff">string</span>)<span style="color: #0000ff">base</span>.GetValue(Student.NameDependencyProperty);
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">			}
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">			[CompilerGenerated]
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">			<span style="color: #0000ff">set</span>
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">			{
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">				<span style="color: #0000ff">base</span>.SetValue(Student.NameDependencyProperty, <span style="color: #0000ff">value</span>);
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">			}
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">		}
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">		<span style="color: #0000ff">public</span> <span style="color: #0000ff">int</span> Age
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">		{
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">			[CompilerGenerated]
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">			<span style="color: #0000ff">get</span>
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">			{
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">				<span style="color: #0000ff">return</span> (<span style="color: #0000ff">int</span>)<span style="color: #0000ff">base</span>.GetValue(Student.AgeDependencyProperty);
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">			}
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">			[CompilerGenerated]
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">			<span style="color: #0000ff">set</span>
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">			{
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">				<span style="color: #0000ff">base</span>.SetValue(Student.AgeDependencyProperty, <span style="color: #0000ff">value</span>);
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">			}
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">		}
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">	}</pre></pre>
-<p>Even though the class initially didn’t inherit from DependencyObject, the weaved version does.&nbsp; It will also continually go up the inheritance chain until it finds the abstract base class, and makes that inherit from DependencyObject.</p>
-<p>Next on the list is obviously documentation (what open source project doesn’t need more documentation?!), however, I think I can slack off on this one since the core library is only 200-300 lines of code :-)</p>  </div>
-<h2>Comments</h2>
-<div class='comments'>
-<div class='comment'>
-<div class='author'>bling</div>
-<div class='content'>
-Welcome to the world of C# :)  In C#, they are called attributes rather than annotations.  The MSBuild task has a property named AttributePatternMatch, which is a regular expression to match on the name of the attribute you want to use to determine whether to weave a property or not.<br /><br />Keep in mind that the code is highly experimental.  Hope that helps!</div>
-</div>
-<div class='comment'>
-<div class='author'>campers</div>
-<div class='content'>
-Awesome, I&#39;ve just started working on my first c# job after 10 years of Java, so learning all this byte code manipulation again!  Would it be possible to use annotations to determine if a class and its properties should or shouldn&#39;t be processed to create the dependancy properties?</div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/8/">&larr; Older</a>
@@ -449,6 +393,10 @@ Awesome, I&#39;ve just started working on my first c# job after 10 years of Java
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/">Asynchronous Eval in Emacs with Stylus and Skewer</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/">Emacs as my &lt;Leader&gt;: Vim Survival Guide</a>
@@ -476,10 +424,6 @@ Awesome, I&#39;ve just started working on my first c# job after 10 years of Java
     
       <li class="post">
         <a href="/blog/2013/07/15/flight-of-an-open-source-project/">The flight of an open-source project</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/">Unite.vim, The plugin you didn&#8217;t know you need</a>
       </li>
     
   </ul>
@@ -524,7 +468,7 @@ Awesome, I&#39;ve just started working on my first c# job after 10 years of Java
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - Bailey Ling -
+  Copyright &copy; 2014 - Bailey Ling -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="Hmmm, I couldn’t really think of a good title except that this blog post has a little bit of everything of the title. As with any multithreaded &hellip;">
+  <meta name="description" content="I don&#8217;t know why it took me so long to come up with this idea, but to save others potential headaches&#8230;have you ever thought &#8220;hmmmm &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,64 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/04/21/forcing-castle-windsor-to-generate/">Forcing Castle Windsor to Generate Class Proxies</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-04-21T00:00:00+00:00" pubdate data-updated="true">Apr 21<span>st</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+I don&#8217;t know why it took me so long to come up with this idea, but to save others potential headaches&#8230;have you ever thought &#8220;hmmmm, I registered this as an interface with an implementation, but I want Windsor to use a class proxy, not an interface proxy, how do I do that?&#8221;<br />
+<br />
+For me, initially I <i>almost</i> went as far as implementing my own ProxyFactory to force it to use class proxy no matter what, and then the light bulb hit me and it turns out that there&#8217;s a much easier way to accomplish this.<br />
+<br />
+c.Register(Component.For&lt;ConcreteImpl, IService&gt;().Interceptors&lt;AnInterceptor&gt;());<br />
+<br />
+Tada!&nbsp; The actual service is now a concrete type, so Windsor will go, OK, I need to create a class proxy.&nbsp; But since it&#8217;s forwarded to the interface as well, all your dependencies can simply use the interface and everything magically works.<br />
+<br />
+Yay!</div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>bling</div>
+<div class='content'>
+void IService.SomeLongRunningOperation() {<br />  Action1();<br />  Action2();<br />  Action3();<br />}<br /><br />protected virtual void Action1() {}<br />protected virtual void Action2() {}<br />protected virtual void Action3() {}<br /><br />Without class proxies, those action methods could not be intercepted, and in our case, we would not be able to collect metrics/statistics on those methods.</div>
+</div>
+<div class='comment'>
+<div class='author'>Krzysztof Koźmic (2)</div>
+<div class='content'>
+Why did you want a class proxy for interface service?</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -541,70 +599,6 @@ I guess this shows that even log4net, which is touted for high-performance, come
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/11/06/multiple-inheritance-in-c-with-castle/">Multiple Inheritance in C# With Castle DynamicProxy Mixins</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-11-06T00:00:00+00:00" pubdate data-updated="true">Nov 6<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-Having some significant experience with C++, every once in a while I’ll <i>really</i> miss features available in C++ that just aren’t possible in C#.&nbsp; Sure, linking takes forever and if you could calculate the percentage of time for a C++ developer spent on linking time I’m sure it’d be around 50%.&nbsp; Nonetheless, there’s a certain seductive pull to stepping through the debugger and the sheer speed of a C++ program (arguably debugger is being made obsolete with TDD).&nbsp; If you’re only used C# for a long time, you probably didn’t even know that C++ was THAT much faster until you try this out.&nbsp; Even a simple hello world program: you can tell a difference.<br />
-But that’s not the point of this post.&nbsp; This post is about mixins!<br />
-So what is a mixin?&nbsp; You can <a href="http://en.wikipedia.org/wiki/Mixin">wikipedia</a> it, but basically it’s a way to add functionality to an existing object.&nbsp; In a way, it’s like multiple inheritance, but not exactly.&nbsp; If you wanna go CS101 terms, this is not a “is-a” relationship, but more of a “can-do” relationship.&nbsp; Both methods promote code reuse, and of course, both can be abused.<br />
-In a way, C# extension methods are a form of mixin, but really it’s just syntactic sugar.&nbsp; It’s a static method but <i>looks</i> like a instance method.&nbsp; True mixins are actual instances.<br />
-I’ve been playing around with Castle.DynamicProxy lately, and some of it is going into production code soon.&nbsp; This is honestly kind of scary, because I really don’t want to mess up production code which generates daily profit for the company.&nbsp; However, if NHibernate’s using dynamic proxy, and that has been proven to work in countless production environments, I’m sure the complexity of the proxies I’m doing pales in comparison to what NHibernate does.<br />
-Most of the examples available on the web show you how a mixin works.&nbsp; Basically, you create a target, and then you mixin extra stuff.&nbsp; Basic stuff…but there’s a really cool trick you can do to make all consuming code a lot easier to use by removing the need of consuming code to cast to a mixin instance.&nbsp; In my case, the system is a very complex piece of legacy code where there are threads all over the place locking things all over the place.&nbsp; I was given the task of keeping track of who owned the lock.<br />
-Originally I started with an extension method, but I soon realized that even though it’s nice that along with IDisposable, I could do something like this:<br />
-<pre class="csharpcode"><span class="kwrd">using</span> (anyInstance.Lock()) {
-anyInstance.DoStuff();
-}</pre><br />
-Where Lock() is an extension method which returns an IDisposable, which when Dispose() is invoked will call Monitor.Exit.&nbsp; This is all nice and dandy use of the ‘using’ syntax, but as you can see this is all just syntactic sugar.&nbsp; At the end of the day, this is still a public static method can is accessible by thousands of other objects.&nbsp; And once you need to keep track of all those owners, you need to create a dictionary of object hashcodes, and locking on that thing for each incoming lock on an instance is…well…very very bad.<br />
-<br />
-Anyways, so with DynamicProxy2, I decided to mix in this lock tracking logic.&nbsp; Now, the interface is simple:<br />
-<pre class="csharpcode"><span class="kwrd">public</span> <span class="kwrd">interface</span> ILockMixin {
-IDisposable Lock(<span class="kwrd">string</span> tag);
-IDisposable TryLock(<span class="kwrd">string</span> tag);
-}</pre><br />
-Now, the particular thing I wanted to target happened to be a hashtable, so with a little interface trick, you could do this:<br />
-<pre class="csharpcode"><span class="kwrd">public</span> <span class="kwrd">interface</span> ILockableHashtable : IDictionary, ILockMixin { }</pre><br />
-Finally, any code that references hashtable needs to be replaced with ILockableHashtable, but the beauty of this is that none of the existing code had to change, and now all proxied hashtables have the Lock() method as well.&nbsp; And alongside Windsor, this is brain-dead simple to wire up:<br />
-<pre class="csharpcode">kernel.Register(
-Component.For&lt;IDictionary, ILockableDictionary&gt;()
-.ImplementedBy&lt;Hashtable&gt;()
-.Proxy.AdditionalInterfaces(<span class="kwrd">typeof</span>(ILockableDictionary))
-.Proxy.MixIns(<span class="kwrd">new</span> Locker()));</pre><br />
-And that’s it!&nbsp; BTW, I realize I could have easily achieved the same effect and with a lot less effort if I just inherited from Hashtable directly (and avoid the negligible proxy/performance cost), but if I needed this locking mechanism for <b>any</b> other code, I would have to resort to either copy/pasting a lot of code, or a lot of copy/paste/redirect to a static class.<br />
-<br />
-Edit: There is a bug in this last bit, check out my latest <a href="http://blingcode.blogspot.com/2010/04/windsordynamicproxymixin-powers.html">entry </a>about this topic.</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/11/">&larr; Older</a>
@@ -620,6 +614,10 @@ Edit: There is a bug in this last bit, check out my latest <a href="http://bling
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/">Asynchronous Eval in Emacs with Stylus and Skewer</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/">Emacs as my &lt;Leader&gt;: Vim Survival Guide</a>
@@ -647,10 +645,6 @@ Edit: There is a bug in this last bit, check out my latest <a href="http://bling
     
       <li class="post">
         <a href="/blog/2013/07/15/flight-of-an-open-source-project/">The flight of an open-source project</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/">Unite.vim, The plugin you didn&#8217;t know you need</a>
       </li>
     
   </ul>
@@ -695,7 +689,7 @@ Edit: There is a bug in this last bit, check out my latest <a href="http://bling
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - Bailey Ling -
+  Copyright &copy; 2014 - Bailey Ling -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

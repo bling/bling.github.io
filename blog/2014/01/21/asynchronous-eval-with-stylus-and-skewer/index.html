@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>bling on software development</title>
+  <title>Asynchronous Eval in Emacs with Stylus and Skewer - bling on software development</title>
   <meta name="author" content="Bailey Ling">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://bling.github.io">
+  <link rel="canonical" href="http://bling.github.io/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="bling on software development" type="application/atom+xml">
@@ -75,15 +75,12 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/">Asynchronous Eval in Emacs With Stylus and Skewer</a></h1>
+      <h1 class="entry-title">Asynchronous Eval in Emacs With Stylus and Skewer</h1>
     
     
       <p class="meta">
@@ -106,7 +103,7 @@
   </header>
 
 
-  <div class="entry-content"><p>You haven&rsquo;t experienced Emacs if you haven&rsquo;t experienced the power of <code>C-x C-e</code>.  This is the magical keybinding which evalulates the current line.  Another useful companion is <code>C-M-x</code>, which evaluates the current function.</p>
+<div class="entry-content"><p>You haven&rsquo;t experienced Emacs if you haven&rsquo;t experienced the power of <code>C-x C-e</code>.  This is the magical keybinding which evalulates the current line.  Another useful companion is <code>C-M-x</code>, which evaluates the current function.</p>
 
 <p>Lisp dialects naturally work with these patterns seamlessly, and once I figured out the possibilities of this I got addicted and wanted it available in <em>all</em> of my languages.  It&rsquo;s like having a debugger available all the time.  But unlike debuggers where you inspect and change variables at run time, and then need to translate your changes back to code, in Lisp you just edit the code directly and eval (and repeat until you like the result).</p>
 
@@ -194,22 +191,16 @@
 
 <p>If you haven&rsquo;t already noticed, this is not specific to Stylus and will work with any program which works with stdin/stdout!  Enjoy.</p>
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/">Emacs as My &lt;Leader&gt;: Vim Survival Guide</a></h1>
-    
-    
-      <p class="meta">
-        
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Bailey Ling</span></span>
+
+      
 
 
 
@@ -221,185 +212,48 @@
   
 
 
-<time datetime="2013-10-27T12:00:00+00:00" pubdate data-updated="true">Oct 27<span>th</span>, 2013</time>
-        
-      </p>
+<time datetime="2014-01-21T16:41:16+00:00" pubdate data-updated="true">Jan 21<span>st</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/emacs/'>emacs</a>
+  
+</span>
+
+
+    </p>
     
-  </header>
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bling.github.io/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/" data-via="blingcoder" data-counturl="http://bling.github.io/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
 
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/" title="Previous Post: Emacs as my &lt;Leader&gt;: Vim Survival Guide">&laquo; Emacs as my &lt;Leader&gt;: Vim Survival Guide</a>
+      
+      
+    </p>
+  </footer>
+</article>
 
-  <div class="entry-content"><p>Two months ago I blogged about switching from Vim to Emacs.  Today, Emacs is my main editor.  I&rsquo;ll try to keep this post short and to the point, because there is <em>a lot</em> to cover!  But by the end of this post you&rsquo;ll have to answer to the question whether you should give Emacs a try.</p>
-
-<h1>What is a text editor?</h1>
-
-<p>If we&rsquo;re just talking about using Emacs as a text editor, then there is no comparison; Vim beats it, period.  But is our job description a text editor?  No.  We are system administrators, software developers, web designers, etc.  A text editor is a tool that we use to do our job (or hobby).  And any tool should be replaced when a better option is available.</p>
-
-<p>One simple example is <code>grep</code>.  As a developer, you can immediately gain a productivity boost by replacing it with <a href="http://beyondgrep.com/">ack</a> or <a href="https://github.com/ggreer/the_silver_searcher">ag</a>.  Do they search faster than <code>grep</code>?  No.  But since they&rsquo;re so good at ignoring things (like your <code>.git</code> directory) that for practical purposes they end up saving you a lot of time.</p>
-
-<p>As a text editor, I think Emacs is quite terrible.  Its key bindings are notoriously bad to the point that something called Emacs pinky exists.  If you&rsquo;re an Emacs user not interested in Vim bindings you should seriously consider taking a look at <a href="https://github.com/chrisdone/god-mode">god-mode</a> or <a href="https://github.com/stephendavidmarsh/control-mode">control-mode</a>.  But where Emacs really excels is all of the things outside of text editing.</p>
-
-<blockquote><p>Emacs is a great operating system, if only it had a good text editor.</p></blockquote>
-
-<p>Well, the nice thing about an operating system is that you can write a text editor for it; that text editor is called <a href="https://gitorious.org/evil/evil">evil-mode</a>.</p>
-
-<p>Now, as a text editor, Vim is still better than evil-mode for obvious reasons, so if you&rsquo;re just swapping it out you&rsquo;re at a net loss of productivity in terms of text editing.  However, what you <em>gain</em> from all of the other things that Emacs can do far outweighs the missing features.</p>
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/">Read on &rarr;</a>
-    </footer>
-  
 
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as My &lt;Leader&gt;: Evil-mode</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-10-16T12:54:00+00:00" pubdate data-updated="true">Oct 16<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Hey guys, I just wanted to post a quick demo video on <a href="https://gitorious.org/evil">evil-mode</a>.</p>
-
-<p>The video is targetted at intermediate/advanced Vim users, so if you&rsquo;re just starting out you might miss some things. But&hellip;hopefully it&rsquo;ll be an enjoyable watch regardless!</p>
-
-<iframe width="630" height="473" src="//www.youtube.com/embed/Uz_0i27wYbg" frameborder="0" allowfullscreen></iframe>
-
-
-<p>Let me know what you guys think of it!</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/09/09/vim-in-emacs-bootstrap/">Vim in Emacs Bootstrap</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-09-09T20:00:00+00:00" pubdate data-updated="true">Sep 9<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Did I wake up on the wrong side of the bed?</p>
-
-<p>My New Year&rsquo;s resolution for 2013 was to learn Vim. I was so new to Vim that I did not even know how to <a href="http://stackoverflow.com/questions/14107198/vim-delete-whitespace-between-2-lines">join lines</a> properly. However, I was diligent, patient, and stubborn enough to stick at it. It didn&rsquo;t take long for me to <a href="http://bling.github.io/blog/2013/02/10/love-affair-with-vim">fall in love</a>. I even ended up writing a <a href="https://github.com/bling/vim-airline">plugin</a> for Vim that got so popular that I was writing VimL as a second job.</p>
-
-<p>Sounds like I&rsquo;m pretty happy with Vim (and I am), so why am I trying Emacs?</p>
-
-<p>Curiosity is a major reason. But more I think the philosophy of Emacs fits my personality better. The Vim community is very much divided into two camps: the text editor people, and the people who try to turn Vim into an IDE. I am in the latter. My vim <a href="https://github.com/bling/dotvim">distribution</a> has over 90 plugins. While I haven&rsquo;t yet run into Vim&rsquo;s limitations of trying to use it this way, I can already see the walls coming up&hellip;</p>
-
-<p>But here&rsquo;s the thing, I&rsquo;m addicted to <strong>modal editing</strong>, not Vim.</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/09/09/vim-in-emacs-bootstrap/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/08/16/modularizing-vimscript/">Modularizing VimScript</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-08-16T20:22:00+00:00" pubdate data-updated="true">Aug 16<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1>The prerequisites</h1>
-
-<p>First off, there are two very good resources that are required reading in addition to what&rsquo;s provided in the official documentation.  Steve Losh&rsquo;s <a href="http://learnvimscriptthehardway.stevelosh.com/">Learn Vim the Hard Way</a> is an excellent book and I highly recommend it.  The <a href="http://www.ibm.com/developerworks/library/l-vim-script-1/">IBM Series</a> by Dr. Damian Conway is another great resource.  Without these I would not have been able to do what I have achieved, so thanks to them!</p>
-
-<h1>Where I started</h1>
-
-<p>When I first wrote <a href="https://github.com/bling/vim-bufferline">vim-bufferline</a> and <a href="https://github.com/bling/vim-airline">vim-airline</a> I was very much a newbie Vim scripter and I tried to follow as many existing patterns as possible.  It was evident that the community at large had a very &ldquo;C-like&rdquo; mentality, in that most things were done with functions declared in the global scope (I don&rsquo;t know if this still holds true for modern C development, but as an expression I think people will get what I&rsquo;m saying).  Many of the older scripts (pre GitHub) tended to be large, single file plugins which lived under the <code>plugin</code> folder.  For example, <a href="http://www.vim.org/scripts/script.php?script_id=2438">EasyGrep</a> is a 3000+ line plugin that helps you search and replace in Vim.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/08/16/modularizing-vimscript/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  <div class="pagination">
-    
-      <a class="prev" href="/blog/page/2/">&larr; Older</a>
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
 <aside class="sidebar">
   
     <section>
@@ -444,7 +298,7 @@
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   
   <a href="https://github.com/bling">@bling</a> on GitHub
@@ -477,6 +331,7 @@
   
 </aside>
 
+
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -491,7 +346,10 @@
       var disqus_shortname = 'blingdev';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://bling.github.io/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/';
+        var disqus_url = 'http://bling.github.io/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="Originally I wanted to avoid bringing in external libraries to keep the app as lean as possible, but then I realized that I would spend too much time &hellip;">
+  <meta name="description" content="I planned on this post to be about UI, but I’m going to defer that until the next post. I said from the start of this series that I would document &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,221 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/09/08/building-real-time-push-app-with-rx-5/">Building a Real-time Push App With Silverlight: Part 5</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-09-08T00:00:00+00:00" pubdate data-updated="true">Sep 8<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I planned on this post to be about UI, but I’m going to defer that until the next post.  I said from the start of this series that I would document about everything about building the application from scratch, including my struggles.</p>
+
+<p>And with that I want to mention something that got me scratching my head one too many times.  It was with how I used LinqToTwitter.  Here is the source code which you can immediately copy/paste into a blank project to reproduce:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">MainPage</span> <span class="p">:</span> <span class="n">UserControl</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">private</span> <span class="k">readonly</span> <span class="n">TwitterContext</span> <span class="n">_context</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TwitterContext</span><span class="p">();</span>
+</span><span class='line'>    <span class="k">private</span> <span class="k">readonly</span> <span class="n">ViewModel</span> <span class="n">_vm1</span><span class="p">,</span> <span class="n">_vm2</span><span class="p">,</span> <span class="n">_vm3</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">public</span> <span class="nf">MainPage</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">InitializeComponent</span><span class="p">();</span>
+</span><span class='line'>        <span class="n">_vm1</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ViewModel</span><span class="p">(</span><span class="n">_context</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">_vm2</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ViewModel</span><span class="p">(</span><span class="n">_context</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">_vm3</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ViewModel</span><span class="p">(</span><span class="n">_context</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">_vm1</span><span class="p">.</span><span class="n">Callback</span> <span class="p">+=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Callback of VM1: &quot;</span> <span class="p">+</span> <span class="n">_vm1</span><span class="p">.</span><span class="n">LocalState</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">_vm2</span><span class="p">.</span><span class="n">Callback</span> <span class="p">+=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Callback of VM2: &quot;</span> <span class="p">+</span> <span class="n">_vm2</span><span class="p">.</span><span class="n">LocalState</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">_vm3</span><span class="p">.</span><span class="n">Callback</span> <span class="p">+=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Callback of VM3: &quot;</span> <span class="p">+</span> <span class="n">_vm3</span><span class="p">.</span><span class="n">LocalState</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">_vm1</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
+</span><span class='line'>        <span class="n">_vm2</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
+</span><span class='line'>        <span class="n">_vm3</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">ViewModel</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">private</span> <span class="k">readonly</span> <span class="n">TwitterContext</span> <span class="n">_context</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">public</span> <span class="k">event</span> <span class="n">Action</span> <span class="n">Callback</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">public</span> <span class="kt">int</span> <span class="n">LocalState</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">public</span> <span class="nf">ViewModel</span><span class="p">(</span><span class="n">TwitterContext</span> <span class="n">context</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">_context</span> <span class="p">=</span> <span class="n">context</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">public</span> <span class="k">void</span> <span class="nf">Start</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="kt">var</span> <span class="n">query</span> <span class="p">=</span> <span class="p">(</span><span class="k">from</span> <span class="n">s</span> <span class="k">in</span> <span class="n">_context</span><span class="p">.</span><span class="n">Status</span>
+</span><span class='line'>                <span class="k">where</span> <span class="n">s</span><span class="p">.</span><span class="n">Type</span> <span class="p">==</span> <span class="n">StatusType</span><span class="p">.</span><span class="n">Public</span> <span class="p">&amp;&amp;</span> <span class="n">s</span><span class="p">.</span><span class="n">Count</span> <span class="p">==</span> <span class="m">10</span>
+</span><span class='line'>                <span class="k">select</span> <span class="n">s</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Hash code of ViewModel: &quot;</span> <span class="p">+</span> <span class="n">query</span><span class="p">.</span><span class="n">GetHashCode</span><span class="p">());</span>
+</span><span class='line'>        <span class="n">query</span><span class="p">.</span><span class="n">AsyncCallback</span><span class="p">(</span><span class="n">statuses</span> <span class="p">=&gt;</span>
+</span><span class='line'>                <span class="p">{</span>
+</span><span class='line'>                <span class="n">LocalState</span><span class="p">++;</span>
+</span><span class='line'>                <span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Hash code inside callback: &quot;</span> <span class="p">+</span> <span class="n">GetHashCode</span><span class="p">());</span>
+</span><span class='line'>                <span class="n">Callback</span><span class="p">();</span>
+</span><span class='line'>                <span class="p">}).</span><span class="n">FirstOrDefault</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now, if you run this, you will see that only <em>one</em> of the view models will get its state updated.  Huh?!</p>
+
+<p>How is that possible?  I started getting paranoid so I even added the local state variable “just in case.”</p>
+
+<p>Well, I had to look into the source code of LinqToTwitter to figure out exactly what happened.  Here is the code for AsyncCallback:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">public</span> <span class="k">static</span> <span class="n">IQueryable</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="n">AsyncCallback</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span><span class="k">this</span> <span class="n">IQueryable</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="n">queryType</span><span class="p">,</span> <span class="n">Action</span><span class="p">&lt;</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;&gt;</span> <span class="n">callback</span><span class="p">)</span>
+</span><span class='line'> <span class="p">{</span>
+</span><span class='line'>     <span class="p">(</span><span class="n">queryType</span><span class="p">.</span><span class="n">Provider</span> <span class="k">as</span> <span class="n">TwitterQueryProvider</span><span class="p">)</span>
+</span><span class='line'>         <span class="p">.</span><span class="n">Context</span>
+</span><span class='line'>         <span class="p">.</span><span class="n">TwitterExecutor</span>
+</span><span class='line'>         <span class="p">.</span><span class="n">AsyncCallback</span> <span class="p">=</span> <span class="n">callback</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>     <span class="k">return</span> <span class="n">queryType</span><span class="p">;</span>
+</span><span class='line'> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>See what happened?  The callback gets overwritten every time you call this method.  Even though the call to <code>FirstOrDefault</code>() causes all 3 expressions to evaluate, only the last view model will get values because that’s the with the callback attached.</p>
+
+<p>Lesson of the day: The AsyncCallback extension method for LinqToTwitter is not thread-safe.</p>
+
+<p>So&hellip;the question is, how do we make it thread safe?  I just replaced wrapped the AsyncCallback with another extension method:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">private</span> <span class="k">static</span> <span class="k">readonly</span> <span class="n">AutoResetEvent</span> <span class="n">_twitterEvt</span> <span class="p">=</span> <span class="k">new</span> <span class="n">AutoResetEvent</span><span class="p">(</span><span class="k">true</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="n">AsyncTwitterCallback</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span><span class="k">this</span> <span class="n">IQueryable</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="n">twitter</span><span class="p">,</span> <span class="n">Action</span><span class="p">&lt;</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;&gt;</span> <span class="n">callback</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">Observable</span><span class="p">.</span><span class="n">Start</span><span class="p">(()</span> <span class="p">=&gt;</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">_twitterEvt</span><span class="p">.</span><span class="n">WaitOne</span><span class="p">();</span>
+</span><span class='line'>        <span class="n">twitter</span><span class="p">.</span><span class="n">AsyncCallback</span><span class="p">(</span><span class="n">results</span> <span class="p">=&gt;</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="k">try</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="n">callback</span><span class="p">(</span><span class="n">results</span><span class="p">);</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>            <span class="k">finally</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="n">_twitterEvt</span><span class="p">.</span><span class="n">Set</span><span class="p">();</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>        <span class="p">}).</span><span class="n">FirstOrDefault</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Nothing complicated – just a simple wait handle to ensure only 1 thread can go through at a time.</p>
+
+<p>Hopefully upstream fixes this, or at least documents it.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -938,114 +1153,6 @@ Rather than the custom Observable generator with Iterval, why not use Observable
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/08/19/injecting-logger-instances-via-unity/">Injecting Logger Instances via Convention With Unity</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-08-19T00:00:00+00:00" pubdate data-updated="true">Aug 19<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Let’s say you have something like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">public</span> <span class="k">void</span> <span class="n">MyClass</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">public</span> <span class="n">ILog</span> <span class="n">Logger</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And you simply want Unity to inject an instance of <code>ILog</code> such that its name is <code>requestingDependency.GetType().FullName</code>, which in this case would be <code>Full.Namespace.MyClass</code>.</p>
-
-<p>I&rsquo;ll leave it up to the exercise of the reader, but if you search for &lsquo;log4net and Unity&rsquo; you will find some working solutions which IMO are way too long to solve this.  I have obviously taken for granted the features of Windsor and Autofac too much because I expected something like this to be easily done in 2-3 lines of code.</p>
-
-<p>After a lot of cursing I&rsquo;ve come up with something that&rsquo;s almost as short and gets the job done:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">LoggingExtension</span> <span class="p">:</span> <span class="n">UnityContainerExtension</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">Initialize</span><span class="p">()</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="p">.</span><span class="n">Context</span><span class="p">.</span><span class="n">Strategies</span><span class="p">.</span><span class="n">AddNew</span><span class="p">(</span><span class="n">UnityBuildStage</span><span class="p">.</span><span class="n">PreCreation</span><span class="p">);</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="k">private</span> <span class="k">class</span> <span class="nc">LogBuilderStrategy</span> <span class="p">:</span> <span class="n">BuilderStrategy</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">private</span> <span class="k">readonly</span> <span class="n">Stack</span> <span class="n">buildKeys</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Stack</span><span class="p">();</span>
-</span><span class='line'>        <span class="k">public</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">PreBuildUp</span><span class="p">(</span><span class="n">IBuilderContext</span> <span class="n">context</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">{</span>
-</span><span class='line'>            <span class="kt">var</span> <span class="n">type</span> <span class="p">=</span> <span class="p">((</span><span class="n">NamedTypeBuildKey</span><span class="p">)</span><span class="n">context</span><span class="p">.</span><span class="n">BuildKey</span><span class="p">).</span><span class="n">Type</span><span class="p">;</span>
-</span><span class='line'>            <span class="k">if</span> <span class="p">(</span><span class="n">type</span> <span class="p">==</span> <span class="k">typeof</span><span class="p">(</span><span class="n">ILog</span><span class="p">))</span>
-</span><span class='line'>            <span class="p">{</span>
-</span><span class='line'>                <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">buildKeys</span><span class="p">.</span><span class="n">Count</span> <span class="p">&lt;</span> <span class="m">1</span><span class="p">)</span>
-</span><span class='line'>                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">InvalidOperationException</span><span class="p">(</span><span class="s">&quot;Log instances cannot be resolved directly.&quot;</span><span class="p">);</span>
-</span><span class='line'>                <span class="n">context</span><span class="p">.</span><span class="n">Existing</span> <span class="p">=</span> <span class="n">LogManager</span><span class="p">.</span><span class="n">GetLog</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">buildKeys</span><span class="p">.</span><span class="n">Peek</span><span class="p">());</span>
-</span><span class='line'>            <span class="p">}</span>
-</span><span class='line'>            <span class="k">this</span><span class="p">.</span><span class="n">buildKeys</span><span class="p">.</span><span class="n">Push</span><span class="p">(</span><span class="n">type</span><span class="p">);</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>        <span class="k">public</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">PostBuildUp</span><span class="p">(</span><span class="n">IBuilderContext</span> <span class="n">context</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">{</span>
-</span><span class='line'>            <span class="k">this</span><span class="p">.</span><span class="n">buildKeys</span><span class="p">.</span><span class="n">Pop</span><span class="p">();</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>If you noticed, I had to cast to <code>NamedTypeBuildKey</code>, which unfortunately means I’m still stuck with Unity 1.2&hellip;</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -1061,6 +1168,10 @@ Rather than the custom Observable generator with Iterval, why not use Observable
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/01/06/emacs-as-my-leader-1-year-later/">Emacs As My &lt;Leader&gt;, 1 Year Later</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/">Asynchronous Eval in Emacs with Stylus and Skewer</a>
@@ -1088,10 +1199,6 @@ Rather than the custom Observable generator with Iterval, why not use Observable
     
       <li class="post">
         <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/15/flight-of-an-open-source-project/">The flight of an open-source project</a>
       </li>
     
   </ul>
@@ -1136,7 +1243,7 @@ Rather than the custom Observable generator with Iterval, why not use Observable
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - Bailey Ling -
+  Copyright &copy; 2015 - Bailey Ling -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

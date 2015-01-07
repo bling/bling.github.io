@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="I&rsquo;ve been experimenting lately with TeamCity 5 EAP and so far it&rsquo;s been a pretty awesome experience. I was up and running within minutes &hellip;">
+  <meta name="description" content="I need to show some love and support for my favorite IoC tool because it’s most powerful feature needs more explaining.&nbsp; It’s not that the main &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,115 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/09/26/autofacs-extremely-powerful-containerscope/">Autofac’s Extremely Powerful and Flexible ContainerScope</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-09-26T00:00:00+00:00" pubdate data-updated="true">Sep 26<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+I need to show some love and support for my favorite IoC tool because it’s most powerful feature needs more explaining.&nbsp; It’s not that the main site doesn’t provide a good explanation, because it does, but because most people don’t really understand what the solution is solving.<br />
+The following is on Autofac’s <a href="http://code.google.com/p/autofac/">front page</a>:<br />
+<blockquote><pre class="csharpcode">var container = // ...
+using (var inner = container.CreateInnerContainer())
+{
+  var controller = inner.Resolve&lt;IController&gt;();
+  controller.Execute(); // use controller..
+}</pre></blockquote>The first time I saw this I basically glanced right passed it.&nbsp; Honestly I didn’t think anything of it, and initially the reason I tried out Autofac was for its very slick lambda registrations.&nbsp; I didn’t realize I was in a world of surprises when I finally realized the power and flexibility of Autofac’s container scope.<br />
+<br />
+If <a href="http://www.codinginstinct.com/2008/05/ioc-container-benchmark-rerevisted.html">benchmarks</a> and <a href="http://blog.ashmind.com/index.php/2008/09/08/comparing-net-di-ioc-frameworks-part-2/">feature comparisons</a> are not enough show off Autofac’s features, this blog post hopes to show how to solve “complex” problems elegantly.<br />
+<br />
+Let’s start with the typical NHibernate use-case.&nbsp; Create 1 singleton, create many sessions-per-request.&nbsp; Here’s a solution with <a href="http://nhforge.org/blogs/nhibernate/archive/2009/08/29/part-7-nhibernate-and-ninject-for-asp-net-mvc.aspx">Ninject</a> (not that I’m picking on Ninject, because I love its very slick contextual binding, but because most other IoC containers have a similar solution, like <a href="http://ayende.com/Blog/archive/2007/06/14/Using-NHibernate-Session-Per-Request-with-WCF-Windsor-Integration.aspx">per-session with WCF &amp; Windsor</a>).<br />
+<br />
+Basically, the solutions mentioned above will following an approach like this: <br />
+<br />
+a) Hook into the beginning of a request, and create the ISession from the ISessionFactory. <br />
+b) Set it in the HttpContext.Current or OperationContext.Current’s dictionaries. <br />
+c) Get this property in all the dependencies that need it. <br />
+d) At the end of the request, Dispose() the ISession.<br />
+<br />
+OK, pretty simple and straightforward solution, but there’s one key thing that really bugs me is that by doing this we have introduced a dependency…that is, HttpContext.Current[].&nbsp; That, or you could wrap that around a class, like SessionManager, again, basically coupling to a dependency under a different name.&nbsp; With Autofac, we can bypass steps b and c entirely and only worry about the beginning and end of a request.<br />
+<br />
+To start off, here&#8217;s the basic wiring needed:<br />
+<div style="text-align: left;"><blockquote><div class="csharpcode"><pre class="alt">1:   var cb = new ContainerBuilder(); 
+2:   cb.Register(x =&gt; CreateSessionFactory())
+       .As&lt;ISessionFactory&gt;()
+       .SingletonScoped(); 
+3:   cb.Register(x =&gt; x.Resolve&lt;ISessionFactory&gt;().OpenSession())
+       .As&lt;ISession&gt;()
+       .ContainerScoped(); 
+4:   IContainer c = cb.Build(); 
+5:  &nbsp;
+6:   Assert.AreSame(c.Resolve&lt;ISessionFactory&gt;(), c.Resolve&lt;ISessionFactory&gt;()); 
+7:   Assert.AreSame(c.Resolve&lt;ISession&gt;(), c.Resolve&lt;ISession&gt;()); 
+8:  &nbsp;
+9:   var inner1 = c.CreateInnerContainer(); 
+10:  Assert.AreSame(c.Resolve&lt;ISessionFactory&gt;(), inner1.Resolve&lt;ISessionFactory&gt;()); 
+11:  Assert.AreNotSame(c.Resolve&lt;ISession&gt;(), inner1.Resolve&lt;ISession&gt;());</pre></div></blockquote></div>That’s the configuration.&nbsp; And that’s it!&nbsp; Nothing more.&nbsp; No additional SessionManager class.&nbsp; No need to use HttpContext.Current to store the session.&nbsp; Just pass ISession in with regular constructor/property injection.<br />
+<br />
+Here’s how it works:<br />
+<br />
+Line 2: ISessionFactory is created from CreateSessionFactory().&nbsp; This is a singleton so there will always be one and only one instance of it within the container (and all child containers).<br />
+<br />
+Line 3: This is where it’s interesting.&nbsp; We’re saying “whenever I need an ISession, resolve ISessionFactory and call OpenSession() on it”.&nbsp; Also, by specifying ContainerScope, we only get 1 instance per-container.<br />
+<br />
+And this is where it’s sort of confusing with the terminology.&nbsp; You can think of Autofac as a tree of containers.&nbsp; The root container (variable c in this case), can create children containers (inner1 in this case, and inner1 could create an inner2, and so on).&nbsp; So when something is Singleton scoped, that means that the root container, and any child containers (and child’s children) will only have 1 instance of a service.&nbsp; With ContainerScope, each “node = container” in the tree gets 1 instance.<br />
+<br />
+So back to the unit test above, in line 6 we verify that there is only 1 instance of ISessionFactory.&nbsp; We resolve ISession twice as well, which shows that we get the same instance.<br />
+<br />
+Line 9, we create an inner container, and here we see that ISessionFactory is the same for both the container <b>c</b> and inner container <b>inner1</b>.&nbsp; However, the ISession resolved is <b>different</b> between the two.<br />
+Thus, by specifying ContainerScope, you can very easily group <i>multiple</i> services and dependencies together as one unit.&nbsp; Implementing the Unit of Work pattern is insanely easy with Autofac.&nbsp; Create services A, which depends on B, which depends on C, which all the previous depends on D.&nbsp; Resolve A within a new inner container, and B, C, and D will always be the same instances.&nbsp; Resolve A in another inner container and you will get a new set of instances.<br />
+<br />
+Last but not least, Autofac will automatically call Dispose() on all resolved services once the container is disposed.&nbsp; So for the above, once <b>inner1</b>.Dispose() is called, ISession.Dispose() is automatically called.&nbsp; If you needed to, you can very easily hook into this mechanism and implement things like transactions and rollbacks.<br />
+<br />
+I hope this blog post clears things up a little bit about Autofac’s ContainerScope!</div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>Nick</div>
+<div class='content'>
+Heya Bailey! Think there is more than one &#39;Nick&#39; lurking around your blog (or else I have a case of amnesia :))<br /><br />Love the article, definitely need more info like this around the &#39;net.<br /><br />Nick (mk II)</div>
+</div>
+<div class='comment'>
+<div class='author'>bling</div>
+<div class='content'>
+Thanks for dropping by Nick!<br /><br />To answer the question, what I ended up doing was creating a set of services for each request/session, basically like how I described in my post.<br /><br />I also wrote my own custom interception module (took some ideas from the one in contrib) based on Castle&#39;s DynamicProxy2.<br /><br />The main difference was that my interceptors work iff methods have specific attributes, and with that I was able to selectively say which methods got transactions (among other things).<br /><br />This made things really easy because I could have the transaction span multiple methods as one huge call or a simple 1 line method depending on where my transaction attributes appear in the code.</div>
+</div>
+<div class='comment'>
+<div class='author'>Nick</div>
+<div class='content'>
+I&#39;ve been toying with a similar approach, but I&#39;m uncertain about how to manage NHibernate&#39;s Transaction (Commits and Rollbacks) in this scenario.  I&#39;ve seen examples that make use of TransactionAttributes (in the case of MVC apps), and previously I had been managing transactions in the begin/end request events (in global.asax), but that ties every request to a transaction which isn&#39;t necessary.  How did you go about handling transactions in this scenario?</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -430,59 +539,6 @@ EDIT: I have since dropped this approach and I&#8217;m currently injecting ISess
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/08/18/goodbye-db4o-hello-orm/">Goodbye Db4o, Hello ORM</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-08-18T00:00:00+00:00" pubdate data-updated="true">Aug 18<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>It&rsquo;s unfortunate that I have to remove db4o from my project, but I can&rsquo;t say this was unexpected.  The CTO finally came to me today to voice his concerns on using an object database rather than a relational database.</p>
-
-<p>As typical of many organizations, we have a database team dedicated to maintaining the integrity and performance of our main product.  We are also stored procedure happy and every write <em>and read</em> operation goes through a stored procedure&hellip;.so you can say I was pretty gutsy to even consider using an object database ;&ndash;)</p>
-
-<p>It was fun nonetheless&hellip;</p>
-
-<p>Sooooo&hellip;.which ORM to use?  I&rsquo;ve already read of <a href="http://lmgtfy.com/?q=entity+framework+vote+of+no+confidence">all the things about the Entity Framework</a> already, so I didn&rsquo;t even bother considering it.  Choices came down to just a few:
-&ndash; <a href="http://www.castleproject.org/activerecord/index.html">Castle.ActiveRecord</a>
-&ndash; <a href="http://fluentnhibernate.org/">Fluent NHibernate</a>
-&ndash; <a href="http://www.subsonicproject.com/">SubSonic</a></p>
-
-<p>I&rsquo;ve initially started with Fluent NHibernate.  The main reason is because it&rsquo;s got really good documentation for beginners like me who&rsquo;ve never used NHibernate, and has more configuration options via code.  Even so, it didn&rsquo;t take long for me to run into gazillions of mapping errors though :&ndash;[</p>
-
-<p>I&rsquo;m still undecided whether I prefer <code>ClassMap&lt;&gt;</code> or <code>ActiveRecord</code> attributes though&hellip;</p>
-
-<p>I started porting all my repositories to using NHibernate, and for the most part it wasn&rsquo;t too bad.  I&rsquo;ve learned some things along the way like lazy loading and cascading, but the conclusion is having Fluent NHibernate with pretty code completion isn&rsquo;t going to prevent the need to actually learn NHibernate the old-fashioned way, although it definitely got me up and running a lot faster.</p>
-
-<p>I&rsquo;ll probably write up a quick repository implementation with SubSonic as well as part of my prototype to see which I like.  SubSonic definitely looks more &lsquo;hip&rsquo; with it&rsquo;s very flashy and web 2.0ey looking website :)</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/13/">&larr; Older</a>
@@ -498,6 +554,10 @@ EDIT: I have since dropped this approach and I&#8217;m currently injecting ISess
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/01/06/emacs-as-my-leader-1-year-later/">Emacs As My &lt;Leader&gt;, 1 Year Later</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/">Asynchronous Eval in Emacs with Stylus and Skewer</a>
@@ -525,10 +585,6 @@ EDIT: I have since dropped this approach and I&#8217;m currently injecting ISess
     
       <li class="post">
         <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/15/flight-of-an-open-source-project/">The flight of an open-source project</a>
       </li>
     
   </ul>
@@ -573,7 +629,7 @@ EDIT: I have since dropped this approach and I&#8217;m currently injecting ISess
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - Bailey Ling -
+  Copyright &copy; 2015 - Bailey Ling -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

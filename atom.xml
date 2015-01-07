@@ -4,7 +4,7 @@
   <title><![CDATA[bling on software development]]></title>
   <link href="http://bling.github.io/atom.xml" rel="self"/>
   <link href="http://bling.github.io/"/>
-  <updated>2014-01-21T18:24:42+00:00</updated>
+  <updated>2015-01-07T02:53:31+00:00</updated>
   <id>http://bling.github.io/</id>
   <author>
     <name><![CDATA[Bailey Ling]]></name>
@@ -12,6 +12,89 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Emacs As My &lt;Leader&gt;, 1 Year Later]]></title>
+    <link href="http://bling.github.io/blog/2015/01/06/emacs-as-my-leader-1-year-later/"/>
+    <updated>2015-01-06T18:11:00+00:00</updated>
+    <id>http://bling.github.io/blog/2015/01/06/emacs-as-my-leader-1-year-later</id>
+    <content type="html"><![CDATA[<p>Last year, I wrote a <a href="http://bling.github.io/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide">Vim Survival Guide</a> for a Vim user switching to Emacs.  In that blog post I wrote:</p>
+
+<blockquote><p>My Emacs setup right now is still not as efficient as my vim/tmux/zsh setup.</p></blockquote>
+
+<p>I got an email from someone a couple days ago asking whether that&rsquo;s still true.  Rather than replying to him directly, I figured I should blog about it since it would make for an interesting topic.</p>
+
+<p>Well, it started out pretty simple.  I used Vim as my text editor, and after switching, I continued using Emacs as my text editor as well.  But as you already know, Emacs is much more than that, and slowly over time, unexpectedly, it took over other parts of my workflow that I thought were untouchable.</p>
+
+<!--more-->
+
+
+<h1>Victim 1, The Terminal</h1>
+
+<p>One of those untouchable things was the terminal.  Vim is at its best when paired with a competent terminal environment, which typically means zsh and tmux.  What is often left out in that recommendation is that it also implies a UNIX operating system.  Well, sometimes that&rsquo;s not an option, and in my case, I had to make do with the Windows machine sitting in front me.</p>
+
+<p>Getting UNIX on Windows is a lot easier these days.  Installing Git alone will get you a decent minimal shell, and projects like <a href="http://babun.github.io/">Babun</a> will get you a preconfigured Cygwin environment up in no time.  As great as these options are, you&rsquo;ll always be a second class citizen compared to a real UNIX machine, and you will suffer the emulation performance costs or the odd compatibility problems here and there when switching between Cygwin and native Windows binaries.</p>
+
+<p>Rather than doing all of that, and since I was already using Emacs, I tried <code>eshell</code> out for a change &mdash; what was supposed to be temporary, became permanent.  eshell is surprisingly good.  Granted, this was likely only possible because I was a basic terminal user &mdash; my zshrc was no where near as complicated as my vimrc or my init.el.  I also wrote quite a few Emacs Lisp functions by now, which meant that my Emacs Lisp scripting prowess was much better than my non-existent Bash scripting, making eshell even better based on my capabilities.</p>
+
+<p>An expected surprise was that eshell reimplements most of UNIX &mdash; <code>ls</code> is Emacs Lisp function, so is <code>grep</code> and a slue of other UNIX commands.
+Some of you may think that this is NIH syndrome, but guess what?  With eshell as my main shell, I can use Windows, OSX, and Linux interchangeably with the same configuration and same key bindings.  The integration of eshell with other Emacs features is also much more seamless.  <code>grep</code>ing for text will put the results into a new buffer, of which I can search to narrow down further, and also opening the files at the matching line numbers.</p>
+
+<p>Before I discovered Babun, I&rsquo;d joke that the easiest way to get UNIX onto a Windows machine was to extract the Emacs zip file and run the exe.</p>
+
+<h1>Victim 2, tmux</h1>
+
+<p>tmux ups your game by allowing you to manage multiple screens at a time.  Most terminal users probably get by this by using tabs in their terminal &mdash; I used iTerm for the longest time on OSX, and still do.  However, using tmux does free you up from OS lock in.  tmux exists on Cygwin for Windows, but the last time I tried it, around of Summer 2014, it had bugs and would segfault, so I had to use screen instead.</p>
+
+<p>Managing multiple windows in Emacs is one of its natural strengths, so replacing tmux didn&rsquo;t take much thought or training.</p>
+
+<h1>Victim 3, Background Processes</h1>
+
+<p>With the terminal and multiple screens taken care of, the next step was figuring out how I would run my development servers.  I do a lot of Web and Java development these days, which means spinning up <code>node</code> for watching/bundling the client and running <code>java</code> processes for the backend.  In the past, I would use dedicated iTerm tabs for each process (or <a href="https://code.google.com/p/conemu-maximus5/">ConEmu</a> tabs in Windows).  It worked just fine, but having these run in Emacs gives some neat advantages.</p>
+
+<p>Any output is piped directly into a buffer.  And that buffer acts the same as any other buffer, which means you can search, jump around, yank, cut (if read-only mode is off), etc.  You can navigate to and from it just like any other file buffer you have open, and even cool things like defining your own syntax highlighting so that anything that matches <code>[ERROR]</code> comes out bright bold red.</p>
+
+<p>Part of development also means killing and spinning up these processes periodically.  In the past, I would Alt-Tab, mouse around, C-c, up, enter, etc.  Now, I have it automated with an elisp function bound to a key.</p>
+
+<h1>Victom 4, IntelliJ</h1>
+
+<p>Just kidding!  IntelliJ for Java is untouchable.  I tried the various options available to Emacs but none of them can hold a candle against IntelliJ.</p>
+
+<h1>Victim 5, Me</h1>
+
+<p>When I was a Vim user, what annoyed me the most was not being able to use my muscle memory outside of Vim.  I lost so many chat messages by prematurely hitting <code>Escape</code> that I had to write a <a href="http://www.autohotkey.com/">AutoHotKey</a> script that would disable the key when those windows are open.</p>
+
+<p>As an Emacs user, I was going to say that I want everything to be running inside Emacs.  And while that&rsquo;s somewhat true, if I had to pick only one thing, it would have to be <code>eval-last-sexp</code>.  The ability to not only tweak every little detail of your editor, but to do it while it is running is very intoxicating.</p>
+
+<p>When I did web development in the past with Vim, I would make changes, wait for live reload to kick in, and verify my changes in the browser.  This was not slow by any means &mdash; it happened in about 1-2 seconds.  After switching to Emacs, all of a sudden this was intolerable &mdash; it was too slow!  I wanted instant gratification!  These days I jack into my browser with <a href="https://github.com/skeeto/skewer-mode">skewer-mode</a> and evaluate changes directly into the browser.</p>
+
+<p>Am I doing anything that you cannot do in Vim?  Nope.  <a href="https://github.com/jaxbot/browserlink.vim">browserlink.vim</a> will get you the same experience.  But I think because both editors start from differing philosophies, doing it in Emacs feels natural, whereas doing it in Vim feels forced.</p>
+
+<h1>Turning evil-mode off!</h1>
+
+<p>When I first started, I did what most people trying <a href="https://gitorious.org/evil/evil">evil-mode</a> probably do &mdash; I enabled it globally.  Unfortunately, over time this proved to me problematic for me because I developed the expectation that <em>everything</em> should have Vim bindings, which was far from reality.  evil-mode comes with integration for some packages out of the box, but you&rsquo;re bound to hit some package which is not supported.  You are left with 3 choices: 1) get repeatedly frustrated as you hit the wrong keys, 2) configure the keymap to have Vim bindings, or 3) suck it up and use Emacs bindings.</p>
+
+<p>But then I realized, despite my desire for modal editing, that is a <em>learned</em> obsession.  I didn&rsquo;t start with Vim, I started with Notepad.</p>
+
+<p>With that realization, I turned evil-mode off by default.  When I edit text, I turn it on.  For everything else, I use Emacs bindings.  With my expectations aligned, I don&rsquo;t get frustrated anymore.</p>
+
+<h1>After a year, am I more efficient?</h1>
+
+<p>Without a doubt, yes!</p>
+
+<p>As far as editing text is concerned, in my mind evil-mode is, for all practical purposes, on par with Vim.  There might be some obscure feature that hasn&rsquo;t been emulated yet, but in my experience that is usually because a) the feature is so rarely used that it&rsquo;s a waste of time to implement, or b) there is a better, native Emacs alternative.</p>
+
+<p>A year ago, the biggest deficiency for me was the lack of a jump list which spread across buffer boundaries.  Well, rather than waiting for it to be implemented by someone else, I did it myself, and thus <a href="https://github.com/bling/evil-jumper">evil-jumper</a> was born.</p>
+
+<p>Fuzzy matching was another biggie for me.  Thanks to all the hard work recently from the maintainers of <a href="https://github.com/emacs-helm/helm">helm</a>, I don&rsquo;t have to be envious anymore.  Helm literally went from one of my least used packages to most used over night &mdash; prior to this I relied on ido+smex.  <a href="https://github.com/auto-complete/auto-complete">auto-complete</a> and <a href="https://github.com/company-mode/company-mode">company-mode</a> aren&rsquo;t there yet, but I suspect it won&rsquo;t be too much longer for them to support it.  As of now, if you truly desire fuzzy auto completion as-you-type, it can be achieved through <a href="https://github.com/abingham/emacs-ycmd">emacs-ycmd</a>, although setup is more involved as it requires compiling a daemon process.</p>
+
+<p>While I&rsquo;m mentioning packages, <a href="https://github.com/bbatsov/projectile">projectile</a> is a must-have for any Emacs user.</p>
+
+<h1>Considering the switch?</h1>
+
+<p>Over the past year there have been a lot more threads lately in <a href="http://www.reddit.com/r/emacs">/r/emacs</a> from curious Vim users.  A general theme I&rsquo;ve observed is that people want to make Emacs act exactly like how they had their Vim set up.  If you&rsquo;re considering the switch, empty your mind.  Trying to get Emacs to behave exactly like Vim will hinder your growth and you&rsquo;ll probably give up with frustration before ever realising Emacs&#8217; full potential.  Remember, there are tons of highly productive Emacs users who do not use Vim or evil-mode &mdash; it&rsquo;s up to you to find out what tricks are up their sleeve&hellip;</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Asynchronous Eval in Emacs with Stylus and Skewer]]></title>
@@ -1480,16 +1563,6 @@ Thanks for the reply Nick!<br /><br />I have yet to check out all the new MEF fe
 Hi Bailey! Nice thoughtful article - I have a foot in both camps, so I&#39;m glad that the Autofac extension points work for you, but I&#39;m also keen to close some of the gaps on the MEF side :)<br /><br />I am curious, have you had a chance to look at RegistrationBuilder, being delivered in the .NET 4.5 version of MEF? It opens up the possibility for us to support activation events like the ones you mention, although it doesn&#39;t as of writing.<br /><br />In case you didn&#39;t catch it, the release announcement is at: http://blogs.msdn.com/b/bclteam/archive/2011/10/27/what-s-new-in-mef-version-2-preview-4.aspx<br /><br />Thanks for writing this up anyway, it will give us something to think about.<br /><br />Regards,<br />Nick</div>
 </div>
 </div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ping.pong Twitter Client]]></title>
-    <link href="http://bling.github.io/blog/2011/10/09/pingpong-twitter-client/"/>
-    <updated>2011-10-09T00:00:00+00:00</updated>
-    <id>http://bling.github.io/blog/2011/10/09/pingpong-twitter-client</id>
-    <content type="html"><![CDATA[<div class='post'>
-<p>I have a whole <a href="http://blingcode.blogspot.com/2011/09/push-driven-development-with-reactive.html">series</a> dedicated to blogging about how I wrote a Twitter client from scratch, but if I want anyone to actually use it, I better do some advertising :-D.</p> <p>ping.pong is a fast and lightweight Twitter client written in Silverlight.&nbsp; As of this moment it targets v4 but will likely target v5 whenever that is released.</p> <p>Here are some highlights…</p> <h3>Visually Pleasing</h3> <p><img style="background-image: none; border-right-width: 0px; padding-left: 0px; padding-right: 0px; display: block; float: none; border-top-width: 0px; border-bottom-width: 0px; margin-left: auto; border-left-width: 0px; margin-right: auto; padding-top: 0px" title="image" border="0" alt="image" src="http://lh3.ggpht.com/-9wwcsDIu5Yg/TpHayG-NVXI/AAAAAAAAAHg/-Jo9iq0ghOA/image%25255B15%25255D.png?imgmax=800" width="377" height="280"></p> <p>The UI is based on your typical column-based design.&nbsp; The column widths will automatically resize to take up all available horizontal space.&nbsp; There is no horizontal scrolling.</p> <h3><strong>Access to the Streaming API</strong></h3> <p>No more rate limits!&nbsp; Your timeline is connected directly with Twitter’s streaming API, which means whenever someone you follow tweets you will know about it in almost near real-time.&nbsp; Searching is also done through the streaming API.</p> <h3>Fast &amp; Lightweight</h3> <p>ping.pong was built to run fast with low CPU utilization.&nbsp; Even when stream searching for “e” (yes, the letter E), the CPU usage stays under 15%.&nbsp; The maximum number of tweets that Twitter sends appears to be 50 per second.</p> <h3>Conversations</h3> <p>ping.pong will quickly show an entire tweet conversation by navigating reply tags back to the original tweet that started it all.</p> <h3>Free &amp; Open Source</h3> <p>The full source code for ping.pong can be found on <a href="https://github.com/bling/Ping.Pong">GitHub</a>.&nbsp; You can compile it, make modifications as you please, and run it yourself.&nbsp; The only thing missing is the consumer keys which uniquely identifies this client from another.&nbsp; You can generate them through Twitter once you have a developer account.</p> <h3>Installer</h3> <p>The latest and greatest can be quickly installed from <a href="http://dl.dropbox.com/u/2072014/Ping.Pong/PingPongTestPage.html">here</a>.&nbsp; Check back periodically for updates!</p>  </div>
 ]]></content>
   </entry>
   

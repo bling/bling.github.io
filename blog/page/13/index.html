@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="So my project has been chuggin along quite nicely, and gave my CTO a quick look over the design of my project of which he was very impressed&#8230;I &hellip;">
+  <meta name="description" content="It&rsquo;s unfortunate that I have to remove db4o from my project, but I can&rsquo;t say this was unexpected. The CTO finally came to me today to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,59 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/08/18/goodbye-db4o-hello-orm/">Goodbye Db4o, Hello ORM</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-08-18T00:00:00+00:00" pubdate data-updated="true">Aug 18<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It&rsquo;s unfortunate that I have to remove db4o from my project, but I can&rsquo;t say this was unexpected.  The CTO finally came to me today to voice his concerns on using an object database rather than a relational database.</p>
+
+<p>As typical of many organizations, we have a database team dedicated to maintaining the integrity and performance of our main product.  We are also stored procedure happy and every write <em>and read</em> operation goes through a stored procedure&hellip;.so you can say I was pretty gutsy to even consider using an object database ;&ndash;)</p>
+
+<p>It was fun nonetheless&hellip;</p>
+
+<p>Sooooo&hellip;.which ORM to use?  I&rsquo;ve already read of <a href="http://lmgtfy.com/?q=entity+framework+vote+of+no+confidence">all the things about the Entity Framework</a> already, so I didn&rsquo;t even bother considering it.  Choices came down to just a few:
+&ndash; <a href="http://www.castleproject.org/activerecord/index.html">Castle.ActiveRecord</a>
+&ndash; <a href="http://fluentnhibernate.org/">Fluent NHibernate</a>
+&ndash; <a href="http://www.subsonicproject.com/">SubSonic</a></p>
+
+<p>I&rsquo;ve initially started with Fluent NHibernate.  The main reason is because it&rsquo;s got really good documentation for beginners like me who&rsquo;ve never used NHibernate, and has more configuration options via code.  Even so, it didn&rsquo;t take long for me to run into gazillions of mapping errors though :&ndash;[</p>
+
+<p>I&rsquo;m still undecided whether I prefer <code>ClassMap&lt;&gt;</code> or <code>ActiveRecord</code> attributes though&hellip;</p>
+
+<p>I started porting all my repositories to using NHibernate, and for the most part it wasn&rsquo;t too bad.  I&rsquo;ve learned some things along the way like lazy loading and cascading, but the conclusion is having Fluent NHibernate with pretty code completion isn&rsquo;t going to prevent the need to actually learn NHibernate the old-fashioned way, although it definitely got me up and running a lot faster.</p>
+
+<p>I&rsquo;ll probably write up a quick repository implementation with SubSonic as well as part of my prototype to see which I like.  SubSonic definitely looks more &lsquo;hip&rsquo; with it&rsquo;s very flashy and web 2.0ey looking website :)</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -392,70 +445,6 @@ Not only that. Castle has integration with logging, validation framework, much m
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/07/25/best-tool-for-job/">Best Tool for the Job&#8230;</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-07-25T00:00:00+00:00" pubdate data-updated="true">Jul 25<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>So I recently moved, and my new place doesn&rsquo;t make internet by wire all that accessible&hellip;so now I have a big honkin desktop computer with no internet, but I have a little netbook which has wireless.</p>
-
-<p>Hmmmm&hellip;my netbook&rsquo;s main operating system is Archlinux&hellip;and Linux is strong in networking&hellip;so it should be easy to set it up right?</p>
-
-<p>Right I was!</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'># give my ethernet an IP address and start it
-</span><span class='line'>$  ifconfig eth1 192.168.0.1 netmask 255.255.255.0
-</span><span class='line'>$  ifconfig eth1 up
-</span><span class='line'>
-</span><span class='line'># enable packet forwarding and reboot (or modify /proc)
-</span><span class='line'>$  set /etc/sysctl.conf to set net.ipv4.ip_forward=1
-</span><span class='line'>
-</span><span class='line'># set up iptables
-</span><span class='line'>$  iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Done!  Now on my desktop I just set it to static IP 192.168.0.2, connected to my gateway 192.168.0.1, and boom, I got internet!</p>
-
-<p>Now I can wait patiently for a wireless adapter to go on sale&hellip;</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/14/">&larr; Older</a>
@@ -471,6 +460,10 @@ Not only that. Castle has integration with logging, validation framework, much m
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/01/06/emacs-as-my-leader-1-year-later/">Emacs As My &lt;Leader&gt;, 1 Year Later</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/">Asynchronous Eval in Emacs with Stylus and Skewer</a>
@@ -498,10 +491,6 @@ Not only that. Castle has integration with logging, validation framework, much m
     
       <li class="post">
         <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/15/flight-of-an-open-source-project/">The flight of an open-source project</a>
       </li>
     
   </ul>
@@ -546,7 +535,7 @@ Not only that. Castle has integration with logging, validation framework, much m
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - Bailey Ling -
+  Copyright &copy; 2015 - Bailey Ling -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="As part of my demonstration for the NYC .NET Meetup in the next couple of days, I prepared some material to show how to use Mono.Cecil to manually &hellip;">
+  <meta name="description" content="See the introduction here. The MSBuild task as it stands currently by default will attempt to weave everything that it finds.&nbsp; This is probably &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,60 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/04/17/integrating-dependencypropertyweaver/">Integrating DependencyPropertyWeaver Into Your Build</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-04-17T00:00:00+00:00" pubdate data-updated="true">Apr 17<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+<p>See the <a href="http://blingcode.blogspot.com/2011/04/introducing-dependencypropertyweaver.html">introduction</a> here.</p> <p>The MSBuild task as it stands currently by default will attempt to weave everything that it finds.&nbsp; This is probably not optimal in most use cases, but any changes is a simple modification to the LINQ query in the code.&nbsp; For now, it’s only available in source format since there are bound to be bugs here and there, and once those get ironed out it’ll be easier to release a “point something” release.</p> <p>An example of how its used can be seen in the unit tests, in the project DependencyPropertyWeaver.Tests.Models.&nbsp; If you open it up in your favorite text editor, you will see this crucial line:</p><pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">&lt;</span><span style="color: #800000">Target</span> <span style="color: #ff0000">Name</span>=<span style="color: #0000ff">"AfterBuild"</span><span style="color: #0000ff">&gt;</span>
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    <span style="color: #0000ff">&lt;</span><span style="color: #800000">Exec</span> <span style="color: #ff0000">Command</span>=<span style="color: #0000ff">"C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe postbuild.proj /p:Files=DependencyPropertyWeaver.Tests.Models.dll"</span> <span style="color: #ff0000">WorkingDirectory</span>=<span style="color: #0000ff">"$(OutputPath)"</span> <span style="color: #0000ff">/&gt;</span>
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  <span style="color: #0000ff">&lt;/</span><span style="color: #800000">Target</span><span style="color: #0000ff">&gt;</span></pre></pre>
+<p>And the contents of <em>postbuild.proj</em> is simply this:</p><pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">&lt;?</span>xml version="1.0" encoding="utf-8"<span style="color: #0000ff">?&gt;</span>
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">&lt;</span><span style="color: #800000">Project</span> <span style="color: #ff0000">ToolsVersion</span>=<span style="color: #0000ff">"4.0"</span> <span style="color: #ff0000">DefaultTargets</span>=<span style="color: #0000ff">"Weave"</span> <span style="color: #ff0000">xmlns</span>=<span style="color: #0000ff">"http://schemas.microsoft.com/developer/msbuild/2003"</span><span style="color: #0000ff">&gt;</span>
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  <span style="color: #0000ff">&lt;</span><span style="color: #800000">UsingTask</span> <span style="color: #ff0000">TaskName</span>=<span style="color: #0000ff">"DependencyPropertyWeaver.DependencyPropertyWeaverTask"</span>
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">             <span style="color: #ff0000">AssemblyFile</span>=<span style="color: #0000ff">"DependencyPropertyWeaver.dll"</span> <span style="color: #0000ff">/&gt;</span>
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  <span style="color: #0000ff">&lt;</span><span style="color: #800000">Target</span> <span style="color: #ff0000">Name</span>=<span style="color: #0000ff">"Weave"</span><span style="color: #0000ff">&gt;</span>
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    <span style="color: #0000ff">&lt;</span><span style="color: #800000">ItemGroup</span><span style="color: #0000ff">&gt;</span>
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">      <span style="color: #0000ff">&lt;</span><span style="color: #800000">Input</span> <span style="color: #ff0000">Include</span>=<span style="color: #0000ff">"$(Files)"</span> <span style="color: #0000ff">/&gt;</span>
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    <span style="color: #0000ff">&lt;/</span><span style="color: #800000">ItemGroup</span><span style="color: #0000ff">&gt;</span>
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    <span style="color: #0000ff">&lt;</span><span style="color: #800000">DependencyPropertyWeaverTask</span> <span style="color: #ff0000">Files</span>=<span style="color: #0000ff">"@(Input)"</span> <span style="color: #0000ff">/&gt;</span>
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  <span style="color: #0000ff">&lt;/</span><span style="color: #800000">Target</span><span style="color: #0000ff">&gt;</span>
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">&lt;/</span><span style="color: #800000">Project</span><span style="color: #0000ff">&gt;</span></pre></pre>
+<p>The <em>AfterBuild</em> target is a special target with MSBuild, which, as the name implies, will run after the target has been built.&nbsp; In this case, after the project is completed, it will invoke another MSBuild instance to perform the weaving.&nbsp; Invoking a new MSBuild process is required because the &lt;UsingTask&gt; will load the assembly into the current AppDomain, and once loaded it cannot be unloaded.</p>
+<p>If you don’t mind the unloading part, you can simply add the &lt;UsingTask&gt; directly into the project file and invoked the &lt;DependencyPropertyWeaverTask&gt; there, and avoid the hassle of having a separate file.</p>
+<p>Currently, the DependencyPropertyWeaverTask supports the <em>TypePatternMatch</em> and <em>AttributePatternMatch</em>, which as the names imply will use regular expression filtering on type names or properties with the attribute you want to weave.&nbsp; If these properties are null, they are ignored.</p>
+<p>Next on the feature list is weaving attached properties ;-)</p>  </div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -339,111 +393,6 @@ For what it&#39;s worth, I found this helpful. I&#39;m new to Castle Windsor as 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/12/04/cqrs-building-transactional-event-store/">CQRS: Building a “Transactional” Event Store With MongoDB</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-12-04T00:00:00+00:00" pubdate data-updated="true">Dec 4<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-<p>As you all already know if you’re familiar with MongoDB, is that it does not support transactions.&nbsp; The closest thing we have is atomic modifications of a single document.</p> <p>The Event Store in a CQRS architecture has the important responsibility of detecting concurrency violations, where two different sources try to update the same version of the aggregate.&nbsp; The one that gets it late should be denied changes into the store with an exception thrown.&nbsp; This ensures the integrity of the data.</p> <p>Here is a very simple typical implementation of appending events into the event store:</p><pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">public</span> <span style="color: #0000ff">void</span> Append(Guid id, <span style="color: #0000ff">long</span> expectedVersion, IEnumerable&lt;IEvent&gt; events)
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">{
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp; <span style="color: #0000ff">try</span>
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp; {
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp;&nbsp;&nbsp; _events.Insert(events.Select(x =&gt; ...)); <span style="color: #008000">// convert to storage type</span>
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp; }
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp; <span style="color: #0000ff">catch</span> (...)
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp; {
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp; <span style="color: #0000ff">&nbsp; if</span> (E11000 duplicate key)
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp; <span style="color: #0000ff">&nbsp;&nbsp;&nbsp; throw</span> <span style="color: #0000ff">new</span> ConcurrencyException(...);
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp; }
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">}</pre></pre>
-<p>Syntax is a mix of C#/pseudo code, but the basic concepts are the same.&nbsp; This assumes that you’ve set up an multi-index on the collection between the ID and the version.&nbsp; Thus, when you insert something that already has a matching ID/version, Mongo will tell you of a duplicate key violation, and all is good.</p>
-<p>But wait!&nbsp; Operations are atomic per document!&nbsp; So what happens if you append 100 events, and it fails on the 43rd one?&nbsp; Events 1 through 42 will continue to exist in the data store, which is bad news.</p>
-<p>Obviously, this solution is not going to work.&nbsp; The next step was to do something like this:</p><pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">catch</span> (...)
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">{
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">&nbsp; if</span> (E11000 duplicate keys)
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp; {
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">&nbsp;&nbsp;&nbsp; foreach</span> (var e <span style="color: #0000ff">in</span> events)
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _events.Delete(<span style="color: #0000ff">new</span> { _id = e._id });
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp;</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">&nbsp;&nbsp;&nbsp; throw</span> <span style="color: #0000ff">new</span> ConcurrencyException(...);
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp; }
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">}</pre></pre>
-<p>So, before inserting into the collection, each events gets a generated ObjectID, so that if it fails, the catch exception can simply tell the data store to delete everything.</p>
-<p>At first glance this seems to fix everything, except for one glaring problem.&nbsp; What happens if you lose connection to the database before, or midway sending the deletes?&nbsp; Now you have a problem of <strong>ensuring</strong> that those deletes are guaranteed, and so then the question that arises from that is <strong>where</strong> would you store it?&nbsp; A local file?&nbsp; Another database?&nbsp; The problem is, at that moment, if another process in the system queries all events for the same aggregate it will return invalid data.</p>
-<p>So, we’re back to square one.&nbsp; We need to simulate a transaction through a single insert.</p>
-<p>The secret is in the schema design.&nbsp; Initially, we started out with a straight forward row-per-event schema.&nbsp; But since we’re operating with <em>documents</em>, we can model it as a <em>batch</em> of events.</p>
-<p>Thus, instead of versioning every event individually, we version a batch of events.&nbsp; For example, originally we would insert 3 events, and the data saved would look like this:</p>
-<blockquote>
-<p>{ _id = 1, aggregate_id = 1, version = 1, event = { … } }<br>{ _id = 2, aggregate_id = 1, version = 2, event = { … } }<br>{ _id = 3, aggregate_id = 1, version = 3, event = { … } }</p></blockquote>
-<p>In the new schema, it would look like this:</p>
-<blockquote>
-<p>{ _id = 1, aggregate_id = 1, version = 1, <strong>events</strong> = [ { … }, { … }, { … }, { … } ] }</p></blockquote>
-<p>Now, a downside to this approach is you lose a bit of granularity of stored events, since you are grouping multiple events under a single version.&nbsp; However, I don’t see this as a huge loss since the main reason you want to use event sourcing in the first place is to be able to restore an aggregate to any state in its history, and we still retain that functionality.</p>
-<p>In our case, this is working very well for us.&nbsp; When a command gets handled, it generates a bunch of events that get applied and then saved to MongoDB.&nbsp; I can’t think of any scenario where it’d want to replay to the middle of a half-processed command (but of course it’s possible anyways, just reply half of a batch of events).&nbsp; But that’s just asking for trouble.&nbsp; It’s most likely easier to just the re-process the command.</p>
-<p>Now, you may be asking why go through the trouble of batching events when you can just store one document per aggregate, and then put all events in one document?&nbsp; Yes, that would solve the problem very effectively…until you hit the 4MB per document limit ;-)</p>  </div>
-<h2>Comments</h2>
-<div class='comments'>
-<div class='comment'>
-<div class='author'>Bailey Ling</div>
-<div class='content'>
-It wouldn&#39;t be any different from processing a new command.  You will need to load all snapshots/events to get the aggregate root to the latest version.  Events should typically be &quot;fire and forget&quot;.  If you require them to be guaranteed delivery it&#39;s better to restructure them as commands.</div>
-</div>
-<div class='comment'>
-<div class='author'>bodrin</div>
-<div class='content'>
-Nice, thanks for answering :)<br />I should definitely take a closer look at the MongoDB! Sounds very interesting :)<br /><br />On the other hand I&#39;m still wondering if there is a general approach for this situation - you have done a state transition into the KV/doc DB and you have some events there. Then your system goes down just before it publishes these events on to the wire (some external messaging system). Then when you start again is there an efficient way/query to be done against the KV/doc DB so that you get all the events that haven&#39;t been dispatched yet?</div>
-</div>
-<div class='comment'>
-<div class='author'>Bailey Ling</div>
-<div class='content'>
-Well, the easiest way is to cheat and use Mongo as your messaging bus ;-)  There&#39;s a bunch of examples on the web.  Basically, you create a direct connection against the database and read the oplog.  This is the mechanism that Mongo uses to do replication, so you get near real-time performance.  Since it&#39;s only one system to manage, rather than two in concert, it&#39;s a bit easier to maintain.  You&#39;ll get the same guarantees as any other write to a Mongo node.<br /><br />If you must go to another messaging system it&#39;ll depend on the guarantees of that implementation.  It&#39;s not the end of the world to tell the user to &quot;try again later&quot;, assuming that&#39;s acceptable for the 0.01% of the time.<br /><br />Also, if the messaging system is down, you can still read from the event store to get the latest information (and is required for stale nodes joining the system).</div>
-</div>
-<div class='comment'>
-<div class='author'>bodrin</div>
-<div class='content'>
-Hi, I want to ask how do you dispatch the events. I guess the flow is somthing like this:<br /><br />1. receive a command<br />2. load the related AR and process the command which produces some events - a batch<br />3. store the event batch in MongoDB, e.g. at <br />{ &quot;_id&quot;: { &quot;aggregate&quot;: 1234, &quot;version&quot;: 65 } }<br />4. dispatch the events to some messaging system<br />5. mark the { &quot;_id&quot;: { &quot;aggregate&quot;: 1234, &quot;version&quot;: 65 } } as dispatched<br /><br />So if this is similar to what you are doing I&#39;m wondering what if the system goes down just after step 3. ?<br />The events are not dispatched, but how do you find that after restart? Is there an efficient way with MongoDb and/or with other documen / KV stores?</div>
-</div>
-<div class='comment'>
-<div class='author'>bling</div>
-<div class='content'>
-Thanks for the comments!<br /><br />You are absolutely right in all of your points.<br /><br />Actually, each individual event in my system is meaningless unless it is part of a batch.  The batch is the only thing that is versioned, and the batch version is required to save or get events from the store.<br /><br />As for duplicate handling, since I wrote the post I implemented _id as a complex object like this:<br /><br />{ &quot;_id&quot;: { &quot;aggregate&quot;: 1234, &quot;version&quot;: 65 } }<br /><br />_id is always indexed, and unique.  If version 66 already exists, the 2nd command handler will simply fail, and the event store will continue to have good, consistent data.</div>
-</div>
-<div class='comment'>
-<div class='author'>Jonathan Oliver</div>
-<div class='content'>
-Awesome post.  <br /><br />When I started writing version 2.0 of my EventStore library, I wanted to ensure that NoSQL databases such as MongoDB could be handled.  Pushing everything up as a single batch is critical.<br /><br />Here is the implementation for Mongo:<br />https://github.com/joliver/EventStore/tree/master/src/proj/EventStore.Persistence.MongoPersistence<br /><br />Here is the design guide:<br />http://jonathan-oliver.blogspot.com/2010/12/cqrs-eventstore-v2-architectural.html<br /><br />There are three quick things I wanted to mention regarding your implementation.  First, because you&#39;re now pushing things up as a batch, you can no longer use the event version as an optimistic control technique.  Instead, you&#39;ll want to number each batch that you push using a sequential, incrementing value.<br /><br />Lastly, if you only push the event information, you may lose some context because there is oftentimes metadata associated with all of the events that you&#39;ll want to store.<br /><br />You&#39;ll also want to consider what happens when a message is processed more than once which causes a batch to be written.  NoSQL doesn&#39;t provide any guarantees related to de-duplication so you&#39;ll need to handle that in your application code/event store code.</div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/9/">&larr; Older</a>
@@ -459,6 +408,10 @@ Awesome post.  <br /><br />When I started writing version 2.0 of my EventStore l
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/01/06/emacs-as-my-leader-1-year-later/">Emacs As My &lt;Leader&gt;, 1 Year Later</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/">Asynchronous Eval in Emacs with Stylus and Skewer</a>
@@ -486,10 +439,6 @@ Awesome post.  <br /><br />When I started writing version 2.0 of my EventStore l
     
       <li class="post">
         <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/15/flight-of-an-open-source-project/">The flight of an open-source project</a>
       </li>
     
   </ul>
@@ -534,7 +483,7 @@ Awesome post.  <br /><br />When I started writing version 2.0 of my EventStore l
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - Bailey Ling -
+  Copyright &copy; 2015 - Bailey Ling -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

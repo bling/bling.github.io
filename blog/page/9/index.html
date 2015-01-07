@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="I’m not going to go into detail about what the deal is about event handlers in a CQRS architecture, since a quick Google/Bing search will give &hellip;">
+  <meta name="description" content="As you all already know if you’re familiar with MongoDB, is that it does not support transactions.&nbsp; The closest thing we have is atomic &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,111 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/12/04/cqrs-building-transactional-event-store/">CQRS: Building a “Transactional” Event Store With MongoDB</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-04T00:00:00+00:00" pubdate data-updated="true">Dec 4<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+<p>As you all already know if you’re familiar with MongoDB, is that it does not support transactions.&nbsp; The closest thing we have is atomic modifications of a single document.</p> <p>The Event Store in a CQRS architecture has the important responsibility of detecting concurrency violations, where two different sources try to update the same version of the aggregate.&nbsp; The one that gets it late should be denied changes into the store with an exception thrown.&nbsp; This ensures the integrity of the data.</p> <p>Here is a very simple typical implementation of appending events into the event store:</p><pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">public</span> <span style="color: #0000ff">void</span> Append(Guid id, <span style="color: #0000ff">long</span> expectedVersion, IEnumerable&lt;IEvent&gt; events)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">{
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp; <span style="color: #0000ff">try</span>
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp; {
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp;&nbsp;&nbsp; _events.Insert(events.Select(x =&gt; ...)); <span style="color: #008000">// convert to storage type</span>
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp; }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp; <span style="color: #0000ff">catch</span> (...)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp; {
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp; <span style="color: #0000ff">&nbsp; if</span> (E11000 duplicate key)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp; <span style="color: #0000ff">&nbsp;&nbsp;&nbsp; throw</span> <span style="color: #0000ff">new</span> ConcurrencyException(...);
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp; }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">}</pre></pre>
+<p>Syntax is a mix of C#/pseudo code, but the basic concepts are the same.&nbsp; This assumes that you’ve set up an multi-index on the collection between the ID and the version.&nbsp; Thus, when you insert something that already has a matching ID/version, Mongo will tell you of a duplicate key violation, and all is good.</p>
+<p>But wait!&nbsp; Operations are atomic per document!&nbsp; So what happens if you append 100 events, and it fails on the 43rd one?&nbsp; Events 1 through 42 will continue to exist in the data store, which is bad news.</p>
+<p>Obviously, this solution is not going to work.&nbsp; The next step was to do something like this:</p><pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">catch</span> (...)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">{
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">&nbsp; if</span> (E11000 duplicate keys)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp; {
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">&nbsp;&nbsp;&nbsp; foreach</span> (var e <span style="color: #0000ff">in</span> events)
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _events.Delete(<span style="color: #0000ff">new</span> { _id = e._id });
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp;</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">&nbsp;&nbsp;&nbsp; throw</span> <span style="color: #0000ff">new</span> ConcurrencyException(...);
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">&nbsp; }
+</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">}</pre></pre>
+<p>So, before inserting into the collection, each events gets a generated ObjectID, so that if it fails, the catch exception can simply tell the data store to delete everything.</p>
+<p>At first glance this seems to fix everything, except for one glaring problem.&nbsp; What happens if you lose connection to the database before, or midway sending the deletes?&nbsp; Now you have a problem of <strong>ensuring</strong> that those deletes are guaranteed, and so then the question that arises from that is <strong>where</strong> would you store it?&nbsp; A local file?&nbsp; Another database?&nbsp; The problem is, at that moment, if another process in the system queries all events for the same aggregate it will return invalid data.</p>
+<p>So, we’re back to square one.&nbsp; We need to simulate a transaction through a single insert.</p>
+<p>The secret is in the schema design.&nbsp; Initially, we started out with a straight forward row-per-event schema.&nbsp; But since we’re operating with <em>documents</em>, we can model it as a <em>batch</em> of events.</p>
+<p>Thus, instead of versioning every event individually, we version a batch of events.&nbsp; For example, originally we would insert 3 events, and the data saved would look like this:</p>
+<blockquote>
+<p>{ _id = 1, aggregate_id = 1, version = 1, event = { … } }<br>{ _id = 2, aggregate_id = 1, version = 2, event = { … } }<br>{ _id = 3, aggregate_id = 1, version = 3, event = { … } }</p></blockquote>
+<p>In the new schema, it would look like this:</p>
+<blockquote>
+<p>{ _id = 1, aggregate_id = 1, version = 1, <strong>events</strong> = [ { … }, { … }, { … }, { … } ] }</p></blockquote>
+<p>Now, a downside to this approach is you lose a bit of granularity of stored events, since you are grouping multiple events under a single version.&nbsp; However, I don’t see this as a huge loss since the main reason you want to use event sourcing in the first place is to be able to restore an aggregate to any state in its history, and we still retain that functionality.</p>
+<p>In our case, this is working very well for us.&nbsp; When a command gets handled, it generates a bunch of events that get applied and then saved to MongoDB.&nbsp; I can’t think of any scenario where it’d want to replay to the middle of a half-processed command (but of course it’s possible anyways, just reply half of a batch of events).&nbsp; But that’s just asking for trouble.&nbsp; It’s most likely easier to just the re-process the command.</p>
+<p>Now, you may be asking why go through the trouble of batching events when you can just store one document per aggregate, and then put all events in one document?&nbsp; Yes, that would solve the problem very effectively…until you hit the 4MB per document limit ;-)</p>  </div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>Bailey Ling</div>
+<div class='content'>
+It wouldn&#39;t be any different from processing a new command.  You will need to load all snapshots/events to get the aggregate root to the latest version.  Events should typically be &quot;fire and forget&quot;.  If you require them to be guaranteed delivery it&#39;s better to restructure them as commands.</div>
+</div>
+<div class='comment'>
+<div class='author'>bodrin</div>
+<div class='content'>
+Nice, thanks for answering :)<br />I should definitely take a closer look at the MongoDB! Sounds very interesting :)<br /><br />On the other hand I&#39;m still wondering if there is a general approach for this situation - you have done a state transition into the KV/doc DB and you have some events there. Then your system goes down just before it publishes these events on to the wire (some external messaging system). Then when you start again is there an efficient way/query to be done against the KV/doc DB so that you get all the events that haven&#39;t been dispatched yet?</div>
+</div>
+<div class='comment'>
+<div class='author'>Bailey Ling</div>
+<div class='content'>
+Well, the easiest way is to cheat and use Mongo as your messaging bus ;-)  There&#39;s a bunch of examples on the web.  Basically, you create a direct connection against the database and read the oplog.  This is the mechanism that Mongo uses to do replication, so you get near real-time performance.  Since it&#39;s only one system to manage, rather than two in concert, it&#39;s a bit easier to maintain.  You&#39;ll get the same guarantees as any other write to a Mongo node.<br /><br />If you must go to another messaging system it&#39;ll depend on the guarantees of that implementation.  It&#39;s not the end of the world to tell the user to &quot;try again later&quot;, assuming that&#39;s acceptable for the 0.01% of the time.<br /><br />Also, if the messaging system is down, you can still read from the event store to get the latest information (and is required for stale nodes joining the system).</div>
+</div>
+<div class='comment'>
+<div class='author'>bodrin</div>
+<div class='content'>
+Hi, I want to ask how do you dispatch the events. I guess the flow is somthing like this:<br /><br />1. receive a command<br />2. load the related AR and process the command which produces some events - a batch<br />3. store the event batch in MongoDB, e.g. at <br />{ &quot;_id&quot;: { &quot;aggregate&quot;: 1234, &quot;version&quot;: 65 } }<br />4. dispatch the events to some messaging system<br />5. mark the { &quot;_id&quot;: { &quot;aggregate&quot;: 1234, &quot;version&quot;: 65 } } as dispatched<br /><br />So if this is similar to what you are doing I&#39;m wondering what if the system goes down just after step 3. ?<br />The events are not dispatched, but how do you find that after restart? Is there an efficient way with MongoDb and/or with other documen / KV stores?</div>
+</div>
+<div class='comment'>
+<div class='author'>bling</div>
+<div class='content'>
+Thanks for the comments!<br /><br />You are absolutely right in all of your points.<br /><br />Actually, each individual event in my system is meaningless unless it is part of a batch.  The batch is the only thing that is versioned, and the batch version is required to save or get events from the store.<br /><br />As for duplicate handling, since I wrote the post I implemented _id as a complex object like this:<br /><br />{ &quot;_id&quot;: { &quot;aggregate&quot;: 1234, &quot;version&quot;: 65 } }<br /><br />_id is always indexed, and unique.  If version 66 already exists, the 2nd command handler will simply fail, and the event store will continue to have good, consistent data.</div>
+</div>
+<div class='comment'>
+<div class='author'>Jonathan Oliver</div>
+<div class='content'>
+Awesome post.  <br /><br />When I started writing version 2.0 of my EventStore library, I wanted to ensure that NoSQL databases such as MongoDB could be handled.  Pushing everything up as a single batch is critical.<br /><br />Here is the implementation for Mongo:<br />https://github.com/joliver/EventStore/tree/master/src/proj/EventStore.Persistence.MongoPersistence<br /><br />Here is the design guide:<br />http://jonathan-oliver.blogspot.com/2010/12/cqrs-eventstore-v2-architectural.html<br /><br />There are three quick things I wanted to mention regarding your implementation.  First, because you&#39;re now pushing things up as a batch, you can no longer use the event version as an optimistic control technique.  Instead, you&#39;ll want to number each batch that you push using a sequential, incrementing value.<br /><br />Lastly, if you only push the event information, you may lose some context because there is oftentimes metadata associated with all of the events that you&#39;ll want to store.<br /><br />You&#39;ll also want to consider what happens when a message is processed more than once which causes a batch to be written.  NoSQL doesn&#39;t provide any guarantees related to de-duplication so you&#39;ll need to handle that in your application code/event store code.</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -673,222 +778,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/05/14/contextual-lifestyle-with-castle/">Contextual Lifestyle With Castle Windsor</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-05-14T00:00:00+00:00" pubdate data-updated="true">May 14<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-<b>EDIT:</b>&nbsp;As of version 3, scoped lifestyles are now a first class citizen supported out of the box (<a href="http://docs.castleproject.org/Windsor.Whats-New-In-Windsor-3.ashx">http://docs.castleproject.org/Windsor.Whats-New-In-Windsor-3.ashx</a>)<br />
-<strong>EDIT:</strong> A much better implementation can be found at <a href="https://github.com/castleprojectcontrib/Castle.Windsor.Lifestyles" title="https://github.com/castleprojectcontrib/Castle.Windsor.Lifestyles">https://github.com/castleprojectcontrib/Castle.Windsor.Lifestyles</a><br />
-<br />
-IMO, one of the big missing features of Castle Windsor is that it doesn’t come with a built-in way for dealing with contextual lifestyles.&nbsp; It handles transients and singletons fairly well, but once you get to other lifestyles it’s pretty heavily dependent on having some “state manager” handling the instances.&nbsp; For example, PerWebRequest uses the HttpContext, PerThread uses thread static variables, etc.<br />
-Contextual lifestyles is one of those things where it doesn’t seem all that useful at first, and then when you see the possibilities it’s like getting hit with a huge truck.<br />
-A question was posted to the Castle Google Group recently, which I follow, which illustrates a relatively common example of why someone would want to have a contextual lifestyle.&nbsp; Basically, you have a whole bunch of components you want to resolve, but only within a context.<br />
-Here’s some boiler plate code of the domain model:<br />
-<pre class="csharpcode"><span class="kwrd">public</span> <span class="kwrd">interface</span> IRepository { ISession Session { get; } }
-<span class="kwrd">public</span> <span class="kwrd">interface</span> ISession : IDisposable { <span class="kwrd">bool</span> IsDisposed { get; } }
-<span class="kwrd">public</span> <span class="kwrd">class</span> Session : ISession
-{
-    <span class="kwrd">public</span> <span class="kwrd">bool</span> IsDisposed { get; set; }
-    <span class="kwrd">public</span> <span class="kwrd">void</span> Dispose() { IsDisposed = <span class="kwrd">true</span>; }
-}
-<span class="kwrd">public</span> <span class="kwrd">class</span> Repository1 :IRepository
-{
-    <span class="kwrd">public</span> ISession Session { get; <span class="kwrd">private</span> set; }
-    <span class="kwrd">public</span> Repository1(ISession session){ Session = session; }
-}
-<span class="kwrd">public</span> <span class="kwrd">class</span> Repository2 : IRepository
-{
-    <span class="kwrd">public</span> ISession Session { get; <span class="kwrd">private</span> set; }
-    <span class="kwrd">public</span> Repository2(ISession session){ Session = session; }
-}
-<span class="kwrd">public</span> <span class="kwrd">class</span> Model1
-{
-    <span class="kwrd">public</span> IRepository First { get; <span class="kwrd">private</span> set; }
-    <span class="kwrd">public</span> IRepository Second { get; <span class="kwrd">private</span> set; }
-    <span class="kwrd">public</span> Model1(IRepository first, IRepository second) { First = first; Second = second; }
-}
-<span class="kwrd">public</span> <span class="kwrd">class</span> Model2
-{
-    <span class="kwrd">public</span> IRepository Second { get; <span class="kwrd">private</span> set; }
-    <span class="kwrd">public</span> Model2(IRepository second) { Second = second; }
-}</pre><style type="text/css">
-.csharpcode, .csharpcode pre
-{
- font-size: small;
- color: black;
- font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
- background-color: #ffffff;
- /*white-space: pre;*/
-}
-.csharpcode pre { margin: 0em; }
-.csharpcode .rem { color: #008000; }
-.csharpcode .kwrd { color: #0000ff; }
-.csharpcode .str { color: #006080; }
-.csharpcode .op { color: #0000c0; }
-.csharpcode .preproc { color: #cc6633; }
-.csharpcode .asp { background-color: #ffff00; }
-.csharpcode .html { color: #800000; }
-.csharpcode .attr { color: #ff0000; }
-.csharpcode .alt 
-{
- background-color: #f4f4f4;
- width: 100%;
- margin: 0em;
-}
-.csharpcode .lnum { color: #606060; }
-</style>And here’s the unit test I want to pass:<br />
-<pre class="csharpcode">[Test]
-        <span class="kwrd">public</span> <span class="kwrd">void</span> ResolutionsByContext()
-        {
-            IWindsorContainer root = <span class="kwrd">new</span> WindsorContainer();
-            root.Register(Component.For&lt;Model1&gt;().LifeStyle.Transient,
-                          Component.For&lt;Model2&gt;().LifeStyle.Transient,
-                          Component.For&lt;IRepository&gt;().ImplementedBy&lt;Repository1&gt;().LifeStyle.Transient,
-                          Component.For&lt;IRepository&gt;().ImplementedBy&lt;Repository2&gt;().LifeStyle.Transient,
-                          Component.For&lt;ISession&gt;().ImplementedBy&lt;Session&gt;().LifeStyle.PerContextScope());
-
-            Model1 model1;
-            Model2 model2;
-            ISession session1, session2;
-            <span class="kwrd">using</span> (var context1 = root.BeginLifetimeScope())
-            {
-                model1 = context1.Resolve&lt;Model1&gt;();
-                session1 = model1.First.Session;
-                Assert.AreSame(model1.First.Session, model1.Second.Session);
-                Assert.AreSame(context1.Resolve&lt;ISession&gt;(), context1.Resolve&lt;ISession&gt;());
-
-                <span class="kwrd">using</span> (var context2 = root.BeginLifetimeScope())
-                {
-                    model2 = context2.Resolve&lt;Model2&gt;();
-                    session2 = model2.Second.Session;
-                    Assert.AreNotSame(model1.First.Session, model2.Second.Session);
-
-                    var anotherModel2 = context2.Resolve&lt;Model2&gt;();
-                    Assert.AreSame(anotherModel2.Second.Session, model2.Second.Session);
-
-                    Assert.AreSame(session2, context2.Resolve&lt;ISession&gt;());
-                    Assert.AreNotSame(context1.Resolve&lt;ISession&gt;(), context2.Resolve&lt;ISession&gt;());
-                }
-                Assert.IsTrue(session2.IsDisposed);
-                Assert.IsFalse(session1.IsDisposed);
-            }
-            Assert.IsTrue(session1.IsDisposed);
-        }</pre><style type="text/css">
-.csharpcode, .csharpcode pre
-{
- font-size: small;
- color: black;
- font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
- background-color: #ffffff;
- /*white-space: pre;*/
-}
-.csharpcode pre { margin: 0em; }
-.csharpcode .rem { color: #008000; }
-.csharpcode .kwrd { color: #0000ff; }
-.csharpcode .str { color: #006080; }
-.csharpcode .op { color: #0000c0; }
-.csharpcode .preproc { color: #cc6633; }
-.csharpcode .asp { background-color: #ffff00; }
-.csharpcode .html { color: #800000; }
-.csharpcode .attr { color: #ff0000; }
-.csharpcode .alt 
-{
- background-color: #f4f4f4;
- width: 100%;
- margin: 0em;
-}
-.csharpcode .lnum { color: #606060; }
-</style>  <br />
-I copied the name BeginLifetimeScope from Autofac, which inherently supports contextual scopes as a first-class citizen (of which the test passes).&nbsp; The question now, is how do we get Castle Windsor to do the same?<br />
-Initially, I took a look at ISubDependencyResolver and caching variables.&nbsp; Unfortunately, this didn’t work too well because sub resolvers never got hit if they were resolved from the container directly.<br />
-The next step I tried was with lifestyle managers, but alas, the CreationContext was always transient and I was unable to store any state that distinguished between different context resolutions.<br />
-After digging deeper into the Windsor codebase and getting into the subsystems and handlers, I found a solution that seems to work.&nbsp; It passes the test above, but that’s about it.&nbsp; Test well if you’re gonna use this in production code!!!<br />
-Here goes!<br />
-First, you have a lifestyle manager to distinguish between other lifestyles.<br />
-<pre class="csharpcode"><span class="kwrd">public</span> <span class="kwrd">class</span> ContextualLifestyleManager : AbstractLifestyleManager
-    {
-        <span class="kwrd">private</span> <span class="kwrd">object</span> instance;
-        <span class="kwrd">public</span> <span class="kwrd">override</span> <span class="kwrd">object</span> Resolve(CreationContext context)
-        {
-            <span class="kwrd">return</span> instance ?? (instance = <span class="kwrd">base</span>.Resolve(context));
-        }
-        <span class="kwrd">public</span> <span class="kwrd">override</span> <span class="kwrd">void</span> Dispose()
-        {
-        }
-    }</pre>And finally, the magic happens with this:<br />
-<pre class="csharpcode"><span class="kwrd">public</span> <span class="kwrd">static</span> <span class="kwrd">class</span> ContextualExtensions
-    {
-        <span class="kwrd">public</span> <span class="kwrd">static</span> ComponentRegistration&lt;T&gt; PerContextScope&lt;T&gt;(<span class="kwrd">this</span> LifestyleGroup&lt;T&gt; group)
-        {
-            <span class="kwrd">return</span> group.Custom&lt;ContextualLifestyleManager&gt;();
-        }
-        <span class="kwrd">public</span> <span class="kwrd">static</span> IWindsorContainer BeginLifetimeScope(<span class="kwrd">this</span> IWindsorContainer parent)
-        {
-            var child = <span class="kwrd">new</span> WindsorContainer();
-            var ss = (INamingSubSystem)parent.Kernel.GetSubSystem(SubSystemConstants.NamingKey);
-            <span class="kwrd">foreach</span> (var handler <span class="kwrd">in</span> ss.GetHandlers())
-            {
-                <span class="kwrd">if</span> (handler.ComponentModel.CustomLifestyle == <span class="kwrd">typeof</span>(ContextualLifestyleManager))
-                {
-                    child.Kernel.AddCustomComponent(handler.ComponentModel);
-                }
-            }
-            parent.AddChildContainer(child);
-            <span class="kwrd">return</span> child;
-        }
-    }</pre>First method is just a helper method to be a little more fluent in the registration for when you want many things to have contextual lifestyle.&nbsp; The second method is the guts.&nbsp; Long story short, we create a child container, and duplicate all component models of contextual lifestyle.&nbsp; Thus, whenever components are resolved, the “override” is found in the child and resolved.&nbsp; Anything else will be found in the parent.<br />
-I was initially pretty happy with this, until I profiled the performance.&nbsp; With Autofac, creating and disposing 100,000 contexts took 5ms on my computer.&nbsp; Doing the same with with Windsor took 3.8 <strong>seconds</strong>.&nbsp; Out of curiosity, I profiled again, but this time just creating child containers without copying handlers down: 1.9 seconds.&nbsp; So while this implementation works, it’s not as performant as I’d like it to be….<br />
-Maybe I’ll come up with another solution, but for now if the performance is acceptable maybe this would be useful for others!</div>
-<h2>Comments</h2>
-<div class='comments'>
-<div class='comment'>
-<div class='author'>bling</div>
-<div class='content'>
-LOL I need to check these comments more often.  Thanks for responding!</div>
-</div>
-<div class='comment'>
-<div class='author'>Krzysztof Koźmic (2)</div>
-<div class='content'>
-That&#39;s my quick and dirty impl based on per-web-request lifestyle that is far more lightweight and should have similar perf characteristics to other lifestyles<br /><br />http://gist.github.com/400979<br />http://gist.github.com/400980</div>
-</div>
-<div class='comment'>
-<div class='author'>Krzysztof Koźmic (2)</div>
-<div class='content'>
-No wonder it is taking so long, you&#39;re doing it in very heavyweight fashion.<br /><br /><br />It can be done w/o nested containers, much more lightweight.</div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/10/">&larr; Older</a>
@@ -904,6 +793,10 @@ No wonder it is taking so long, you&#39;re doing it in very heavyweight fashion.
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/01/06/emacs-as-my-leader-1-year-later/">Emacs As My &lt;Leader&gt;, 1 Year Later</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/">Asynchronous Eval in Emacs with Stylus and Skewer</a>
@@ -931,10 +824,6 @@ No wonder it is taking so long, you&#39;re doing it in very heavyweight fashion.
     
       <li class="post">
         <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/15/flight-of-an-open-source-project/">The flight of an open-source project</a>
       </li>
     
   </ul>
@@ -979,7 +868,7 @@ No wonder it is taking so long, you&#39;re doing it in very heavyweight fashion.
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - Bailey Ling -
+  Copyright &copy; 2015 - Bailey Ling -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

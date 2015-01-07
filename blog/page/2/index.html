@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="1000 stars in 1 month One month ago I pushed the first commit of my plugin vim-airline. Two weeks later I wrote a blog post about the experience. By &hellip;">
+  <meta name="description" content="The prerequisites First off, there are two very good resources that are required reading in addition to what&rsquo;s provided in the official &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,53 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/16/modularizing-vimscript/">Modularizing VimScript</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-16T20:22:00+00:00" pubdate data-updated="true">Aug 16<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1>The prerequisites</h1>
+
+<p>First off, there are two very good resources that are required reading in addition to what&rsquo;s provided in the official documentation.  Steve Losh&rsquo;s <a href="http://learnvimscriptthehardway.stevelosh.com/">Learn Vim the Hard Way</a> is an excellent book and I highly recommend it.  The <a href="http://www.ibm.com/developerworks/library/l-vim-script-1/">IBM Series</a> by Dr. Damian Conway is another great resource.  Without these I would not have been able to do what I have achieved, so thanks to them!</p>
+
+<h1>Where I started</h1>
+
+<p>When I first wrote <a href="https://github.com/bling/vim-bufferline">vim-bufferline</a> and <a href="https://github.com/bling/vim-airline">vim-airline</a> I was very much a newbie Vim scripter and I tried to follow as many existing patterns as possible.  It was evident that the community at large had a very &ldquo;C-like&rdquo; mentality, in that most things were done with functions declared in the global scope (I don&rsquo;t know if this still holds true for modern C development, but as an expression I think people will get what I&rsquo;m saying).  Many of the older scripts (pre GitHub) tended to be large, single file plugins which lived under the <code>plugin</code> folder.  For example, <a href="http://www.vim.org/scripts/script.php?script_id=2438">EasyGrep</a> is a 3000+ line plugin that helps you search and replace in Vim.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/08/16/modularizing-vimscript/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -285,51 +332,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/19/on-typescript/">On TypeScript</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-19T23:31:00+00:00" pubdate data-updated="true">Apr 19<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1>What&rsquo;s the deal?</h1>
-
-<p>For the past week I&rsquo;ve been fortunate to work on an internal project which was purely greenfield and built on Node/Express on the backend, and AngularJS on the front-end.  It was a ton of fun and I learned a lot in the process, most particularly TypeScript and CoffeeScript.</p>
-
-<p>TypeScript was of interest because the application I was writing contained some pretty complex calculations.  The existing implementation was in Java, and at first glance it seemed like it would be a good idea to have some type safety whilst reimplementing the algorithm.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/04/19/on-typescript/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -345,6 +347,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/01/06/emacs-as-my-leader-1-year-later/">Emacs As My &lt;Leader&gt;, 1 Year Later</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/">Asynchronous Eval in Emacs with Stylus and Skewer</a>
@@ -372,10 +378,6 @@
     
       <li class="post">
         <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/15/flight-of-an-open-source-project/">The flight of an open-source project</a>
       </li>
     
   </ul>
@@ -420,7 +422,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - Bailey Ling -
+  Copyright &copy; 2015 - Bailey Ling -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

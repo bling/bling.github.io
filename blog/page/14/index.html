@@ -9,7 +9,7 @@
   <meta name="author" content="Bailey Ling">
 
   
-  <meta name="description" content="Hmmmmm&hellip;CodeRush and ReSharper&hellip;It seems like these are the only 2 products people think about when they want that all super powerful &hellip;">
+  <meta name="description" content="So I recently moved, and my new place doesn&rsquo;t make internet by wire all that accessible&hellip;so now I have a big honkin desktop computer with &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,70 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/07/25/best-tool-for-job/">Best Tool for the Job&#8230;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-07-25T00:00:00+00:00" pubdate data-updated="true">Jul 25<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>So I recently moved, and my new place doesn&rsquo;t make internet by wire all that accessible&hellip;so now I have a big honkin desktop computer with no internet, but I have a little netbook which has wireless.</p>
+
+<p>Hmmmm&hellip;my netbook&rsquo;s main operating system is Archlinux&hellip;and Linux is strong in networking&hellip;so it should be easy to set it up right?</p>
+
+<p>Right I was!</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># give my ethernet an IP address and start it
+</span><span class='line'>$  ifconfig eth1 192.168.0.1 netmask 255.255.255.0
+</span><span class='line'>$  ifconfig eth1 up
+</span><span class='line'>
+</span><span class='line'># enable packet forwarding and reboot (or modify /proc)
+</span><span class='line'>$  set /etc/sysctl.conf to set net.ipv4.ip_forward=1
+</span><span class='line'>
+</span><span class='line'># set up iptables
+</span><span class='line'>$  iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Done!  Now on my desktop I just set it to static IP 192.168.0.2, connected to my gateway 192.168.0.1, and boom, I got internet!</p>
+
+<p>Now I can wait patiently for a wireless adapter to go on sale&hellip;</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -292,122 +356,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/04/27/simple-thread-pool-implementation-2/">A Simple Thread Pool Implementation (Part 2)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-04-27T00:00:00+00:00" pubdate data-updated="true">Apr 27<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I said last time I&rsquo;d compare the performance of my super duper simple implementation against the .NET ThreadPool, so here it is!</p>
-
-<p>Here&rsquo;s the test code:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="n">ManualResetEvent</span> <span class="n">evt</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ManualResetEvent</span><span class="p">(</span><span class="k">false</span><span class="p">);</span>
-</span><span class='line'><span class="kt">int</span> <span class="n">total</span> <span class="p">=</span> <span class="m">100000</span><span class="p">;</span>
-</span><span class='line'><span class="kt">int</span> <span class="n">count</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
-</span><span class='line'><span class="n">DateTime</span> <span class="n">start</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">Now</span><span class="p">;</span>
-</span><span class='line'><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">total</span><span class="p">;</span> <span class="p">++</span><span class="n">i</span><span class="p">)</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'><span class="c1">//  ThreadQueue.QueueUserWorkItem(delegate(object obj)</span>
-</span><span class='line'>    <span class="n">ThreadPool</span><span class="p">.</span><span class="n">QueueUserWorkItem</span><span class="p">(</span><span class="k">delegate</span><span class="p">(</span><span class="kt">object</span> <span class="n">obj</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">obj</span><span class="p">);</span>
-</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">Interlocked</span><span class="p">.</span><span class="n">Increment</span><span class="p">(</span><span class="k">ref</span> <span class="n">count</span><span class="p">)</span> <span class="p">==</span> <span class="n">total</span><span class="p">)</span>
-</span><span class='line'>            <span class="n">evt</span><span class="p">.</span><span class="n">Set</span><span class="p">();</span>
-</span><span class='line'>    <span class="p">},</span> <span class="n">i</span><span class="p">);</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="n">evt</span><span class="p">.</span><span class="n">WaitOne</span><span class="p">();</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Time: {0}ms&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">DateTime</span><span class="p">.</span><span class="n">Now</span> <span class="p">-</span> <span class="n">start</span><span class="p">).</span><span class="n">TotalMilliseconds</span><span class="p">);</span>
-</span><span class='line'><span class="n">Console</span><span class="p">.</span><span class="n">ReadLine</span><span class="p">();</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Here are the initial tests.  My CPU is a Core2Duo clocked at 3.6GHz.  I also ran a release build outside of the debugger.  I set my ThreadQueue to have 25 worker threads.  The results were pretty surprising:
-&ndash; ThreadPool: 1515.6444ms
-&ndash; ThreadQueue: 5093.8152ms</p>
-
-<p>Well, that&rsquo;s interesting.  The .NET ThreadPool whooped my butt!  How can that be?  Let&rsquo;s dig deeper and find out how many threads actually got used.  I used <code>ThreadPool.GetMinThreads</code> and <code>ThreadPool.GetMaxThreads</code>, and I got 2-500 for worker threads, and 2-1000 for completion IO threads.</p>
-
-<p>Then, I tracked how many threads were actually used, like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="n">Dictionary</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">&gt;</span> <span class="n">threads</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">&gt;();</span>
-</span><span class='line'><span class="c1">// ...snip</span>
-</span><span class='line'>    <span class="n">ThreadPool</span><span class="p">.</span><span class="n">QueueUserWorkItem</span><span class="p">(</span><span class="k">delegate</span><span class="p">(</span><span class="kt">object</span> <span class="n">obj</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">obj</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">threads</span><span class="p">[</span><span class="n">Thread</span><span class="p">.</span><span class="n">CurrentThread</span><span class="p">.</span><span class="n">ManagedThreadId</span><span class="p">]</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
-</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">Interlocked</span><span class="p">.</span><span class="n">Increment</span><span class="p">(</span><span class="k">ref</span> <span class="n">count</span><span class="p">)</span> <span class="p">==</span> <span class="n">total</span><span class="p">)</span>
-</span><span class='line'>            <span class="n">evt</span><span class="p">.</span><span class="n">Set</span><span class="p">();</span>
-</span><span class='line'>    <span class="p">},</span> <span class="n">i</span><span class="p">);</span>
-</span><span class='line'><span class="c1">// ...snip</span>
-</span><span class='line'><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Threads used: {0}&quot;</span><span class="p">,</span> <span class="n">threads</span><span class="p">.</span><span class="n">Count</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Surprisingly, only 2 threads were used.  So, I set the number of worker threads of my ThreadQueue to 2.  Viola!  1437.5184ms, which is just a little under 100ms faster than the ThreadPool.</p>
-
-<p><em>I guess this shows that more threads does not mean better or faster!</em></p>
-
-<p>For fun I set the number of worker threads to 200 and it took 27906.6072ms!  There was clearly a lot of locking overhead here&hellip;</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/15/">&larr; Older</a>
@@ -423,6 +371,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/01/06/emacs-as-my-leader-1-year-later/">Emacs As My &lt;Leader&gt;, 1 Year Later</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/">Asynchronous Eval in Emacs with Stylus and Skewer</a>
@@ -450,10 +402,6 @@
     
       <li class="post">
         <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/15/flight-of-an-open-source-project/">The flight of an open-source project</a>
       </li>
     
   </ul>
@@ -498,7 +446,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - Bailey Ling -
+  Copyright &copy; 2015 - Bailey Ling -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

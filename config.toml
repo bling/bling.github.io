@@ -1,0 +1,22 @@
+baseurl = "http://bling.github.io"
+languageCode = "en-us"
+title = "bling on software"
+disqusShortname = "blingdev"
+pygmentscodefences = true
+pygmentsuseclasses = true
+paginate = 5
+theme = "herring-cove"
+GoogleAnalytics = "UA-38439430-2"
+
+[author]
+  name = "Bailey Ling"
+
+[permalinks]
+  post = "/blog/:year/:month/:day/:slug/"
+
+[params]
+  ProfilePicture = "https://pbs.twimg.com/profile_images/1188386482/Untitled_bigger.png"
+  Description = "when pragmatism meets minimalism"
+  github = "bling"
+  twitter = "blingcoder"
+  linkedin = "bailey.ling"

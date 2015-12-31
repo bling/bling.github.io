@@ -1,122 +1,140 @@
-
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <title>DDD, TDD, Enterprise Library, Autofac, and Lokad.Shared libs! - bling on software development</title>
-  <meta name="author" content="Bailey Ling">
-
-  
-  <meta name="description" content="So my project has been chuggin along quite nicely, and gave my CTO a quick look over the design of my project of which he was very impressed&#8230;I &hellip;">
-  
-
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  
-  <link rel="canonical" href="http://bling.github.io/blog/2009/08/15/ddd-tdd-enterprise-library-autofac-and-lokad">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="bling on software development" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic|Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
-
-
-  
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-38439430-2']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
-
-</head>
-
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">bling on software development</a></h1>
-  
-    <h2>when pragmatism meets minimalism</h2>
-  
-</hgroup>
-
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:bling.github.io" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
-
-</nav>
-  <div id="main">
-    <div id="content">
-      <div>
-<article class="hentry" role="article">
-  
-  <header>
-    
-      <h1 class="entry-title">DDD, TDD, Enterprise Library, Autofac, and Lokad.Shared Libs!</h1>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>DDD, TDD, Enterprise Library, Autofac, and Lokad.Shared libs!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="generator" content="Hugo 0.16-DEV" />
+    <link href="" rel="alternate" type="application/rss+xml" title="bling on software" />
+    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
     
     
-      <p class="meta">
-        
+  </head>
+  <body>
+    <div id = "wrapper">
+
+      <div class="navbar navbar-default" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a href="http://bling.github.io/"><p class="navbar-brand">bling on software</p></a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              
+              
+            </ul>
+          </div>
+        </div>
+      </div>
 
 
 
+      
+      <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+          <li class="sidebar-brand">
+            <a href="http://bling.github.io/">
+              <h1 class="brand">bling on software</h1>
+            </a>
+            <a href="/about">
+              <img src="https://pbs.twimg.com/profile_images/1188386482/Untitled_bigger.png" />
+            </a>
+            <h3>when pragmatism meets minimalism</h3>
+          </li>
+
+          <hr />
+
+          <div id="social-wrapper">
+            <li> <a href="https://github.com/bling"><i class="fa fa-github-square"></i> github</a> </li>
+            <li> <a href="https://twitter.com/blingcoder"><i class="fa fa-twitter-square"></i> @twitter</a></li>
+            <li> <a href="https://linkedin.com/in/baileyling"><i class="fa fa-linkedin-square"></i> linkedin</a> </li>
+          </div>
+
+          <hr />
+
+          <li class="sidebar-categories">
+            <div>
+              <span>Categories</span>
+              <a href="/post" style="float:right">show all</a>
+            </div>
+            <div>
+              
+              <a href="/categories/blend">blend</a>
+              
+              <a href="/categories/castle">castle</a>
+              
+              <a href="/categories/castle-coding">castle-coding</a>
+              
+              <a href="/categories/coding">coding</a>
+              
+              <a href="/categories/cqrs">cqrs</a>
+              
+              <a href="/categories/emacs">emacs</a>
+              
+              <a href="/categories/forex">forex</a>
+              
+              <a href="/categories/ioc">ioc</a>
+              
+              <a href="/categories/javascript">javascript</a>
+              
+              <a href="/categories/logging">logging</a>
+              
+              <a href="/categories/powershell">powershell</a>
+              
+              <a href="/categories/rx">rx</a>
+              
+              <a href="/categories/software-tools">software-tools</a>
+              
+              <a href="/categories/source-control-management">source-control-management</a>
+              
+              <a href="/categories/testing">testing</a>
+              
+              <a href="/categories/twitter">twitter</a>
+              
+              <a href="/categories/vim">vim</a>
+              
+              <a href="/categories/visual-studio">visual-studio</a>
+              
+            </div>
+          </li>
+        </ul>
+      </div>
 
 
 
+      <div class="container">
 
 
-  
 
+<div class="article">
+  <div class="article-title">DDD, TDD, Enterprise Library, Autofac, and Lokad.Shared libs!</div>
+  <p class="meta"><small>&nbsp;<i class="fa fa-calendar-o"></i> 2009-08-15</small></p> <hr/>
+  <div class="post">
+    <div class='post'>
+So my project has been chuggin along quite nicely, and gave my CTO a quick look over the design of my project of which he was very impressed...I'm glad I spent all that time reading up on DDD, BDD, TDD, and listening to all the <a href="http://altnetpodcast.com/">ALT.NET podcasts</a>.
 
-<time datetime="2009-08-15T00:00:00+00:00" pubdate data-updated="true">Aug 15<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
+I've learned SOOOOO much in the past month it is ridiculous, mostly thanks to coming across ALT.NET, and then reading everything linked from that source.
 
+I can honestly say I'm 100% sold on the TDD approach.  Initially, after reading about it I was like, hmmm, yeah, I can see that working, but writing tests first kinda seems dumb and redundant.  After all, obviously you know the tests will pass because you wrote them!!
 
-<div class="entry-content"><div class='post'>
-So my project has been chuggin along quite nicely, and gave my CTO a quick look over the design of my project of which he was very impressed&#8230;I&#8217;m glad I spent all that time reading up on DDD, BDD, TDD, and listening to all the <a href="http://altnetpodcast.com/">ALT.NET podcasts</a>.
+Then...I saw the light!!!
 
-I&#8217;ve learned SOOOOO much in the past month it is ridiculous, mostly thanks to coming across ALT.NET, and then reading everything linked from that source.
+I'm currently prototyping my project, but since I live in the real world I can reasonably assume the prototype will become the real thing.  But that's not really an issue having designed everything with DDD and DI.  Once the prototype is done, we can <span style="font-style:italic;">optionally</span> replace the implementation, change the IoC wiring up, and voila, it just works (because we had all those tests written).
 
-I can honestly say I&#8217;m 100% sold on the TDD approach.  Initially, after reading about it I was like, hmmm, yeah, I can see that working, but writing tests first kinda seems dumb and redundant.  After all, obviously you know the tests will pass because you wrote them!!
+Another design choice for the prototype I made was to use <a href="http://www.db4o.com/about/productinformation/">DB4O</a> rather than SQL Server.  DDD emphasizes very much on storing aggregate roots in repositories, and let's be honest, object databases work ridiculously well with storing domain entities.
 
-Then&#8230;I saw the light!!!
-
-I&#8217;m currently prototyping my project, but since I live in the real world I can reasonably assume the prototype will become the real thing.  But that&#8217;s not really an issue having designed everything with DDD and DI.  Once the prototype is done, we can <span style="font-style:italic;">optionally</span> replace the implementation, change the IoC wiring up, and voila, it just works (because we had all those tests written).
-
-Another design choice for the prototype I made was to use <a href="http://www.db4o.com/about/productinformation/">DB4O</a> rather than SQL Server.  DDD emphasizes very much on storing aggregate roots in repositories, and let&#8217;s be honest, object databases work ridiculously well with storing domain entities.
-
-So not only can I speed up development in my prototype by having all repositories go to a DB4O backing store, if it&#8217;s decided we need to change to a relational database, boom, I just need to reimplement all my repositories with <a href="http://nhforge.org/Default.aspx"/>NHibernate</a>.
+So not only can I speed up development in my prototype by having all repositories go to a DB4O backing store, if it's decided we need to change to a relational database, boom, I just need to reimplement all my repositories with <a href="http://nhforge.org/Default.aspx"/>NHibernate</a>.
 
 And just to drive home how easy DB4O is, literally, this is what you need to do to store a User in the database.
 <pre>
@@ -127,13 +145,13 @@ using (IObjectContainer c = Db4oFactory.OpenFile("database.db"))
 </pre>
 Seriously!!!  It <span style="font-weight:bold;">IS</span> that easy!
 
-But back to why I&#8217;m sold on TDD.  Originally, I had IUsersRepository modeled something like this:
+But back to why I'm sold on TDD.  Originally, I had IUsersRepository modeled something like this:
 <pre>
 User GetUserByName(string userName);
 User GetUserById(Guid id);
 User GetUserByFirstName(string firstName);
 </pre>
-And then I realized, it&#8217;s a total pain in the butt to be adding all these methods because once the method call reaches the DB4O container, I need to pass in a predicate for the query.  So I thought, I&#8217;ll just pass the predicate directly to DB4O.  I changed all my repositories (I had 4 at the time), to do this instead:
+And then I realized, it's a total pain in the butt to be adding all these methods because once the method call reaches the DB4O container, I need to pass in a predicate for the query.  So I thought, I'll just pass the predicate directly to DB4O.  I changed all my repositories (I had 4 at the time), to do this instead:
 <pre>
 User GetUser(Predicate&lt;User&gt; condition);
 </pre>
@@ -141,31 +159,31 @@ So now I can simply do this:
 <pre>
 var user = usersRepository.GetUser(x => x.UserName == userName);
 </pre>
-I&#8217;ve converted 3 methods (and potentially more) into a single method that is very expressive and easy to read (thank you lambdas!).
+I've converted 3 methods (and potentially more) into a single method that is very expressive and easy to read (thank you lambdas!).
 
-And then I reran all my tests and they passed&#8230;.which leads to the following conclusion:
+And then I reran all my tests and they passed....which leads to the following conclusion:
 
 <span style="font-weight:bold;">TDD lets you refactor with confidence!</span>
 
-Oh wait, I mentioned <a href="http://code.google.com/p/autofac/">Autofac</a> and <a href="http://code.google.com/p/lokad-shared-libraries/">Lokad.Shared</a> libs in this blog post didn&#8217;t I&#8230;.
+Oh wait, I mentioned <a href="http://code.google.com/p/autofac/">Autofac</a> and <a href="http://code.google.com/p/lokad-shared-libraries/">Lokad.Shared</a> libs in this blog post didn't I....
 
-To start&#8230;my project has removed all dependencies on the <a href="http://www.codeplex.com/entlib">Enterprise Library</a>.  In my previous post I mentioned how Unity wasn&#8217;t as mature as other frameworks.  Well, it appears that the Logging Block and/or the Exception Handling Block has a dependency on Unity.  I definitely did not like having 2 IoC containers in my bin directory, so I decided maybe I should just ditch the entire thing.
+To start...my project has removed all dependencies on the <a href="http://www.codeplex.com/entlib">Enterprise Library</a>.  In my previous post I mentioned how Unity wasn't as mature as other frameworks.  Well, it appears that the Logging Block and/or the Exception Handling Block has a dependency on Unity.  I definitely did not like having 2 IoC containers in my bin directory, so I decided maybe I should just ditch the entire thing.
 
-Honestly, I didn&#8217;t really like the EntLib anyways&#8230;.the logging block requires the use of a static class Logger (tight coupling), and the exception block needs a try/catch/handle for any exception you want to handle, again with a static class ExceptionPolicy (more tight coupling!!!).
+Honestly, I didn't really like the EntLib anyways....the logging block requires the use of a static class Logger (tight coupling), and the exception block needs a try/catch/handle for any exception you want to handle, again with a static class ExceptionPolicy (more tight coupling!!!).
 
 So now it was a matter of finding a replacement.  There really was only 2 choices: the <a href="http://www.castleproject.org/index.html">Castle Stack</a>, or Autofac+Lokad.Shared.
 
-I was not very impressed with the lack of documentation on the Castle Validator component (or even where to download a binary of it).  Also, I&#8217;m really not a big fan of attributes on parameters.
+I was not very impressed with the lack of documentation on the Castle Validator component (or even where to download a binary of it).  Also, I'm really not a big fan of attributes on parameters.
 
-So what&#8217;s left is Autofac and Lokad.Shared.  I chose Autofac mainly because I love its lambda syntax (and the included performance benefit).  But of more concern is Lokad.Shared.
+So what's left is Autofac and Lokad.Shared.  I chose Autofac mainly because I love its lambda syntax (and the included performance benefit).  But of more concern is Lokad.Shared.
 a) It is basically written by 1 guy
-b) It doesn&#8217;t have community inertia
+b) It doesn't have community inertia
 
-But after reading the <a href="http://abdullin.com/journal/2008/11/23/net-application-block-for-validation-and-business-rules.html">examples</a> <a href="http://abdullin.com/journal/2008/12/1/net-exception-handling-action-policies-application-block.html">here</a> and <a href="http://abdullin.com/journal/2009/1/3/strongly-typed-reflection-in-lokad-shared.html">here</a> I didn&#8217;t have a choice!  It is just too damn nice!
+But after reading the <a href="http://abdullin.com/journal/2008/11/23/net-application-block-for-validation-and-business-rules.html">examples</a> <a href="http://abdullin.com/journal/2008/12/1/net-exception-handling-action-policies-application-block.html">here</a> and <a href="http://abdullin.com/journal/2009/1/3/strongly-typed-reflection-in-lokad-shared.html">here</a> I didn't have a choice!  It is just too damn nice!
 
-Comparing code I&#8217;m writing today with code I wrote 3 months ago is like light and day&#8230;.on different planets.
+Comparing code I'm writing today with code I wrote 3 months ago is like light and day....on different planets.
 
-And since I&#8217;m very link happy today, check out this awesome add-on called <a href="http://www.exactmagic.com/products/studiotools/index.html">Studio Tools</a>.  It&#8217;s free, only 1.9 megs and has the most impressive and blazing fast file/class/symbol search I&#8217;ve ever seen.</div>
+And since I'm very link happy today, check out this awesome add-on called <a href="http://www.exactmagic.com/products/studiotools/index.html">Studio Tools</a>.  It's free, only 1.9 megs and has the most impressive and blazing fast file/class/symbol search I've ever seen.</div>
 <h2>Comments</h2>
 <div class='comments'>
 <div class='comment'>
@@ -174,190 +192,36 @@ And since I&#8217;m very link happy today, check out this awesome add-on called 
 There&#39;s a few of us floating around who&#39;ve found, like, and use Lokad.Shard (and Lokad.ActionPolicy).</div>
 </div>
 </div>
+
+  </div>
 </div>
 
 
-  <footer>
-    <p class="meta">
-      
-  
 
-<span class="byline author vcard">Posted by <span class="fn">Bailey Ling</span></span>
-
-      
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-08-15T00:00:00+00:00" pubdate data-updated="true">Aug 15<span>th</span>, 2009</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/coding/'>coding</a>
-  
-</span>
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bling.github.io/blog/2009/08/15/ddd-tdd-enterprise-library-autofac-and-lokad/" data-via="blingcoder" data-counturl="http://bling.github.io/blog/2009/08/15/ddd-tdd-enterprise-library-autofac-and-lokad/" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-</div>
-
-    
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2009/08/08/dynamic-proxies/" title="Previous Post: Dynamic proxies">&laquo; Dynamic proxies</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2009/08/18/goodbye-db4o-hello-orm/" title="Next Post: Goodbye db4o, Hello ORM">Goodbye db4o, Hello ORM &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
-
-</div>
-
-<aside class="sidebar">
-  
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2015/01/06/emacs-as-my-leader-1-year-later/">Emacs As My &lt;Leader&gt;, 1 Year Later</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/">Asynchronous Eval in Emacs with Stylus and Skewer</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/">Emacs as my &lt;Leader&gt;: Vim Survival Guide</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my &lt;Leader&gt;: evil-mode</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/09/09/vim-in-emacs-bootstrap/">Vim in Emacs Bootstrap</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/08/16/modularizing-vimscript/">Modularizing VimScript</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/30/1000-stars-in-1-month/">1000 stars in 1 month</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
-      </li>
-    
-  </ul>
-</section>
-
-<section>
-  <h1>GitHub Repos</h1>
-  <ul id="gh_repos">
-    <li class="loading">Status updating...</li>
-  </ul>
-  
-  <a href="https://github.com/bling">@bling</a> on GitHub
-  
-  <script type="text/javascript">
-    $(document).ready(function(){
-        if (!window.jXHR){
-            var jxhr = document.createElement('script');
-            jxhr.type = 'text/javascript';
-            jxhr.src = '/javascripts/libs/jXHR.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(jxhr, s);
-        }
-
-        github.showRepos({
-            user: 'bling',
-            count: 0,
-            skip_forks: true,
-            target: '#gh_repos'
-        });
-    });
-  </script>
-  <script src="/javascripts/github.js" type="text/javascript"> </script>
-</section>
-
-
-
-
-
-  
-</aside>
 
 
     </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - Bailey Ling -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
 
-</footer>
-  
+    <footer>
+      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
+    </footer>
 
+    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.js"></script>
+    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
 
+    
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id; js.async = true;
-  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
+ga('create', 'UA-38439430-2', 'auto');
+ga('send', 'pageview');
+</script>
 
-
-
-  <script type="text/javascript">
-    (function() {
-      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
-      script.src = 'https://apis.google.com/js/plusone.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
-    })();
-  </script>
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
-
-</body>
+  </body>
 </html>
+

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>bling on software</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="generator" content="Hugo 0.16-DEV" />
+    <link href="http://bling.github.io/index.xml" rel="alternate" type="application/rss+xml" title="bling on software" />
+    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    
+    
+  </head>
+  <body>
+    <div id = "wrapper">
+
+      <div class="navbar navbar-default" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a href="http://bling.github.io/"><p class="navbar-brand">bling on software</p></a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+
+
+
+      
+      <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+          <li class="sidebar-brand">
+            <a href="http://bling.github.io/">
+              <h1 class="brand">bling on software</h1>
+            </a>
+            <a href="/about">
+              <img src="https://pbs.twimg.com/profile_images/1188386482/Untitled_bigger.png" />
+            </a>
+            <h3>when pragmatism meets minimalism</h3>
+          </li>
+
+          <hr />
+
+          <div id="social-wrapper">
+            <li> <a href="https://github.com/bling"><i class="fa fa-github-square"></i> github</a> </li>
+            <li> <a href="https://twitter.com/blingcoder"><i class="fa fa-twitter-square"></i> @twitter</a></li>
+            <li> <a href="https://linkedin.com/in/baileyling"><i class="fa fa-linkedin-square"></i> linkedin</a> </li>
+          </div>
+
+          <hr />
+
+          <li class="sidebar-categories">
+            <div>
+              <span>Categories</span>
+              <a href="/post" style="float:right">show all</a>
+            </div>
+            <div>
+              
+              <a href="/categories/blend">blend</a>
+              
+              <a href="/categories/castle">castle</a>
+              
+              <a href="/categories/castle-coding">castle-coding</a>
+              
+              <a href="/categories/coding">coding</a>
+              
+              <a href="/categories/cqrs">cqrs</a>
+              
+              <a href="/categories/emacs">emacs</a>
+              
+              <a href="/categories/forex">forex</a>
+              
+              <a href="/categories/ioc">ioc</a>
+              
+              <a href="/categories/javascript">javascript</a>
+              
+              <a href="/categories/logging">logging</a>
+              
+              <a href="/categories/powershell">powershell</a>
+              
+              <a href="/categories/rx">rx</a>
+              
+              <a href="/categories/software-tools">software-tools</a>
+              
+              <a href="/categories/source-control-management">source-control-management</a>
+              
+              <a href="/categories/testing">testing</a>
+              
+              <a href="/categories/twitter">twitter</a>
+              
+              <a href="/categories/vim">vim</a>
+              
+              <a href="/categories/visual-studio">visual-studio</a>
+              
+            </div>
+          </li>
+        </ul>
+      </div>
+
+
+
+      <div class="container">
+
+
+
+
+
+<div class="article">
+  <div class="article-title">
+    <a href="http://bling.github.io/blog/2008/09/20/unfortunately-too-well-hidden-tool/">An Unfortunately Too Well Hidden Tool</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2008-09-20</small></p> <hr/>
+  <div class="post">
+    Alright, maybe it&rsquo;s not THAT well hidden, but it&rsquo;s well hidden enough that most developers don&rsquo;t even know it exists, yet I find it to be probably one of the top 3 tools of Visual Studio that I find most useful. What is it? Break into debugger at any uncaught exception. Yep! There&rsquo;s actually a feature that can do that! You don&rsquo;t have to pull your hair out trying to figure out what exception is causing your program to mess up or when it gets swallowed. You can find the option under Debug -&gt; Exceptions. This also brings into the discussion about what the purpose of exceptions are. I&rsquo;m from the school of thought that exceptions are&hellip;well&hellip;exceptions. Exceptions should occur rarely, not regularly, otherwise they shouldn&rsquo;t be called exceptions. I dread finding code that uses exceptions to break out of methods/functions. If you program like that you&rsquo;ll probably be quickly annoyed by turning on the feature above because it&rsquo;ll break into the debugger a lot. While there&rsquo;s always a time where it can be justified, the mass majority of the time it&rsquo;s a bad idea to use exceptions to control program flow.
+
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
+    <a href="http://bling.github.io/blog/2008/09/17/infamous-idisposable-pattern/">The Infamous IDisposable Pattern</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2008-09-17</small></p> <hr/>
+  <div class="post">
+    At one point or another, any .NET developer should come across the concept of implementing the IDisposable pattern. For more detail, visit this excellent article at http://www.codeproject.com/KB/cs/idisposable.aspx. One of the most common errors of programmers with a C++ background is that they define the Finalize() method with ~() syntax. This is almost always wrong. Just like you should never call GC.Collect(), you should not define a finalizer most of the time. The destructor is only required if your class uses unmanaged resources. If it does, then you should implement both the destructor and IDisposable, which simply contains a public Dispose() method which is where you deterministically clean up resources. Finalizers are called during garbage collection. The typically class template is this: class Foo : IDisposable { private bool _disposed = false; ~Foo() { Dispose(false); // this is called automatically by the GC when you forget to call Dispose() explicitly. } public void Dispose() { Dispose(true); GC.SuppressFinalize(this); // this prevents the GC from calling the finalizer, since you deterministically cleaned up resources already by calling Dispose(). } protected void Dispose(bool disposing) { if (disposing) { //dispose unmanaged resource } _disposed = true; } } Since I&rsquo;m on the subject of IDisposable, please for the love of God, use the keyword &lsquo;using&rsquo; whenever possible. It makes the code much cleaner, easier to read, and safer. Compare the following: public void Print(string path) // implemented with using { try { using (StreamReader r = new StreamReader(path)) { string line; while ((line = r.ReadLine()) != null) Console.WriteLine(line); } } catch { } } public void Print(string path) // implemented without { StreamReader r = null; try { r = new StreamReader(path); string line; while ((line = r.ReadLine()) != null) Console.WriteLine(line); } catch { } finally { if (r != null) r.Close(); } } I don&rsquo;t think I need to tell you the 1st section of code is much cleaner, robust, and easier to read than the 2nd section of code. The finally section is crucial as well. If you don&rsquo;t have this section, and some part of your code throws an exception, you probably just leaked resources. Just because .NET has a garbage collector does NOT mean you can be lazy about memory. You can and you will leak memory if you&rsquo;re not mindful of these things.
+
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
+    <a href="http://bling.github.io/blog/2008/09/11/gccollect-is-bad-for-you/">GC.Collect Is Bad For You</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2008-09-11</small></p> <hr/>
+  <div class="post">
+    Sometimes I wish Microsoft didn&rsquo;t include this method in the API because it promotes bad programming. I&rsquo;ve seen people use this in their code and 99.99% of the time, it is incorrect to do so. I came across a program which had many try/catch/finally blocks which had GC.Collect() in the finally block. C# has a garbage collector so you, the programmer, does not have to worry about cleaning up memory. In fact, it&rsquo;s optimized in such a way that it only collects memory when it needs to. By manually calling GC.Collect(), you are preventing the JIT from doing its job properly. Not only that, GC.Collect() is expensive operation. It searches every reference in memory to see if there are other objects pointing to them, and if there are no references, it cleans up and removes it from memory. Something this heavy should definitely not be called without a good reason. Summary, do not call GC.Collect(). If you want to manage memory, use another language.
+
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
+    <a href="http://bling.github.io/blog/2008/09/11/importance-of-color-schemes/">The Importance of Color Schemes</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2008-09-11</small></p> <hr/>
+  <div class="post">
+    It is surprising to me how few people use custom color schemes and just stick with the IDE defaults. I&rsquo;m not saying that the ones shipped with Visual Studio are bad, quite the contrary. They are good, but it can be better. Since VS2005, we&rsquo;ve been given the option of having different colors for classes, value types, delegates, enumerations, and interfaces. I consider this to be one of the single most useful features in the IDE. Let&rsquo;s take a look at the following comparison: The first thing you&rsquo;ll probably notice is that I program on a black background. I find this to be easier on the eyes. It takes some getting used to at first, but once you go black you don&rsquo;t go back :-) These are the colors I use (or slight variations) and it helps me tremendously in keeping track of what&rsquo;s what. It also prevents the need to use any ugly prefixes for any variable names. Another reason I use a black background is that it&rsquo;s much easier to tell the difference between different shades of colors on a black background than it is on a white background. Anyways, it should be clear that my custom color scheme provides much more information than the default color scheme. At an immediate glance of the code you know exactly what is a delegate and what is a class. There is no dependence on the name or anything else. And since we can read colors faster than we can read words, this will increase your productivity. The most important one, in my opinion, is the one that differentiates reference types from value types. C# lets you declare instances on the heap or on the stack, although they have the same syntax. The compiler is smart enough to tell the difference though, so you should take advantage of that and have the colors different.
+
+    
+  </div>
+</div>
+
+
+
+    
+    <ul class="pagination">
+        
+        <li>
+            <a href="/" aria-label="First"><span aria-hidden="true">&laquo;&laquo;</span></a>
+        </li>
+        
+        <li
+        >
+        <a href="/page/16/" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+        </li>
+        
+        <li
+        ><a href="/">1</a></li>
+        
+        <li
+        ><a href="/page/2/">2</a></li>
+        
+        <li
+        ><a href="/page/3/">3</a></li>
+        
+        <li
+        ><a href="/page/4/">4</a></li>
+        
+        <li
+        ><a href="/page/5/">5</a></li>
+        
+        <li
+        ><a href="/page/6/">6</a></li>
+        
+        <li
+        ><a href="/page/7/">7</a></li>
+        
+        <li
+        ><a href="/page/8/">8</a></li>
+        
+        <li
+        ><a href="/page/9/">9</a></li>
+        
+        <li
+        ><a href="/page/10/">10</a></li>
+        
+        <li
+        ><a href="/page/11/">11</a></li>
+        
+        <li
+        ><a href="/page/12/">12</a></li>
+        
+        <li
+        ><a href="/page/13/">13</a></li>
+        
+        <li
+        ><a href="/page/14/">14</a></li>
+        
+        <li
+        ><a href="/page/15/">15</a></li>
+        
+        <li
+        ><a href="/page/16/">16</a></li>
+        
+        <li
+        class="active"><a href="/page/17/">17</a></li>
+        
+        <li
+        class="disabled">
+        <a href="" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+        </li>
+        
+        <li>
+            <a href="/page/17/" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
+        </li>
+        
+    </ul>
+    
+
+    </div>
+
+    <footer>
+      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
+    </footer>
+
+    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.js"></script>
+    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+
+    
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38439430-2', 'auto');
+ga('send', 'pageview');
+</script>
+
+  </body>
+</html>
+

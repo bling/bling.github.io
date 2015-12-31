@@ -1,0 +1,628 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Rx on bling on software</title>
+    <link>http://bling.github.io/categories/rx/</link>
+    <description>Recent content in Rx on bling on software</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 29 Sep 2011 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://bling.github.io/categories/rx/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Push Driven Development with Reactive Extensions</title>
+      <link>http://bling.github.io/blog/2011/09/29/push-driven-development-with-reactive/</link>
+      <pubDate>Thu, 29 Sep 2011 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2011/09/29/push-driven-development-with-reactive/</guid>
+      <description>
+
+&lt;p&gt;This is going to be the last post that concludes my series on building a real-time push app with Silverlight.  Any additional posts would likely be outside the context of writing a push app and more about how I’m adding features to ping.pong, my Twitter app, so I think this is a good place to wrap up and talk generally from a top down overview of building a push-style application.&lt;/p&gt;
+
+&lt;p&gt;Here’s a recap of everything discussed so far:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://bling.github.io/blog/2011/08/26/building-real-time-push-app-with-rx-1&#34;&gt;Part 1&lt;/a&gt;: Basics – Creating an Observable around a basic HTTP web stream against Twitter’s streaming API&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://bling.github.io/blog/2011/08/26/building-real-time-push-app-with-rx-2&#34;&gt;Part 2&lt;/a&gt;: Subscription and Observation of Observables&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://bling.github.io/blog/2011/08/28/building-real-time-push-app-with-rx-3&#34;&gt;Part 3&lt;/a&gt;:  Basics of UX design with a look at shadows and gradients.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://bling.github.io/blog/2011/09/05/building-real-time-push-app-with-rx-4&#34;&gt;Part 4&lt;/a&gt;:  Integrating with 3rd party libraries, notably Caliburn Micro and Linq2Twitter and how to achieve polling with observables.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://bling.github.io/blog/2011/09/08/building-real-time-push-app-with-rx-5&#34;&gt;Part 5&lt;/a&gt;:  A minor hick up with Linq2Twitter.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://bling.github.io/blog/2011/09/13/building-real-time-push-app-with-rx-6&#34;&gt;Part 6&lt;/a&gt;:  Taking advantage of transparencies to improve the design and reusability of UX.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://bling.github.io/blog/2011/09/16/building-real-time-push-app-with-rx-7&#34;&gt;Part 7&lt;/a&gt;:  A summary of all things encountered so far, replacing Linq2Twitter with Hammock, first release of code to &lt;a href=&#34;https://github.com/bling/Ping.Pong&#34;&gt;GitHub&lt;/a&gt;, and a binary released capable pulling and streaming tweets from Twitter.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://bling.github.io/blog/2011/09/21/building-real-time-push-app-with-rx-8&#34;&gt;Part 8&lt;/a&gt;:  Examples of using Caliburn Micro to easily resolve data bindings that otherwise would be much more effort.&lt;/p&gt;
+
+&lt;p&gt;And that leads us to this post…&lt;/p&gt;
+
+&lt;h1 id=&#34;pdd-push-driven-development:59fe73bd1c5a5710d61b089976e2b93f&#34;&gt;PDD (Push Driven Development)&lt;/h1&gt;
+
+&lt;p&gt;One of the main goals of this series is to create a performant Silverlight app based on push principles, as opposed to more traditional pull principles.  To that effect, ping.pong has performed remarkably well and is limited only by Twitter’s throttling, which currently appears to be maximum of 50 tweets per second via the streaming API.&lt;/p&gt;
+
+&lt;p&gt;Writing the application from a push-driven mindset was definitely unintuitive at first, and I had to refactor (actually rewrite is more accurate) the code many times to move closer to a world where the application is simply &lt;em&gt;reacting&lt;/em&gt; to events thrown at it (as opposed to asking the world for events).&lt;/p&gt;
+
+&lt;p&gt;To be absolutely clear on what I mean on the differences between push and pull, here’s a comparison:&lt;/p&gt;
+
+&lt;table border=&#34;0&#34; cellspacing=&#34;0&#34; cellpadding=&#34;2&#34; width=&#34;100%&#34;&gt; &lt;tbody&gt; &lt;tr&gt; &lt;td valign=&#34;top&#34;&gt;&lt;strong&gt;Pulling&lt;/strong&gt;&lt;/td&gt; &lt;td valign=&#34;top&#34;&gt;&lt;strong&gt;Push&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt; &lt;tr&gt; &lt;td valign=&#34;top&#34; width=&#34;50%&#34;&gt;var e = tweets.GetEnumerator();&lt;br&gt;while (e.MoveNext()) &lt;strong&gt;// is there more?&lt;br&gt;&lt;/strong&gt;{&lt;br&gt;  e.Current; &lt;strong&gt;// get current&lt;br&gt;&lt;/strong&gt;  DoSomething(e.Current);&lt;br&gt;}&lt;/td&gt; &lt;td valign=&#34;top&#34; width=&#34;50%&#34;&gt;IObservable&amp;lt;Data&amp;gt; data = /* get source */&lt;br&gt;&lt;br&gt;&lt;strong&gt;// whenever data comes, do something&lt;/strong&gt;&lt;br&gt;data.Subscribe(DoSometing); &lt;br&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt; 
+
+&lt;p&gt;On the pulling side, the caller is much more concerned with the logic on how to process each message.  It needs to &lt;em&gt;repeatedly&lt;/em&gt; ask the world, &amp;ldquo;hey, is there more data?&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;On the push side, the caller merely asks the world, &amp;ldquo;hey, give me data when you get some&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;Twitter is a perfect example because their APIs have both a pulling and pushing models.  Traditional clients poll continuously all the time, and many had configurable options to try to stay under the 200 API calls per hour limit.  Most of Twitter’s API still consists of pulling, but the user’s home line and searching can be streamed in near real time via the streaming API, aka. push.  Streaming tweets effectively removes the API call limit.&lt;/p&gt;
+
+&lt;h1 id=&#34;push-and-pull-with-reactive-extensions:59fe73bd1c5a5710d61b089976e2b93f&#34;&gt;Push and Pull with Reactive Extensions&lt;/h1&gt;
+
+&lt;p&gt;The beauty of Rx is that regardless of whether it is actually pushing or pulling, the API will look same:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;n&#34;&gt;IObservable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Tweet&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tweets&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;_client&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetHomeTimeline&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;tweets&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Subscribe&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;t&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;cm&#34;&gt;/* do something with the tweet */&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;As far as the caller is concerned, it doesn’t care (or needs to know) whether the &lt;code&gt;GetHomeTimeline&lt;/code&gt; method is polling Twitter or streaming from Twitter.  All it needs to know is &lt;em&gt;when&lt;/em&gt; a tweet comes it will &lt;em&gt;react&lt;/em&gt; and do something in the Subscribe action.&lt;/p&gt;
+
+&lt;p&gt;In fact, Subscribe simply means &amp;ldquo;when you have data, call this&amp;rdquo;, but that could also be immediately, which would be analogous to IEnumerable.&lt;/p&gt;
+
+&lt;p&gt;However, if that was the only thing Rx provided it wouldn’t be as popular as it is, because other pub/sub solutions like the EventAggregator already provide a viable asynchronous solution.&lt;/p&gt;
+
+&lt;p&gt;Unlocking Rx’s power comes with its multitude of operators.  Here’s an example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IObservable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Tweet&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GetStreamingStatuses&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;TwitterClient&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;client&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;client&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetHomeTimeline&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+      &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Merge&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;client&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetMentions&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt;
+      &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Concat&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;client&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetStreamingHomeline&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;());&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code&gt;GetHomeTimeline&lt;/code&gt; and &lt;code&gt;GetMentions&lt;/code&gt; initiate once-only pull style API calls, while &lt;code&gt;GetStreamingHomeline&lt;/code&gt; will initiate a sticky connection and stream subsequent tweets down the pipe.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;Merge&lt;/code&gt; operator is defined as this: &amp;ldquo;Merges an observable sequence of observable sequences into an observable sequence.&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;I think a better description would be &amp;ldquo;whenever there is data from any of the sources, push it through&amp;rdquo;.  In the example above, this would translate to whenever a tweet comes from either the home timeline or the mentions timeline, give me a Tweet (first-come-first-push), followed by anything from the streaming timeline.&lt;/p&gt;
+
+&lt;p&gt;And there lies one of the greatest beauties of Rx.  &lt;em&gt;All&lt;/em&gt; of the complexity lies solely on setting up the stream and operators.  And that, also, is its disadvantage.&lt;/p&gt;
+
+&lt;h1 id=&#34;rx-complexity:59fe73bd1c5a5710d61b089976e2b93f&#34;&gt;Rx Complexity&lt;/h1&gt;
+
+&lt;p&gt;Let’s take a look at the &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/hh212146(v=VS.103).aspx&#34;&gt;Concat&lt;/a&gt; operator, defined as: &amp;ldquo;Concatenates two observable sequences.&amp;rdquo;  In the remarks sections it states this: &amp;ldquo;The Concat operator runs the first sequence to completion. Then, the second sequence is run to completion effectively concatenating the second sequence to the end of the first sequence.&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;Let’s try it out:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Observable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Interval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;TimeSpan&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;FromSeconds&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)).&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Select&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ToString&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;());&lt;/span&gt;
+&lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;b&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Observable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Interval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;TimeSpan&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;FromSeconds&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)).&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Select&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;s&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Concat&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Subscribe&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Console&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;WriteLine&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;// output: 0, 1, 2, 3, 4...&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;As expected, only numbers are printed because the first sequence never ends, so it won’t concatenate the second one.  Let’s modify it so that it does finish:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;count&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Observable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Interval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;TimeSpan&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;FromSeconds&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;TakeWhile&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;_&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;++&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;count&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Select&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ToString&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;());&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Note, that using &lt;code&gt;Observable.Generate&lt;/code&gt; is preferred because it doesn’t introduce an external variable, but I stuck with Interval so the code looks similar to the second observable.  As expected again, it will print &amp;ldquo;0, 1, 2, s0, s1, s2&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;OK, let’s spice things up.  Let’s make &lt;code&gt;b&lt;/code&gt; a ConnectableObservable by using the &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/hh229126(v=VS.103).aspx&#34;&gt;Publish&lt;/a&gt; operator, and immediately call &lt;code&gt;Connect&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;count&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Observable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Interval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;TimeSpan&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;FromSeconds&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;TakeWhile&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;_&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;++&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;count&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Select&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ToString&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;());&lt;/span&gt;
+&lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;b&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Observable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Interval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;TimeSpan&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;FromSeconds&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)).&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Select&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;_&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;s&amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;_&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Publish&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Connect&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Concat&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Subscribe&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Console&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;WriteLine&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;What do you think the output of this will be?  The answer is &amp;ldquo;0, 1, 2, 3, &lt;em&gt;s5, s6, s7&lt;/em&gt;, &amp;hellip;&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;Despite using the same &lt;code&gt;Concat&lt;/code&gt; operator, the result can be very different depending on the source observables.  If you use the &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/hh229288(v=VS.103).aspx&#34;&gt;Replay&lt;/a&gt; operator, it would have printed &amp;ldquo;0, 1, 2, 3, s0, s1, s2, &amp;hellip;&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;Years and years of working in synchronous programming models have trained us to think in synchronous ways, and I picked Concat specifically because Concat also exists in the enumerable world.  Observable sequences are asynchronous, so we never know exactly &lt;em&gt;when&lt;/em&gt; data comes at us, only what to do when it does.  And because streams occur at different times, when you combine them together there are many many ways of doing so (CombineLatest, Merge, Zip, are just a few).&lt;/p&gt;
+
+&lt;p&gt;The greatest hurdle to working in Rx is to know what the different combinations do.  This takes time and practice.  &lt;a href=&#34;http://mnajder.blogspot.com/2010/03/rxsandbox-v1.html&#34;&gt;RxTools&lt;/a&gt; is a great learning tool to test out what all the operators do.&lt;/p&gt;
+
+&lt;h1 id=&#34;unit-testing:59fe73bd1c5a5710d61b089976e2b93f&#34;&gt;Unit Testing&lt;/h1&gt;
+
+&lt;p&gt;Last but not least, Rx can make it easier to write unit tests.  The concept is easy: take some inputs and test the output.  In practice this is complicated because applications typically carry a lot of state with them.  Even with dependency injection and mocking frameworks I’ve seen a lot of code where for every assert there is 10 lines of mock setup code.&lt;/p&gt;
+
+&lt;p&gt;So how does it make it easier to test?  It reduces what you need to test to a single method, Subscribe, which takes one input, an &lt;code&gt;IObservable&amp;lt;T&amp;gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;conclusion:59fe73bd1c5a5710d61b089976e2b93f&#34;&gt;Conclusion&lt;/h1&gt;
+
+&lt;p&gt;Rx is a library unlike any other you will use.  With other libraries, you will add them to your solution, use a method here or there, and go on with your life.  With Rx, it will radically change the way you code and think in general.  It’s awesome.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Building a Real-time Push App with Silverlight: Part 7</title>
+      <link>http://bling.github.io/blog/2011/09/16/building-real-time-push-app-with-rx-7/</link>
+      <pubDate>Fri, 16 Sep 2011 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2011/09/16/building-real-time-push-app-with-rx-7/</guid>
+      <description>&lt;div class=&#39;post&#39;&gt;
+&lt;h3&gt;&lt;/h3&gt; &lt;h3&gt;Infrastructure Refactor&lt;/h3&gt; &lt;p&gt;A lot of things changed internally, and I mean….a lot….&lt;/p&gt; &lt;p&gt;From an infrastructure standpoint, I decided to remove the dependency on LinqToTwitter, and I replaced it with &lt;a href=&#34;https://github.com/danielcrenna/hammock&#34;&gt;Hammock&lt;/a&gt;.&amp;nbsp; A couple things led me to this decision, one being the Silverlight support wasn’t as good as I’d hoped, and the streaming API implementation was limited.&amp;nbsp; After reading the Twitter documentation I realized that the REST API was super simple and I’d be better off writing a simple interface to it.&lt;/p&gt; &lt;p&gt;I heard good things about Hammock, so I decided to give that one a try (I wasn’t going to go as far as reimplementing OAuth).&amp;nbsp; It was pretty easy to set up and in the end I was able to get Twitter working again and with less lines of code compared to the beginning of the refactor.&lt;/p&gt; &lt;h3&gt;Goals&lt;/h3&gt; &lt;p&gt;I had a couple goals for this project:&lt;/p&gt; &lt;ul&gt; &lt;li&gt;&lt;strong&gt;Learn:&lt;/strong&gt;&amp;nbsp; I was a complete newbie to Reactive Extensions when I started but now I understand it enough to hit the ground running with it.&amp;nbsp; I’m still learning about more conventions available to Caliburn.Micro.  &lt;li&gt;&lt;strong&gt;UX:&lt;/strong&gt;&amp;nbsp; I wanted to learn a little more about interface design.&amp;nbsp; I wanted to know how little changes to gradients, shadows, colors, etc. could have a radically effect in the end result.  &lt;li&gt;&lt;strong&gt;Performance:&lt;/strong&gt;&amp;nbsp; It should be fast.&amp;nbsp; It should be able to react to real-time data.&amp;nbsp; And it should do it with low CPU utilization.  &lt;li&gt;&lt;strong&gt;Concise:&lt;/strong&gt;&amp;nbsp; I am a huge advocate for KISS.&amp;nbsp; I like convention over configuration.&amp;nbsp; I like implementing something in 2 lines of code rather than 20 (assuming it’s not cryptic).&amp;nbsp; As I was writing the app and refactoring, if there was an opportunity to remove a line of code, I did it.&amp;nbsp; The result is that the app currently consists of less than 500 lines of code as of this post (excluding XAML).&lt;/li&gt;&lt;/ul&gt; &lt;h3&gt;Tidbits&lt;/h3&gt; &lt;p&gt;What are some interest things I learned?&lt;/p&gt; &lt;ul&gt; &lt;li&gt;System.Json is an amazing assembly.&amp;nbsp; All you need to do is invoke JsonValue.Parse on a string and it will create a JsonValue for you, which will be a dictionary of key/value pairs.&amp;nbsp; What’s more, by doing something like “string s = json[“text”]” will do an explicit conversion &lt;strong&gt;and unescape JSON characters&lt;/strong&gt;, and &lt;strong&gt;only&lt;/strong&gt; via the explicit operator.&amp;nbsp; Calling ToString(), even though converting it to a string, will not unescape.&amp;nbsp; This was completely undocumented and only found when I looked at the source code via Resharper’s external sources feature.  &lt;li&gt;Rx is awesome.&amp;nbsp; When I ran into performance problems of trying to stream tweets from the world that contained the letter ‘a’ all I had to do was add an operator to improve the performance (in this case it was Buffer).&amp;nbsp; It should be noted that it is &lt;em&gt;very important&lt;/em&gt; to understand what Rx is doing underneath the hood to realize its benefits.&amp;nbsp; Rx lets you refactor 30 lines of async code into 1 operator, but it’s still doing that 30 lines of code – you just don’t see it.  &lt;li&gt;I really, &lt;em&gt;really&lt;/em&gt;, like the conventions available from Caliburn.&amp;nbsp; Some of the features that come out of the box from this very small library saves me from writing a lot of boilerplate code like commands, triggers, and evening bindings (Caliburn will auto bind x:Name to a property).  &lt;li&gt;Twitter’s documentation for &lt;a href=&#34;https://dev.twitter.com/docs/streaming-api/user-streams&#34;&gt;user streams&lt;/a&gt; currently sucks and some trial and error was required to get it working.&lt;/li&gt;&lt;/ul&gt; &lt;p&gt;What is the end result of all this effort?&amp;nbsp; We have a styled Twitter app that can update your status, pull your home/mentions timeline, and most importantly will &lt;strong&gt;stream all subsequent tweets&lt;/strong&gt;.&amp;nbsp; There’s no pulling and no limits.&amp;nbsp; You will get a tweet of everyone you follow in real-time as it happens.&lt;/p&gt; &lt;p&gt;Moreover, there’s a feature to connect to the Streaming API to search Twitter for &lt;em&gt;anything&lt;/em&gt;.&amp;nbsp; To get an idea of what we’re talking about, here’s a full screenshot of it:&lt;/p&gt; &lt;p&gt;&lt;img style=&#34;background-image: none; border-right-width: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px&#34; title=&#34;image&#34; border=&#34;0&#34; alt=&#34;image&#34; src=&#34;http://lh4.ggpht.com/-tB6iLGL85aE/TnNOi7hdq9I/AAAAAAAAAHE/wGjkyHQzYKs/image%25255B20%25255D.png?imgmax=800&#34; width=&#34;578&#34; height=&#34;328&#34;&gt;&lt;/p&gt; &lt;p&gt;You read that right.&amp;nbsp; I’m streaming any tweet in the world that has the words ‘and’, ‘the’, ‘yes’, &lt;strong&gt;or&lt;/strong&gt; ‘no’ in them.&amp;nbsp; This is streaming around 400kB/s continuously and CPU utilization is under 25%.&amp;nbsp; The tweets are coming so fast it’s impossible to read them (at a rate of 50 tweets/second), so ideally you’d want to specify realistic search terms.&lt;/p&gt; &lt;p&gt;Moreover, the majority of the performance cost is actually downloading all the profile images.&amp;nbsp; If I take took out pictures I could stream any tweet in the world that has the letter ‘e’ in it at under 10% CPU.&amp;nbsp; It looks like Twitter limits the rate of tweets to 50 tweets/second because that was the rate for this one as well.&lt;/p&gt; &lt;p&gt;Features are minimalistic.&amp;nbsp; You can update your status, but you can’t DM, you can’t RT, you can’t do any of the normal things.&amp;nbsp; My original goal was not to write another Twitter client, but it’s actually quite fun to do so, so I’ll probably eventually get all features in.&lt;/p&gt; &lt;p&gt;And as promised, it’s up on &lt;a href=&#34;https://github.com/bling/Ping.Pong&#34;&gt;GitHub&lt;/a&gt;, and version 0.0.0.1 &lt;strong&gt;alpha&lt;/strong&gt; (yes! expect bugs!!) is available in the downloads section.&amp;nbsp; Or, here’s a direct link to the XAP file on my &lt;a href=&#34;http://dl.dropbox.com/u/2072014/Ping.Pong/PingPongTestPage.html&#34;&gt;Dropbox&lt;/a&gt;.&amp;nbsp; Have fun!&lt;/p&gt;  &lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Building a Real-time Push App with Silverlight: Part 4</title>
+      <link>http://bling.github.io/blog/2011/09/05/building-real-time-push-app-with-rx-4/</link>
+      <pubDate>Mon, 05 Sep 2011 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2011/09/05/building-real-time-push-app-with-rx-4/</guid>
+      <description>
+
+&lt;p&gt;Originally I wanted to avoid bringing in external libraries to keep the app as lean as possible, but then I realized that I would spend too much time reinventing the wheel.  Twitter is deprecating basic authentication in the near future, which makes OAuth no longer optional.  Rather than writing yet another Twitter client (if you’re curious I found a great reference &lt;a href=&#34;http://chris.59north.com/post/2009/09/16/SilverTweet-e28093-Building-a-Silverlight-Twitter-client-part-1.aspx&#34;&gt;here&lt;/a&gt;), I fired up &lt;a href=&#34;http://nuget.org/&#34;&gt;NuGet&lt;/a&gt; and brought in &lt;a href=&#34;http://linqtotwitter.codeplex.com/&#34;&gt;LinqToTwitter&lt;/a&gt;, and while I’m there I brought in &lt;a href=&#34;http://code.google.com/p/autofac/&#34;&gt;Autofac&lt;/a&gt; and &lt;a href=&#34;http://caliburnmicro.codeplex.com/&#34;&gt;Caliburn.Micro&lt;/a&gt; as well.&lt;/p&gt;
+
+&lt;p&gt;Naturally, LinqToTwitter will work nicely with Rx because as name implies it uses LINQ heavily.  Caliburn.Micro is a MVVM library which I’ve always wanted an excuse to try because of features like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;&amp;lt;ListBox&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;cal:Message.Attach=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;[Event Loaded] = [LoadList($dataContext)]&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;That’s only scratching the surface of what Caliburn can do, so it will be a fresh breath of air to see what else it can do.&lt;/p&gt;
+
+&lt;p&gt;By default, Caliburn uses MEF to wire up its bootstrapper.  After adding a couple &lt;code&gt;[Import]&lt;/code&gt;s and &lt;code&gt;[Export]&lt;/code&gt;s, I knew it wasn’t for me.  It works well for writing plugins, i.e. &lt;em&gt;external&lt;/em&gt; dependencies because of its built-in assembly scanning capabilities, but for injecting &lt;em&gt;internal&lt;/em&gt; dependencies, other IoC containers do a much better job of that.  I used Castle Windsor in past projects, but for a change I’m going to use Autofac which I haven’t used since v2 came out.&lt;/p&gt;
+
+&lt;p&gt;When this was all said and done the View was the only thing that didn’t change.  Everything underneath either changed radically or was deleted altogether (because LinqToTwitter provided it).  I added OAuth support and registered my application with Twitter, and with that was the birth of Ping Pong.&lt;/p&gt;
+
+&lt;p&gt;This took much longer than expected.  Silverlight 5 RC just came out and it broke pretty much any container (including MEF) for OOB because of a TypeLoadException.  I haven’t been using too many v5 features, so for the time being I downgraded to v4 to get the project working until RC2 comes out.&lt;/p&gt;
+
+&lt;p&gt;Integrating LinqToTwitter was a challenge.  The project site has a lot of good documentation, but most of it was for desktop, not Silverlight, and because of that I banged my head a couple times.  I wish I grabbed the source code earlier because it’s there where you’ll find hundreds of working examples (in code!) to do everything with the library (and in Silverlight).&lt;/p&gt;
+
+&lt;p&gt;After all that, PingPong now has 3 columns (home, public, sampling) that &lt;em&gt;dynamically resizes&lt;/em&gt; (it’s surprising that &lt;a href=&#34;http://metrotwit.com&#34;&gt;MetroTwit&lt;/a&gt; is the only client that does this&amp;hellip;) to the window size.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://lh4.ggpht.com/-f1uQ63FwyoI/TmU-fK3WfQI/AAAAAAAAAGc/Y26EvwnXy_4/image_thumb%25255B15%25255D.png?imgmax=800&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Oh, and there’s pictures now!  The streaming time line takes significantly more CPU now that it has to load images, but we’re still sitting at around 5-10% for what is continuously streaming data and loading pictures.  Not too shabby!  (It took a couple tries to get a PG-13 screenshot from the public/streaming time lines&amp;hellip;)&lt;/p&gt;
+
+&lt;p&gt;To conclude this post in the series, I’m going to talk about converting an asynchronous operation into an Observable that does not follow any predefined pattern.&lt;/p&gt;
+
+&lt;h1 id=&#34;creating-an-observable:2dbe1459b61bc4f7448ad9fecbcf7603&#34;&gt;Creating an Observable&lt;/h1&gt;
+
+&lt;p&gt;One of Silverlight’s limitations is that almost everything needs to be an asynchronous call.  In regards to LinqToTwitter, something like this will fail (but work on desktop):&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tweets&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;t&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Status&lt;/span&gt;
+              &lt;span class=&#34;k&#34;&gt;where&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;t&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Type&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;StatusType&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Public&lt;/span&gt;
+              &lt;span class=&#34;k&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;t&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ToArray&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;On Silverlight you will get a single empty element.  To get it working, there is an extension method that comes with the library, and you use it like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;t&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Status&lt;/span&gt;
+ &lt;span class=&#34;k&#34;&gt;where&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;t&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Type&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;StatusType&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Public&lt;/span&gt;
+  &lt;span class=&#34;k&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;t&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;AsyncCallback&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tweets&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;cm&#34;&gt;/* do something with it */&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;})&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;FirstOrDefault&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Code is self-explanatory.  The &lt;code&gt;FirstOrDefault()&lt;/code&gt; exists only to initiate the expression, otherwise it wouldn’t do anything.  So now the question is how do we convert that into an Rx Observable?&lt;/p&gt;
+
+&lt;p&gt;Every time I write an Rx query I try to use the least amount of state as possible.  This helps to keep the number unexpected anomalies to a minimum.  In the following section of code, I was able to get it down to 2 fields: &lt;code&gt;_sinceId&lt;/code&gt;, and &lt;code&gt;Context&lt;/code&gt;.  There is probably some operator that will let me save the sinceId variable from one observable to the next but I wasn’t able to figure it out.  In any case, I came up with this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;n&#34;&gt;_subscription&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Observable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Create&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Tweet&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;(&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;ob&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Observable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Interval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;TimeSpan&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;FromSeconds&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;60&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;StartWith&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(-&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SubscribeOnThreadPool&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Subscribe&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;_&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+                &lt;span class=&#34;kt&#34;&gt;ulong&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;sinceId&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+                &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;ulong&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;TryParse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;_sinceId&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;out&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;sinceId&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+                    &lt;span class=&#34;p&#34;&gt;?&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Context&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Status&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Where&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;s&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Type&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;statusType&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Count&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;200&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+                    &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Context&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Status&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Where&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;s&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Type&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;statusType&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Count&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;200&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SinceID&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;sinceId&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+                &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;AsyncCallback&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;statuses&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt;
+                &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+                    &lt;span class=&#34;k&#34;&gt;foreach&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;status&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;statuses&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+                    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+                        &lt;span class=&#34;n&#34;&gt;ob&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;OnNext&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Tweet&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;));&lt;/span&gt;
+                        &lt;span class=&#34;n&#34;&gt;_sinceId&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;StatusID&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+                    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+                &lt;span class=&#34;p&#34;&gt;})&lt;/span&gt;
+                &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;FirstOrDefault&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// materalize the results&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;}))&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DispatcherSubscribe&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SubscribeToTweet&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;That contains some custom code:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Context:  is a TwitterContext from LinqToTwitter&lt;/li&gt;
+&lt;li&gt;DispatcherSubscribe:  is a helper extension method which Subscribes on the ThreadPool, Observes on the Dispatcher, and then Subscribes with the specified action&lt;/li&gt;
+&lt;li&gt;SubscribeToTweet: a method in the base class which adds to a ObservableCollection so the UI gets updated&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;To translate the code, here is a basic flow of what’s happening:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Observable.Create wraps the subscription of another Observable.  It provides access to an IObserver &lt;code&gt;ob&lt;/code&gt; which lets you explicitly invoke OnNext().&lt;/li&gt;
+&lt;li&gt;Observable.Interval will raise an observable every 60 seconds.&lt;/li&gt;
+&lt;li&gt;The subscription of Observable.Interval will query the TwitterContext for the next set of tweets.&lt;/li&gt;
+&lt;li&gt;Inside the AsyncCallback, it invokes &lt;code&gt;ob.OnNext&lt;/code&gt;as well as keeps track of the ID so the next time it queries it only gets newer tweets.&lt;/li&gt;
+&lt;li&gt;Finally, &lt;code&gt;DispatcherSubscribe&lt;/code&gt; will take the &lt;code&gt;Tweet&lt;/code&gt; object and add it to an &lt;code&gt;ObservableCollection&amp;lt;Tweet&amp;gt;&lt;/code&gt;, which notifies the UI.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;As always, you should “clean up your garbage”.  In this respect I was pretty impressed with Rx as it was able to clean up the entire chain of observables with a single call to &lt;code&gt;_subscription.Dispose()&lt;/code&gt;.  Nice!&lt;/p&gt;
+
+&lt;p&gt;In the next post I’m going to switch back to UI and completely restyle the application.  The code will hit GitHub soon as well (I promise!).  Stay tuned&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;&lt;h2&gt;Comments&lt;/h2&gt;
+&lt;div class=&#39;comments&#39;&gt;
+&lt;div class=&#39;comment&#39;&gt;
+&lt;div class=&#39;author&#39;&gt;bling&lt;/div&gt;
+&lt;div class=&#39;content&#39;&gt;
+Looks like the same StartWith() trick is needed for Observable.Generate.&lt;br /&gt;&lt;br /&gt;I played around with Observable.Generate and all the expressions I came up looked pretty complicated in comparison with what I originally had.  This is mainly because I need to call OnNext() inside the AsyncCallback, so all solutions either had external Subjects or obscure ways of passing an IObserver around&amp;hellip;&lt;br /&gt;&lt;br /&gt;Maybe I&amp;#39;m overcomplicating things so if you can come up with an example it&amp;#39;d be greatly appreciated.  I&amp;#39;m still a Rx newbie&amp;hellip;&lt;br /&gt;&lt;br /&gt;Thanks!&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#39;comment&#39;&gt;
+&lt;div class=&#39;author&#39;&gt;bling&lt;/div&gt;
+&lt;div class=&#39;content&#39;&gt;
+Thanks!  I didn&amp;#39;t know about that overload.&lt;br /&gt;&lt;br /&gt;Is there a way to make it start immediately, like the StartWith(-1) in the original expression?&lt;br /&gt;&lt;br /&gt;Observable.Generate(&lt;br /&gt;   0, &lt;br /&gt;   _ =&amp;gt; true,&lt;br /&gt;   _ =&amp;gt; _,&lt;br /&gt;   _ =&amp;gt;&lt;br /&gt;   {&lt;br /&gt;     // this doesn&amp;#39;t get called until 60 seconds passes first&amp;hellip;&lt;br /&gt;     return 0;&lt;br /&gt;   }, &lt;br /&gt;   _ =&amp;gt; TimeSpan.FromSeconds(60));&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#39;comment&#39;&gt;
+&lt;div class=&#39;author&#39;&gt;jwooley&lt;/div&gt;
+&lt;div class=&#39;content&#39;&gt;
+Rather than the custom Observable generator with Iterval, why not use Observable.Generate passing in a timespan of 60 seconds?&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Building a Real-time Push App with Silverlight: Part 3</title>
+      <link>http://bling.github.io/blog/2011/08/28/building-real-time-push-app-with-rx-3/</link>
+      <pubDate>Sun, 28 Aug 2011 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2011/08/28/building-real-time-push-app-with-rx-3/</guid>
+      <description>&lt;p&gt;In this part we’re going to fire up Expression Blend (the trial for version 5 can be found &lt;a href=&#34;http://www.microsoft.com/download/en/details.aspx?displaylang=en&amp;amp;amp;id=9503&#34;&gt;here&lt;/a&gt;) and do some UI work.&lt;/p&gt;
+
+&lt;p&gt;In part 2, I created a simple Twitter client which connected to the streaming API, and connected to the sampling request which brings back random tweets.  Here is the data template:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;&amp;lt;DataTemplate&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;x:Key=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;TweetDataTemplate&amp;quot;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;lt;Grid&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;DataContext=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{Binding}&amp;quot;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;lt;Grid.RowDefinitions&amp;gt;&lt;/span&gt;
+            &lt;span class=&#34;nt&#34;&gt;&amp;lt;RowDefinition&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+            &lt;span class=&#34;nt&#34;&gt;&amp;lt;RowDefinition&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Height=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Auto&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;lt;/Grid.RowDefinitions&amp;gt;&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;lt;TextBlock&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;FontFamily=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{StaticResource FontFamily}&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;FontSize=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;12&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Text=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{Binding Text}&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;TextWrapping=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Wrap&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;lt;TextBlock&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Grid.Row=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;1&amp;quot;&lt;/span&gt;
+                   &lt;span class=&#34;na&#34;&gt;HorizontalAlignment=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Right&amp;quot;&lt;/span&gt;
+                   &lt;span class=&#34;na&#34;&gt;VerticalAlignment=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Bottom&amp;quot;&lt;/span&gt;
+                   &lt;span class=&#34;na&#34;&gt;FontFamily=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{StaticResource FontFamily}&amp;quot;&lt;/span&gt;
+                   &lt;span class=&#34;na&#34;&gt;FontSize=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;13.333&amp;quot;&lt;/span&gt;
+                   &lt;span class=&#34;na&#34;&gt;Foreground=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;BlueViolet&amp;quot;&lt;/span&gt;
+                   &lt;span class=&#34;na&#34;&gt;Text=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{Binding ScreenName}&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;lt;TextBlock&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Grid.Row=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;1&amp;quot;&lt;/span&gt;
+                   &lt;span class=&#34;na&#34;&gt;HorizontalAlignment=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Left&amp;quot;&lt;/span&gt;
+                   &lt;span class=&#34;na&#34;&gt;VerticalAlignment=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Bottom&amp;quot;&lt;/span&gt;
+                   &lt;span class=&#34;na&#34;&gt;FontFamily=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{StaticResource FontFamily}&amp;quot;&lt;/span&gt;
+                   &lt;span class=&#34;na&#34;&gt;FontSize=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;9.333&amp;quot;&lt;/span&gt;
+                   &lt;span class=&#34;na&#34;&gt;Foreground=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;DarkCyan&amp;quot;&lt;/span&gt;
+                   &lt;span class=&#34;na&#34;&gt;Text=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{Binding CreatedAt}&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;lt;/Grid&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;/DataTemplate&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This renders into something like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://lh4.ggpht.com/-ul4umD_jKFs/Tlq_U7HuoLI/AAAAAAAAAFg/pOhMiaqmxcE/s1600/image%25255B4%25255D.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The text is randomly generated from Blend’s &lt;a href=&#34;http://lmgtfy.com/?q=blend+sample+data&#34;&gt;sample&lt;/a&gt; capability, which is totally awesome as it allows designers to see what they’re working with, and keeps the sample data separate from the real data.&lt;/p&gt;
+
+&lt;p&gt;While design is a matter of personal taste, and you’re bound to get disagreements between different people, if you follow some basic rules you’ll satisfy a greater audience.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Subtle gradients and small shadows
+
+&lt;ul&gt;
+&lt;li&gt;If you take a look at all the nice interfaces, they tend to use very slight gradients and small shadows.  Most of the time you don’t even notice unless you look closely.&lt;/li&gt;
+&lt;li&gt;I think Microsoft’s Metro design is beautiful.  Reason?  It emphasizes text over decorations (like gradients and shadows).  This tends to lead to very clean design because there’s very little opportunity to abuse gradients and shadows.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Realism and light sources
+
+&lt;ul&gt;
+&lt;li&gt;Continuing on with gradients and shadows, they should be realistic.  Look at your design from a 3D point of view.  Apply a light source from a certain angle, and then apply your shadows relative to that light source.&lt;/li&gt;
+&lt;li&gt;Convey distance properly&lt;/li&gt;
+&lt;li&gt;Darker shadows imply being closer to the background, whereas lighter shadows imply being further away.  Use blurring to add emphasis to the distance.  &lt;img src=&#34;http://lh5.ggpht.com/-YvKRal5ToEw/Tlr6OrRIS4I/AAAAAAAAAFs/AAg79v6y2Cc/image_thumb%25255B14%25255D.png?imgmax=800&#34; alt=&#34;eg&#34; /&gt;&lt;/li&gt;
+&lt;li&gt;If you overlap planes you should apply these rules to each individual plane.  Don’t use the same border for everything.  Think about how it would look like in real life if you laid it out like that with pieces of paper.  The shadow sizes for that will be different, so you should do the same.&lt;/li&gt;
+&lt;li&gt;Also keep in mind that the shadows used above are &lt;em&gt;way&lt;/em&gt; too much for any application.  Be subtle!&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Consistent theme
+
+&lt;ul&gt;
+&lt;li&gt;This one seems obvious but nothing is worse than having a nice looking application bring up an unskinned dialog.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Usability
+
+&lt;ul&gt;
+&lt;li&gt;If the design doesn’t serve a purpose to make it more usable, it shouldn’t be there.  Even something as simple as black on white follows this – you do that so you can read text.  However, even something as simple as that can be improved.  Take a look at why the Kindle is so successful.  The readability is better because of the lower contrast between the black and light-brown background.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;With these starting points, let’s redesign the data template.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;&amp;lt;DataTemplate&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;x:Key=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;TweetDataTemplate&amp;quot;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;
+   &lt;span class=&#34;nt&#34;&gt;&amp;lt;Grid&amp;gt;&lt;/span&gt;
+       &lt;span class=&#34;nt&#34;&gt;&amp;lt;Grid.Background&amp;gt;&lt;/span&gt;
+           &lt;span class=&#34;nt&#34;&gt;&amp;lt;LinearGradientBrush&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;StartPoint=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;0.5,0&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;EndPoint=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;0.5,1&amp;quot;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;
+               &lt;span class=&#34;nt&#34;&gt;&amp;lt;GradientStop&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Color=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;#FFDADADA&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+               &lt;span class=&#34;nt&#34;&gt;&amp;lt;GradientStop&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Offset=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;1&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Color=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;#FFC8C8C8&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+           &lt;span class=&#34;nt&#34;&gt;&amp;lt;/LinearGradientBrush&amp;gt;&lt;/span&gt;
+       &lt;span class=&#34;nt&#34;&gt;&amp;lt;/Grid.Background&amp;gt;&lt;/span&gt;
+       &lt;span class=&#34;nt&#34;&gt;&amp;lt;Grid.RowDefinitions&amp;gt;&lt;/span&gt;
+           &lt;span class=&#34;nt&#34;&gt;&amp;lt;RowDefinition&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+           &lt;span class=&#34;nt&#34;&gt;&amp;lt;RowDefinition&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Height=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Auto&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+       &lt;span class=&#34;nt&#34;&gt;&amp;lt;/Grid.RowDefinitions&amp;gt;&lt;/span&gt;
+       &lt;span class=&#34;nt&#34;&gt;&amp;lt;TextBlock&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;FontFamily=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{StaticResource FontFamily}&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;FontSize=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;12&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Text=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{Binding Text}&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;TextWrapping=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Wrap&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+       &lt;span class=&#34;nt&#34;&gt;&amp;lt;TextBlock&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Grid.Row=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;1&amp;quot;&lt;/span&gt;
+                  &lt;span class=&#34;na&#34;&gt;HorizontalAlignment=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Right&amp;quot;&lt;/span&gt;
+                  &lt;span class=&#34;na&#34;&gt;VerticalAlignment=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Bottom&amp;quot;&lt;/span&gt;
+                  &lt;span class=&#34;na&#34;&gt;FontFamily=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{StaticResource FontFamily}&amp;quot;&lt;/span&gt;
+                  &lt;span class=&#34;na&#34;&gt;FontSize=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;13.333&amp;quot;&lt;/span&gt;
+                  &lt;span class=&#34;na&#34;&gt;Foreground=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;BlueViolet&amp;quot;&lt;/span&gt;
+                  &lt;span class=&#34;na&#34;&gt;Text=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{Binding ScreenName}&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+       &lt;span class=&#34;nt&#34;&gt;&amp;lt;TextBlock&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Grid.Row=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;1&amp;quot;&lt;/span&gt;
+                  &lt;span class=&#34;na&#34;&gt;HorizontalAlignment=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Left&amp;quot;&lt;/span&gt;
+                  &lt;span class=&#34;na&#34;&gt;VerticalAlignment=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Bottom&amp;quot;&lt;/span&gt;
+                  &lt;span class=&#34;na&#34;&gt;FontFamily=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{StaticResource FontFamily}&amp;quot;&lt;/span&gt;
+                  &lt;span class=&#34;na&#34;&gt;FontSize=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;9.333&amp;quot;&lt;/span&gt;
+                  &lt;span class=&#34;na&#34;&gt;Foreground=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;#FF003D8F&amp;quot;&lt;/span&gt;
+                  &lt;span class=&#34;na&#34;&gt;Text=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{Binding CreatedAt}&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+       &lt;span class=&#34;nt&#34;&gt;&amp;lt;Border&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Grid.RowSpan=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;2&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;BorderBrush=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;#FF999999&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;BorderThickness=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;0,0,0,1&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+       &lt;span class=&#34;nt&#34;&gt;&amp;lt;Border&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Grid.RowSpan=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;2&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;BorderBrush=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;White&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;BorderThickness=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;0,1,0,0&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+   &lt;span class=&#34;nt&#34;&gt;&amp;lt;/Grid&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;/DataTemplate&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;After these changes, it looks like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://lh5.ggpht.com/-fTL8wgr5ebs/Tlr6PGkqyeI/AAAAAAAAAF0/O98iakwvqGc/image_thumb%25255B17%25255D.png?imgmax=800&#34; alt=&#34;eg&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Did you notice the gradient?  You might think after seeing it here to adjust the gradients more so you can see it.  That would be a mistake.  See below.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://lh6.ggpht.com/--uPF_IEo6LM/Tlr6PpL9YDI/AAAAAAAAAF8/UxqCqYW3Wl4/image_thumb%25255B47%25255D.png?imgmax=800&#34; alt=&#34;eg&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The above is the exact same thing, but stacked vertically three times.  When this happens the subtle difference between the top and bottom of the control is more pronounced, so it looks like multiple panels are aligned together.&lt;/p&gt;
+
+&lt;p&gt;However, there’s still a little touch you can add.  The white and gray borders are only 1 pixel high, but that’s the little touch needed to make it look crisp.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://lh3.ggpht.com/-QHLW-sKfPfI/Tlr6P_c9qLI/AAAAAAAAAGE/kJ0Z8VgS3xg/image_thumb%25255B44%25255D.png?imgmax=800&#34; alt=&#34;eg&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Finally, let’s see the before and after (or eh&amp;hellip;rather after and before, because I took the screenshot backwards :P):&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://lh6.ggpht.com/-tzZ8AVtNv0M/Tlr6QmHJHnI/AAAAAAAAAGM/H1SYEqT6cis/image_thumb%25255B50%25255D.png?imgmax=800&#34; alt=&#34;eg&#34; /&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Building a Real-time Push App with Silverlight: Part 2</title>
+      <link>http://bling.github.io/blog/2011/08/27/building-real-time-push-app-with-rx-2/</link>
+      <pubDate>Sat, 27 Aug 2011 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2011/08/27/building-real-time-push-app-with-rx-2/</guid>
+      <description>&lt;p&gt;Let’s review the main Rx code from last time:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IObservable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GetJsonStreams&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;request&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GetRequest&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Observable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;FromAsyncPattern&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;WebResponse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;BeginGetResponse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;EndGetResponse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)()&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Select&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;wr&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;wr&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetResponseStream&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Select&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;str&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Observable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;FromAsyncPattern&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;byte&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[],&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;str&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;BeginRead&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;str&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;EndRead&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SelectMany&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ParseJson&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;One thing I didn’t like about this was that the web request object was created regardless of whether the Observable gets a subscription or not.  This is potentially wasted resources, and I wanted to refactor this to be completely lazy.&lt;/p&gt;
+
+&lt;p&gt;And with this I started to run into my first &amp;ldquo;huh?&amp;rdquo; moments with Rx: I blocked the UI thread.  How did I do that? I started down the path of exploring some more of the Rx methods, which lead me to &lt;code&gt;Create&lt;/code&gt;, which lets you manually call &lt;code&gt;OnNext&lt;/code&gt;.  With this train of thought, I came up with something like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Observable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Create&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;obs&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;request&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GetRequest&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;response&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Observable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;FromAsyncPattern&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;WebResponse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;BeginGetResponse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;EndGetResponse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)().&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;First&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;str&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;response&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetResponseStream&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;reader&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Observable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;FromAsyncPattern&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;byte&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[],&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;str&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;BeginRead&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;str&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;EndRead&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;foreach&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;json&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ParseJson&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;reader&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;obs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;OnNext&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;json&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+
+        &lt;span class=&#34;n&#34;&gt;obs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;OnCompleted&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;str&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Great! The initialization of the web request only occurs when subscribed! And it will even dispose the stream (by returning &lt;code&gt;str&lt;/code&gt;) upon unsubscription.  I ran the app and the UI thread immediately blocked.  What happened?&lt;/p&gt;
+
+&lt;p&gt;Rx has the concept of subscription and observation, and provides a way to subscribe and observe on different threads.  Here is the original code that subscribed:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetJsonStreams&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+   &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ObserveOnDispatcher&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+   &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Subscribe&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Text&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Can you spot the error? I explicitly told Rx to observe on the dispatcher thread, because I want the action inside &lt;code&gt;Subscribe&lt;/code&gt; to be invoked on the UI thread, but I didn’t specify where I want to set up the subscription.  Since I left it out, it uses the current thread, which happens to be the UI thread.  To solve this, it’s as simple as doing this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetJsonStreams&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SubscribeOn&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Scheduler&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ThreadPool&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ObserveOnDispatcher&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Subscribe&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Text&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;That’s it! Easy! This also follows one of the most important guidelines when using Rx: &lt;em&gt;Subscription and Observation should be done as late as possible&lt;/em&gt;, typically just before the &lt;code&gt;Subscribe&lt;/code&gt;.  Anything more and you’ll likely make Rx spawn more threads than are necessary or some other nasty bugs.  &lt;a href=&#34;http://en.wikipedia.org/wiki/KISS_principle&#34;&gt;KISS&lt;/a&gt;!&lt;/p&gt;
+
+&lt;p&gt;Now with that out of the way, let’s replace the boring TextBlock with something more usable.  First, I need to parse all the JSON streams I’m getting into bindable models.  To do that, I upgraded my StreamReader component and threw in System.Json for some basic parsing:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;TweetParser&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;_stack&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;readonly&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;StringBuilder&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;_sb&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;StringBuilder&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IEnumerable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Tweet&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Parse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;byte&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;buffer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;count&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;i&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;i&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;count&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;i&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;++)&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;current&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;buffer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;i&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+            &lt;span class=&#34;n&#34;&gt;_sb&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Append&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;current&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+
+            &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;current&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;sc&#34;&gt;&amp;#39;{&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;_stack&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;++;&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;else&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;current&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;sc&#34;&gt;&amp;#39;}&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;_stack&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;--;&lt;/span&gt;
+
+            &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;_stack&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;_sb&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Length&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+                &lt;span class=&#34;n&#34;&gt;Tweet&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tweet&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+                &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;value&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;JsonValue&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Parse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;_sb&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ToString&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;());&lt;/span&gt;
+
+                &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;value&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;is&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;JsonObject&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Tweet&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;TryParse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;JsonObject&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;out&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tweet&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+                    &lt;span class=&#34;k&#34;&gt;yield&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tweet&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+                &lt;span class=&#34;n&#34;&gt;_sb&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Clear&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Nothing overly complicated.  Next, the Tweet object:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Tweet&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;readonly&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;JsonObject&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;_json&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;bool&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;TryParse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;JsonObject&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;out&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Tweet&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;tweet&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ContainsKey&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;text&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ContainsKey&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;user&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;n&#34;&gt;tweet&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Tweet&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;tweet&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Tweet&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;JsonObject&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;json&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;_json&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;json&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Text&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;get&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;_json&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;text&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;].&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ToValueString&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ScreenName&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;get&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;_json&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;user&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;][&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;screen_name&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;].&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ToValueString&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;internal&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;TweetEx&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;ToValueString&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;JsonValue&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ToString&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Trim&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;&amp;#39;&amp;quot;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;To keep things simple I’m only extracting the screen name and text.  I won’t bore you setting up the views since it’s just simple ListBox bound to an &lt;code&gt;ObservableCollection&amp;lt;Tweet&amp;gt;&lt;/code&gt;, and a DataTemplate for Tweet.  When it’s all said and done, we see something like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://lh3.ggpht.com/-sVzoQRx_V2s/TlqFswXVhUI/AAAAAAAAAFc/d9nLfBSrARA/image_thumb3.png?imgmax=800&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Performance is still good at 2-5% CPU, even though we’re scrolling through 1000 items in near real-time.&lt;/p&gt;
+
+&lt;p&gt;Stay tuned for part 3, when we introduce Expression Blend and go into basics of UI design.  Also, most of this will hit GitHub very soon.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Building a Real-time Push App with Silverlight: Part 1</title>
+      <link>http://bling.github.io/blog/2011/08/26/building-real-time-push-app-with-rx-1/</link>
+      <pubDate>Fri, 26 Aug 2011 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2011/08/26/building-real-time-push-app-with-rx-1/</guid>
+      <description>&lt;p&gt;This is the beginning of a multi-part series where I’ll be building an interactive application with Silverlight 5 (still beta as of this post).  It will be built from the ground up and designed predominantly from a “push data” point of view, where the application is reacting to events in real-time, rather than a more traditional “pulling” point of view.  This type of application has exploded with the popularity of social networking and has made a lot of the traditional methods of building applications obsolete.&lt;/p&gt;
+
+&lt;p&gt;The best example of this shift is from Twitter.  When it first came out, it was (and still is predominantly) a “pull” model.  You have 200 API requests an hour, and you pull Twitter whenever you want to check if there are tweets of people you follow.  That is changing with the &lt;a href=&#34;https://dev.twitter.com/docs/streaming-api&#34;&gt;Streaming API&lt;/a&gt; where data is “pushed” to you as it comes.  This changes the way you write your code and requires a mind shift much like from for loops to LINQ.&lt;/p&gt;
+
+&lt;p&gt;The primary purpose of this series is build a real-time push application from beginning to end, and to show any problems I run along the way, and how I managed to solve them.  This will be my first attempt at building a Silverlight application as well as learning &lt;a href=&#34;http://msdn.microsoft.com/en-us/data/gg577609&#34;&gt;Reactive Extensions&lt;/a&gt;, so I’m bound to run into newbie mistakes.  If you have any tips or pointers please let me know!&lt;/p&gt;
+
+&lt;p&gt;Also, rather than doing this from a purely technical point of view, I’m also going to put on my designer hat and talk about UI design, and make it look good with Expression Blend when I get to designing the UI in later parts of this series.  I feel that this is often overlooked and can result in a lot of wasted work and lead to frustration.&lt;/p&gt;
+
+&lt;p&gt;This first post will be to get up and running and connected to Twitter with the Streaming API. This was chosen primarily because it is so much data can be pushed through and it can be used to demonstrate how to write a high performance Silverlight application.  It’s one thing to write something maintainable, and another altogether to make it run fast as well.  I’ve worked on too many WPF projects where performance took a back seat, and in WPF particularly this tends to create some massive technical debt.  The Silverlight/WPF technology stack is an exception to the rule and you should definitely think about performance from the start.&lt;/p&gt;
+
+&lt;p&gt;Well let’s get started!  We will connect to Twitter, convert it to an Observable, and then display tweets on the UI.&lt;/p&gt;
+
+&lt;p&gt;First, let’s create our TwitterStream class:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;TwitterStream&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;TwitterStream&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// this allows http authentication to work&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;WebRequest&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;RegisterPrefix&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;http://&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Net&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Browser&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;WebRequestCreator&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ClientHttp&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;protected&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;readonly&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;StreamParser&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;parser&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;StreamParser&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Username&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;set&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Password&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;set&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;protected&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;HttpWebRequest&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;GetRequest&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;request&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;WebRequest&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CreateHttp&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;http://stream.twitter.com/1/statuses/sample.json?delimited=length&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;UseDefaultCredentials&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Credentials&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;NetworkCredential&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Username&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Password&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IObservable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GetJsonStreams&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;request&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GetRequest&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Observable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;FromAsyncPattern&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;WebResponse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;BeginGetResponse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;EndGetResponse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)()&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Select&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;wr&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;wr&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetResponseStream&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Select&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;str&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Observable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;FromAsyncPattern&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;byte&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[],&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;str&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;BeginRead&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;str&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;EndRead&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SelectMany&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ParseJson&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IEnumerable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ParseJson&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Func&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;byte&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[],&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IObservable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;reader&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;buffer&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;byte&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;256&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+        &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;bytesRead&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+        &lt;span class=&#34;k&#34;&gt;while&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;bytesRead&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;reader&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;buffer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;buffer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Length&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Single&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;foreach&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;json&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;parser&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Parse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;buffer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;bytesRead&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+                &lt;span class=&#34;k&#34;&gt;yield&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;json&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;And that’s all there is to it!  The most complicated part is probably parsing of the JSON documents themselves, which I refactored into its own class.  The algorithm in the parser is pretty primitive, as it just looks for opening { and closing } and calls that a document – nothing more, nothing less.  Note that this uses the deprecated basic HTTP authentication.  Sooner or later it will be shut down and OAuth will be required, so I will upgrade when that happens as I want to keep the amount of written code to a minimum.&lt;/p&gt;
+
+&lt;p&gt;Perhaps the more interesting bit is this part with Rx:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;n&#34;&gt;Observable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;FromAsyncPattern&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;WebResponse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;BeginGetResponse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;EndGetResponse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Select&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;wr&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;wr&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetResponseStream&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Select&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;str&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Observable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;FromAsyncPattern&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;byte&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[],&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;str&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;BeginRead&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;str&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;EndRead&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SelectMany&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ParseJson&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The API takes some getting used to, but once you “tune in” things start to make sense.  The &lt;code&gt;FromAsyncPattern&lt;/code&gt; essentially wraps the &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/ms228969.aspx&#34;&gt;APM&lt;/a&gt; pattern’s Begin/End calls into a single &lt;code&gt;Func&amp;lt;&amp;gt;&lt;/code&gt;, which when invoked gets you the result as if you called End(), however without all the tedious AsyncCallback implementation.&lt;/p&gt;
+
+&lt;p&gt;The nice thing about this wrapper Func is that the code starts to look synchronous, even though it is using the ThreadPool behind the scenes.  Next, the response is projected into its response stream, which again is converted to another Observable for reading bytes from the stream until finally it goes into the &lt;code&gt;ParseJson&lt;/code&gt; method which projects string results.  This is both good and bad.  Good in that it can make asynchronous code look short and succinct (in this example I’ve wrapped 2 APM pattern calls in 2 lines of code), bad in that anyone inexperienced with Rx will get lost pretty fast.&lt;/p&gt;
+
+&lt;p&gt;Rx thus far has been a fairly high learning curve.  Maybe it’s just me.  When I read about it from others, or from seminars, it all makes sense and I generally don’t have any questions.  Trying to use it directly is another story, as there are so many overloads it’s easy to get overwhelmed.  I feel like Intellisense is making things worse!&lt;/p&gt;
+
+&lt;p&gt;Carrying on, the code above actually doesn’t do anything yet.  First, you must Subscribe to an observable before it does something, similar to you must foreach on a IEnumerable before it starts pulling data.&lt;/p&gt;
+
+&lt;p&gt;To finish off, let’s create a simple Window with a TextBlock bound to a Text property.  This is the constructor:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;MainPage&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;InitializeComponent&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;DataContext&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+   &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;s&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;TwitterStream&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Username&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;blingcoder&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Password&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;1234567&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetJsonStreams&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+       &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ObserveOnDispatcher&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+       &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Subscribe&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Text&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Perhaps one of the nicest features of Rx is automatic thread switching between background threads and UI threads.  Above, there is a call to &lt;code&gt;ObserveOnDispatcher&lt;/code&gt;, which as the name implies it observes to events on the Dispatcher thread :-).  Rx automatically handles switching to the UI thread so when Subscribe occurs we’re on the UI thread.&lt;/p&gt;
+
+&lt;p&gt;Performance is also very good so far, only maxing out at 5% CPU for what appears to be a continuous flood of tweets from random people.&lt;/p&gt;
+
+&lt;p&gt;And there you have it!  A completely asynchronous streaming Twitter client in roughly 20 lines of code (minus the parsing).  Stay tuned for part 2&amp;hellip;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,148 +1,155 @@
-
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <title>On TypeScript - bling on software development</title>
-  <meta name="author" content="Bailey Ling">
-
-  
-  <meta name="description" content="What&rsquo;s the deal? For the past week I&rsquo;ve been fortunate to work on an internal project which was purely greenfield and built on Node/ &hellip;">
-  
-
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  
-  <link rel="canonical" href="http://bling.github.io/blog/2013/04/19/on-typescript">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="bling on software development" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic|Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
-
-
-  
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-38439430-2']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
-
-</head>
-
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">bling on software development</a></h1>
-  
-    <h2>when pragmatism meets minimalism</h2>
-  
-</hgroup>
-
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:bling.github.io" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
-
-</nav>
-  <div id="main">
-    <div id="content">
-      <div>
-<article class="hentry" role="article">
-  
-  <header>
-    
-      <h1 class="entry-title">On TypeScript</h1>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>On TypeScript</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="generator" content="Hugo 0.16-DEV" />
+    <link href="" rel="alternate" type="application/rss+xml" title="bling on software" />
+    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
     
     
-      <p class="meta">
-        
+  </head>
+  <body>
+    <div id = "wrapper">
+
+      <div class="navbar navbar-default" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a href="http://bling.github.io/"><p class="navbar-brand">bling on software</p></a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              
+              
+            </ul>
+          </div>
+        </div>
+      </div>
 
 
 
+      
+      <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+          <li class="sidebar-brand">
+            <a href="http://bling.github.io/">
+              <h1 class="brand">bling on software</h1>
+            </a>
+            <a href="/about">
+              <img src="https://pbs.twimg.com/profile_images/1188386482/Untitled_bigger.png" />
+            </a>
+            <h3>when pragmatism meets minimalism</h3>
+          </li>
+
+          <hr />
+
+          <div id="social-wrapper">
+            <li> <a href="https://github.com/bling"><i class="fa fa-github-square"></i> github</a> </li>
+            <li> <a href="https://twitter.com/blingcoder"><i class="fa fa-twitter-square"></i> @twitter</a></li>
+            <li> <a href="https://linkedin.com/in/baileyling"><i class="fa fa-linkedin-square"></i> linkedin</a> </li>
+          </div>
+
+          <hr />
+
+          <li class="sidebar-categories">
+            <div>
+              <span>Categories</span>
+              <a href="/post" style="float:right">show all</a>
+            </div>
+            <div>
+              
+              <a href="/categories/blend">blend</a>
+              
+              <a href="/categories/castle">castle</a>
+              
+              <a href="/categories/castle-coding">castle-coding</a>
+              
+              <a href="/categories/coding">coding</a>
+              
+              <a href="/categories/cqrs">cqrs</a>
+              
+              <a href="/categories/emacs">emacs</a>
+              
+              <a href="/categories/forex">forex</a>
+              
+              <a href="/categories/ioc">ioc</a>
+              
+              <a href="/categories/javascript">javascript</a>
+              
+              <a href="/categories/logging">logging</a>
+              
+              <a href="/categories/powershell">powershell</a>
+              
+              <a href="/categories/rx">rx</a>
+              
+              <a href="/categories/software-tools">software-tools</a>
+              
+              <a href="/categories/source-control-management">source-control-management</a>
+              
+              <a href="/categories/testing">testing</a>
+              
+              <a href="/categories/twitter">twitter</a>
+              
+              <a href="/categories/vim">vim</a>
+              
+              <a href="/categories/visual-studio">visual-studio</a>
+              
+            </div>
+          </li>
+        </ul>
+      </div>
 
 
 
+      <div class="container">
 
 
-  
 
-
-<time datetime="2013-04-19T23:31:00+00:00" pubdate data-updated="true">Apr 19<span>th</span>, 2013</time>
-        
-      </p>
+<div class="article">
+  <div class="article-title">On TypeScript</div>
+  <p class="meta"><small>&nbsp;<i class="fa fa-calendar-o"></i> 2013-04-19</small></p> <hr/>
+  <div class="post">
     
-  </header>
 
-
-<div class="entry-content"><h1>What&rsquo;s the deal?</h1>
+<h1 id="what-s-the-deal:2eaa3d5702d7bfa3dcdaf47ea31e215c">What&rsquo;s the deal?</h1>
 
 <p>For the past week I&rsquo;ve been fortunate to work on an internal project which was purely greenfield and built on Node/Express on the backend, and AngularJS on the front-end.  It was a ton of fun and I learned a lot in the process, most particularly TypeScript and CoffeeScript.</p>
 
 <p>TypeScript was of interest because the application I was writing contained some pretty complex calculations.  The existing implementation was in Java, and at first glance it seemed like it would be a good idea to have some type safety whilst reimplementing the algorithm.</p>
 
-<!--more-->
-
-
-<h1>Getting Started</h1>
+<h1 id="getting-started:2eaa3d5702d7bfa3dcdaf47ea31e215c">Getting Started</h1>
 
 <p>I don&rsquo;t know why there&rsquo;s this misconception that you need to have Microsoft tooling to use Typescript, but it is 100% false and a myth.  To install it you just run <code>npm install typescript</code>.  Yes!  It&rsquo;s just a standard node package.  Once it&rsquo;s installed you have access to a <code>tsc</code> command, similar to how you would use the <code>coffee</code>, i.e. you give it input, and it spits output.</p>
 
 <p>If you&rsquo;ve ever been to <a href="http://typescriptlang.org">TypeScript</a>&rsquo;s website, you will have seen the rather impressive playground where you can see side by side Javascript vs Typescript.  This is a trick!  It gives you the illusion that you can simply annotate variables with types and it will automatically check only those types.  This is only half true.  Let&rsquo;s look at a innocent Node application:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">);</span>
-</span><span class='line'><span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="nx">res</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">&#39;hello world&#39;</span><span class="p">);</span>
-</span><span class='line'>  <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span>
-</span><span class='line'><span class="p">}).</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">);</span>
+<span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">&#39;hello world&#39;</span><span class="p">);</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span>
+<span class="p">}).</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">);</span>
+</code></pre></div>
 
 <p>That is just plain &lsquo;ol Javascript, and if the claim that all Javascript is valid Typescript, this should compile fine.  Except that it doesn&rsquo;t&hellip;we are greeted with the following error:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">The</span> <span class="nx">name</span> <span class="s1">&#39;require&#39;</span> <span class="nx">does</span> <span class="nx">not</span> <span class="nx">exist</span> <span class="k">in</span> <span class="nx">the</span> <span class="nx">current</span> <span class="nx">scope</span><span class="p">.</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="highlight"><pre>The name &#39;require&#39; does not exist in the current scope.
+</pre></div>
 
 <p>As it turns out, if you&rsquo;re using Typescript you need to tell the compiler of <em>every</em> object and function that you&rsquo;re using.  In the above example, the compiler doesn&rsquo;t know anything about <code>require</code>, so it threw an error.</p>
 
 <p>The way to correct this is with definition files.  These are like header files and they define the API of a module.  The pseudo standard for definition files currently lives in a GitHub repository named <a href="https://github.com/borisyankov/DefinitelyTyped">DefinitedlyTyped</a>.  This contains definition files for many popular libraries and is actively updated by the community.</p>
 
-<p>Once you have a definition file, you add <code>///&lt;reference path="./d.ts/requirejs/require.d.ts"/&gt;</code> to the top of the file, and the code will compile.</p>
+<p>Once you have a definition file, you add <code>///&lt;reference path=&quot;./d.ts/requirejs/require.d.ts&quot;/&gt;</code> to the top of the file, and the code will compile.</p>
 
 <p>The second option is to add <code>declare var require: any;</code> to the top of the file, effectively telling the compiler to ignore anything to do with that variable.</p>
 
@@ -150,31 +157,22 @@
 
 <p>I suppose this is a necessary evil for type checking, although it would have been nice to have this baked into the compiler to ease the migration path of existing applications.</p>
 
-<h1>Clean output</h1>
+<h1 id="clean-output:2eaa3d5702d7bfa3dcdaf47ea31e215c">Clean output</h1>
 
 <p>One of the nice things about TypeScript is that the output is very clean and predictable.  For example, here is an empty class:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kr">class</span> <span class="nx">Foo</span> <span class="p">{</span> <span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">class</span> <span class="nx">Foo</span> <span class="p">{</span> <span class="p">}</span>
+</code></pre></div>
 
 <p>It will compile to this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">Foo</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>    <span class="kd">function</span> <span class="nx">Foo</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>
-</span><span class='line'>    <span class="k">return</span> <span class="nx">Foo</span><span class="p">;</span>
-</span><span class='line'><span class="p">})();</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">Foo</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Foo</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">Foo</span><span class="p">;</span>
+<span class="p">})();</span>
+</code></pre></div>
 
 <p>All classes are done so with an immediately executed anonymous function.  If you define <code>Foo</code> as <code>export class Foo</code>, then the output will have an extra line at the bottom: <code>exports.Foo = Foo;</code>.  In other words, it&rsquo;s got first class support for the CommonJS syntax (as well as AMD).</p>
 
-<h1>Competing thought processes</h1>
+<h1 id="competing-thought-processes:2eaa3d5702d7bfa3dcdaf47ea31e215c">Competing thought processes</h1>
 
 <p>For people coming from C#, it will feel very comfortable, because it is <em>extremely</em> similar to C#.  You have classes, methods, modules (aka namespaces), just like you have in C#.  If you try to use a method that doesn&rsquo;t exist, the compiler will complain.  These features are the bread and butter of compiled languages and people coming from Visual Studio (the majority of the audience) will feel very comfortable.</p>
 
@@ -185,212 +183,66 @@
 <p>But what this comes down to is the classic static vs dynamic languages.  Static proponents will state that the compiler saves you from a lot of mistakes earlier on.  Dynamic proponents will state that &ldquo;if it quacks like a duck, it&rsquo;s a duck, I shouldn&rsquo;t need to declare it&rdquo;.  They&rsquo;re both right.</p>
 
 <p>Either way, given an open mind and some time, you can be productive in either environment, and makes you a better developer in the end.</p>
+
+  </div>
 </div>
 
 
-  <footer>
-    <p class="meta">
-      
-  
-
-<span class="byline author vcard">Posted by <span class="fn">Bailey Ling</span></span>
-
-      
 
 
+<div class="social-bar">
+  <a href="https://twitter.com/share" class="twitter-share-button"{count} data-via="blingcoder">Tweet</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-19T23:31:00+00:00" pubdate data-updated="true">Apr 19<span>th</span>, 2013</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/coding/'>coding</a>
-  
-</span>
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bling.github.io/blog/2013/04/19/on-typescript/" data-via="blingcoder" data-counturl="http://bling.github.io/blog/2013/04/19/on-typescript/" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <g:plusone></g:plusone>
 </div>
 
-    
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript/" title="Previous Post: .NET/WPF to HTML/CSS/Javscript">&laquo; .NET/WPF to HTML/CSS/Javscript</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/" title="Next Post: Unite.vim, The plugin you didn't know you need">Unite.vim, The plugin you didn't know you need &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
+<ul class="pager">
+   &nbsp;<li class="previous"><a href="http://bling.github.io/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/"> Unite.vim, The plugin you didn&#39;t know you need</a></li>
+   &nbsp;<li class="next"><a href="http://bling.github.io/blog/2013/04/13/dot-net-slash-wpf-to-html-slash-css-slash-javscript/"> .NET/WPF to HTML/CSS/Javscript</a></li>
+</ul>
 
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-  </section>
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'blingdev';
+    var disqus_identifier = 'http:\/\/bling.github.io\/blog\/2013\/04\/19\/on-typescript\/';
+    var disqus_title = 'On TypeScript';
+    var disqus_url = 'http:\/\/bling.github.io\/blog\/2013\/04\/19\/on-typescript\/';
 
-</div>
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
-<aside class="sidebar">
-  
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2015/01/06/emacs-as-my-leader-1-year-later/">Emacs As My &lt;Leader&gt;, 1 Year Later</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/">Asynchronous Eval in Emacs with Stylus and Skewer</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/">Emacs as my &lt;Leader&gt;: Vim Survival Guide</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my &lt;Leader&gt;: evil-mode</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/09/09/vim-in-emacs-bootstrap/">Vim in Emacs Bootstrap</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/08/16/modularizing-vimscript/">Modularizing VimScript</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/30/1000-stars-in-1-month/">1000 stars in 1 month</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
-      </li>
-    
-  </ul>
-</section>
-
-<section>
-  <h1>GitHub Repos</h1>
-  <ul id="gh_repos">
-    <li class="loading">Status updating...</li>
-  </ul>
-  
-  <a href="https://github.com/bling">@bling</a> on GitHub
-  
-  <script type="text/javascript">
-    $(document).ready(function(){
-        if (!window.jXHR){
-            var jxhr = document.createElement('script');
-            jxhr.type = 'text/javascript';
-            jxhr.src = '/javascripts/libs/jXHR.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(jxhr, s);
-        }
-
-        github.showRepos({
-            user: 'bling',
-            count: 0,
-            skip_forks: true,
-            target: '#gh_repos'
-        });
-    });
-  </script>
-  <script src="/javascripts/github.js" type="text/javascript"> </script>
-</section>
-
-
-
-
-
-  
-</aside>
 
 
     </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - Bailey Ling -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
 
-</footer>
-  
+    <footer>
+      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
+    </footer>
 
-<script type="text/javascript">
-      var disqus_shortname = 'blingdev';
-      
-        
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://bling.github.io/blog/2013/04/19/on-typescript/';
-        var disqus_url = 'http://bling.github.io/blog/2013/04/19/on-typescript/';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
+    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.js"></script>
+    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+
+    
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38439430-2', 'auto');
+ga('send', 'pageview');
 </script>
 
-
-
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id; js.async = true;
-  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
-
-
-  <script type="text/javascript">
-    (function() {
-      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
-      script.src = 'https://apis.google.com/js/plusone.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
-    })();
-  </script>
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
-
-</body>
+  </body>
 </html>
+

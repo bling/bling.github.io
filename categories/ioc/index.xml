@@ -1,0 +1,751 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ioc on bling on software</title>
+    <link>http://bling.github.io/categories/ioc/</link>
+    <description>Recent content in Ioc on bling on software</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 31 Oct 2011 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://bling.github.io/categories/ioc/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>My Thoughts on MEF</title>
+      <link>http://bling.github.io/blog/2011/10/31/my-thoughts-on-mef/</link>
+      <pubDate>Mon, 31 Oct 2011 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2011/10/31/my-thoughts-on-mef/</guid>
+      <description>&lt;div class=&#39;post&#39;&gt;
+&lt;p&gt;Ever since MEF was conceived, despite the authors saying that it is &lt;strong&gt;not&lt;em&gt; &lt;/em&gt;&lt;/strong&gt;an IoC container, it has since evolved to become one of the more popular IoC containers.&amp;nbsp; I’ve always avoided it because I disagree with using attributes, and I’ve had no reason to use it over Autofac or Windsor.&lt;/p&gt; &lt;p&gt;Recently, I found a reason to use it – Metro-style applications only support MEF so far.&amp;nbsp; My Twitter client ping.pong uses Autofac as the IoC container.&amp;nbsp; It uses some very basic functionality like factories and hooks.&amp;nbsp; To my surprise, MEF has no support for either of these.&lt;/p&gt; &lt;p&gt;Coming across these limitations solidifies my opinion that MEF is a plugin container, not an IoC container.&lt;/p&gt; &lt;p&gt;First let’s take a look at automated factories. What I mean is that by registering Foo, like so:&lt;/p&gt; &lt;div id=&#34;codeSnippetWrapper&#34;&gt; &lt;div style=&#34;border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: #f4f4f4; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: &#39;Courier New&#39;, courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px&#34; id=&#34;codeSnippet&#34;&gt;&lt;pre style=&#34;border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: white; margin: 0em; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: &#39;Courier New&#39;, courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px&#34;&gt;container.RegisterType&amp;lt;Foo&amp;gt;();&lt;/pre&gt;&lt;!--CRLF--&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;the container will automatically provide us a Func&amp;lt;Foo&amp;gt; without explicitly having to register it. This can be useful when you want to create an instance of Foo some time in the future rather than at constructor time.&amp;nbsp; You can do this with MEF via an ExportFactory&amp;lt;T&amp;gt;, but it’s limited because you cannot override dependencies at resolve time.&lt;/p&gt;
+&lt;p&gt;For example, let’s say Foo has a constructor of Foo(Bar1, Bar2, Bar3). With MEF, you have no control at resolution time what the Bars are. A container that has support for automated factories (like Autofac and Castle Windsor), will let you resolve a Func&amp;lt;Bar1, Foo&amp;gt;, which lets you override Bar1 at resolve time. Similarly, you can resolve a Func&amp;lt;Bar1, Bar2, Bar3, Foo&amp;gt; and override all dependencies. Any dependencies not overridden fall back to their configuration in the bootstrapper. This is a &lt;em&gt;very&lt;/em&gt; useful feature, and coupled with the scoping features for automatic disposal it opens up many doors for elegant solutions for what otherwise are complicated problems.&lt;/p&gt;
+&lt;p&gt;On to the second point; MEF has limited extension points. This one sounds odd since MEF is all about designing decoupled plugins so surely it should have extension points! The problem here is that MEF is designed as an explicit API (attributes are required) rather than an implicit API. In Autofac, you can scan an assembly and register every type. In MEF, every class needs to have an [Export] on it.&amp;nbsp; It also baffles my mind why [ImportingConstructor] is required even when there’s only one constructor. All this explicitness means you lose a bunch of “free” extension points that typical IoC containers have, like this:&lt;/p&gt;
+&lt;div id=&#34;codeSnippetWrapper&#34;&gt;
+&lt;div style=&#34;border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: #f4f4f4; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: &#39;Courier New&#39;, courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px&#34; id=&#34;codeSnippet&#34;&gt;&lt;pre style=&#34;border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: white; margin: 0em; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: &#39;Courier New&#39;, courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px&#34;&gt;b.RegisterAssemblyTypes(GetType().Assembly)&lt;/pre&gt;&lt;!--CRLF--&gt;&lt;pre style=&#34;border-bottom-style: none; text-align: left; padding-bottom: 0px; line-height: 12pt; background-color: #f4f4f4; margin: 0em; border-left-style: none; padding-left: 0px; width: 100%; padding-right: 0px; font-family: &#39;Courier New&#39;, courier, monospace; direction: ltr; border-top-style: none; color: black; border-right-style: none; font-size: 8pt; overflow: visible; padding-top: 0px&#34;&gt;  .OnActivated(x =&amp;gt; x.Context.Resolve&amp;lt;IEventAggregator&amp;gt;().Subscribe(x.Instance));&lt;/pre&gt;&lt;!--CRLF--&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;What the code above is saying that every time &lt;em&gt;any&lt;/em&gt; component is activated, it will subscribe to the event aggregator. If the component doesn’t IHandle&amp;lt;&amp;gt; any messages, it’s a no-op and continues on. If the instance does IHandle&amp;lt;&amp;gt; messages, this will ensure it’s hooked up.&lt;/p&gt;
+&lt;p&gt;The closest thing I could find in MEF was IPartImportsSatisfiedNotification (yes, an interface, more explicitness!).&amp;nbsp; It contains a single method OnImportsSatisfied() which gets called when the part is created.&amp;nbsp; Needless to say, the one line of code from Autofac would translate into a method for every implementation of IHandle&amp;lt;&amp;gt;, and since OnImportsSatisfied() contains no contextual information, every component will need IEventAggregator injected just to be able to call Subscribe.&lt;/p&gt;
+&lt;p&gt;To fully complete this example, Autofac has the following methods when registering a component: &lt;em&gt;OnRegistered, OnPreparing, OnActivating, OnActivated, &lt;/em&gt;and&lt;em&gt; OnRelease&lt;/em&gt;.&amp;nbsp; Each of these methods gives you complete contextual information at the time it is called like access to the current scope of the container, the instance (if applicable), which component which requested the dependency, etc.&amp;nbsp; This makes it almost too easy to extend the container.&lt;/p&gt;
+&lt;p&gt;For MEF, the only real extension point is an ExportProvider.&amp;nbsp; It is pretty low level (all it does is parse attributes for you) so to write anything similar for MEF requires a lot more code.&amp;nbsp; To further illustrate this point, compare the interception modules from AutofacContrib and MefContrib.&amp;nbsp; The Autofac implementation is a single file with a couple extension methods.&amp;nbsp; The MEF implementation is an entire namespace, over multiple classes, not the mention that it also relies on other infrastructure code in MefContrib.&amp;nbsp; Basically, the guys that wrote MefContrib had to write a mini-container within MEF.&lt;/p&gt;
+&lt;p&gt;MEF is great for building &lt;em&gt;&lt;strong&gt;extremely&lt;/strong&gt; loosely coupled &lt;/em&gt;applications.&amp;nbsp; I don’t think it has any business in an application where you know and own all of the dependencies; there are simply better libraries for that.&lt;/p&gt;  &lt;/div&gt;
+&lt;h2&gt;Comments&lt;/h2&gt;
+&lt;div class=&#39;comments&#39;&gt;
+&lt;div class=&#39;comment&#39;&gt;
+&lt;div class=&#39;author&#39;&gt;bling&lt;/div&gt;
+&lt;div class=&#39;content&#39;&gt;
+Thanks for the reply Nick!&lt;br /&gt;&lt;br /&gt;I have yet to check out all the new MEF features of 4.5, but it definitely looks very interesting with what&amp;#39;s happening in the previews.&lt;br /&gt;&lt;br /&gt;The new RegistrationBuilder looks pretty good, especially since attributes are optional now, but that only solves wiring up the application.&lt;br /&gt;&lt;br /&gt;IMO, the most useful (and powerful) thing you can add is the equivalent of Autofac&amp;#39;s IComponentContext -- something that will let you easily hook into any part of the resolution chain from creation to disposal.&lt;br /&gt;&lt;br /&gt;Once that&amp;#39;s in it&amp;#39;ll be much easier to extend the container and use it for more &amp;quot;advanced&amp;quot; scenarios --and with less code.&lt;br /&gt;&lt;br /&gt;Cheers,&lt;br /&gt;Bailey&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#39;comment&#39;&gt;
+&lt;div class=&#39;author&#39;&gt;Nick&lt;/div&gt;
+&lt;div class=&#39;content&#39;&gt;
+Hi Bailey! Nice thoughtful article - I have a foot in both camps, so I&amp;#39;m glad that the Autofac extension points work for you, but I&amp;#39;m also keen to close some of the gaps on the MEF side :)&lt;br /&gt;&lt;br /&gt;I am curious, have you had a chance to look at RegistrationBuilder, being delivered in the .NET 4.5 version of MEF? It opens up the possibility for us to support activation events like the ones you mention, although it doesn&amp;#39;t as of writing.&lt;br /&gt;&lt;br /&gt;In case you didn&amp;#39;t catch it, the release announcement is at: http://blogs.msdn.com/b/bclteam/archive/2011/10/27/what-s-new-in-mef-version-2-preview-4.aspx&lt;br /&gt;&lt;br /&gt;Thanks for writing this up anyway, it will give us something to think about.&lt;br /&gt;&lt;br /&gt;Regards,&lt;br /&gt;Nick&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Contextual Lifestyle with Castle Windsor</title>
+      <link>http://bling.github.io/blog/2010/05/14/contextual-lifestyle-with-castle/</link>
+      <pubDate>Fri, 14 May 2010 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2010/05/14/contextual-lifestyle-with-castle/</guid>
+      <description>&lt;div class=&#39;post&#39;&gt;
+&lt;b&gt;EDIT:&lt;/b&gt;&amp;nbsp;As of version 3, scoped lifestyles are now a first class citizen supported out of the box (&lt;a href=&#34;http://docs.castleproject.org/Windsor.Whats-New-In-Windsor-3.ashx&#34;&gt;http://docs.castleproject.org/Windsor.Whats-New-In-Windsor-3.ashx&lt;/a&gt;)&lt;br /&gt;
+&lt;strong&gt;EDIT:&lt;/strong&gt; A much better implementation can be found at &lt;a href=&#34;https://github.com/castleprojectcontrib/Castle.Windsor.Lifestyles&#34; title=&#34;https://github.com/castleprojectcontrib/Castle.Windsor.Lifestyles&#34;&gt;https://github.com/castleprojectcontrib/Castle.Windsor.Lifestyles&lt;/a&gt;&lt;br /&gt;
+&lt;br /&gt;
+IMO, one of the big missing features of Castle Windsor is that it doesn’t come with a built-in way for dealing with contextual lifestyles.&amp;nbsp; It handles transients and singletons fairly well, but once you get to other lifestyles it’s pretty heavily dependent on having some “state manager” handling the instances.&amp;nbsp; For example, PerWebRequest uses the HttpContext, PerThread uses thread static variables, etc.&lt;br /&gt;
+Contextual lifestyles is one of those things where it doesn’t seem all that useful at first, and then when you see the possibilities it’s like getting hit with a huge truck.&lt;br /&gt;
+A question was posted to the Castle Google Group recently, which I follow, which illustrates a relatively common example of why someone would want to have a contextual lifestyle.&amp;nbsp; Basically, you have a whole bunch of components you want to resolve, but only within a context.&lt;br /&gt;
+Here’s some boiler plate code of the domain model:&lt;br /&gt;
+&lt;pre class=&#34;csharpcode&#34;&gt;&lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;interface&lt;/span&gt; IRepository { ISession Session { get; } }
+&lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;interface&lt;/span&gt; ISession : IDisposable { &lt;span class=&#34;kwrd&#34;&gt;bool&lt;/span&gt; IsDisposed { get; } }
+&lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;class&lt;/span&gt; Session : ISession
+{
+    &lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;bool&lt;/span&gt; IsDisposed { get; set; }
+    &lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;void&lt;/span&gt; Dispose() { IsDisposed = &lt;span class=&#34;kwrd&#34;&gt;true&lt;/span&gt;; }
+}
+&lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;class&lt;/span&gt; Repository1 :IRepository
+{
+    &lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; ISession Session { get; &lt;span class=&#34;kwrd&#34;&gt;private&lt;/span&gt; set; }
+    &lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; Repository1(ISession session){ Session = session; }
+}
+&lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;class&lt;/span&gt; Repository2 : IRepository
+{
+    &lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; ISession Session { get; &lt;span class=&#34;kwrd&#34;&gt;private&lt;/span&gt; set; }
+    &lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; Repository2(ISession session){ Session = session; }
+}
+&lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;class&lt;/span&gt; Model1
+{
+    &lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; IRepository First { get; &lt;span class=&#34;kwrd&#34;&gt;private&lt;/span&gt; set; }
+    &lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; IRepository Second { get; &lt;span class=&#34;kwrd&#34;&gt;private&lt;/span&gt; set; }
+    &lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; Model1(IRepository first, IRepository second) { First = first; Second = second; }
+}
+&lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;class&lt;/span&gt; Model2
+{
+    &lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; IRepository Second { get; &lt;span class=&#34;kwrd&#34;&gt;private&lt;/span&gt; set; }
+    &lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; Model2(IRepository second) { Second = second; }
+}&lt;/pre&gt;&lt;style type=&#34;text/css&#34;&gt;
+.csharpcode, .csharpcode pre
+{
+ font-size: small;
+ color: black;
+ font-family: consolas, &#34;Courier New&#34;, courier, monospace;
+ background-color: #ffffff;
+ /*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+ background-color: #f4f4f4;
+ width: 100%;
+ margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+&lt;/style&gt;And here’s the unit test I want to pass:&lt;br /&gt;
+&lt;pre class=&#34;csharpcode&#34;&gt;[Test]
+        &lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;void&lt;/span&gt; ResolutionsByContext()
+        {
+            IWindsorContainer root = &lt;span class=&#34;kwrd&#34;&gt;new&lt;/span&gt; WindsorContainer();
+            root.Register(Component.For&amp;lt;Model1&amp;gt;().LifeStyle.Transient,
+                          Component.For&amp;lt;Model2&amp;gt;().LifeStyle.Transient,
+                          Component.For&amp;lt;IRepository&amp;gt;().ImplementedBy&amp;lt;Repository1&amp;gt;().LifeStyle.Transient,
+                          Component.For&amp;lt;IRepository&amp;gt;().ImplementedBy&amp;lt;Repository2&amp;gt;().LifeStyle.Transient,
+                          Component.For&amp;lt;ISession&amp;gt;().ImplementedBy&amp;lt;Session&amp;gt;().LifeStyle.PerContextScope());
+
+            Model1 model1;
+            Model2 model2;
+            ISession session1, session2;
+            &lt;span class=&#34;kwrd&#34;&gt;using&lt;/span&gt; (var context1 = root.BeginLifetimeScope())
+            {
+                model1 = context1.Resolve&amp;lt;Model1&amp;gt;();
+                session1 = model1.First.Session;
+                Assert.AreSame(model1.First.Session, model1.Second.Session);
+                Assert.AreSame(context1.Resolve&amp;lt;ISession&amp;gt;(), context1.Resolve&amp;lt;ISession&amp;gt;());
+
+                &lt;span class=&#34;kwrd&#34;&gt;using&lt;/span&gt; (var context2 = root.BeginLifetimeScope())
+                {
+                    model2 = context2.Resolve&amp;lt;Model2&amp;gt;();
+                    session2 = model2.Second.Session;
+                    Assert.AreNotSame(model1.First.Session, model2.Second.Session);
+
+                    var anotherModel2 = context2.Resolve&amp;lt;Model2&amp;gt;();
+                    Assert.AreSame(anotherModel2.Second.Session, model2.Second.Session);
+
+                    Assert.AreSame(session2, context2.Resolve&amp;lt;ISession&amp;gt;());
+                    Assert.AreNotSame(context1.Resolve&amp;lt;ISession&amp;gt;(), context2.Resolve&amp;lt;ISession&amp;gt;());
+                }
+                Assert.IsTrue(session2.IsDisposed);
+                Assert.IsFalse(session1.IsDisposed);
+            }
+            Assert.IsTrue(session1.IsDisposed);
+        }&lt;/pre&gt;&lt;style type=&#34;text/css&#34;&gt;
+.csharpcode, .csharpcode pre
+{
+ font-size: small;
+ color: black;
+ font-family: consolas, &#34;Courier New&#34;, courier, monospace;
+ background-color: #ffffff;
+ /*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+ background-color: #f4f4f4;
+ width: 100%;
+ margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+&lt;/style&gt;  &lt;br /&gt;
+I copied the name BeginLifetimeScope from Autofac, which inherently supports contextual scopes as a first-class citizen (of which the test passes).&amp;nbsp; The question now, is how do we get Castle Windsor to do the same?&lt;br /&gt;
+Initially, I took a look at ISubDependencyResolver and caching variables.&amp;nbsp; Unfortunately, this didn’t work too well because sub resolvers never got hit if they were resolved from the container directly.&lt;br /&gt;
+The next step I tried was with lifestyle managers, but alas, the CreationContext was always transient and I was unable to store any state that distinguished between different context resolutions.&lt;br /&gt;
+After digging deeper into the Windsor codebase and getting into the subsystems and handlers, I found a solution that seems to work.&amp;nbsp; It passes the test above, but that’s about it.&amp;nbsp; Test well if you’re gonna use this in production code!!!&lt;br /&gt;
+Here goes!&lt;br /&gt;
+First, you have a lifestyle manager to distinguish between other lifestyles.&lt;br /&gt;
+&lt;pre class=&#34;csharpcode&#34;&gt;&lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;class&lt;/span&gt; ContextualLifestyleManager : AbstractLifestyleManager
+    {
+        &lt;span class=&#34;kwrd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;object&lt;/span&gt; instance;
+        &lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;override&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;object&lt;/span&gt; Resolve(CreationContext context)
+        {
+            &lt;span class=&#34;kwrd&#34;&gt;return&lt;/span&gt; instance ?? (instance = &lt;span class=&#34;kwrd&#34;&gt;base&lt;/span&gt;.Resolve(context));
+        }
+        &lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;override&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;void&lt;/span&gt; Dispose()
+        {
+        }
+    }&lt;/pre&gt;And finally, the magic happens with this:&lt;br /&gt;
+&lt;pre class=&#34;csharpcode&#34;&gt;&lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;class&lt;/span&gt; ContextualExtensions
+    {
+        &lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;static&lt;/span&gt; ComponentRegistration&amp;lt;T&amp;gt; PerContextScope&amp;lt;T&amp;gt;(&lt;span class=&#34;kwrd&#34;&gt;this&lt;/span&gt; LifestyleGroup&amp;lt;T&amp;gt; group)
+        {
+            &lt;span class=&#34;kwrd&#34;&gt;return&lt;/span&gt; group.Custom&amp;lt;ContextualLifestyleManager&amp;gt;();
+        }
+        &lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;static&lt;/span&gt; IWindsorContainer BeginLifetimeScope(&lt;span class=&#34;kwrd&#34;&gt;this&lt;/span&gt; IWindsorContainer parent)
+        {
+            var child = &lt;span class=&#34;kwrd&#34;&gt;new&lt;/span&gt; WindsorContainer();
+            var ss = (INamingSubSystem)parent.Kernel.GetSubSystem(SubSystemConstants.NamingKey);
+            &lt;span class=&#34;kwrd&#34;&gt;foreach&lt;/span&gt; (var handler &lt;span class=&#34;kwrd&#34;&gt;in&lt;/span&gt; ss.GetHandlers())
+            {
+                &lt;span class=&#34;kwrd&#34;&gt;if&lt;/span&gt; (handler.ComponentModel.CustomLifestyle == &lt;span class=&#34;kwrd&#34;&gt;typeof&lt;/span&gt;(ContextualLifestyleManager))
+                {
+                    child.Kernel.AddCustomComponent(handler.ComponentModel);
+                }
+            }
+            parent.AddChildContainer(child);
+            &lt;span class=&#34;kwrd&#34;&gt;return&lt;/span&gt; child;
+        }
+    }&lt;/pre&gt;First method is just a helper method to be a little more fluent in the registration for when you want many things to have contextual lifestyle.&amp;nbsp; The second method is the guts.&amp;nbsp; Long story short, we create a child container, and duplicate all component models of contextual lifestyle.&amp;nbsp; Thus, whenever components are resolved, the “override” is found in the child and resolved.&amp;nbsp; Anything else will be found in the parent.&lt;br /&gt;
+I was initially pretty happy with this, until I profiled the performance.&amp;nbsp; With Autofac, creating and disposing 100,000 contexts took 5ms on my computer.&amp;nbsp; Doing the same with with Windsor took 3.8 &lt;strong&gt;seconds&lt;/strong&gt;.&amp;nbsp; Out of curiosity, I profiled again, but this time just creating child containers without copying handlers down: 1.9 seconds.&amp;nbsp; So while this implementation works, it’s not as performant as I’d like it to be….&lt;br /&gt;
+Maybe I’ll come up with another solution, but for now if the performance is acceptable maybe this would be useful for others!&lt;/div&gt;
+&lt;h2&gt;Comments&lt;/h2&gt;
+&lt;div class=&#39;comments&#39;&gt;
+&lt;div class=&#39;comment&#39;&gt;
+&lt;div class=&#39;author&#39;&gt;bling&lt;/div&gt;
+&lt;div class=&#39;content&#39;&gt;
+LOL I need to check these comments more often.  Thanks for responding!&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#39;comment&#39;&gt;
+&lt;div class=&#39;author&#39;&gt;Krzysztof Koźmic (2)&lt;/div&gt;
+&lt;div class=&#39;content&#39;&gt;
+That&amp;#39;s my quick and dirty impl based on per-web-request lifestyle that is far more lightweight and should have similar perf characteristics to other lifestyles&lt;br /&gt;&lt;br /&gt;http://gist.github.com/400979&lt;br /&gt;http://gist.github.com/400980&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#39;comment&#39;&gt;
+&lt;div class=&#39;author&#39;&gt;Krzysztof Koźmic (2)&lt;/div&gt;
+&lt;div class=&#39;content&#39;&gt;
+No wonder it is taking so long, you&amp;#39;re doing it in very heavyweight fashion.&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;It can be done w/o nested containers, much more lightweight.&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Forcing Castle Windsor to Generate Class Proxies</title>
+      <link>http://bling.github.io/blog/2010/04/21/forcing-castle-windsor-to-generate/</link>
+      <pubDate>Wed, 21 Apr 2010 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2010/04/21/forcing-castle-windsor-to-generate/</guid>
+      <description>&lt;div class=&#39;post&#39;&gt;
+I don&#39;t know why it took me so long to come up with this idea, but to save others potential headaches...have you ever thought &#34;hmmmm, I registered this as an interface with an implementation, but I want Windsor to use a class proxy, not an interface proxy, how do I do that?&#34;&lt;br /&gt;
+&lt;br /&gt;
+For me, initially I &lt;i&gt;almost&lt;/i&gt; went as far as implementing my own ProxyFactory to force it to use class proxy no matter what, and then the light bulb hit me and it turns out that there&#39;s a much easier way to accomplish this.&lt;br /&gt;
+&lt;br /&gt;
+c.Register(Component.For&amp;lt;ConcreteImpl, IService&amp;gt;().Interceptors&amp;lt;AnInterceptor&amp;gt;());&lt;br /&gt;
+&lt;br /&gt;
+Tada!&amp;nbsp; The actual service is now a concrete type, so Windsor will go, OK, I need to create a class proxy.&amp;nbsp; But since it&#39;s forwarded to the interface as well, all your dependencies can simply use the interface and everything magically works.&lt;br /&gt;
+&lt;br /&gt;
+Yay!&lt;/div&gt;
+&lt;h2&gt;Comments&lt;/h2&gt;
+&lt;div class=&#39;comments&#39;&gt;
+&lt;div class=&#39;comment&#39;&gt;
+&lt;div class=&#39;author&#39;&gt;bling&lt;/div&gt;
+&lt;div class=&#39;content&#39;&gt;
+void IService.SomeLongRunningOperation() {&lt;br /&gt;  Action1();&lt;br /&gt;  Action2();&lt;br /&gt;  Action3();&lt;br /&gt;}&lt;br /&gt;&lt;br /&gt;protected virtual void Action1() {}&lt;br /&gt;protected virtual void Action2() {}&lt;br /&gt;protected virtual void Action3() {}&lt;br /&gt;&lt;br /&gt;Without class proxies, those action methods could not be intercepted, and in our case, we would not be able to collect metrics/statistics on those methods.&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#39;comment&#39;&gt;
+&lt;div class=&#39;author&#39;&gt;Krzysztof Koźmic (2)&lt;/div&gt;
+&lt;div class=&#39;content&#39;&gt;
+Why did you want a class proxy for interface service?&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Windsor/DynamicProxy/Mixin Powers!</title>
+      <link>http://bling.github.io/blog/2010/04/05/windsordynamicproxymixin-powers/</link>
+      <pubDate>Mon, 05 Apr 2010 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2010/04/05/windsordynamicproxymixin-powers/</guid>
+      <description>&lt;div class=&#39;post&#39;&gt;
+Hmmm, I couldn’t really think of a good title except that this blog post has a little bit of everything of the title.&lt;br /&gt;
+&lt;br /&gt;
+As with any multithreaded program, deadlocks are a huge pain in the butt, and when they happen it costs time, money, and stress.&lt;br /&gt;
+&lt;br /&gt;
+In my code base I’ve introduced something called an ExtendedLock, which basically has something like this inside:&lt;br /&gt;
+&lt;div class=&#34;csharpcode&#34;&gt;&lt;pre class=&#34;alt&#34;&gt;&lt;span class=&#34;lnum&#34;&gt;   1:  &lt;/span&gt;&lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;class&lt;/span&gt; ExtendedLock : IExtendedLock {&lt;/pre&gt;&lt;pre&gt;&lt;span class=&#34;lnum&#34;&gt;   2:  &lt;/span&gt;  &lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; IDisposable Lock() {&lt;/pre&gt;&lt;pre class=&#34;alt&#34;&gt;&lt;span class=&#34;lnum&#34;&gt;   3:  &lt;/span&gt;    &lt;span class=&#34;kwrd&#34;&gt;while&lt;/span&gt; (!Monitor.TryEnter(&lt;span class=&#34;kwrd&#34;&gt;this&lt;/span&gt;, 5000)) {&lt;/pre&gt;&lt;pre&gt;&lt;span class=&#34;lnum&#34;&gt;   4:  &lt;/span&gt;      IncrementLockTime();&lt;/pre&gt;&lt;pre class=&#34;alt&#34;&gt;&lt;span class=&#34;lnum&#34;&gt;   5:  &lt;/span&gt;    }&lt;/pre&gt;&lt;pre&gt;&lt;span class=&#34;lnum&#34;&gt;   6:  &lt;/span&gt;    &lt;span class=&#34;kwrd&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;new&lt;/span&gt; Disposer(() =&amp;gt; Release());&lt;/pre&gt;&lt;pre class=&#34;alt&#34;&gt;&lt;span class=&#34;lnum&#34;&gt;   7:  &lt;/span&gt;  }&lt;/pre&gt;&lt;pre&gt;&lt;span class=&#34;lnum&#34;&gt;   8:    public event Deadlock;&lt;/span&gt;&lt;/pre&gt;&lt;pre&gt;9&lt;span class=&#34;lnum&#34;&gt;: &lt;/span&gt;}&lt;/pre&gt;&lt;/div&gt;&lt;style type=&#34;text/css&#34;&gt;
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#34;Courier New&#34;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+&lt;/style&gt;&lt;br /&gt;
+&lt;br /&gt;
+Pretty simple.&amp;nbsp; IncrementLockTime, as the name implies keeps track of how long the current thread has been attempting to acquire the lock.&amp;nbsp; It returns a Disposer which takes an Action, which releases the lock.&amp;nbsp; This allows us to take advantage of the &lt;b&gt;using&lt;/b&gt; syntax, and avoid boiler plate try/finally (oh, and it avoids typos in Monitor.Exit).&amp;nbsp; After some configurable amount of time, if the lock cannot be acquired within, say, 2 minutes, it’s probably a good probability your application is blocked somewhere.&lt;br /&gt;
+&lt;br /&gt;
+Now, using this class basically means replacing lock(_syncRoot) type code with _elock.Lock().&amp;nbsp; Also, I believe it’s a good candidate for “mixing” into any other component.&amp;nbsp; Mixins are sort of like multiple-inheritance, but not.&amp;nbsp; I like to think of mixins as a “can do” rather than “is a.”&lt;br /&gt;
+&lt;br /&gt;
+Now, we know that C# doesn’t let you do multiple inheritance, but with libraries like Castle’s DynamicProxy2, it lets you do something very similar, and is extremely powerful.&amp;nbsp; In a sense, it will automatically generate the following code for you:&lt;br /&gt;
+&lt;br /&gt;
+&lt;div class=&#34;csharpcode&#34;&gt;&lt;br /&gt;
+&lt;pre class=&#34;alt&#34;&gt;&lt;span class=&#34;lnum&#34;&gt;   1:  &lt;/span&gt;&lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;class&lt;/span&gt; SomeService : ISomeService, IExtendedLock {&lt;/pre&gt;&lt;pre&gt;&lt;span class=&#34;lnum&#34;&gt;   2:  &lt;/span&gt;  IExtendedLock _lock = &lt;span class=&#34;kwrd&#34;&gt;new&lt;/span&gt; ExtendedLock();&lt;/pre&gt;&lt;pre class=&#34;alt&#34;&gt;&lt;span class=&#34;lnum&#34;&gt;   3:  &lt;/span&gt;  &lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;void&lt;/span&gt; DoSomething() { }&lt;/pre&gt;&lt;pre&gt;&lt;span class=&#34;lnum&#34;&gt;   4:  &lt;/span&gt;  IDisposable IExtendedLock.Lock() { &lt;span class=&#34;kwrd&#34;&gt;return&lt;/span&gt; _lock.Lock(); }&lt;/pre&gt;&lt;pre class=&#34;alt&#34;&gt;&lt;span class=&#34;lnum&#34;&gt;   5:  &lt;/span&gt;}&lt;/pre&gt;&lt;br /&gt;
+&lt;/div&gt;&lt;style type=&#34;text/css&#34;&gt;
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#34;Courier New&#34;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+&lt;/style&gt;&lt;style type=&#34;text/css&#34;&gt;
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#34;Courier New&#34;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+&lt;/style&gt;&lt;br /&gt;
+&lt;br /&gt;
+_lock is a private instance variable, SomeService implements IExtendedLock, and simply redirects all the interface methods to _lock.&amp;nbsp; This seems pretty simple and straightforward, but becomes tedious when the type you want to mix in has many methods (as my actual IExtendedLock is).&lt;br /&gt;
+&lt;br /&gt;
+With Windsor/DynamicProxy, you can do this automatically with minimal amount of code.&amp;nbsp; For example, first you define something like this:&lt;br /&gt;
+&lt;br /&gt;
+&lt;pre class=&#34;csharpcode&#34;&gt;&lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;interface&lt;/span&gt; ILockableDictionary : IDictionary, IExtendedLock { }&lt;/pre&gt;&lt;br /&gt;
+Then, you register it in the container:&lt;br /&gt;
+&lt;div class=&#34;csharpcode&#34;&gt;&lt;br /&gt;
+&lt;pre class=&#34;alt&#34;&gt;&lt;span class=&#34;lnum&#34;&gt;   1:  &lt;/span&gt;var container = &lt;span class=&#34;kwrd&#34;&gt;new&lt;/span&gt; WindsorContainer();&lt;/pre&gt;&lt;pre&gt;&lt;span class=&#34;lnum&#34;&gt;   2:  &lt;/span&gt;container.Register(Component.For(&lt;span class=&#34;kwrd&#34;&gt;typeof&lt;/span&gt;(ILockableHashtable))&lt;/pre&gt;&lt;pre class=&#34;alt&#34;&gt;&lt;span class=&#34;lnum&#34;&gt;   3:  &lt;/span&gt;                                   .LifeStyle.Transient&lt;/pre&gt;&lt;pre&gt;&lt;span class=&#34;lnum&#34;&gt;   4:  &lt;/span&gt;                                   .Activator&amp;lt;LockableHashtableActivator&amp;gt;());&lt;/pre&gt;&lt;/div&gt;&lt;style type=&#34;text/css&#34;&gt;
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#34;Courier New&#34;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+&lt;/style&gt;&lt;br /&gt;
+&lt;br /&gt;
+Now, whenever you need an instance of a lockable hashtable you can simply do something like this:&lt;br /&gt;
+&lt;br /&gt;
+&lt;pre class=&#34;csharpcode&#34;&gt;var hash = container.Resolve&amp;lt;ILockableHashtable&amp;gt;();
+&lt;span class=&#34;kwrd&#34;&gt;using&lt;/span&gt; (hash.Lock()) {
+hash[&lt;span class=&#34;str&#34;&gt;&#34;1&#34;&lt;/span&gt;] = 1;
+}&lt;/pre&gt;&lt;style type=&#34;text/css&#34;&gt;
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#34;Courier New&#34;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+&lt;/style&gt;&lt;br /&gt;
+&lt;br /&gt;
+You might be wondering why it’s worth all this trouble, and what’s wrong with regular locks and Monitor.&amp;nbsp; For our system it’s pretty critical that it stays running 24/7, and every minute it’s down is money lost, so it is in our best interest to detect any problematic condition.&lt;br /&gt;
+&lt;br /&gt;
+Last but not least, here’s the important code that actually generates the proxy:&lt;br /&gt;
+&lt;div class=&#34;csharpcode&#34;&gt;&lt;br /&gt;
+&lt;pre class=&#34;alt&#34;&gt;&lt;span class=&#34;lnum&#34;&gt;   1:  &lt;/span&gt;&lt;span class=&#34;kwrd&#34;&gt;internal&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;class&lt;/span&gt; LockableHashtableActivator : DefaultComponentActivator&lt;/pre&gt;&lt;pre&gt;&lt;span class=&#34;lnum&#34;&gt;   2:  &lt;/span&gt;{&lt;/pre&gt;&lt;pre class=&#34;alt&#34;&gt;&lt;span class=&#34;lnum&#34;&gt;   3:  &lt;/span&gt;    &lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; LockableHashtableActivator(ComponentModel model, IKernel kernel, ComponentInstanceDelegate onCreation, ComponentInstanceDelegate onDestruction)&lt;/pre&gt;&lt;pre&gt;&lt;span class=&#34;lnum&#34;&gt;   4:  &lt;/span&gt;        : &lt;span class=&#34;kwrd&#34;&gt;base&lt;/span&gt;(model, kernel, onCreation, onDestruction)&lt;/pre&gt;&lt;pre class=&#34;alt&#34;&gt;&lt;span class=&#34;lnum&#34;&gt;   5:  &lt;/span&gt;    {&lt;/pre&gt;&lt;pre&gt;&lt;span class=&#34;lnum&#34;&gt;   6:  &lt;/span&gt;    }&lt;/pre&gt;&lt;pre class=&#34;alt&#34;&gt;&lt;span class=&#34;lnum&#34;&gt;   7:  &lt;/span&gt;&amp;nbsp;&lt;/pre&gt;&lt;pre&gt;&lt;span class=&#34;lnum&#34;&gt;   8:  &lt;/span&gt;    &lt;span class=&#34;kwrd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;override&lt;/span&gt; &lt;span class=&#34;kwrd&#34;&gt;object&lt;/span&gt; Create(CreationContext context)&lt;/pre&gt;&lt;pre class=&#34;alt&#34;&gt;&lt;span class=&#34;lnum&#34;&gt;   9:  &lt;/span&gt;    {&lt;/pre&gt;&lt;pre&gt;&lt;span class=&#34;lnum&#34;&gt;  10:  &lt;/span&gt;        IExtendedLock lockMixin = Kernel.Resolve&amp;lt;IExtendedLock&amp;gt;();&lt;/pre&gt;&lt;pre class=&#34;alt&#34;&gt;&lt;span class=&#34;lnum&#34;&gt;  11:  &lt;/span&gt;&amp;nbsp;&lt;/pre&gt;&lt;pre&gt;&lt;span class=&#34;lnum&#34;&gt;  12:  &lt;/span&gt;        &lt;span class=&#34;rem&#34;&gt;// an additional object we want to &#34;mix&#34; with the implementation to provide combined functionality&lt;/span&gt;&lt;/pre&gt;&lt;pre class=&#34;alt&#34;&gt;&lt;span class=&#34;lnum&#34;&gt;  13:  &lt;/span&gt;        ProxyGenerationOptions options = &lt;span class=&#34;kwrd&#34;&gt;new&lt;/span&gt; ProxyGenerationOptions();&lt;/pre&gt;&lt;pre&gt;&lt;span class=&#34;lnum&#34;&gt;  14:  &lt;/span&gt;        options.AddMixinInstance(lockMixin);&lt;/pre&gt;&lt;pre class=&#34;alt&#34;&gt;&lt;span class=&#34;lnum&#34;&gt;  15:  &lt;/span&gt;        &lt;/pre&gt;&lt;pre&gt;&lt;span class=&#34;lnum&#34;&gt;  16:  &lt;/span&gt;        &lt;span class=&#34;kwrd&#34;&gt;return&lt;/span&gt; Kernel.Resolve&amp;lt;ProxyGenerator&amp;gt;().CreateInterfaceProxyWithTarget(&lt;/pre&gt;&lt;pre class=&#34;alt&#34;&gt;&lt;span class=&#34;lnum&#34;&gt;  17:  &lt;/span&gt;            &lt;span class=&#34;kwrd&#34;&gt;typeof&lt;/span&gt;(IDictionary), &lt;span class=&#34;rem&#34;&gt;// the interface of the implementation&lt;/span&gt;&lt;/pre&gt;&lt;pre&gt;&lt;span class=&#34;lnum&#34;&gt;  18:  &lt;/span&gt;            &lt;span class=&#34;kwrd&#34;&gt;new&lt;/span&gt;[] { &lt;span class=&#34;kwrd&#34;&gt;typeof&lt;/span&gt;(ILockableHashtable) }, &lt;span class=&#34;rem&#34;&gt;// additional interfaces to use&lt;/span&gt;&lt;/pre&gt;&lt;pre class=&#34;alt&#34;&gt;&lt;span class=&#34;lnum&#34;&gt;  19:  &lt;/span&gt;            Activator.CreateInstance&amp;lt;Hashtable&amp;gt;(), &lt;span class=&#34;rem&#34;&gt;// concrete implementation to mix into&lt;/span&gt;&lt;/pre&gt;&lt;pre&gt;&lt;span class=&#34;lnum&#34;&gt;  20:  &lt;/span&gt;            options);&lt;/pre&gt;&lt;pre class=&#34;alt&#34;&gt;&lt;span class=&#34;lnum&#34;&gt;  21:  &lt;/span&gt;    }&lt;/pre&gt;&lt;pre&gt;&lt;span class=&#34;lnum&#34;&gt;  22:  &lt;/span&gt;}&lt;/pre&gt;&lt;br /&gt;
+&lt;/div&gt;&lt;style type=&#34;text/css&#34;&gt;
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#34;Courier New&#34;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+&lt;/style&gt;&lt;style type=&#34;text/css&#34;&gt;
+.csharpcode, .csharpcode pre
+{
+font-size: small;
+color: black;
+font-family: consolas, &#34;Courier New&#34;, courier, monospace;
+background-color: #ffffff;
+/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+background-color: #f4f4f4;
+width: 100%;
+margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+&lt;/style&gt;&lt;br /&gt;
+For those who are familiar with Windsor and wondering why I didn’t use the fluent Proxy.Mixins method, it’s because those mixins are created once per registration.&amp;nbsp; In this case, it is very important that each mixin (which is an extended lock), is transient, otherwise every lockable hashtable ends up with the same extended lock, which is just asking for trouble.&lt;/div&gt;
+&lt;h2&gt;Comments&lt;/h2&gt;
+&lt;div class=&#39;comments&#39;&gt;
+&lt;div class=&#39;comment&#39;&gt;
+&lt;div class=&#39;author&#39;&gt;Krzysztof Koźmic&lt;/div&gt;
+&lt;div class=&#39;content&#39;&gt;
+actually, with the trunk version the limitation &amp;quot;one mixin per registration&amp;quot; was lifted off. Now Mixins behave pretty much like interceptors, which means they can have any lifestyle, including being transient.&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Autofac’s extremely powerful and flexible ContainerScope</title>
+      <link>http://bling.github.io/blog/2009/09/26/autofacs-extremely-powerful-containerscope/</link>
+      <pubDate>Sat, 26 Sep 2009 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2009/09/26/autofacs-extremely-powerful-containerscope/</guid>
+      <description>&lt;div class=&#39;post&#39;&gt;
+I need to show some love and support for my favorite IoC tool because it’s most powerful feature needs more explaining.&amp;nbsp; It’s not that the main site doesn’t provide a good explanation, because it does, but because most people don’t really understand what the solution is solving.&lt;br /&gt;
+The following is on Autofac’s &lt;a href=&#34;http://code.google.com/p/autofac/&#34;&gt;front page&lt;/a&gt;:&lt;br /&gt;
+&lt;blockquote&gt;&lt;pre class=&#34;csharpcode&#34;&gt;var container = // ...
+using (var inner = container.CreateInnerContainer())
+{
+  var controller = inner.Resolve&amp;lt;IController&amp;gt;();
+  controller.Execute(); // use controller..
+}&lt;/pre&gt;&lt;/blockquote&gt;The first time I saw this I basically glanced right passed it.&amp;nbsp; Honestly I didn’t think anything of it, and initially the reason I tried out Autofac was for its very slick lambda registrations.&amp;nbsp; I didn’t realize I was in a world of surprises when I finally realized the power and flexibility of Autofac’s container scope.&lt;br /&gt;
+&lt;br /&gt;
+If &lt;a href=&#34;http://www.codinginstinct.com/2008/05/ioc-container-benchmark-rerevisted.html&#34;&gt;benchmarks&lt;/a&gt; and &lt;a href=&#34;http://blog.ashmind.com/index.php/2008/09/08/comparing-net-di-ioc-frameworks-part-2/&#34;&gt;feature comparisons&lt;/a&gt; are not enough show off Autofac’s features, this blog post hopes to show how to solve “complex” problems elegantly.&lt;br /&gt;
+&lt;br /&gt;
+Let’s start with the typical NHibernate use-case.&amp;nbsp; Create 1 singleton, create many sessions-per-request.&amp;nbsp; Here’s a solution with &lt;a href=&#34;http://nhforge.org/blogs/nhibernate/archive/2009/08/29/part-7-nhibernate-and-ninject-for-asp-net-mvc.aspx&#34;&gt;Ninject&lt;/a&gt; (not that I’m picking on Ninject, because I love its very slick contextual binding, but because most other IoC containers have a similar solution, like &lt;a href=&#34;http://ayende.com/Blog/archive/2007/06/14/Using-NHibernate-Session-Per-Request-with-WCF-Windsor-Integration.aspx&#34;&gt;per-session with WCF &amp;amp; Windsor&lt;/a&gt;).&lt;br /&gt;
+&lt;br /&gt;
+Basically, the solutions mentioned above will following an approach like this: &lt;br /&gt;
+&lt;br /&gt;
+a) Hook into the beginning of a request, and create the ISession from the ISessionFactory. &lt;br /&gt;
+b) Set it in the HttpContext.Current or OperationContext.Current’s dictionaries. &lt;br /&gt;
+c) Get this property in all the dependencies that need it. &lt;br /&gt;
+d) At the end of the request, Dispose() the ISession.&lt;br /&gt;
+&lt;br /&gt;
+OK, pretty simple and straightforward solution, but there’s one key thing that really bugs me is that by doing this we have introduced a dependency…that is, HttpContext.Current[].&amp;nbsp; That, or you could wrap that around a class, like SessionManager, again, basically coupling to a dependency under a different name.&amp;nbsp; With Autofac, we can bypass steps b and c entirely and only worry about the beginning and end of a request.&lt;br /&gt;
+&lt;br /&gt;
+To start off, here&#39;s the basic wiring needed:&lt;br /&gt;
+&lt;div style=&#34;text-align: left;&#34;&gt;&lt;blockquote&gt;&lt;div class=&#34;csharpcode&#34;&gt;&lt;pre class=&#34;alt&#34;&gt;1:   var cb = new ContainerBuilder(); 
+2:   cb.Register(x =&amp;gt; CreateSessionFactory())
+       .As&amp;lt;ISessionFactory&amp;gt;()
+       .SingletonScoped(); 
+3:   cb.Register(x =&amp;gt; x.Resolve&amp;lt;ISessionFactory&amp;gt;().OpenSession())
+       .As&amp;lt;ISession&amp;gt;()
+       .ContainerScoped(); 
+4:   IContainer c = cb.Build(); 
+5:  &amp;nbsp;
+6:   Assert.AreSame(c.Resolve&amp;lt;ISessionFactory&amp;gt;(), c.Resolve&amp;lt;ISessionFactory&amp;gt;()); 
+7:   Assert.AreSame(c.Resolve&amp;lt;ISession&amp;gt;(), c.Resolve&amp;lt;ISession&amp;gt;()); 
+8:  &amp;nbsp;
+9:   var inner1 = c.CreateInnerContainer(); 
+10:  Assert.AreSame(c.Resolve&amp;lt;ISessionFactory&amp;gt;(), inner1.Resolve&amp;lt;ISessionFactory&amp;gt;()); 
+11:  Assert.AreNotSame(c.Resolve&amp;lt;ISession&amp;gt;(), inner1.Resolve&amp;lt;ISession&amp;gt;());&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;&lt;/div&gt;That’s the configuration.&amp;nbsp; And that’s it!&amp;nbsp; Nothing more.&amp;nbsp; No additional SessionManager class.&amp;nbsp; No need to use HttpContext.Current to store the session.&amp;nbsp; Just pass ISession in with regular constructor/property injection.&lt;br /&gt;
+&lt;br /&gt;
+Here’s how it works:&lt;br /&gt;
+&lt;br /&gt;
+Line 2: ISessionFactory is created from CreateSessionFactory().&amp;nbsp; This is a singleton so there will always be one and only one instance of it within the container (and all child containers).&lt;br /&gt;
+&lt;br /&gt;
+Line 3: This is where it’s interesting.&amp;nbsp; We’re saying “whenever I need an ISession, resolve ISessionFactory and call OpenSession() on it”.&amp;nbsp; Also, by specifying ContainerScope, we only get 1 instance per-container.&lt;br /&gt;
+&lt;br /&gt;
+And this is where it’s sort of confusing with the terminology.&amp;nbsp; You can think of Autofac as a tree of containers.&amp;nbsp; The root container (variable c in this case), can create children containers (inner1 in this case, and inner1 could create an inner2, and so on).&amp;nbsp; So when something is Singleton scoped, that means that the root container, and any child containers (and child’s children) will only have 1 instance of a service.&amp;nbsp; With ContainerScope, each “node = container” in the tree gets 1 instance.&lt;br /&gt;
+&lt;br /&gt;
+So back to the unit test above, in line 6 we verify that there is only 1 instance of ISessionFactory.&amp;nbsp; We resolve ISession twice as well, which shows that we get the same instance.&lt;br /&gt;
+&lt;br /&gt;
+Line 9, we create an inner container, and here we see that ISessionFactory is the same for both the container &lt;b&gt;c&lt;/b&gt; and inner container &lt;b&gt;inner1&lt;/b&gt;.&amp;nbsp; However, the ISession resolved is &lt;b&gt;different&lt;/b&gt; between the two.&lt;br /&gt;
+Thus, by specifying ContainerScope, you can very easily group &lt;i&gt;multiple&lt;/i&gt; services and dependencies together as one unit.&amp;nbsp; Implementing the Unit of Work pattern is insanely easy with Autofac.&amp;nbsp; Create services A, which depends on B, which depends on C, which all the previous depends on D.&amp;nbsp; Resolve A within a new inner container, and B, C, and D will always be the same instances.&amp;nbsp; Resolve A in another inner container and you will get a new set of instances.&lt;br /&gt;
+&lt;br /&gt;
+Last but not least, Autofac will automatically call Dispose() on all resolved services once the container is disposed.&amp;nbsp; So for the above, once &lt;b&gt;inner1&lt;/b&gt;.Dispose() is called, ISession.Dispose() is automatically called.&amp;nbsp; If you needed to, you can very easily hook into this mechanism and implement things like transactions and rollbacks.&lt;br /&gt;
+&lt;br /&gt;
+I hope this blog post clears things up a little bit about Autofac’s ContainerScope!&lt;/div&gt;
+&lt;h2&gt;Comments&lt;/h2&gt;
+&lt;div class=&#39;comments&#39;&gt;
+&lt;div class=&#39;comment&#39;&gt;
+&lt;div class=&#39;author&#39;&gt;Nick&lt;/div&gt;
+&lt;div class=&#39;content&#39;&gt;
+Heya Bailey! Think there is more than one &amp;#39;Nick&amp;#39; lurking around your blog (or else I have a case of amnesia :))&lt;br /&gt;&lt;br /&gt;Love the article, definitely need more info like this around the &amp;#39;net.&lt;br /&gt;&lt;br /&gt;Nick (mk II)&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#39;comment&#39;&gt;
+&lt;div class=&#39;author&#39;&gt;bling&lt;/div&gt;
+&lt;div class=&#39;content&#39;&gt;
+Thanks for dropping by Nick!&lt;br /&gt;&lt;br /&gt;To answer the question, what I ended up doing was creating a set of services for each request/session, basically like how I described in my post.&lt;br /&gt;&lt;br /&gt;I also wrote my own custom interception module (took some ideas from the one in contrib) based on Castle&amp;#39;s DynamicProxy2.&lt;br /&gt;&lt;br /&gt;The main difference was that my interceptors work iff methods have specific attributes, and with that I was able to selectively say which methods got transactions (among other things).&lt;br /&gt;&lt;br /&gt;This made things really easy because I could have the transaction span multiple methods as one huge call or a simple 1 line method depending on where my transaction attributes appear in the code.&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#39;comment&#39;&gt;
+&lt;div class=&#39;author&#39;&gt;Nick&lt;/div&gt;
+&lt;div class=&#39;content&#39;&gt;
+I&amp;#39;ve been toying with a similar approach, but I&amp;#39;m uncertain about how to manage NHibernate&amp;#39;s Transaction (Commits and Rollbacks) in this scenario.  I&amp;#39;ve seen examples that make use of TransactionAttributes (in the case of MVC apps), and previously I had been managing transactions in the begin/end request events (in global.asax), but that ties every request to a transaction which isn&amp;#39;t necessary.  How did you go about handling transactions in this scenario?&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Member injection module for Autofac</title>
+      <link>http://bling.github.io/blog/2009/09/07/member-injection-module-for-autofac/</link>
+      <pubDate>Mon, 07 Sep 2009 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2009/09/07/member-injection-module-for-autofac/</guid>
+      <description>&lt;div class=&#39;post&#39;&gt;
+Inevitably as a project gets more complicated, you will need to start using more features of your IoC container.  Autofac has built-in support for property injection by hooking into the OnActivating or OnActivated events, which basically set all public properties (or only those which are unset).
+
+However, I didn&#39;t really like this because once you start using properties, it&#39;s not as clear cut as constructors that you are using injection.  It becomes hard to manage later on when you have many properties which some should be injected and others should be manually set in code.  Autofac&#39;s inject all or only-null approach doesn&#39;t fit the bill when a class gets a little more complicated.
+
+I set up to fix this by writing a custom module, and it turned out to be very very simple.  With attributes, we can mimic functionality that&#39;s used in Ninject.
+
+Here&#39;s the module code:
+&lt;pre&gt;
+public class MemberInjectionModule : IModule
+{
+  public void Configure(IContainer container)
+  {
+    container.ComponentRegistered += (oo, ee) =&gt;
+      ee.ComponentRegistration.Activated += (o, e) =&gt;
+    {
+      const BindingFlags flags = BindingFlags.Instance |
+                                 BindingFlags.NonPublic |
+                                 BindingFlags.Public;
+      var type = e.Instance.GetType();
+      foreach (var field in type.GetFields(flags))
+      {
+        if (field.GetCustomAttributes(typeof(InjectedAttribute), true).Length &gt; 0)
+          field.SetValue(e.Instance, e.Context.Resolve(field.FieldType));
+      }
+      foreach (var prop in type.GetProperties(flags))
+      {
+        if (prop.GetCustomAttributes(typeof(InjectedAttribute), true).Length &gt; 0)
+        {
+          if (prop.GetIndexParameters().Length &gt; 0)
+            throw new InvalidOperationException(&#34;Indexed properties cannot be injected.&#34;);
+
+          prop.SetValue(e.Instance, e.Context.Resolve(prop.PropertyType), null);
+        }
+      }
+    };
+  }
+}
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+public class InjectedAttribute : Attribute { }
+&lt;/pre&gt;
+And that&#39;s it!  Pretty basic reflection here stuff here, but as you can see...iterate through all fields and properties (including privates), and try to resolve them.
+
+Now, you can just RegisterModule(new MemberInjectionModule()), and inside your services you simply annotate your properties/fields with the [Injected] attribute, like so:
+&lt;pre&gt;
+public class SomeService : ISomeService
+{
+  [Injected]
+  protected ISomeOtherService SomeOtherService { get; set; }
+}
+&lt;/pre&gt;
+And now, it&#39;s a very clear cut way of explicitly defining which properties (and fields) should be injected.  Also, it&#39;s also a simple string property away defined in the attribute if you want to specify a named service, which I&#39;ll leave the the reader to implement :)&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Session management with NHibernate and Autofac: Corollary</title>
+      <link>http://bling.github.io/blog/2009/08/21/session-management-with-nhibernate-and-autofac-2/</link>
+      <pubDate>Fri, 21 Aug 2009 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2009/08/21/session-management-with-nhibernate-and-autofac-2/</guid>
+      <description>&lt;div class=&#39;post&#39;&gt;
+Ooops, I forgot to mention that it&#39;s easily mockable as well.
+&lt;pre&gt;
+public class UserService : IUserService {
+  public UserService(ISessionFactory factory, UsersRepositoryFactory usersFactory) { ... }
+}
+&lt;/pre&gt;
+So that&#39;s the basic thing right.  So now, with &lt;a href=&#34;http://code.google.com/p/moq/&#34;&gt;Moq&lt;/a&gt;, we can do this:
+&lt;pre&gt;
+var mockUserRepo = new Mock&amp;lt;IUsersRepository&amp;gt;();
+mockUserRepo.Setup(x =&amp;gt; x.GetUser(It.IsAny&amp;lt;string&amp;gt;())).Returns(() =&amp;gt; someUser);
+
+var userService = new UserService(..., x =&gt; mockUserRepo.Object);
+&lt;/pre&gt;
+So what I&#39;ve basically done is insert a lambda expression into the constructor, which is the delegate, which always returns my mock repository.  Pretty nifty methinks!&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Session management with NHibernate and Autofac</title>
+      <link>http://bling.github.io/blog/2009/08/20/session-management-with-nhibernate-and-autofac-1/</link>
+      <pubDate>Thu, 20 Aug 2009 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2009/08/20/session-management-with-nhibernate-and-autofac-1/</guid>
+      <description>&lt;div class=&#39;post&#39;&gt;
+NHibernate is a beast let me tell you!  I think I already mentioned this in the previous post, but NHibernate definitely has a VERY high learning curve.  If it wasn&#39;t for FluentNHibernate I&#39;d probably still be struggling with XML mapping files right now.&lt;br /&gt;
+&lt;br /&gt;
+But anywho, it didn&#39;t take long for me to run into very many problems with NHibernate.  It&#39;s not really NHibernate&#39;s fault, but more of maybe I&#39;m trying to use the wrong tool for the job.&lt;br /&gt;
+&lt;br /&gt;
+I&#39;m using DDD for my project, and there&#39;s a clear separation between the client and the domain.  I got lazy and I didn&#39;t make any DTOs for my entities, and just used the [DataContract] and [DataMember] to have WCF automatically generated &#34;DTO&#34;s for me (and in the options turn OFF reusing assemblies).&lt;br /&gt;
+&lt;br /&gt;
+(Disclaimer:  I am *not* by any means knowledgeable about NHibernate, but maybe, just maybe what I say here might point other people in the right direction)&lt;br /&gt;
+&lt;br /&gt;
+OK, all is good.  I can store my entities in the database, I can read them back.  So I fire up my client and read some users, and it blows up.  NHibernate by default lazy loads everything.  Here&#39;s what I originally had in my UsersRepository&lt;br /&gt;
+&lt;pre&gt;public IEnumerable&amp;lt;User&amp;gt; GetAll() {
+using (var session = _factory.OpenSession())
+return session.CreateCriteria&amp;lt;User&amp;gt;().List&amp;lt;User&amp;gt;();
+}
+&lt;/pre&gt;&lt;br /&gt;
+It looks pretty innocent.  But it blows up.  Why?  If Users has a collection of other entities (which mine did), they are &lt;span style=&#34;font-weight: bold;&#34;&gt;not&lt;/span&gt; loaded with the above code.  They are loaded on-demand, i.e. lazy loaded.  So when my WCF service finally returns the objects and serializes them, it pukes and throws an exception because the session was long closed already.&lt;br /&gt;
+&lt;br /&gt;
+Easy solution was to Not.LazyLoad() all my collections.  Now here&#39;s what I&#39;m thinking I might not be using the right tool for the job because I am purposely disabling one of the key features of NHibernate.  By default, caching is always enabled, and I couldn&#39;t find anywhere how to globally turn it off.  You must go class by class.&lt;br /&gt;
+&lt;br /&gt;
+OK, so on to my next problem.  I soon ran into issues with entities not being unique.  I would have code like this in my UserService:&lt;br /&gt;
+&lt;pre&gt;public void AddProduct(string username, Guid productId) {
+var user = _usersRepository.GetUser(username);
+var product = _productRepository.GetProduct(productId);
+user.Products.Add(product);
+_usersRepository.Store(user);
+}
+&lt;/pre&gt;&lt;br /&gt;
+Again, this puked.  The problem here was after my GetUser call, inside my repository, like my first example, I had a using(session), which closed when the method ended.  Shortly after, I am trying to update the same user, but with a *different* session.  NHibernate doesn&#39;t like this, an NHibernate.NonUniqueObjectException is thrown, and I had a new problem to deal with.&lt;br /&gt;
+&lt;br /&gt;
+It became clear I had to actively manage the sessions somehow, and the best place would be to have them in my services, which typically each method had a &#34;unit of work&#34; placed on them.&lt;br /&gt;
+&lt;br /&gt;
+So the goal I wanted to accomplish was to initiate a new session at the beginning of a service method, call a repository multiple times, close the session, and then exit the method.&lt;br /&gt;
+&lt;br /&gt;
+So how can we achieve that?&lt;br /&gt;
+&lt;br /&gt;
+I thought of a couple things, and the first thing I did actually was to use AOP style and use Autofac with Castle.DynamicProxy.  I created an interceptor for my service, and before invocation I opened a session, then manually called a property setter for a CurrentSession, and after invocation close the session.&lt;br /&gt;
+&lt;br /&gt;
+It did the job, but had some problems:&lt;br /&gt;
+a) It did a little too much black magic for me.  All methods got intercepted.&lt;br /&gt;
+b) I still had to manually set the CurrentSession property of my repositories.  Sooner or later I&#39;m sure to run in the threading problems.&lt;br /&gt;
+&lt;br /&gt;
+After I got that half working I scrapped it and tried to come up with something better.  This is what I came up with:&lt;br /&gt;
+&lt;pre&gt;public delegate IUsersRepository UsersRepositoryFactory(ISession session);
+
+public class UserService : IUserService {
+public UserService(ISessionFactory factory, UsersRepositoryFactory usersFactory) { ... }
+}
+
+public class UsersRepository : IUsersRepository {
+public UsersRepository(ISession session) { ... }
+}
+&lt;/pre&gt;&lt;br /&gt;
+Now, when I call a method on my UserService, I do this:&lt;br /&gt;
+&lt;pre&gt;public void AddProduct(string username, Guid productId) {
+using (var session = _factory.OpenSession()) {
+var userRepo = _userRepoFactory(session);
+var productRepo = _productFactory(session);
+...
+}
+}
+&lt;/pre&gt;&lt;br /&gt;
+And, of course, the Autofac code:&lt;br /&gt;
+&lt;pre&gt;b.Register&amp;lt;UsersRepository&amp;gt;().As&amp;lt;IUsersRepository&amp;gt;().FactoryScoped();
+b.RegisterGeneratedFactory&amp;lt;UsersRepositoryFactory&amp;gt;();
+&lt;/pre&gt;&lt;br /&gt;
+More details on the delegate factory &lt;a href=&#34;http://code.google.com/p/autofac/wiki/DelegateFactories&#34;&gt;here&lt;/a&gt;.  But basically, with Autofac I have told it to inject delegates into my UserService, and those delegates can create new instances of my user repository by passing in the current session.&lt;br /&gt;
+&lt;br /&gt;
+You&#39;ll also notice I had a products repository as well.  With these delegate factories I can create up multiple repositories on the fly with the same session (and all the good NHibernate stuff that comes with that).&lt;br /&gt;
+&lt;br /&gt;
+Sure, there&#39;s a whole bunch of using(var session) boilerplate now, but it&#39;s explicit, clear, and allows for a lot of fine-grained control.&lt;br /&gt;
+&lt;br /&gt;
+EDIT: I have since dropped this approach and I&#39;m currently injecting ISessions into my constructors by using Autofac&#39;s container-scope (something that took me a while to understand).&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

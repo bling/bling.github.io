@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Emacs on bling on software</title>
+    <link>http://bling.github.io/categories/emacs/</link>
+    <description>Recent content in Emacs on bling on software</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 06 Jan 2015 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://bling.github.io/categories/emacs/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Emacs As My &lt;Leader&gt; 1 Year Later</title>
+      <link>http://bling.github.io/blog/2015/01/06/emacs-as-my-leader-1-year-later/</link>
+      <pubDate>Tue, 06 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2015/01/06/emacs-as-my-leader-1-year-later/</guid>
+      <description>
+
+&lt;p&gt;Last year, I wrote a &lt;a href=&#34;http://bling.github.io/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide&#34;&gt;Vim Survival Guide&lt;/a&gt; for a Vim user switching to Emacs.  In that blog post I wrote:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;My Emacs setup right now is still not as efficient as my vim/tmux/zsh setup.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;I got an email from someone a couple days ago asking whether that&amp;rsquo;s still true.  Rather than replying to him directly, I figured I should blog about it since it would make for an interesting topic.&lt;/p&gt;
+
+&lt;p&gt;Well, it started out pretty simple.  I used Vim as my text editor, and after switching, I continued using Emacs as my text editor as well.  But as you already know, Emacs is much more than that, and slowly over time, unexpectedly, it took over other parts of my workflow that I thought were untouchable.&lt;/p&gt;
+
+&lt;h1 id=&#34;victim-1-the-terminal:1e749a88314d0c8274107a81cde84d26&#34;&gt;Victim 1, The Terminal&lt;/h1&gt;
+
+&lt;p&gt;One of those untouchable things was the terminal.  Vim is at its best when paired with a competent terminal environment, which typically means zsh and tmux.  What is often left out in that recommendation is that it also implies a UNIX operating system.  Well, sometimes that&amp;rsquo;s not an option, and in my case, I had to make do with the Windows machine sitting in front me.&lt;/p&gt;
+
+&lt;p&gt;Getting UNIX on Windows is a lot easier these days.  Installing Git alone will get you a decent minimal shell, and projects like &lt;a href=&#34;http://babun.github.io/&#34;&gt;Babun&lt;/a&gt; will get you a preconfigured Cygwin environment up in no time.  As great as these options are, you&amp;rsquo;ll always be a second class citizen compared to a real UNIX machine, and you will suffer the emulation performance costs or the odd compatibility problems here and there when switching between Cygwin and native Windows binaries.&lt;/p&gt;
+
+&lt;p&gt;Rather than doing all of that, and since I was already using Emacs, I tried &lt;code&gt;eshell&lt;/code&gt; out for a change &amp;ndash; what was supposed to be temporary, became permanent.  eshell is surprisingly good.  Granted, this was likely only possible because I was a basic terminal user &amp;ndash; my zshrc was no where near as complicated as my vimrc or my init.el.  I also wrote quite a few Emacs Lisp functions by now, which meant that my Emacs Lisp scripting prowess was much better than my non-existent Bash scripting, making eshell even better based on my capabilities.&lt;/p&gt;
+
+&lt;p&gt;An expected surprise was that eshell reimplements most of UNIX &amp;ndash; &lt;code&gt;ls&lt;/code&gt; is Emacs Lisp function, so is &lt;code&gt;grep&lt;/code&gt; and a slue of other UNIX commands.
+Some of you may think that this is NIH syndrome, but guess what?  With eshell as my main shell, I can use Windows, OSX, and Linux interchangeably with the same configuration and same key bindings.  The integration of eshell with other Emacs features is also much more seamless.  &lt;code&gt;grep&lt;/code&gt;ing for text will put the results into a new buffer, of which I can search to narrow down further, and also opening the files at the matching line numbers.&lt;/p&gt;
+
+&lt;p&gt;Before I discovered Babun, I&amp;rsquo;d joke that the easiest way to get UNIX onto a Windows machine was to extract the Emacs zip file and run the exe.&lt;/p&gt;
+
+&lt;h1 id=&#34;victim-2-tmux:1e749a88314d0c8274107a81cde84d26&#34;&gt;Victim 2, tmux&lt;/h1&gt;
+
+&lt;p&gt;tmux ups your game by allowing you to manage multiple screens at a time.  Most terminal users probably get by this by using tabs in their terminal &amp;ndash; I used iTerm for the longest time on OSX, and still do.  However, using tmux does free you up from OS lock in.  tmux exists on Cygwin for Windows, but the last time I tried it, around of Summer 2014, it had bugs and would segfault, so I had to use screen instead.&lt;/p&gt;
+
+&lt;p&gt;Managing multiple windows in Emacs is one of its natural strengths, so replacing tmux didn&amp;rsquo;t take much thought or training.&lt;/p&gt;
+
+&lt;h1 id=&#34;victim-3-background-processes:1e749a88314d0c8274107a81cde84d26&#34;&gt;Victim 3, Background Processes&lt;/h1&gt;
+
+&lt;p&gt;With the terminal and multiple screens taken care of, the next step was figuring out how I would run my development servers.  I do a lot of Web and Java development these days, which means spinning up &lt;code&gt;node&lt;/code&gt; for watching/bundling the client and running &lt;code&gt;java&lt;/code&gt; processes for the backend.  In the past, I would use dedicated iTerm tabs for each process (or &lt;a href=&#34;https://code.google.com/p/conemu-maximus5/&#34;&gt;ConEmu&lt;/a&gt; tabs in Windows).  It worked just fine, but having these run in Emacs gives some neat advantages.&lt;/p&gt;
+
+&lt;p&gt;Any output is piped directly into a buffer.  And that buffer acts the same as any other buffer, which means you can search, jump around, yank, cut (if read-only mode is off), etc.  You can navigate to and from it just like any other file buffer you have open, and even cool things like defining your own syntax highlighting so that anything that matches &lt;code&gt;[ERROR]&lt;/code&gt; comes out bright bold red.&lt;/p&gt;
+
+&lt;p&gt;Part of development also means killing and spinning up these processes periodically.  In the past, I would Alt-Tab, mouse around, C-c, up, enter, etc.  Now, I have it automated with an elisp function bound to a key.&lt;/p&gt;
+
+&lt;h1 id=&#34;victom-4-intellij:1e749a88314d0c8274107a81cde84d26&#34;&gt;Victom 4, IntelliJ&lt;/h1&gt;
+
+&lt;p&gt;Just kidding!  IntelliJ for Java is untouchable.  I tried the various options available to Emacs but none of them can hold a candle against IntelliJ.&lt;/p&gt;
+
+&lt;h1 id=&#34;victim-5-me:1e749a88314d0c8274107a81cde84d26&#34;&gt;Victim 5, Me&lt;/h1&gt;
+
+&lt;p&gt;When I was a Vim user, what annoyed me the most was not being able to use my muscle memory outside of Vim.  I lost so many chat messages by prematurely hitting &lt;code&gt;Escape&lt;/code&gt; that I had to write a &lt;a href=&#34;http://www.autohotkey.com/&#34;&gt;AutoHotKey&lt;/a&gt; script that would disable the key when those windows are open.&lt;/p&gt;
+
+&lt;p&gt;As an Emacs user, I was going to say that I want everything to be running inside Emacs.  And while that&amp;rsquo;s somewhat true, if I had to pick only one thing, it would have to be &lt;code&gt;eval-last-sexp&lt;/code&gt;.  The ability to not only tweak every little detail of your editor, but to do it while it is running is very intoxicating.&lt;/p&gt;
+
+&lt;p&gt;When I did web development in the past with Vim, I would make changes, wait for live reload to kick in, and verify my changes in the browser.  This was not slow by any means &amp;ndash; it happened in about 1-2 seconds.  After switching to Emacs, all of a sudden this was intolerable &amp;ndash; it was too slow!  I wanted instant gratification!  These days I jack into my browser with &lt;a href=&#34;https://github.com/skeeto/skewer-mode&#34;&gt;skewer-mode&lt;/a&gt; and evaluate changes directly into the browser.&lt;/p&gt;
+
+&lt;p&gt;Am I doing anything that you cannot do in Vim?  Nope.  &lt;a href=&#34;https://github.com/jaxbot/browserlink.vim&#34;&gt;browserlink.vim&lt;/a&gt; will get you the same experience.  But I think because both editors start from differing philosophies, doing it in Emacs feels natural, whereas doing it in Vim feels forced.&lt;/p&gt;
+
+&lt;h1 id=&#34;turning-evil-mode-off:1e749a88314d0c8274107a81cde84d26&#34;&gt;Turning evil-mode off!&lt;/h1&gt;
+
+&lt;p&gt;When I first started, I did what most people trying &lt;a href=&#34;https://gitorious.org/evil/evil&#34;&gt;evil-mode&lt;/a&gt; probably do &amp;ndash; I enabled it globally.  Unfortunately, over time this proved to me problematic for me because I developed the expectation that &lt;em&gt;everything&lt;/em&gt; should have Vim bindings, which was far from reality.  evil-mode comes with integration for some packages out of the box, but you&amp;rsquo;re bound to hit some package which is not supported.  You are left with 3 choices: 1) get repeatedly frustrated as you hit the wrong keys, 2) configure the keymap to have Vim bindings, or 3) suck it up and use Emacs bindings.&lt;/p&gt;
+
+&lt;p&gt;But then I realized, despite my desire for modal editing, that is a &lt;em&gt;learned&lt;/em&gt; obsession.  I didn&amp;rsquo;t start with Vim, I started with Notepad.&lt;/p&gt;
+
+&lt;p&gt;With that realization, I turned evil-mode off by default.  When I edit text, I turn it on.  For everything else, I use Emacs bindings.  With my expectations aligned, I don&amp;rsquo;t get frustrated anymore.&lt;/p&gt;
+
+&lt;h1 id=&#34;after-a-year-am-i-more-efficient:1e749a88314d0c8274107a81cde84d26&#34;&gt;After a year, am I more efficient?&lt;/h1&gt;
+
+&lt;p&gt;Without a doubt, yes!&lt;/p&gt;
+
+&lt;p&gt;As far as editing text is concerned, in my mind evil-mode is, for all practical purposes, on par with Vim.  There might be some obscure feature that hasn&amp;rsquo;t been emulated yet, but in my experience that is usually because a) the feature is so rarely used that it&amp;rsquo;s a waste of time to implement, or b) there is a better, native Emacs alternative.&lt;/p&gt;
+
+&lt;p&gt;A year ago, the biggest deficiency for me was the lack of a jump list which spread across buffer boundaries.  Well, rather than waiting for it to be implemented by someone else, I did it myself, and thus &lt;a href=&#34;https://github.com/bling/evil-jumper&#34;&gt;evil-jumper&lt;/a&gt; was born.&lt;/p&gt;
+
+&lt;p&gt;Fuzzy matching was another biggie for me.  Thanks to all the hard work recently from the maintainers of &lt;a href=&#34;https://github.com/emacs-helm/helm&#34;&gt;helm&lt;/a&gt;, I don&amp;rsquo;t have to be envious anymore.  Helm literally went from one of my least used packages to most used over night &amp;ndash; prior to this I relied on ido+smex.  &lt;a href=&#34;https://github.com/auto-complete/auto-complete&#34;&gt;auto-complete&lt;/a&gt; and &lt;a href=&#34;https://github.com/company-mode/company-mode&#34;&gt;company-mode&lt;/a&gt; aren&amp;rsquo;t there yet, but I suspect it won&amp;rsquo;t be too much longer for them to support it.  As of now, if you truly desire fuzzy auto completion as-you-type, it can be achieved through &lt;a href=&#34;https://github.com/abingham/emacs-ycmd&#34;&gt;emacs-ycmd&lt;/a&gt;, although setup is more involved as it requires compiling a daemon process.&lt;/p&gt;
+
+&lt;p&gt;While I&amp;rsquo;m mentioning packages, &lt;a href=&#34;https://github.com/bbatsov/projectile&#34;&gt;projectile&lt;/a&gt; is a must-have for any Emacs user.&lt;/p&gt;
+
+&lt;h1 id=&#34;considering-the-switch:1e749a88314d0c8274107a81cde84d26&#34;&gt;Considering the switch?&lt;/h1&gt;
+
+&lt;p&gt;Over the past year there have been a lot more threads lately in &lt;a href=&#34;http://www.reddit.com/r/emacs&#34;&gt;/r/emacs&lt;/a&gt; from curious Vim users.  A general theme I&amp;rsquo;ve observed is that people want to make Emacs act exactly like how they had their Vim set up.  If you&amp;rsquo;re considering the switch, empty your mind.  Trying to get Emacs to behave exactly like Vim will hinder your growth and you&amp;rsquo;ll probably give up with frustration before ever realising Emacs&amp;rsquo; full potential.  Remember, there are tons of highly productive Emacs users who do not use Vim or evil-mode &amp;ndash; it&amp;rsquo;s up to you to find out what tricks are up their sleeve&amp;hellip;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Asynchronous Eval in Emacs with Stylus and Skewer</title>
+      <link>http://bling.github.io/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/</link>
+      <pubDate>Tue, 21 Jan 2014 16:41:16 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/</guid>
+      <description>
+
+&lt;p&gt;You haven&amp;rsquo;t experienced Emacs if you haven&amp;rsquo;t experienced the power of &lt;code&gt;C-x C-e&lt;/code&gt;.  This is the magical keybinding which evalulates the current line.  Another useful companion is &lt;code&gt;C-M-x&lt;/code&gt;, which evaluates the current function.&lt;/p&gt;
+
+&lt;p&gt;Lisp dialects naturally work with these patterns seamlessly, and once I figured out the possibilities of this I got addicted and wanted it available in &lt;em&gt;all&lt;/em&gt; of my languages.  It&amp;rsquo;s like having a debugger available all the time.  But unlike debuggers where you inspect and change variables at run time, and then need to translate your changes back to code, in Lisp you just edit the code directly and eval (and repeat until you like the result).&lt;/p&gt;
+
+&lt;h1 id=&#34;adapting-the-pattern-to-stylus:6219f9e2c0ad4a4dcda9b93b8ed614eb&#34;&gt;Adapting the Pattern to Stylus&lt;/h1&gt;
+
+&lt;p&gt;Anyone doing serious web development will not be writing CSS directly.  There are many compelling alternatives; the 3 most popular being SASS/Compass, LESS, and Stylus.  On my current project I&amp;rsquo;m using Stylus, so I adapted this workflow to it.&lt;/p&gt;
+
+&lt;p&gt;First, let&amp;rsquo;s start with &lt;a href=&#34;https://github.com/skeeto/skewer-mode&#34;&gt;skewer-mode&lt;/a&gt;.  This minor mode lets you connect to a real browser and evaluate to it.  It can evaluate Javascript or CSS on the fly.  It even has a bookmarklet script that allows you to evaluate arbitrary code against &lt;em&gt;any&lt;/em&gt; website.  Yes, that is amazing!&lt;/p&gt;
+
+&lt;p&gt;However, it only supports CSS&amp;hellip;so how am I going to use my beloved eval against Stylus code?&lt;/p&gt;
+
+&lt;h1 id=&#34;the-first-attempt:6219f9e2c0ad4a4dcda9b93b8ed614eb&#34;&gt;The First Attempt&lt;/h1&gt;
+
+&lt;p&gt;The first thing I did was do the simplest thing &amp;ndash; convert Stylus to CSS and show it in a temporary buffer.  This turned out to be pretty straightforward.  I came up with the following code snippet:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-cl&#34; data-lang=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;stylus-compile-and-show-region&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;start&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;end&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;interactive&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;r&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;call-process-region&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;start&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;end&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;stylus&amp;quot;&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;nil&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;get-buffer-create&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;*Stylus*&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;display-buffer&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;*Stylus*&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;with-current-buffer&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;*Stylus*&amp;quot;&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;css-mode&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Easy!  It creates an interactive command which takes in a region, then calls out to the external &lt;code&gt;stylus&lt;/code&gt; command and puts the output into a buffer named &lt;code&gt;*Stylus*&lt;/code&gt;, and finally shows it and enables &lt;code&gt;css-mode&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now, I just switch to that buffer and &lt;code&gt;C-x C-e&lt;/code&gt; to my heart&amp;rsquo;s content!  But there was a problem here&amp;hellip;.Anything I change in the CSS buffer I would have to translate it back to Stylus, which was very annoying, and I might as well do it in the browser directly with Dev Tools if I&amp;rsquo;m going to do that.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s fix that.&lt;/p&gt;
+
+&lt;h1 id=&#34;evaluating-stylus-directly:6219f9e2c0ad4a4dcda9b93b8ed614eb&#34;&gt;Evaluating Stylus Directly&lt;/h1&gt;
+
+&lt;p&gt;First things first, I realized that I don&amp;rsquo;t need to show a buffer to interact with it.  So evaluating from Stylus directly actually involved replacing one line of code.  Instead of &lt;code&gt;(display-buffer)&lt;/code&gt;, I put in &lt;code&gt;(skewer-css-eval-buffer)&lt;/code&gt;, and viola!!  Now I can eval any Stylus code and have it appear in the browser!&lt;/p&gt;
+
+&lt;p&gt;For brevity I&amp;rsquo;ve excluded other necessary code like emptying the buffer before compiling Stylus, but you get the idea.&lt;/p&gt;
+
+&lt;p&gt;But, there was one last itch I still needed to scratch&amp;hellip;&lt;/p&gt;
+
+&lt;h1 id=&#34;it-was-blocking:6219f9e2c0ad4a4dcda9b93b8ed614eb&#34;&gt;It was blocking!&lt;/h1&gt;
+
+&lt;p&gt;All things considered, blocking the UI for 1 second isn&amp;rsquo;t the end of the world.  But it was enough of an annoyance that I felt compelled to fix it!&lt;/p&gt;
+
+&lt;p&gt;And with that, I started reading the documentation.  I wish Emacs would provide a categorzied listing of all functions (instead of the &lt;a href=&#34;http://www.gnu.org/software/emacs/manual/html_node/elisp/Index.html#Index&#34;&gt;alphabetical listing&lt;/a&gt;), because finding what I needed took longer than expected (if you know of such a listing please let me know).&lt;/p&gt;
+
+&lt;p&gt;I eventually stumbled across &lt;code&gt;start-process&lt;/code&gt;, which lets you control asynchronous processes.  Digging through the documentation further, I was able to find &lt;code&gt;set-process-sentinel&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;And with that, the following snippet was born:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-cl&#34; data-lang=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;stylus-eval-region-async&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;begin&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;end&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;let&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;process&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;start-process&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;stylus&amp;quot;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;*Stylus*&amp;quot;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;stylus&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;set-process-sentinel&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;process&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;stylus-process-sentinel&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;process-send-region&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;process&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;begin&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;end&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;process-send-eof&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;process&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
+
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;stylus-process-sentinel&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;process&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;event&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;when&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;equal&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;event&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;finished\n&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;with-current-buffer&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;*Stylus*&amp;quot;&lt;/span&gt;
+      &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;css-mode&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+      &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;skewer-css-eval-buffer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Basically, what&amp;rsquo;s happening here is that I&amp;rsquo;m starting an asynchronous process which writes all output into the &lt;code&gt;*Stylus*&lt;/code&gt; buffer.  I send the region as input into the process, and finally, when the process terminates, which is detected by the sentinel function, it evaluates the buffer.&lt;/p&gt;
+
+&lt;p&gt;And now I can eval to my heart&amp;rsquo;s content without blocking!&lt;/p&gt;
+
+&lt;p&gt;The full source code (with emptying buffers and other housekeeping) can be found in my &lt;a href=&#34;https://github.com/bling/dotemacs/blob/master/config/init-stylus.el&#34;&gt;dotemacs&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you haven&amp;rsquo;t already noticed, this is not specific to Stylus and will work with any program which works with stdin/stdout!  Enjoy.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Emacs as my &lt;Leader&gt; Vim Survival Guide</title>
+      <link>http://bling.github.io/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/</link>
+      <pubDate>Sun, 27 Oct 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/</guid>
+      <description>
+
+&lt;p&gt;Two months ago I blogged about switching from Vim to Emacs.  Today, Emacs is my main editor.  I&amp;rsquo;ll try to keep this post short and to the point, because there is &lt;em&gt;a lot&lt;/em&gt; to cover!  But by the end of this post you&amp;rsquo;ll have to answer to the question whether you should give Emacs a try.&lt;/p&gt;
+
+&lt;h1 id=&#34;what-is-a-text-editor:1dfbe80e979aabf9b2dd7cd9b5de696e&#34;&gt;What is a text editor?&lt;/h1&gt;
+
+&lt;p&gt;If we&amp;rsquo;re just talking about using Emacs as a text editor, then there is no comparison; Vim beats it, period.  But is our job description a text editor?  No.  We are system administrators, software developers, web designers, etc.  A text editor is a tool that we use to do our job (or hobby).  And any tool should be replaced when a better option is available.&lt;/p&gt;
+
+&lt;p&gt;One simple example is &lt;code&gt;grep&lt;/code&gt;.  As a developer, you can immediately gain a productivity boost by replacing it with &lt;a href=&#34;http://beyondgrep.com/&#34;&gt;ack&lt;/a&gt; or &lt;a href=&#34;https://github.com/ggreer/the_silver_searcher&#34;&gt;ag&lt;/a&gt;.  Do they search faster than &lt;code&gt;grep&lt;/code&gt;?  No.  But since they&amp;rsquo;re so good at ignoring things (like your &lt;code&gt;.git&lt;/code&gt; directory) that for practical purposes they end up saving you a lot of time.&lt;/p&gt;
+
+&lt;p&gt;As a text editor, I think Emacs is quite terrible.  Its key bindings are notoriously bad to the point that something called Emacs pinky exists.  If you&amp;rsquo;re an Emacs user not interested in Vim bindings you should seriously consider taking a look at &lt;a href=&#34;https://github.com/chrisdone/god-mode&#34;&gt;god-mode&lt;/a&gt; or &lt;a href=&#34;https://github.com/stephendavidmarsh/control-mode&#34;&gt;control-mode&lt;/a&gt;.  But where Emacs really excels is all of the things outside of text editing.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Emacs is a great operating system, if only it had a good text editor.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Well, the nice thing about an operating system is that you can write a text editor for it; that text editor is called &lt;a href=&#34;https://gitorious.org/evil/evil&#34;&gt;evil-mode&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now, as a text editor, Vim is still better than evil-mode for obvious reasons, so if you&amp;rsquo;re just swapping it out you&amp;rsquo;re at a net loss of productivity in terms of text editing.  However, what you &lt;em&gt;gain&lt;/em&gt; from all of the other things that Emacs can do far outweighs the missing features.&lt;/p&gt;
+
+&lt;h1 id=&#34;enough-talk-give-me-real-life-examples:1dfbe80e979aabf9b2dd7cd9b5de696e&#34;&gt;Enough talk, give me real life examples!&lt;/h1&gt;
+
+&lt;p&gt;There are a couple immediate advantages that Emacs has that Vim users have been requesting for a long time.  First, is asynchronous operations.  Second, is integration with background processes.  And third, multiple-monitor support.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s a quick video illustrating the difference:&lt;/p&gt;
+
+&lt;iframe width=&#34;420&#34; height=&#34;315&#34; src=&#34;//www.youtube.com/embed/I6pvC3_zeP4&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;p&gt;In the video, &lt;a href=&#34;https://github.com/flycheck/flycheck&#34;&gt;flycheck&lt;/a&gt;, &lt;a href=&#34;https://github.com/scrooloose/syntastic&#34;&gt;syntastic&lt;/a&gt;, &lt;a href=&#34;https://github.com/tpope/vim-dispatch&#34;&gt;vim-dispatch&lt;/a&gt;, &lt;a href=&#34;https://github.com/mileszs/ack.vim&#34;&gt;ack.vim&lt;/a&gt; and &lt;a href=&#34;https://github.com/Wilfred/ag.el&#34;&gt;ag.el&lt;/a&gt; are used.&lt;/p&gt;
+
+&lt;h1 id=&#34;zero-to-hero:1dfbe80e979aabf9b2dd7cd9b5de696e&#34;&gt;Zero to hero&lt;/h1&gt;
+
+&lt;p&gt;OK, I&amp;rsquo;ve caught your interest.  And now you want to use Emacs and be at the same efficiency as your Vim setup.  I&amp;rsquo;ll be frank with you.  My Emacs setup right now is &lt;em&gt;still&lt;/em&gt; not as efficient as my vim/tmux/zsh setup.  But I believe with enough time and tweaking I will eventually cross over, hence why I am sticking with it. But to get you started on the right track, here are steps to take.&lt;/p&gt;
+
+&lt;h2 id=&#34;step-0-install-evil-mode:1dfbe80e979aabf9b2dd7cd9b5de696e&#34;&gt;Step 0: Install evil-mode&lt;/h2&gt;
+
+&lt;p&gt;This is a given, but I figured I&amp;rsquo;d mention it.  This is the magical package which gives you Vim bindings.&lt;/p&gt;
+
+&lt;p&gt;Remember though that evil-mode is an &lt;em&gt;emulation&lt;/em&gt; of Vim; it is &lt;em&gt;not&lt;/em&gt; Vim!  For example, you might try &lt;code&gt;cas&lt;/code&gt; and conclude that evil-mode is broken because it is changing a paragraph instead of a sentence.  That is, of course, until you realize that Emacs also has a notion of what a sentence is, and that the default value of &lt;code&gt;sentence-end-double-space&lt;/code&gt; is true.  Long story short, evil-mode will use Emacs functionality where it makes sense, so if something is not working as expected there is usually a good reason for it.&lt;/p&gt;
+
+&lt;h2 id=&#34;step-1-resist-the-urge-to-google-it-initially:1dfbe80e979aabf9b2dd7cd9b5de696e&#34;&gt;Step 1: Resist the urge to Google it&amp;hellip;initially&lt;/h2&gt;
+
+&lt;p&gt;I wasted a lot of time doing the thing most people do first: Google it.  The problem here is that you will find EmacsWiki.  The second problem is that EmacsWiki will contain &lt;em&gt;a lot&lt;/em&gt; of information, giving you the illusion that it is useful.  The third problem is that you will not know what it old and outdated, old and still useful, or new and useless.  Emacs has been around since 1976, so there is a lot of history go through.&lt;/p&gt;
+
+&lt;p&gt;What you actually want to do is read the &lt;a href=&#34;http://www.gnu.org/software/emacs/manual/&#34;&gt;Emacs Manual&lt;/a&gt;.  And you should also read &lt;a href=&#34;http://www.gnu.org/software/emacs/manual/eintr.html&#34;&gt;Introduction to Programming Emacs Lisp&lt;/a&gt;.  If you are not going to learn how to program in Emacs Lisp, you should just stop now because you&amp;rsquo;re severely limiting the potential of Emacs.&lt;/p&gt;
+
+&lt;h2 id=&#34;step-2-prepare-for-a-world-of-hurt-h-h-h-hlearning:1dfbe80e979aabf9b2dd7cd9b5de696e&#34;&gt;Step 2: Prepare for a world of hurt\^H\^H\^H\^Hlearning&lt;/h2&gt;
+
+&lt;p&gt;Vim is difficult to learn because you&amp;rsquo;re learning a new language on how to interact with text.  Emacs, however, is difficult to learn because there is &lt;em&gt;so much&lt;/em&gt; to learn.  The &lt;em&gt;default&lt;/em&gt; distribution includes a email client, IRC client, file explorer, shell, and even tetris.  You will literally be learning a new operating system.  And operating systems have many applications; Emacs is no different.  You can choose to learn only one application, the text editor, but if you do that you might as well just stick with Vim.&lt;/p&gt;
+
+&lt;h2 id=&#34;step-3-learn-how-to-help-the-help:1dfbe80e979aabf9b2dd7cd9b5de696e&#34;&gt;Step 3: Learn how to help the help&lt;/h2&gt;
+
+&lt;p&gt;In Emacs, the prefix key for help is &lt;code&gt;C-h&lt;/code&gt;.  What this means is you hit &lt;code&gt;C-h&lt;/code&gt;, followed by another key to invoke help on something.  Typing &lt;code&gt;C-h C-h&lt;/code&gt; will give you the full list of possibilities.  When I first started, I found I used &lt;code&gt;f&lt;/code&gt;unction and &lt;code&gt;v&lt;/code&gt;ariable a lot.  In Emacs, &lt;em&gt;everything&lt;/em&gt; is a function (this is Lisp after all), so you can find out a lot about Emacs by reading the descriptions of functions.&lt;/p&gt;
+
+&lt;h2 id=&#34;step-4-understanding-key-bindings:1dfbe80e979aabf9b2dd7cd9b5de696e&#34;&gt;Step 4: Understanding key bindings&lt;/h2&gt;
+
+&lt;p&gt;It&amp;rsquo;s probably way too early to talk about this, but I feel this is a great way that describes the fundamental differences between customizing Vim vs customizing Emacs.&lt;/p&gt;
+
+&lt;p&gt;First, let&amp;rsquo;s take an extremely common customization in Vim, where the cursor is centered after jumping to the next match:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-vim&#34; data-lang=&#34;vim&#34;&gt;&lt;span class=&#34;nb&#34;&gt;nnoremap&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;n&lt;/span&gt; nzz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Emacs does not have a notion of recursive vs non-recursive bindings, so it cannot be configured in the same fashion as Vim (doing it with key bindings would require you to define a throw away key binding in the middle).  However, the way you do it in Emacs is ultimately way more powerful and flexible.  One option is to do it like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-cl&#34; data-lang=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defadvice&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;evil-ex-search-next&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;after&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;advice-for-evil-ex-search-next&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;activate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;evil-scroll-line-to-center&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;line-number-at-pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;An advice lets you add behavior to an existing function without modifying it.  By default &lt;code&gt;n&lt;/code&gt; is bound to the command &lt;code&gt;evil-ex-search-next&lt;/code&gt;, so what we&amp;rsquo;re doing here is giving it some advice, such that &lt;em&gt;after&lt;/em&gt; the command is run, we center the line.  I&amp;rsquo;m a huge advocate of aspect oriented programming so when I found that this was built into Lisp I was jumping with joy.&lt;/p&gt;
+
+&lt;p&gt;Another option is you could bind &lt;code&gt;n&lt;/code&gt; to a wrapper function which calls these two commands directly.&lt;/p&gt;
+
+&lt;p&gt;While any path you take will be incredibly verbose in comparison to how Vim does it, there are a couple key take aways from this example.  One; every key is bound to a function (called a command in Emacs lingo).  Two; every function can be redefined entirely, or attached advice before, after, or around it.  Three; almost 80% of Emacs is written in Emacs Lisp.  This is where the &amp;ldquo;infinitely extensible&amp;rdquo; reputation comes from.&lt;/p&gt;
+
+&lt;h2 id=&#34;step-5-understanding-major-and-minor-modes:1dfbe80e979aabf9b2dd7cd9b5de696e&#34;&gt;Step 5: Understanding major and minor modes&lt;/h2&gt;
+
+&lt;p&gt;I&amp;rsquo;ve mentioned that Emacs is an operating system multiple times now, but to drive the point home, I want to briefly discuss major and minor modes.  You can have a single major mode and multiple minor modes, although there is &lt;a href=&#34;https://github.com/purcell/mmm-mode&#34;&gt;mmm-mode&lt;/a&gt; which allows you have multiple major modes.  A major mode is similar to &lt;code&gt;set filetype&lt;/code&gt; from Vim, and a minor mode is similar to a plugin like &lt;a href=&#34;https://github.com/tpope/vim-surround&#34;&gt;vim-surround&lt;/a&gt;, which spans all filetypes.  However, the biggest difference is that major modes in Emacs often change key bindings radically.&lt;/p&gt;
+
+&lt;p&gt;For example, if you hit &lt;code&gt;M-x package-list-packages RET&lt;/code&gt; it will open up the package manager buffer.  Inside this buffer, you can use &lt;code&gt;C-n&lt;/code&gt; and &lt;code&gt;C-p&lt;/code&gt; to move lines up and down, just like the default Emacs bindings.  But you can also hit &lt;code&gt;n&lt;/code&gt; and &lt;code&gt;p&lt;/code&gt; instead of the chords, and keys like &lt;code&gt;i&lt;/code&gt;nstall, &lt;code&gt;d&lt;/code&gt;elete, and &lt;code&gt;h&lt;/code&gt;elp are available to you as well.  Emacs appears to be modal after all!&lt;/p&gt;
+
+&lt;p&gt;Similarly, the customize buffer, via &lt;code&gt;M-x customize-group RET&lt;/code&gt; also sets up its own modal bindings; &lt;code&gt;TAB&lt;/code&gt; for example will jump to the next option.&lt;/p&gt;
+
+&lt;p&gt;In Emacs it is common practice for modes to set up a host of bindings under the &lt;code&gt;C-c&lt;/code&gt; prefix.  I&amp;rsquo;m writing this post right now in &lt;a href=&#34;http://jblevins.org/projects/markdown-mode/&#34;&gt;markdown-mode&lt;/a&gt;, so I can use &lt;code&gt;C-c C-u&lt;/code&gt; to jump up a heading, but that binding will be completely different in a different mode.&lt;/p&gt;
+
+&lt;p&gt;Essentially, activating a major-mode in Emacs is not much different from running a separate application on your operating system.&lt;/p&gt;
+
+&lt;p&gt;This isn&amp;rsquo;t to say that you can&amp;rsquo;t do the same thing in Vim; in fact, email and IRC clients exist on Vim as well, but comparatively speaking these are rare due to the relative difficulty of implementation, and most are done as experiments.&lt;/p&gt;
+
+&lt;h2 id=&#34;step-6-actually-getting-work-done:1dfbe80e979aabf9b2dd7cd9b5de696e&#34;&gt;Step 6: Actually getting work done&lt;/h2&gt;
+
+&lt;p&gt;OK, so you&amp;rsquo;ve read the manual, you&amp;rsquo;ve learned the Emacs way, and you even know some basic Lisp now.  But unless you&amp;rsquo;re getting paid to customize Emacs and write Lisp, you didn&amp;rsquo;t get any work done yet.&lt;/p&gt;
+
+&lt;p&gt;With that in mind, the first thing you will need to do is install all of the packages which replicate as most of your Vim setup as possible.&lt;/p&gt;
+
+&lt;h3 id=&#34;auto-completion-engines:1dfbe80e979aabf9b2dd7cd9b5de696e&#34;&gt;Auto-completion engines&lt;/h3&gt;
+
+&lt;p&gt;I&amp;rsquo;m torn between Emacs and Vim solutions.  With Vim, &lt;a href=&#34;https://github.com/Valloric/YouCompleteMe&#34;&gt;YouCompleteMe&lt;/a&gt; and &lt;a href=&#34;https://github.com/Shougo/neocomplete.vim&#34;&gt;NeoComplete&lt;/a&gt; offer amazing and fast fuzzy completion.  On Emacs, neither &lt;a href=&#34;https://github.com/auto-complete/auto-complete&#34;&gt;auto-complete&lt;/a&gt; or &lt;a href=&#34;https://github.com/company-mode/company-mode&#34;&gt;company-mode&lt;/a&gt; offer fuzzy completion yet.  auto-complete has a fuzzy match algorithm, but it has to be manually invoked, rendering it inferior to always-fuzzy-on.  While you have to give up fuzzy matching (for now), in exchange you get real documentation tooltips.  This is far superior to Vim&amp;rsquo;s use of the preview window which ends up bouncing your cursor all over the place as the window shows and hides.&lt;/p&gt;
+
+&lt;p&gt;company-mode has a unique take on auto-completion where it will reject keystrokes if it doesn&amp;rsquo;t match any possibilities.  It can also search available completions and filter as well, something I&amp;rsquo;ve not seen in any other completion engine.&lt;/p&gt;
+
+&lt;p&gt;auto-complete is far more popular than company-mode, so you will find that more packages integrate with it, however it&amp;rsquo;s pretty straightforward to write an adapter to get sources to work with company-mode.  I&amp;rsquo;d say try both and see which one you like more!&lt;/p&gt;
+
+&lt;p&gt;Snippets are another huge time saver.  In Vim, you got &lt;a href=&#34;https://github.com/SirVer/ultisnips&#34;&gt;UltiSnips&lt;/a&gt; and &lt;a href=&#34;https://github.com/Shougo/neosnippet.vim&#34;&gt;NeoSnippet&lt;/a&gt;, whereas on Emacs you only got one contender, &lt;a href=&#34;https://github.com/capitaomorte/yasnippet&#34;&gt;YASnippet&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;moving-around:1dfbe80e979aabf9b2dd7cd9b5de696e&#34;&gt;Moving around&lt;/h3&gt;
+
+&lt;p&gt;Emacs out of the box has superior capabilities for navigation; the built-in package &lt;a href=&#34;http://www.emacswiki.org/emacs/InteractivelyDoThings&#34;&gt;ido&lt;/a&gt; makes quick work of navigating files and buffers.  You can go a long way knowing just &lt;code&gt;C-x C-f&lt;/code&gt; and &lt;code&gt;C-x b&lt;/code&gt;.  However, most people will be used to the capabilities of &lt;a href=&#34;https://github.com/kien/ctrlp.vim&#34;&gt;ctrlp&lt;/a&gt; and &lt;a href=&#34;https://github.com/Shougo/unite.vim&#34;&gt;unite&lt;/a&gt;, which can recursively fuzzy search the project.  In Emacs, &lt;a href=&#34;https://github.com/bbatsov/projectile&#34;&gt;projectile&lt;/a&gt; and &lt;a href=&#34;https://github.com/d11wtq/fiplr&#34;&gt;filpr&lt;/a&gt; will do the trick.&lt;/p&gt;
+
+&lt;p&gt;Another powerful package worth mentioning is &lt;a href=&#34;https://github.com/emacs-helm/helm&#34;&gt;helm&lt;/a&gt;.  Although it shares many similarities with projectile, it also excels in areas that projectile does not, and vice versa, causing me to have both installed.  The situation is similar to me having both ctrlp and unite installed in Vim.&lt;/p&gt;
+
+&lt;h3 id=&#34;fuzzy-extended-command-search:1dfbe80e979aabf9b2dd7cd9b5de696e&#34;&gt;Fuzzy extended command search&lt;/h3&gt;
+
+&lt;p&gt;Sublime Text has a very useful feature called the command palette.  It&amp;rsquo;s a fuzzy searchable list of commands that you can use to operate on the current buffer.  Emacs has a very similar feature, called &lt;code&gt;M-x&lt;/code&gt;, which is bound to &lt;code&gt;execute-extended-command&lt;/code&gt;.  Unlike Sublime Text, it will not show you a list or description.  The default behavior requires you to type some things and use &lt;code&gt;TAB&lt;/code&gt; completion.  Luckily, you can get half-way there by installing a package called &lt;a href=&#34;https://github.com/nonsequitur/smex&#34;&gt;smex&lt;/a&gt;, which will give you the fuzzy searchable list (no descriptions though).&lt;/p&gt;
+
+&lt;p&gt;This is a &lt;em&gt;very&lt;/em&gt; &lt;strong&gt;&lt;em&gt;very&lt;/em&gt;&lt;/strong&gt; commonly used operation in Emacs.  It pains me that the &lt;code&gt;ALT&lt;/code&gt; key is so hard to reach, requiring you to tuck your thumb under either hand on most keyboards.  The nice thing about Vim bindings though you can easily add normal mode mappings.  I have this bound to &lt;code&gt;SPC SPC&lt;/code&gt;, so I can just double tap the space to run a command.&lt;/p&gt;
+
+&lt;h3 id=&#34;memorizing-key-bindings:1dfbe80e979aabf9b2dd7cd9b5de696e&#34;&gt;Memorizing key bindings&lt;/h3&gt;
+
+&lt;p&gt;Emacs bindings are pretty hard to remember (not nearly as mnemonic as Vim keys).  Luckily, the most often used Emacs bindings are prefixed with &lt;code&gt;C-x&lt;/code&gt; and &lt;code&gt;C-c&lt;/code&gt;.  This actually makes mixing Emacs and Vim very easy, because you are only giving up decrementing a number (which you can easily rebind), and &lt;code&gt;C-c&lt;/code&gt;, which most people will be using &lt;code&gt;Esc&lt;/code&gt; anyway.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/kbkbkbkb1/guide-key&#34;&gt;guide-key&lt;/a&gt; is an immensely useful package that will tell you all the available keys and what they are bound to after hitting a prefix key.&lt;/p&gt;
+
+&lt;h3 id=&#34;file-browsers:1dfbe80e979aabf9b2dd7cd9b5de696e&#34;&gt;File browsers&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/scrooloose/nerdtree&#34;&gt;NERDTree&lt;/a&gt; and &lt;a href=&#34;https://github.com/Shougo/vimfiler.vim&#34;&gt;vimfiler&lt;/a&gt; are both excellent plugins for Vim that give you a file browser on the side.&lt;/p&gt;
+
+&lt;p&gt;I think fuzzy searching is a far more useful and productive way to navigate around, but file browsers hold a niche in my tool belt for when I&amp;rsquo;m working a foreign project where I don&amp;rsquo;t know where all the files are laid out.  I haven&amp;rsquo;t spent much time with file browsers for Emacs, but there are many available.  The built-in &lt;code&gt;speedbar&lt;/code&gt; will open up a new frame.  An installable package named &lt;code&gt;sr-speedbar&lt;/code&gt; will take the speedbar and place it inside a split window instead.&lt;/p&gt;
+
+&lt;p&gt;A new kid of the block, released just a couple weeks ago is &lt;a href=&#34;https://github.com/sabof/project-explorer&#34;&gt;project-explorer&lt;/a&gt;, also looks very promising.&lt;/p&gt;
+
+&lt;h3 id=&#34;your-choice-of-language-specific-packages:1dfbe80e979aabf9b2dd7cd9b5de696e&#34;&gt;Your choice of language specific packages&lt;/h3&gt;
+
+&lt;p&gt;Last but not least, you will need to install mode packages, e.g. &lt;code&gt;coffee-mode&lt;/code&gt;, &lt;code&gt;stylus-mode&lt;/code&gt;, &lt;code&gt;jade-mode&lt;/code&gt;, &lt;code&gt;js2-mode&lt;/code&gt; etc.&lt;/p&gt;
+
+&lt;h2 id=&#34;step-7-practice-makes-perfect:1dfbe80e979aabf9b2dd7cd9b5de696e&#34;&gt;Step 7: Practice makes perfect&lt;/h2&gt;
+
+&lt;p&gt;And of course, practice practice practice!&lt;/p&gt;
+
+&lt;h1 id=&#34;some-other-things-to-consider:1dfbe80e979aabf9b2dd7cd9b5de696e&#34;&gt;Some other things to consider&lt;/h1&gt;
+
+&lt;p&gt;Here are some &lt;em&gt;subjective&lt;/em&gt; opinions I have on some&amp;hellip;softer things to consider&amp;hellip;&lt;/p&gt;
+
+&lt;h2 id=&#34;vim-developers-are-very-tenacious:1dfbe80e979aabf9b2dd7cd9b5de696e&#34;&gt;Vim developers are &lt;em&gt;very&lt;/em&gt; tenacious&lt;/h2&gt;
+
+&lt;p&gt;There is no dispute that Emacs Lisp is by far the superior language when compared to VimScript, but that doesn&amp;rsquo;t stop VimScript plugin developers from making some really amazing plugins and pushing the envelope.  Vim plugin developers always find a way, no matter how hacky the solution might be.  It&amp;rsquo;s fun to be &amp;ldquo;hacking&amp;rdquo; instead of &amp;ldquo;developing&amp;rdquo; after all.&lt;/p&gt;
+
+&lt;p&gt;To illustrate this point, &lt;a href=&#34;https://github.com/wincent/Command-T&#34;&gt;commandt&lt;/a&gt; first came out early 2010, and &lt;a href=&#34;https://github.com/kien/ctrlp.vim&#34;&gt;ctrlp&lt;/a&gt; came out third quarter of 2011.  &lt;a href=&#34;https://github.com/bbatsov/projectile&#34;&gt;projectile&lt;/a&gt; and &lt;a href=&#34;https://github.com/d11wtq/fiplr&#34;&gt;fiplr&lt;/a&gt; both got recursive fuzzy searching the summer of &lt;strong&gt;2013&lt;/strong&gt; (yes, &lt;em&gt;this&lt;/em&gt; year).&lt;/p&gt;
+
+&lt;h2 id=&#34;vim-is-much-more-popular-than-emacs:1dfbe80e979aabf9b2dd7cd9b5de696e&#34;&gt;Vim is &lt;em&gt;much&lt;/em&gt; more popular than Emacs&lt;/h2&gt;
+
+&lt;p&gt;While popularity and internet stars as a metric does not necessarily correlate with the quality of a product, the side effects will definitely be felt if you use Emacs.&lt;/p&gt;
+
+&lt;p&gt;For starters, for every Emacs colorscheme there will be at least 10 Vim colorschemes.  Good luck finding one that works well in the terminal.  I can count on one hand the number of themes I&amp;rsquo;ve found usable in the terminal (I use &lt;code&gt;monokai&lt;/code&gt;).  The irony is that Emacs packages tend to understand your code a lot better, for example &lt;code&gt;js2-mode&lt;/code&gt; is actually a full-blown parser, but Vim will still highlight more symbols because its colorschemes will define a lot more syntax rules.  The best themes with the most rules for Emacs are currently &lt;code&gt;zenburn&lt;/code&gt; and &lt;code&gt;solarized&lt;/code&gt; (unfortunately I&amp;rsquo;m not a fan of either).&lt;/p&gt;
+
+&lt;p&gt;Another effect of popularity is that plugins tend to have more bells and whistles than their Emacs counterparts.  This, coupled with the attitude of Vim plugin developers mentioned earlier, results in a impressive set of plugins that no other ecosystem can match.&lt;/p&gt;
+
+&lt;h2 id=&#34;vim-is-more-user-friendly:1dfbe80e979aabf9b2dd7cd9b5de696e&#34;&gt;Vim is more user friendly&lt;/h2&gt;
+
+&lt;p&gt;I&amp;rsquo;ve mentioned before that if you want to use Emacs to its fullest potential, you &lt;em&gt;must&lt;/em&gt; learn Lisp.  Unless you&amp;rsquo;re lucky and the package you&amp;rsquo;re using has a very active and responsive maintainer, you are better off trying to implement that feature or bug on your own and then submit a pull request later.&lt;/p&gt;
+
+&lt;h1 id=&#34;is-it-worth-it:1dfbe80e979aabf9b2dd7cd9b5de696e&#34;&gt;Is it worth it?&lt;/h1&gt;
+
+&lt;p&gt;At the end of all of this, you&amp;rsquo;re probably thinking to yourself, I&amp;rsquo;m already at &lt;code&gt;X&lt;/code&gt; level of productivity, will switching to Emacs get me to &lt;code&gt;X + Y&lt;/code&gt;?&lt;/p&gt;
+
+&lt;p&gt;One of the major reasons for me switching was an excuse to &lt;a href=&#34;http://bling.github.io/blog/2013/09/09/vim-in-emacs-bootstrap/&#34;&gt;learn a Lisp dialect&lt;/a&gt;.  Let me tell you; this reason alone is worth it to try Emacs.  Lisp will make you a better programmer by giving you a new perspective.  It will also make you question why all the complicated imperative languages today still do not compare to the simplicity and power that was available to us over 30 years ago.&lt;/p&gt;
+
+&lt;p&gt;Yes, the learning curve is high.  But fear not!  You do not have to start from scratch.  You already know Vim, so you got the text editing part covered, which leaves just learning how to do things in Emacs one feature at a time.  If you configure Emacs to use the same key bindings as your Vim config, as I have in my &lt;a href=&#34;https://github.com/bling/dotvim&#34;&gt;dotvim&lt;/a&gt; and &lt;a href=&#34;https://github.com/bling/dotemacs&#34;&gt;dotemacs&lt;/a&gt; configs, it becomes seamless to switch between the two.  Lastly, you are not picking Vim &lt;em&gt;or&lt;/em&gt; Emacs, but rather you are picking Vim &lt;em&gt;and&lt;/em&gt; Emacs!  Use the best tool for the job.&lt;/p&gt;
+
+&lt;p&gt;For me, Emacs is my &lt;code&gt;&amp;lt;leader&amp;gt;&lt;/code&gt; key, the set of customizations that are non-standard to Vim, just like &lt;code&gt;set nocompatible&lt;/code&gt; is the set of customizations that are non-standard to Vi.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Emacs as my &lt;Leader&gt; evil-mode</title>
+      <link>http://bling.github.io/blog/2013/10/16/emacs-as-my-leader-evil-mode/</link>
+      <pubDate>Wed, 16 Oct 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2013/10/16/emacs-as-my-leader-evil-mode/</guid>
+      <description>&lt;p&gt;Hey guys, I just wanted to post a quick demo video on &lt;a href=&#34;https://gitorious.org/evil&#34;&gt;evil-mode&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The video is targetted at intermediate/advanced Vim users, so if you&amp;rsquo;re just starting out you might miss some things. But&amp;hellip;hopefully it&amp;rsquo;ll be an enjoyable watch regardless!&lt;/p&gt;
+
+&lt;iframe width=&#34;630&#34; height=&#34;473&#34; src=&#34;//www.youtube.com/embed/Uz_0i27wYbg&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;p&gt;Let me know what you guys think of it!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Vim in Emacs Bootstrap</title>
+      <link>http://bling.github.io/blog/2013/09/09/vim-in-emacs-bootstrap/</link>
+      <pubDate>Mon, 09 Sep 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2013/09/09/vim-in-emacs-bootstrap/</guid>
+      <description>
+
+&lt;p&gt;Did I wake up on the wrong side of the bed?&lt;/p&gt;
+
+&lt;p&gt;My New Year&amp;rsquo;s resolution for 2013 was to learn Vim. I was so new to Vim that I did not even know how to &lt;a href=&#34;http://stackoverflow.com/questions/14107198/vim-delete-whitespace-between-2-lines&#34;&gt;join lines&lt;/a&gt; properly. However, I was diligent, patient, and stubborn enough to stick at it. It didn&amp;rsquo;t take long for me to &lt;a href=&#34;http://bling.github.io/blog/2013/02/10/love-affair-with-vim&#34;&gt;fall in love&lt;/a&gt;. I even ended up writing a &lt;a href=&#34;https://github.com/bling/vim-airline&#34;&gt;plugin&lt;/a&gt; for Vim that got so popular that I was writing VimL as a second job.&lt;/p&gt;
+
+&lt;p&gt;Sounds like I&amp;rsquo;m pretty happy with Vim (and I am), so why am I trying Emacs?&lt;/p&gt;
+
+&lt;p&gt;Curiosity is a major reason. But more I think the philosophy of Emacs fits my personality better. The Vim community is very much divided into two camps: the text editor people, and the people who try to turn Vim into an IDE. I am in the latter. My vim &lt;a href=&#34;https://github.com/bling/dotvim&#34;&gt;distribution&lt;/a&gt; has over 90 plugins. While I haven&amp;rsquo;t yet run into Vim&amp;rsquo;s limitations of trying to use it this way, I can already see the walls coming up&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;But here&amp;rsquo;s the thing, I&amp;rsquo;m addicted to &lt;strong&gt;modal editing&lt;/strong&gt;, not Vim. It just so happens that Vim is the best implementation of modal editing, but Emacs has something that does a pretty damn good job too! And it&amp;rsquo;s none other than &lt;a href=&#34;http://www.emacswiki.org/emacs/Evil&#34;&gt;evil-mode&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;With evil-mode, it&amp;rsquo;s finally possible to have the best of both worlds. The power of modal editing with the near limitless extensibility of Emacs.&lt;/p&gt;
+
+&lt;p&gt;And as an added bonus I can finally have an excuse to learn a Lisp dialect. I discovered with Vim that customizing your editor is an incredible catalyst for learning a new language. It wasn&amp;rsquo;t my intention to memorize a sizable portion of the VimL standard library when I started using Vim, but it happened anyway once I started tweaking and customizing&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;My goal is that by the end of this post you&amp;rsquo;ll have a working Emacs installation with Vim keybindings out of the box.&lt;/p&gt;
+
+&lt;h1 id=&#34;back-to-basics:dd5dcba472bf99cee57e5ad68e630909&#34;&gt;Back to Basics&lt;/h1&gt;
+
+&lt;p&gt;The best way to learn is to start from scratch. And so I did exactly that starting with the built-in tutorial &lt;code&gt;C-h t&lt;/code&gt;. While the purpose of this blog post is to get modal editing working in Emacs, you&amp;rsquo;re not going to be able to make &lt;em&gt;everything&lt;/em&gt; modal, so you still need to know basic commands to navigate around.&lt;/p&gt;
+
+&lt;h1 id=&#34;things-you-need-to-know:dd5dcba472bf99cee57e5ad68e630909&#34;&gt;Things you need to know&lt;/h1&gt;
+
+&lt;p&gt;There are a couple important Emacs keys that you should know.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;C-g&lt;/code&gt; is the universal &amp;ldquo;get me out of here&amp;rdquo; key, equivalent to &lt;code&gt;C-c&lt;/code&gt; in Vim.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-h&lt;/code&gt; is the &amp;ldquo;help&amp;rdquo; prefix. &lt;code&gt;C-h C-h&lt;/code&gt; will show you all possible options. I&amp;rsquo;ve found that I use &lt;code&gt;C-h f&lt;/code&gt; very often, which is used to lookup help for functions.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-x&lt;/code&gt; is a also very important, as it&amp;rsquo;s the prefix for many common things like saving and finding files.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-c&lt;/code&gt; by &lt;a href=&#34;http://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Binding-Conventions.html&#34;&gt;convention&lt;/a&gt; are used for many things, including the equivalent of &lt;code&gt;&amp;lt;leader&amp;gt;&lt;/code&gt; for user customizations when followed by letters, but also for major and minor mode bindings.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;setting-up-your-vimrc:dd5dcba472bf99cee57e5ad68e630909&#34;&gt;Setting up your &amp;ldquo;vimrc&amp;rdquo;&lt;/h1&gt;
+
+&lt;p&gt;In Emacs, this is the &lt;code&gt;~/.emacs&lt;/code&gt; file. But just like in Vim, where you usually have a &lt;code&gt;~/.vim&lt;/code&gt; directory for various plugins and configuration, Emacs has the &lt;code&gt;~/.emacs.d&lt;/code&gt; directory. As an added bonus, &lt;code&gt;~/.emacs.d/init.el&lt;/code&gt; is automatically loaded, so if you put your dotfiles up on GitHub it&amp;rsquo;s as simple as cloning it to &lt;code&gt;~/.emacs.d&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;what-s-with-the:dd5dcba472bf99cee57e5ad68e630909&#34;&gt;What&amp;rsquo;s with the (((())))?&lt;/h1&gt;
+
+&lt;p&gt;Going through the documentation is one thing, but making the first change to your &lt;code&gt;~/.emacs.d/init.el&lt;/code&gt; file is daunting, at least for me it was. While Vim also has its own scripting language, VimL, it is much more newbie friendly.&lt;/p&gt;
+
+&lt;p&gt;How do you turn on line numbers? You add &lt;code&gt;set number&lt;/code&gt; to your vimrc. It&amp;rsquo;s simple, straightforward, and obvious. You don&amp;rsquo;t even know you&amp;rsquo;re scripting in Vim; it just looks like a configuration file at this point. How do you do that in Emacs? First you search on Google, which links you to this &lt;a href=&#34;http://www.emacswiki.org/emacs/LineNumbers&#34;&gt;EmacsWiki&lt;/a&gt; article. If that doesn&amp;rsquo;t scare you from using Emacs I don&amp;rsquo;t know what will.&lt;/p&gt;
+
+&lt;p&gt;The short answer is, you add &lt;code&gt;(global-linum-mode t)&lt;/code&gt; to your &lt;code&gt;init.el&lt;/code&gt; file. Right off the bat the questions would be, is that a variable, a function? What is &lt;code&gt;t&lt;/code&gt;?&lt;/p&gt;
+
+&lt;p&gt;Configuring Emacs throws you into Lisp from the get go, so what you want to do is actually read &lt;a href=&#34;http://www.gnu.org/software/emacs/manual/eintr.html&#34;&gt;Introduction to Programming in Emacs Lisp&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;lisp-basics:dd5dcba472bf99cee57e5ad68e630909&#34;&gt;Lisp basics&lt;/h1&gt;
+
+&lt;p&gt;You&amp;rsquo;re going to be seeing a lot of Lisp, so let&amp;rsquo;s summarize the basics:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;set&lt;/code&gt; will set a variable, but you will rarely see this.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;setq&lt;/code&gt; is &lt;em&gt;very&lt;/em&gt; frequently seen. The q stands for quote, which will sidetrack you to understanding what a &lt;a href=&#34;http://stackoverflow.com/questions/134887/when-to-use-quote-in-lisp&#34;&gt;quote&lt;/a&gt; is.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;setq-default&lt;/code&gt; sets a variable if it&amp;rsquo;s not already set/overridden.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;defun&lt;/code&gt; defines a function.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-p&lt;/code&gt; by convention is added to functions that return true or false (the p stands for predicate).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Now that things are a bit more readable, we can begin setting up our configuration to get evil-mode installed.&lt;/p&gt;
+
+&lt;h1 id=&#34;package-management:dd5dcba472bf99cee57e5ad68e630909&#34;&gt;Package management&lt;/h1&gt;
+
+&lt;p&gt;Emacs 24 comes with built-in &lt;a href=&#34;http://www.emacswiki.org/emacs/ELP&#34;&gt;package management&lt;/a&gt;. The default GNU repository doesn&amp;rsquo;t really have many packages, but luckily there&amp;rsquo;s a community driven repository named &lt;a href=&#34;http://melpa.milkbox.net/&#34;&gt;MELPA&lt;/a&gt; where up to date packages are built directly from GitHub.&lt;/p&gt;
+
+&lt;p&gt;So, let&amp;rsquo;s add the MELPA into our &lt;code&gt;~/.emacs.d/init.el&lt;/code&gt; file:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-cl&#34; data-lang=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;;;; this loads the package manager&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;require&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;package&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;;;; here there&amp;#39;s a variable named package-archives, and we are adding the MELPA repository to it&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;add-to-list&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;package-archives&lt;/span&gt;
+             &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;melpa&amp;quot;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;http://melpa.milkbox.net/packages/&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;t&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;;;; loads packages and activates them&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;package-initialize&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;OK, straightforward so far.&lt;/p&gt;
+
+&lt;h1 id=&#34;installing-evil:dd5dcba472bf99cee57e5ad68e630909&#34;&gt;Installing evil&lt;/h1&gt;
+
+&lt;p&gt;Next up is the all important &lt;code&gt;M-x&lt;/code&gt; binding (on modern keyboards M is the Alt key). This is sort of like Vim&amp;rsquo;s &lt;code&gt;:&lt;/code&gt; where you can type commands. Here we are going to do a &lt;code&gt;M-x package-refresh-contents RET&lt;/code&gt;. In Emacs, &lt;code&gt;RET&lt;/code&gt; is the convention for &lt;code&gt;&amp;lt;CR&amp;gt;&lt;/code&gt;. This will refresh the repository of available packages. And finally, &lt;code&gt;M-x package-install RET evil RET&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;And now it&amp;rsquo;s installed!&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s not enabled by default, so we need to append the following lines to our &lt;code&gt;init.el&lt;/code&gt; file:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-cl&#34; data-lang=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;require&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;evil&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;evil-mode&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;t&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Finally, &lt;code&gt;C-x C-c&lt;/code&gt; to quit Emacs and restart it. If you&amp;rsquo;re feeling adventurous you can use &lt;code&gt;M-x eval-buffer RET&lt;/code&gt; instead.&lt;/p&gt;
+
+&lt;h1 id=&#34;finale:dd5dcba472bf99cee57e5ad68e630909&#34;&gt;Finale&lt;/h1&gt;
+
+&lt;p&gt;Congratulations! You have a working Emacs installation with Vim modal editing!&lt;/p&gt;
+
+&lt;p&gt;You may notice that in addition to &lt;code&gt;C-c&lt;/code&gt;, &lt;code&gt;C-h&lt;/code&gt;, and &lt;code&gt;C-x&lt;/code&gt; that I mentioned earlier, &lt;code&gt;C-u&lt;/code&gt; will not scroll up half a page as you would expect. This is because by default this is mapped to the Emacs &lt;code&gt;universal-argument&lt;/code&gt; function, which is used for repeating. You can of course customize all of this, but I&amp;rsquo;ll let you take it from here&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;And so there you have it!&lt;/p&gt;
+
+&lt;p&gt;TLDR: &lt;code&gt;git clone https://github.com/bling/emacs-evil-bootstrap.git ~/.emacs.d&lt;/code&gt; will automate this entire blog post and let you try Vim in Emacs in 10-20 seconds.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

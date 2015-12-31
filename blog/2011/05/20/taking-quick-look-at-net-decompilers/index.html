@@ -1,115 +1,135 @@
-
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <title>Taking a Quick Look at .NET Decompilers - bling on software development</title>
-  <meta name="author" content="Bailey Ling">
-
-  
-  <meta name="description" content="Decompilers in the .NET space has changed a lot since the announcement from Red Gate that they were going to start charging for Reflector, which was &hellip;">
-  
-
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  
-  <link rel="canonical" href="http://bling.github.io/blog/2011/05/20/taking-quick-look-at-net-decompilers">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="bling on software development" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic|Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
-
-
-  
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-38439430-2']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
-
-</head>
-
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">bling on software development</a></h1>
-  
-    <h2>when pragmatism meets minimalism</h2>
-  
-</hgroup>
-
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:bling.github.io" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
-
-</nav>
-  <div id="main">
-    <div id="content">
-      <div>
-<article class="hentry" role="article">
-  
-  <header>
-    
-      <h1 class="entry-title">Taking a Quick Look at .NET Decompilers</h1>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Taking a Quick Look at .NET Decompilers</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="generator" content="Hugo 0.16-DEV" />
+    <link href="" rel="alternate" type="application/rss+xml" title="bling on software" />
+    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
     
     
-      <p class="meta">
-        
+  </head>
+  <body>
+    <div id = "wrapper">
+
+      <div class="navbar navbar-default" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a href="http://bling.github.io/"><p class="navbar-brand">bling on software</p></a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              
+              
+            </ul>
+          </div>
+        </div>
+      </div>
 
 
 
+      
+      <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+          <li class="sidebar-brand">
+            <a href="http://bling.github.io/">
+              <h1 class="brand">bling on software</h1>
+            </a>
+            <a href="/about">
+              <img src="https://pbs.twimg.com/profile_images/1188386482/Untitled_bigger.png" />
+            </a>
+            <h3>when pragmatism meets minimalism</h3>
+          </li>
+
+          <hr />
+
+          <div id="social-wrapper">
+            <li> <a href="https://github.com/bling"><i class="fa fa-github-square"></i> github</a> </li>
+            <li> <a href="https://twitter.com/blingcoder"><i class="fa fa-twitter-square"></i> @twitter</a></li>
+            <li> <a href="https://linkedin.com/in/baileyling"><i class="fa fa-linkedin-square"></i> linkedin</a> </li>
+          </div>
+
+          <hr />
+
+          <li class="sidebar-categories">
+            <div>
+              <span>Categories</span>
+              <a href="/post" style="float:right">show all</a>
+            </div>
+            <div>
+              
+              <a href="/categories/blend">blend</a>
+              
+              <a href="/categories/castle">castle</a>
+              
+              <a href="/categories/castle-coding">castle-coding</a>
+              
+              <a href="/categories/coding">coding</a>
+              
+              <a href="/categories/cqrs">cqrs</a>
+              
+              <a href="/categories/emacs">emacs</a>
+              
+              <a href="/categories/forex">forex</a>
+              
+              <a href="/categories/ioc">ioc</a>
+              
+              <a href="/categories/javascript">javascript</a>
+              
+              <a href="/categories/logging">logging</a>
+              
+              <a href="/categories/powershell">powershell</a>
+              
+              <a href="/categories/rx">rx</a>
+              
+              <a href="/categories/software-tools">software-tools</a>
+              
+              <a href="/categories/source-control-management">source-control-management</a>
+              
+              <a href="/categories/testing">testing</a>
+              
+              <a href="/categories/twitter">twitter</a>
+              
+              <a href="/categories/vim">vim</a>
+              
+              <a href="/categories/visual-studio">visual-studio</a>
+              
+            </div>
+          </li>
+        </ul>
+      </div>
 
 
 
+      <div class="container">
 
 
-  
 
-
-<time datetime="2011-05-20T00:00:00+00:00" pubdate data-updated="true">May 20<span>th</span>, 2011</time>
-        
-      </p>
+<div class="article">
+  <div class="article-title">Taking a Quick Look at .NET Decompilers</div>
+  <p class="meta"><small>&nbsp;<i class="fa fa-calendar-o"></i> 2011-05-20</small></p> <hr/>
+  <div class="post">
     
-  </header>
 
-
-<div class="entry-content"><p>Decompilers in the .NET space has changed a lot since the announcement from Red Gate that they were going to start charging for Reflector, which was the defacto most important/useful tool in any developer&rsquo;s tool belt.</p>
+<p>Decompilers in the .NET space has changed a lot since the announcement from Red Gate that they were going to start charging for Reflector, which was the defacto most important/useful tool in any developer&rsquo;s tool belt.</p>
 
 <p>This blog post will be a quick overview to take a look at all the new contenders that have cropped up in the .NET space to see if any of them can dethrone Reflector as the decompiler of choice.  This is only taking a look at the tools as a stand alone product and excludes any IDE integration.</p>
 
 <p>To start, let&rsquo;s take a look at Reflector.</p>
 
-<h1><a href="http://www.reflector.net/">Red Gate Reflector</a> (7.1.0.143)</h1>
+<h1 id="red-gate-reflector-http-www-reflector-net-7-1-0-143:3183d8af1163b41cbdb0163c2adcbfe8"><a href="http://www.reflector.net/">Red Gate Reflector</a> (7.1.0.143)</h1>
 
 <p>Having been around for years, Reflector is a rock solid product that sets the standard for everything else.  It has a simple straight forward interface and has a large following with many 3rd party addins.  It has a search which lets you find types, and an analyzer which shows you incoming and outgoing calls for any method.  It also has the most options for decompiling, giving choices from C# to VB and even Delphi.</p>
 
@@ -117,17 +137,17 @@
 
 <p>As of this version it looks like they added tabs, but it for me it only used one at a time…perhaps a limitation of the trial version.</p>
 
-<h1><a href="http://wiki.sharpdevelop.net/ilspy.ashx">ILSpy</a> (1.0.0.822)</h1>
+<h1 id="ilspy-http-wiki-sharpdevelop-net-ilspy-ashx-1-0-0-822:3183d8af1163b41cbdb0163c2adcbfe8"><a href="http://wiki.sharpdevelop.net/ilspy.ashx">ILSpy</a> (1.0.0.822)</h1>
 
 <p>This open source offering at this point looks the same as Reflector did just before Red Gate took over.  It has all the necessities, including search and analyze.  It can only view one thing at a time, and doesn&rsquo;t have support for addins yet.  However, progress on this project is blazing fast and it&rsquo;s only a matter of time before it reaches feature parity with the rest.</p>
 
-<h1><a href="http://www.telerik.com/products/decompiling.aspx">JustDecompile Beta</a> (2011.1.516.2)</h1>
+<h1 id="justdecompile-beta-http-www-telerik-com-products-decompiling-aspx-2011-1-516-2:3183d8af1163b41cbdb0163c2adcbfe8"><a href="http://www.telerik.com/products/decompiling.aspx">JustDecompile Beta</a> (2011.1.516.2)</h1>
 
 <p>First impression was, damn, this is a nice pretty WPF app.  Onwards, it has a predefined assembly list of .NET2, 4, and Silverlight, which is nice.  What&rsquo;s nicer is that you can save a predefined list for use later, a feature that&rsquo;s absent from the others.  It has search by type, and search by symbol, however, the search is noticeably slower than everything else I tried.  Also, the actual decompiling is much slower than the rest as well.  Like ILSpy, it can only view one thing at a time.</p>
 
 <p>Decompiling to C# and VB are supported, but no IL yet.</p>
 
-<h1><a href="http://www.jetbrains.com/decompiler/">dotPeek EAP</a> (1.0.0.1219)</h1>
+<h1 id="dotpeek-eap-http-www-jetbrains-com-decompiler-1-0-0-1219:3183d8af1163b41cbdb0163c2adcbfe8"><a href="http://www.jetbrains.com/decompiler/">dotPeek EAP</a> (1.0.0.1219)</h1>
 
 <p>I tried an EAP build and I was blown away.  I may be biased because I&rsquo;m a Resharper user, but having almost all of the keyboard shortcuts I have in my muscle memory work in dotPeek was a welcome surprise.  The keyboard navigation makes dotPeek <em>by far</em> the best tool for navigating.  While the others have searches, they only do so at the type level.  With dotPeek (just like Resharper), you can search by type, current type, and even private members.  Inheritance searching like finding implementations, etc., all of that works.  Simply amazing.  Oh, and it also has full tab support.</p>
 
@@ -135,7 +155,7 @@
 
 <p>The downside?  No support for decompiling to IL, and lambdas aren&rsquo;t fully supported yet.  I&rsquo;m sure these will be done by the time it&rsquo;s released.</p>
 
-<h1>Conclusion</h1>
+<h1 id="conclusion:3183d8af1163b41cbdb0163c2adcbfe8">Conclusion</h1>
 
 <p>I guess the most important thing I should be looking at is the actual decompiler, rather than the bells and whistles. If that&rsquo;s what I looked at, this would be a pretty boring post because only Reflector is able to decompile everything out there.</p>
 
@@ -143,191 +163,37 @@
 
 <p>In conclusion, I love dotPeek just because of the awesomeness that is Resharper keyboard shortcuts.  For everything else, ILSpy does the job.</p>
 
-<p>I&rsquo;m actually pretty thankful that Red Gate decided to charge money for Reflector, because that inspired so much competition and we already have 3 viable replacements, all of which are free &mdash; something that wouldn&rsquo;t have happened if Reflector remained free.</p>
+<p>I&rsquo;m actually pretty thankful that Red Gate decided to charge money for Reflector, because that inspired so much competition and we already have 3 viable replacements, all of which are free &ndash; something that wouldn&rsquo;t have happened if Reflector remained free.</p>
+
+  </div>
 </div>
 
 
-  <footer>
-    <p class="meta">
-      
-  
 
-<span class="byline author vcard">Posted by <span class="fn">Bailey Ling</span></span>
-
-      
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-05-20T00:00:00+00:00" pubdate data-updated="true">May 20<span>th</span>, 2011</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/coding/'>coding</a>, <a class='category' href='/blog/categories/software-tools/'>software tools</a>
-  
-</span>
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bling.github.io/blog/2011/05/20/taking-quick-look-at-net-decompilers/" data-via="blingcoder" data-counturl="http://bling.github.io/blog/2011/05/20/taking-quick-look-at-net-decompilers/" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-</div>
-
-    
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2011/05/08/simple-app-to-preview-fonts/" title="Previous Post: Simple App to Preview Fonts">&laquo; Simple App to Preview Fonts</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2011/06/23/tools-i-use-to-do-what-i-do/" title="Next Post: Tools I Use To Do What I Do">Tools I Use To Do What I Do &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
-
-</div>
-
-<aside class="sidebar">
-  
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2015/01/06/emacs-as-my-leader-1-year-later/">Emacs As My &lt;Leader&gt;, 1 Year Later</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/">Asynchronous Eval in Emacs with Stylus and Skewer</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/">Emacs as my &lt;Leader&gt;: Vim Survival Guide</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my &lt;Leader&gt;: evil-mode</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/09/09/vim-in-emacs-bootstrap/">Vim in Emacs Bootstrap</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/08/16/modularizing-vimscript/">Modularizing VimScript</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/30/1000-stars-in-1-month/">1000 stars in 1 month</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
-      </li>
-    
-  </ul>
-</section>
-
-<section>
-  <h1>GitHub Repos</h1>
-  <ul id="gh_repos">
-    <li class="loading">Status updating...</li>
-  </ul>
-  
-  <a href="https://github.com/bling">@bling</a> on GitHub
-  
-  <script type="text/javascript">
-    $(document).ready(function(){
-        if (!window.jXHR){
-            var jxhr = document.createElement('script');
-            jxhr.type = 'text/javascript';
-            jxhr.src = '/javascripts/libs/jXHR.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(jxhr, s);
-        }
-
-        github.showRepos({
-            user: 'bling',
-            count: 0,
-            skip_forks: true,
-            target: '#gh_repos'
-        });
-    });
-  </script>
-  <script src="/javascripts/github.js" type="text/javascript"> </script>
-</section>
-
-
-
-
-
-  
-</aside>
 
 
     </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - Bailey Ling -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
 
-</footer>
-  
+    <footer>
+      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
+    </footer>
 
+    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.js"></script>
+    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
 
+    
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id; js.async = true;
-  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
+ga('create', 'UA-38439430-2', 'auto');
+ga('send', 'pageview');
+</script>
 
-
-
-  <script type="text/javascript">
-    (function() {
-      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
-      script.src = 'https://apis.google.com/js/plusone.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
-    })();
-  </script>
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
-
-</body>
+  </body>
 </html>
+

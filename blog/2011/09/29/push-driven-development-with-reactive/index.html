@@ -1,109 +1,129 @@
-
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <title>Push Driven Development with Reactive Extensions - bling on software development</title>
-  <meta name="author" content="Bailey Ling">
-
-  
-  <meta name="description" content="This is going to be the last post that concludes my series on building a real-time push app with Silverlight. Any additional posts would likely be &hellip;">
-  
-
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  
-  <link rel="canonical" href="http://bling.github.io/blog/2011/09/29/push-driven-development-with-reactive">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="bling on software development" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic|Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
-
-
-  
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-38439430-2']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
-
-</head>
-
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">bling on software development</a></h1>
-  
-    <h2>when pragmatism meets minimalism</h2>
-  
-</hgroup>
-
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:bling.github.io" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
-
-</nav>
-  <div id="main">
-    <div id="content">
-      <div>
-<article class="hentry" role="article">
-  
-  <header>
-    
-      <h1 class="entry-title">Push Driven Development With Reactive Extensions</h1>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Push Driven Development with Reactive Extensions</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="generator" content="Hugo 0.16-DEV" />
+    <link href="" rel="alternate" type="application/rss+xml" title="bling on software" />
+    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
     
     
-      <p class="meta">
-        
+  </head>
+  <body>
+    <div id = "wrapper">
+
+      <div class="navbar navbar-default" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a href="http://bling.github.io/"><p class="navbar-brand">bling on software</p></a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              
+              
+            </ul>
+          </div>
+        </div>
+      </div>
 
 
 
+      
+      <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+          <li class="sidebar-brand">
+            <a href="http://bling.github.io/">
+              <h1 class="brand">bling on software</h1>
+            </a>
+            <a href="/about">
+              <img src="https://pbs.twimg.com/profile_images/1188386482/Untitled_bigger.png" />
+            </a>
+            <h3>when pragmatism meets minimalism</h3>
+          </li>
+
+          <hr />
+
+          <div id="social-wrapper">
+            <li> <a href="https://github.com/bling"><i class="fa fa-github-square"></i> github</a> </li>
+            <li> <a href="https://twitter.com/blingcoder"><i class="fa fa-twitter-square"></i> @twitter</a></li>
+            <li> <a href="https://linkedin.com/in/baileyling"><i class="fa fa-linkedin-square"></i> linkedin</a> </li>
+          </div>
+
+          <hr />
+
+          <li class="sidebar-categories">
+            <div>
+              <span>Categories</span>
+              <a href="/post" style="float:right">show all</a>
+            </div>
+            <div>
+              
+              <a href="/categories/blend">blend</a>
+              
+              <a href="/categories/castle">castle</a>
+              
+              <a href="/categories/castle-coding">castle-coding</a>
+              
+              <a href="/categories/coding">coding</a>
+              
+              <a href="/categories/cqrs">cqrs</a>
+              
+              <a href="/categories/emacs">emacs</a>
+              
+              <a href="/categories/forex">forex</a>
+              
+              <a href="/categories/ioc">ioc</a>
+              
+              <a href="/categories/javascript">javascript</a>
+              
+              <a href="/categories/logging">logging</a>
+              
+              <a href="/categories/powershell">powershell</a>
+              
+              <a href="/categories/rx">rx</a>
+              
+              <a href="/categories/software-tools">software-tools</a>
+              
+              <a href="/categories/source-control-management">source-control-management</a>
+              
+              <a href="/categories/testing">testing</a>
+              
+              <a href="/categories/twitter">twitter</a>
+              
+              <a href="/categories/vim">vim</a>
+              
+              <a href="/categories/visual-studio">visual-studio</a>
+              
+            </div>
+          </li>
+        </ul>
+      </div>
 
 
 
+      <div class="container">
 
 
-  
 
-
-<time datetime="2011-09-29T00:00:00+00:00" pubdate data-updated="true">Sep 29<span>th</span>, 2011</time>
-        
-      </p>
+<div class="article">
+  <div class="article-title">Push Driven Development with Reactive Extensions</div>
+  <p class="meta"><small>&nbsp;<i class="fa fa-calendar-o"></i> 2011-09-29</small></p> <hr/>
+  <div class="post">
     
-  </header>
 
-
-<div class="entry-content"><p>This is going to be the last post that concludes my series on building a real-time push app with Silverlight.  Any additional posts would likely be outside the context of writing a push app and more about how I’m adding features to ping.pong, my Twitter app, so I think this is a good place to wrap up and talk generally from a top down overview of building a push-style application.</p>
+<p>This is going to be the last post that concludes my series on building a real-time push app with Silverlight.  Any additional posts would likely be outside the context of writing a push app and more about how I’m adding features to ping.pong, my Twitter app, so I think this is a good place to wrap up and talk generally from a top down overview of building a push-style application.</p>
 
 <p>Here’s a recap of everything discussed so far:</p>
 
@@ -125,7 +145,7 @@
 
 <p>And that leads us to this post…</p>
 
-<h1>PDD (Push Driven Development)</h1>
+<h1 id="pdd-push-driven-development:59fe73bd1c5a5710d61b089976e2b93f">PDD (Push Driven Development)</h1>
 
 <p>One of the main goals of this series is to create a performant Silverlight app based on push principles, as opposed to more traditional pull principles.  To that effect, ping.pong has performed remarkably well and is limited only by Twitter’s throttling, which currently appears to be maximum of 50 tweets per second via the streaming API.</p>
 
@@ -133,10 +153,7 @@
 
 <p>To be absolutely clear on what I mean on the differences between push and pull, here’s a comparison:</p>
 
-<table border="0" cellspacing="0" cellpadding="2" width="100%"> <tbody> <tr> <td valign="top"><strong>Pulling</strong></td> <td valign="top"><strong>Push</strong></td></tr> <tr> <td valign="top" width="50%">var e = tweets.GetEnumerator();<br>while (e.MoveNext()) <strong>// is there more?<br></strong>{<br>  e.Current; <strong>// get current<br></strong>  DoSomething(e.Current);<br>}</td> <td valign="top" width="50%">IObservable&lt;Data&gt; data = /* get source */<br><br><strong>// whenever data comes, do something</strong><br>data.Subscribe(DoSometing); <br></td></tr></tbody></table>
-
-
-<p></p>
+<table border="0" cellspacing="0" cellpadding="2" width="100%"> <tbody> <tr> <td valign="top"><strong>Pulling</strong></td> <td valign="top"><strong>Push</strong></td></tr> <tr> <td valign="top" width="50%">var e = tweets.GetEnumerator();<br>while (e.MoveNext()) <strong>// is there more?<br></strong>{<br>  e.Current; <strong>// get current<br></strong>  DoSomething(e.Current);<br>}</td> <td valign="top" width="50%">IObservable&lt;Data&gt; data = /* get source */<br><br><strong>// whenever data comes, do something</strong><br>data.Subscribe(DoSometing); <br></td></tr></tbody></table> 
 
 <p>On the pulling side, the caller is much more concerned with the logic on how to process each message.  It needs to <em>repeatedly</em> ask the world, &ldquo;hey, is there more data?&rdquo;.</p>
 
@@ -144,16 +161,12 @@
 
 <p>Twitter is a perfect example because their APIs have both a pulling and pushing models.  Traditional clients poll continuously all the time, and many had configurable options to try to stay under the 200 API calls per hour limit.  Most of Twitter’s API still consists of pulling, but the user’s home line and searching can be streamed in near real time via the streaming API, aka. push.  Streaming tweets effectively removes the API call limit.</p>
 
-<h1>Push and Pull with Reactive Extensions</h1>
+<h1 id="push-and-pull-with-reactive-extensions:59fe73bd1c5a5710d61b089976e2b93f">Push and Pull with Reactive Extensions</h1>
 
 <p>The beauty of Rx is that regardless of whether it is actually pushing or pulling, the API will look same:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="n">IObservable</span><span class="p">&lt;</span><span class="n">Tweet</span><span class="p">&gt;</span> <span class="n">tweets</span> <span class="p">=</span> <span class="n">_client</span><span class="p">.</span><span class="n">GetHomeTimeline</span><span class="p">();</span>
-</span><span class='line'><span class="n">tweets</span><span class="p">.</span><span class="n">Subscribe</span><span class="p">(</span><span class="n">t</span> <span class="p">=&gt;</span> <span class="p">{</span> <span class="cm">/* do something with the tweet */</span> <span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">IObservable</span><span class="p">&lt;</span><span class="n">Tweet</span><span class="p">&gt;</span> <span class="n">tweets</span> <span class="p">=</span> <span class="n">_client</span><span class="p">.</span><span class="n">GetHomeTimeline</span><span class="p">();</span>
+<span class="n">tweets</span><span class="p">.</span><span class="n">Subscribe</span><span class="p">(</span><span class="n">t</span> <span class="p">=&gt;</span> <span class="p">{</span> <span class="cm">/* do something with the tweet */</span> <span class="p">});</span>
+</code></pre></div>
 
 <p>As far as the caller is concerned, it doesn’t care (or needs to know) whether the <code>GetHomeTimeline</code> method is polling Twitter or streaming from Twitter.  All it needs to know is <em>when</em> a tweet comes it will <em>react</em> and do something in the Subscribe action.</p>
 
@@ -162,21 +175,13 @@
 <p>However, if that was the only thing Rx provided it wouldn’t be as popular as it is, because other pub/sub solutions like the EventAggregator already provide a viable asynchronous solution.</p>
 
 <p>Unlocking Rx’s power comes with its multitude of operators.  Here’s an example:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">public</span> <span class="k">static</span> <span class="n">IObservable</span><span class="p">&lt;</span><span class="n">Tweet</span><span class="p">&gt;</span> <span class="n">GetStreamingStatuses</span><span class="p">(</span><span class="k">this</span> <span class="n">TwitterClient</span> <span class="n">client</span><span class="p">)</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>  <span class="k">return</span> <span class="n">client</span><span class="p">.</span><span class="n">GetHomeTimeline</span><span class="p">()</span>
-</span><span class='line'>      <span class="p">.</span><span class="n">Merge</span><span class="p">(</span><span class="n">client</span><span class="p">.</span><span class="n">GetMentions</span><span class="p">())</span>
-</span><span class='line'>      <span class="p">.</span><span class="n">Concat</span><span class="p">(</span><span class="n">client</span><span class="p">.</span><span class="n">GetStreamingHomeline</span><span class="p">());</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">static</span> <span class="n">IObservable</span><span class="p">&lt;</span><span class="n">Tweet</span><span class="p">&gt;</span> <span class="n">GetStreamingStatuses</span><span class="p">(</span><span class="k">this</span> <span class="n">TwitterClient</span> <span class="n">client</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">return</span> <span class="n">client</span><span class="p">.</span><span class="n">GetHomeTimeline</span><span class="p">()</span>
+      <span class="p">.</span><span class="n">Merge</span><span class="p">(</span><span class="n">client</span><span class="p">.</span><span class="n">GetMentions</span><span class="p">())</span>
+      <span class="p">.</span><span class="n">Concat</span><span class="p">(</span><span class="n">client</span><span class="p">.</span><span class="n">GetStreamingHomeline</span><span class="p">());</span>
+<span class="p">}</span>
+</code></pre></div>
 
 <p><code>GetHomeTimeline</code> and <code>GetMentions</code> initiate once-only pull style API calls, while <code>GetStreamingHomeline</code> will initiate a sticky connection and stream subsequent tweets down the pipe.</p>
 
@@ -186,280 +191,113 @@
 
 <p>And there lies one of the greatest beauties of Rx.  <em>All</em> of the complexity lies solely on setting up the stream and operators.  And that, also, is its disadvantage.</p>
 
-<h1>Rx Complexity</h1>
+<h1 id="rx-complexity:59fe73bd1c5a5710d61b089976e2b93f">Rx Complexity</h1>
 
-<p>Let’s take a look at the <a href="http://msdn.microsoft.com/en-us/library/hh212146(v=VS.103">Concat</a>.aspx) operator, defined as: &ldquo;Concatenates two observable sequences.&rdquo;  In the remarks sections it states this: &ldquo;The Concat operator runs the first sequence to completion. Then, the second sequence is run to completion effectively concatenating the second sequence to the end of the first sequence.&rdquo;</p>
+<p>Let’s take a look at the <a href="http://msdn.microsoft.com/en-us/library/hh212146(v=VS.103).aspx">Concat</a> operator, defined as: &ldquo;Concatenates two observable sequences.&rdquo;  In the remarks sections it states this: &ldquo;The Concat operator runs the first sequence to completion. Then, the second sequence is run to completion effectively concatenating the second sequence to the end of the first sequence.&rdquo;</p>
 
 <p>Let’s try it out:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="kt">var</span> <span class="n">a</span> <span class="p">=</span> <span class="n">Observable</span><span class="p">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromSeconds</span><span class="p">(</span><span class="m">1</span><span class="p">)).</span><span class="n">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">ToString</span><span class="p">());</span>
-</span><span class='line'><span class="kt">var</span> <span class="n">b</span> <span class="p">=</span> <span class="n">Observable</span><span class="p">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromSeconds</span><span class="p">(</span><span class="m">1</span><span class="p">)).</span><span class="n">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="s">&quot;s&quot;</span> <span class="p">+</span> <span class="n">x</span><span class="p">);</span>
-</span><span class='line'><span class="n">a</span><span class="p">.</span><span class="n">Concat</span><span class="p">(</span><span class="n">b</span><span class="p">).</span><span class="n">Subscribe</span><span class="p">(</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">);</span>
-</span><span class='line'><span class="c1">// output: 0, 1, 2, 3, 4...</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="kt">var</span> <span class="n">a</span> <span class="p">=</span> <span class="n">Observable</span><span class="p">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromSeconds</span><span class="p">(</span><span class="m">1</span><span class="p">)).</span><span class="n">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">ToString</span><span class="p">());</span>
+<span class="kt">var</span> <span class="n">b</span> <span class="p">=</span> <span class="n">Observable</span><span class="p">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromSeconds</span><span class="p">(</span><span class="m">1</span><span class="p">)).</span><span class="n">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="s">&quot;s&quot;</span> <span class="p">+</span> <span class="n">x</span><span class="p">);</span>
+<span class="n">a</span><span class="p">.</span><span class="n">Concat</span><span class="p">(</span><span class="n">b</span><span class="p">).</span><span class="n">Subscribe</span><span class="p">(</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">);</span>
+<span class="c1">// output: 0, 1, 2, 3, 4...</span>
+</code></pre></div>
 
 <p>As expected, only numbers are printed because the first sequence never ends, so it won’t concatenate the second one.  Let’s modify it so that it does finish:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="kt">int</span> <span class="n">count</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
-</span><span class='line'><span class="kt">var</span> <span class="n">a</span> <span class="p">=</span> <span class="n">Observable</span><span class="p">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromSeconds</span><span class="p">(</span><span class="m">1</span><span class="p">))</span>
-</span><span class='line'>    <span class="p">.</span><span class="n">TakeWhile</span><span class="p">(</span><span class="n">_</span> <span class="p">=&gt;</span> <span class="p">++</span><span class="n">count</span> <span class="p">&lt;</span> <span class="m">5</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">.</span><span class="n">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">ToString</span><span class="p">());</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="kt">int</span> <span class="n">count</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+<span class="kt">var</span> <span class="n">a</span> <span class="p">=</span> <span class="n">Observable</span><span class="p">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromSeconds</span><span class="p">(</span><span class="m">1</span><span class="p">))</span>
+    <span class="p">.</span><span class="n">TakeWhile</span><span class="p">(</span><span class="n">_</span> <span class="p">=&gt;</span> <span class="p">++</span><span class="n">count</span> <span class="p">&lt;</span> <span class="m">5</span><span class="p">)</span>
+    <span class="p">.</span><span class="n">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">ToString</span><span class="p">());</span>
+</code></pre></div>
 
 <p>Note, that using <code>Observable.Generate</code> is preferred because it doesn’t introduce an external variable, but I stuck with Interval so the code looks similar to the second observable.  As expected again, it will print &ldquo;0, 1, 2, s0, s1, s2&rdquo;.</p>
 
-<p>OK, let’s spice things up.  Let’s make <code>b</code> a ConnectableObservable by using the <a href="http://msdn.microsoft.com/en-us/library/hh229126(v=VS.103">Publish</a>.aspx) operator, and immediately call <code>Connect</code>.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="kt">int</span> <span class="n">count</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
-</span><span class='line'><span class="kt">var</span> <span class="n">a</span> <span class="p">=</span> <span class="n">Observable</span><span class="p">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromSeconds</span><span class="p">(</span><span class="m">1</span><span class="p">))</span>
-</span><span class='line'>    <span class="p">.</span><span class="n">TakeWhile</span><span class="p">(</span><span class="n">_</span> <span class="p">=&gt;</span> <span class="p">++</span><span class="n">count</span> <span class="p">&lt;</span> <span class="m">5</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">.</span><span class="n">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">ToString</span><span class="p">());</span>
-</span><span class='line'><span class="kt">var</span> <span class="n">b</span> <span class="p">=</span> <span class="n">Observable</span><span class="p">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromSeconds</span><span class="p">(</span><span class="m">1</span><span class="p">)).</span><span class="n">Select</span><span class="p">(</span><span class="n">_</span> <span class="p">=&gt;</span> <span class="s">&quot;s&quot;</span> <span class="p">+</span> <span class="n">_</span><span class="p">).</span><span class="n">Publish</span><span class="p">();</span>
-</span><span class='line'><span class="n">b</span><span class="p">.</span><span class="n">Connect</span><span class="p">();</span>
-</span><span class='line'><span class="n">a</span><span class="p">.</span><span class="n">Concat</span><span class="p">(</span><span class="n">b</span><span class="p">).</span><span class="n">Subscribe</span><span class="p">(</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<p>OK, let’s spice things up.  Let’s make <code>b</code> a ConnectableObservable by using the <a href="http://msdn.microsoft.com/en-us/library/hh229126(v=VS.103).aspx">Publish</a> operator, and immediately call <code>Connect</code>.</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="kt">int</span> <span class="n">count</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+<span class="kt">var</span> <span class="n">a</span> <span class="p">=</span> <span class="n">Observable</span><span class="p">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromSeconds</span><span class="p">(</span><span class="m">1</span><span class="p">))</span>
+    <span class="p">.</span><span class="n">TakeWhile</span><span class="p">(</span><span class="n">_</span> <span class="p">=&gt;</span> <span class="p">++</span><span class="n">count</span> <span class="p">&lt;</span> <span class="m">5</span><span class="p">)</span>
+    <span class="p">.</span><span class="n">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">ToString</span><span class="p">());</span>
+<span class="kt">var</span> <span class="n">b</span> <span class="p">=</span> <span class="n">Observable</span><span class="p">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromSeconds</span><span class="p">(</span><span class="m">1</span><span class="p">)).</span><span class="n">Select</span><span class="p">(</span><span class="n">_</span> <span class="p">=&gt;</span> <span class="s">&quot;s&quot;</span> <span class="p">+</span> <span class="n">_</span><span class="p">).</span><span class="n">Publish</span><span class="p">();</span>
+<span class="n">b</span><span class="p">.</span><span class="n">Connect</span><span class="p">();</span>
+<span class="n">a</span><span class="p">.</span><span class="n">Concat</span><span class="p">(</span><span class="n">b</span><span class="p">).</span><span class="n">Subscribe</span><span class="p">(</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">);</span>
+</code></pre></div>
 
 <p>What do you think the output of this will be?  The answer is &ldquo;0, 1, 2, 3, <em>s5, s6, s7</em>, &hellip;&rdquo;</p>
 
-<p>Despite using the same <code>Concat</code> operator, the result can be very different depending on the source observables.  If you use the <a href="http://msdn.microsoft.com/en-us/library/hh229288(v=VS.103">Replay</a>.aspx) operator, it would have printed &ldquo;0, 1, 2, 3, s0, s1, s2, &hellip;&rdquo;</p>
+<p>Despite using the same <code>Concat</code> operator, the result can be very different depending on the source observables.  If you use the <a href="http://msdn.microsoft.com/en-us/library/hh229288(v=VS.103).aspx">Replay</a> operator, it would have printed &ldquo;0, 1, 2, 3, s0, s1, s2, &hellip;&rdquo;</p>
 
 <p>Years and years of working in synchronous programming models have trained us to think in synchronous ways, and I picked Concat specifically because Concat also exists in the enumerable world.  Observable sequences are asynchronous, so we never know exactly <em>when</em> data comes at us, only what to do when it does.  And because streams occur at different times, when you combine them together there are many many ways of doing so (CombineLatest, Merge, Zip, are just a few).</p>
 
 <p>The greatest hurdle to working in Rx is to know what the different combinations do.  This takes time and practice.  <a href="http://mnajder.blogspot.com/2010/03/rxsandbox-v1.html">RxTools</a> is a great learning tool to test out what all the operators do.</p>
 
-<h1>Unit Testing</h1>
+<h1 id="unit-testing:59fe73bd1c5a5710d61b089976e2b93f">Unit Testing</h1>
 
 <p>Last but not least, Rx can make it easier to write unit tests.  The concept is easy: take some inputs and test the output.  In practice this is complicated because applications typically carry a lot of state with them.  Even with dependency injection and mocking frameworks I’ve seen a lot of code where for every assert there is 10 lines of mock setup code.</p>
 
 <p>So how does it make it easier to test?  It reduces what you need to test to a single method, Subscribe, which takes one input, an <code>IObservable&lt;T&gt;</code></p>
 
-<h1>Conclusion</h1>
+<h1 id="conclusion:59fe73bd1c5a5710d61b089976e2b93f">Conclusion</h1>
 
 <p>Rx is a library unlike any other you will use.  With other libraries, you will add them to your solution, use a method here or there, and go on with your life.  With Rx, it will radically change the way you code and think in general.  It’s awesome.</p>
+
+  </div>
 </div>
 
 
-  <footer>
-    <p class="meta">
-      
-  
-
-<span class="byline author vcard">Posted by <span class="fn">Bailey Ling</span></span>
-
-      
 
 
+<div class="social-bar">
+  <a href="https://twitter.com/share" class="twitter-share-button"{count} data-via="blingcoder">Tweet</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 
-
-
-
-
-
-  
-
-
-<time datetime="2011-09-29T00:00:00+00:00" pubdate data-updated="true">Sep 29<span>th</span>, 2011</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/rx/'>rx</a>, <a class='category' href='/blog/categories/twitter/'>twitter</a>
-  
-</span>
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bling.github.io/blog/2011/09/29/push-driven-development-with-reactive/" data-via="blingcoder" data-counturl="http://bling.github.io/blog/2011/09/29/push-driven-development-with-reactive/" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <g:plusone></g:plusone>
 </div>
 
-    
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2011/09/21/building-real-time-push-app-with-rx-8/" title="Previous Post: Building a Real-time Push App with Silverlight: Part 8">&laquo; Building a Real-time Push App with Silverlight: Part 8</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2011/10/09/pingpong-twitter-client/" title="Next Post: ping.pong Twitter Client">ping.pong Twitter Client &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
+<ul class="pager">
+   &nbsp;<li class="previous"><a href="http://bling.github.io/blog/2011/10/09/pingpong-twitter-client/"> ping.pong Twitter Client</a></li>
+   &nbsp;<li class="next"><a href="http://bling.github.io/blog/2011/09/21/building-real-time-push-app-with-rx-8/"> Building a Real-time Push App with Silverlight: Part 8</a></li>
+</ul>
 
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-  </section>
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'blingdev';
+    var disqus_identifier = 'http:\/\/bling.github.io\/blog\/2011\/09\/29\/push-driven-development-with-reactive\/';
+    var disqus_title = 'Push Driven Development with Reactive Extensions';
+    var disqus_url = 'http:\/\/bling.github.io\/blog\/2011\/09\/29\/push-driven-development-with-reactive\/';
 
-</div>
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
-<aside class="sidebar">
-  
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2015/01/06/emacs-as-my-leader-1-year-later/">Emacs As My &lt;Leader&gt;, 1 Year Later</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/">Asynchronous Eval in Emacs with Stylus and Skewer</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/">Emacs as my &lt;Leader&gt;: Vim Survival Guide</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my &lt;Leader&gt;: evil-mode</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/09/09/vim-in-emacs-bootstrap/">Vim in Emacs Bootstrap</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/08/16/modularizing-vimscript/">Modularizing VimScript</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/30/1000-stars-in-1-month/">1000 stars in 1 month</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
-      </li>
-    
-  </ul>
-</section>
-
-<section>
-  <h1>GitHub Repos</h1>
-  <ul id="gh_repos">
-    <li class="loading">Status updating...</li>
-  </ul>
-  
-  <a href="https://github.com/bling">@bling</a> on GitHub
-  
-  <script type="text/javascript">
-    $(document).ready(function(){
-        if (!window.jXHR){
-            var jxhr = document.createElement('script');
-            jxhr.type = 'text/javascript';
-            jxhr.src = '/javascripts/libs/jXHR.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(jxhr, s);
-        }
-
-        github.showRepos({
-            user: 'bling',
-            count: 0,
-            skip_forks: true,
-            target: '#gh_repos'
-        });
-    });
-  </script>
-  <script src="/javascripts/github.js" type="text/javascript"> </script>
-</section>
-
-
-
-
-
-  
-</aside>
 
 
     </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - Bailey Ling -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
 
-</footer>
-  
+    <footer>
+      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
+    </footer>
 
-<script type="text/javascript">
-      var disqus_shortname = 'blingdev';
-      
-        
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://bling.github.io/blog/2011/09/29/push-driven-development-with-reactive/';
-        var disqus_url = 'http://bling.github.io/blog/2011/09/29/push-driven-development-with-reactive/';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
+    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.js"></script>
+    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+
+    
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38439430-2', 'auto');
+ga('send', 'pageview');
 </script>
 
-
-
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id; js.async = true;
-  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
-
-
-  <script type="text/javascript">
-    (function() {
-      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
-      script.src = 'https://apis.google.com/js/plusone.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
-    })();
-  </script>
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
-
-</body>
+  </body>
 </html>
+

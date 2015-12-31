@@ -1,294 +1,158 @@
-
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <title>ping.pong Twitter Client - bling on software development</title>
-  <meta name="author" content="Bailey Ling">
-
-  
-  <meta name="description" content="I have a whole series dedicated to blogging about how I wrote a Twitter client from scratch, but if I want anyone to actually use it, I better do &hellip;">
-  
-
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  
-  <link rel="canonical" href="http://bling.github.io/blog/2011/10/09/pingpong-twitter-client">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="bling on software development" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic|Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
-
-
-  
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-38439430-2']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
-
-</head>
-
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">bling on software development</a></h1>
-  
-    <h2>when pragmatism meets minimalism</h2>
-  
-</hgroup>
-
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:bling.github.io" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
-
-</nav>
-  <div id="main">
-    <div id="content">
-      <div>
-<article class="hentry" role="article">
-  
-  <header>
-    
-      <h1 class="entry-title">ping.pong Twitter Client</h1>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>ping.pong Twitter Client</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="generator" content="Hugo 0.16-DEV" />
+    <link href="" rel="alternate" type="application/rss+xml" title="bling on software" />
+    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
     
     
-      <p class="meta">
-        
+  </head>
+  <body>
+    <div id = "wrapper">
+
+      <div class="navbar navbar-default" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a href="http://bling.github.io/"><p class="navbar-brand">bling on software</p></a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              
+              
+            </ul>
+          </div>
+        </div>
+      </div>
 
 
 
+      
+      <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+          <li class="sidebar-brand">
+            <a href="http://bling.github.io/">
+              <h1 class="brand">bling on software</h1>
+            </a>
+            <a href="/about">
+              <img src="https://pbs.twimg.com/profile_images/1188386482/Untitled_bigger.png" />
+            </a>
+            <h3>when pragmatism meets minimalism</h3>
+          </li>
+
+          <hr />
+
+          <div id="social-wrapper">
+            <li> <a href="https://github.com/bling"><i class="fa fa-github-square"></i> github</a> </li>
+            <li> <a href="https://twitter.com/blingcoder"><i class="fa fa-twitter-square"></i> @twitter</a></li>
+            <li> <a href="https://linkedin.com/in/baileyling"><i class="fa fa-linkedin-square"></i> linkedin</a> </li>
+          </div>
+
+          <hr />
+
+          <li class="sidebar-categories">
+            <div>
+              <span>Categories</span>
+              <a href="/post" style="float:right">show all</a>
+            </div>
+            <div>
+              
+              <a href="/categories/blend">blend</a>
+              
+              <a href="/categories/castle">castle</a>
+              
+              <a href="/categories/castle-coding">castle-coding</a>
+              
+              <a href="/categories/coding">coding</a>
+              
+              <a href="/categories/cqrs">cqrs</a>
+              
+              <a href="/categories/emacs">emacs</a>
+              
+              <a href="/categories/forex">forex</a>
+              
+              <a href="/categories/ioc">ioc</a>
+              
+              <a href="/categories/javascript">javascript</a>
+              
+              <a href="/categories/logging">logging</a>
+              
+              <a href="/categories/powershell">powershell</a>
+              
+              <a href="/categories/rx">rx</a>
+              
+              <a href="/categories/software-tools">software-tools</a>
+              
+              <a href="/categories/source-control-management">source-control-management</a>
+              
+              <a href="/categories/testing">testing</a>
+              
+              <a href="/categories/twitter">twitter</a>
+              
+              <a href="/categories/vim">vim</a>
+              
+              <a href="/categories/visual-studio">visual-studio</a>
+              
+            </div>
+          </li>
+        </ul>
+      </div>
 
 
 
+      <div class="container">
 
 
-  
 
-
-<time datetime="2011-10-09T00:00:00+00:00" pubdate data-updated="true">Oct 9<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-<div class="entry-content"><div class='post'>
+<div class="article">
+  <div class="article-title">ping.pong Twitter Client</div>
+  <p class="meta"><small>&nbsp;<i class="fa fa-calendar-o"></i> 2011-10-09</small></p> <hr/>
+  <div class="post">
+    <div class='post'>
 <p>I have a whole <a href="http://blingcode.blogspot.com/2011/09/push-driven-development-with-reactive.html">series</a> dedicated to blogging about how I wrote a Twitter client from scratch, but if I want anyone to actually use it, I better do some advertising :-D.</p> <p>ping.pong is a fast and lightweight Twitter client written in Silverlight.&nbsp; As of this moment it targets v4 but will likely target v5 whenever that is released.</p> <p>Here are some highlights…</p> <h3>Visually Pleasing</h3> <p><img style="background-image: none; border-right-width: 0px; padding-left: 0px; padding-right: 0px; display: block; float: none; border-top-width: 0px; border-bottom-width: 0px; margin-left: auto; border-left-width: 0px; margin-right: auto; padding-top: 0px" title="image" border="0" alt="image" src="http://lh3.ggpht.com/-9wwcsDIu5Yg/TpHayG-NVXI/AAAAAAAAAHg/-Jo9iq0ghOA/image%25255B15%25255D.png?imgmax=800" width="377" height="280"></p> <p>The UI is based on your typical column-based design.&nbsp; The column widths will automatically resize to take up all available horizontal space.&nbsp; There is no horizontal scrolling.</p> <h3><strong>Access to the Streaming API</strong></h3> <p>No more rate limits!&nbsp; Your timeline is connected directly with Twitter’s streaming API, which means whenever someone you follow tweets you will know about it in almost near real-time.&nbsp; Searching is also done through the streaming API.</p> <h3>Fast &amp; Lightweight</h3> <p>ping.pong was built to run fast with low CPU utilization.&nbsp; Even when stream searching for “e” (yes, the letter E), the CPU usage stays under 15%.&nbsp; The maximum number of tweets that Twitter sends appears to be 50 per second.</p> <h3>Conversations</h3> <p>ping.pong will quickly show an entire tweet conversation by navigating reply tags back to the original tweet that started it all.</p> <h3>Free &amp; Open Source</h3> <p>The full source code for ping.pong can be found on <a href="https://github.com/bling/Ping.Pong">GitHub</a>.&nbsp; You can compile it, make modifications as you please, and run it yourself.&nbsp; The only thing missing is the consumer keys which uniquely identifies this client from another.&nbsp; You can generate them through Twitter once you have a developer account.</p> <h3>Installer</h3> <p>The latest and greatest can be quickly installed from <a href="http://dl.dropbox.com/u/2072014/Ping.Pong/PingPongTestPage.html">here</a>.&nbsp; Check back periodically for updates!</p>  </div>
+
+  </div>
 </div>
 
 
-  <footer>
-    <p class="meta">
-      
-  
 
-<span class="byline author vcard">Posted by <span class="fn">Bailey Ling</span></span>
-
-      
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-10-09T00:00:00+00:00" pubdate data-updated="true">Oct 9<span>th</span>, 2011</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/twitter/'>twitter</a>
-  
-</span>
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bling.github.io/blog/2011/10/09/pingpong-twitter-client/" data-via="blingcoder" data-counturl="http://bling.github.io/blog/2011/10/09/pingpong-twitter-client/" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-</div>
-
-    
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2011/09/29/push-driven-development-with-reactive/" title="Previous Post: Push Driven Development with Reactive Extensions">&laquo; Push Driven Development with Reactive Extensions</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2011/10/31/my-thoughts-on-mef/" title="Next Post: My Thoughts on MEF">My Thoughts on MEF &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
-
-</div>
-
-<aside class="sidebar">
-  
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2015/01/06/emacs-as-my-leader-1-year-later/">Emacs As My &lt;Leader&gt;, 1 Year Later</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/">Asynchronous Eval in Emacs with Stylus and Skewer</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/">Emacs as my &lt;Leader&gt;: Vim Survival Guide</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my &lt;Leader&gt;: evil-mode</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/09/09/vim-in-emacs-bootstrap/">Vim in Emacs Bootstrap</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/08/16/modularizing-vimscript/">Modularizing VimScript</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/30/1000-stars-in-1-month/">1000 stars in 1 month</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
-      </li>
-    
-  </ul>
-</section>
-
-<section>
-  <h1>GitHub Repos</h1>
-  <ul id="gh_repos">
-    <li class="loading">Status updating...</li>
-  </ul>
-  
-  <a href="https://github.com/bling">@bling</a> on GitHub
-  
-  <script type="text/javascript">
-    $(document).ready(function(){
-        if (!window.jXHR){
-            var jxhr = document.createElement('script');
-            jxhr.type = 'text/javascript';
-            jxhr.src = '/javascripts/libs/jXHR.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(jxhr, s);
-        }
-
-        github.showRepos({
-            user: 'bling',
-            count: 0,
-            skip_forks: true,
-            target: '#gh_repos'
-        });
-    });
-  </script>
-  <script src="/javascripts/github.js" type="text/javascript"> </script>
-</section>
-
-
-
-
-
-  
-</aside>
 
 
     </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - Bailey Ling -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
 
-</footer>
-  
+    <footer>
+      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
+    </footer>
 
+    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.js"></script>
+    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
 
+    
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id; js.async = true;
-  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
+ga('create', 'UA-38439430-2', 'auto');
+ga('send', 'pageview');
+</script>
 
-
-
-  <script type="text/javascript">
-    (function() {
-      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
-      script.src = 'https://apis.google.com/js/plusone.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
-    })();
-  </script>
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
-
-</body>
+  </body>
 </html>
+

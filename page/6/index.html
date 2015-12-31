@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>bling on software</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="generator" content="Hugo 0.16-DEV" />
+    <link href="http://bling.github.io/index.xml" rel="alternate" type="application/rss+xml" title="bling on software" />
+    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    
+    
+  </head>
+  <body>
+    <div id = "wrapper">
+
+      <div class="navbar navbar-default" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a href="http://bling.github.io/"><p class="navbar-brand">bling on software</p></a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+
+
+
+      
+      <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+          <li class="sidebar-brand">
+            <a href="http://bling.github.io/">
+              <h1 class="brand">bling on software</h1>
+            </a>
+            <a href="/about">
+              <img src="https://pbs.twimg.com/profile_images/1188386482/Untitled_bigger.png" />
+            </a>
+            <h3>when pragmatism meets minimalism</h3>
+          </li>
+
+          <hr />
+
+          <div id="social-wrapper">
+            <li> <a href="https://github.com/bling"><i class="fa fa-github-square"></i> github</a> </li>
+            <li> <a href="https://twitter.com/blingcoder"><i class="fa fa-twitter-square"></i> @twitter</a></li>
+            <li> <a href="https://linkedin.com/in/baileyling"><i class="fa fa-linkedin-square"></i> linkedin</a> </li>
+          </div>
+
+          <hr />
+
+          <li class="sidebar-categories">
+            <div>
+              <span>Categories</span>
+              <a href="/post" style="float:right">show all</a>
+            </div>
+            <div>
+              
+              <a href="/categories/blend">blend</a>
+              
+              <a href="/categories/castle">castle</a>
+              
+              <a href="/categories/castle-coding">castle-coding</a>
+              
+              <a href="/categories/coding">coding</a>
+              
+              <a href="/categories/cqrs">cqrs</a>
+              
+              <a href="/categories/emacs">emacs</a>
+              
+              <a href="/categories/forex">forex</a>
+              
+              <a href="/categories/ioc">ioc</a>
+              
+              <a href="/categories/javascript">javascript</a>
+              
+              <a href="/categories/logging">logging</a>
+              
+              <a href="/categories/powershell">powershell</a>
+              
+              <a href="/categories/rx">rx</a>
+              
+              <a href="/categories/software-tools">software-tools</a>
+              
+              <a href="/categories/source-control-management">source-control-management</a>
+              
+              <a href="/categories/testing">testing</a>
+              
+              <a href="/categories/twitter">twitter</a>
+              
+              <a href="/categories/vim">vim</a>
+              
+              <a href="/categories/visual-studio">visual-studio</a>
+              
+            </div>
+          </li>
+        </ul>
+      </div>
+
+
+
+      <div class="container">
+
+
+
+
+
+<div class="article">
+  <div class="article-title">
+    <a href="http://bling.github.io/blog/2011/09/08/building-real-time-push-app-with-rx-5/">Building a Real-time Push App with Silverlight: Part 5</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2011-09-08</small></p> <hr/>
+  <div class="post">
+    I planned on this post to be about UI, but I’m going to defer that until the next post. I said from the start of this series that I would document about everything about building the application from scratch, including my struggles. And with that I want to mention something that got me scratching my head one too many times. It was with how I used LinqToTwitter. Here is the source code which you can immediately copy/paste into a blank project to reproduce: public partial class MainPage : UserControl { private readonly TwitterContext _context = new TwitterContext(); private readonly ViewModel _vm1, _vm2, _vm3; public MainPage() { InitializeComponent(); _vm1 = new ViewModel(_context); _vm2 = new ViewModel(_context); _vm3 = new ViewModel(_context); _vm1.Callback += () =&gt; Debug.WriteLine(&quot;Callback of VM1: &quot; + _vm1.LocalState); _vm2.Callback += () =&gt; Debug.WriteLine(&quot;Callback of VM2: &quot; + _vm2.LocalState); _vm3.Callback += () =&gt; Debug.WriteLine(&quot;Callback of VM3: &quot; + _vm3.LocalState); _vm1.Start(); _vm2.Start(); _vm3.Start(); } } public class ViewModel { private readonly TwitterContext _context; public event Action Callback; public int LocalState; public ViewModel(TwitterContext context) { _context = context; } public void Start() { var query = (from s in _context.Status where s.Type == StatusType.Public &amp;&amp; s.Count == 10 select s); Debug.WriteLine(&quot;Hash code of ViewModel: &quot; + query.GetHashCode()); query.AsyncCallback(statuses =&gt; { LocalState++; Debug.WriteLine(&quot;Hash code inside callback: &quot; + GetHashCode()); Callback(); }).FirstOrDefault(); } } Now, if you run this, you will see that only one of the view models will get its state updated. Huh?! How is that possible? I started getting paranoid so I even added the local state variable “just in case.” Well, I had to look into the source code of LinqToTwitter to figure out exactly what happened. Here is the code for AsyncCallback: public static IQueryable&lt;T&gt; AsyncCallback&lt;T&gt;(this IQueryable&lt;T&gt; queryType, Action&lt;IEnumerable&lt;T&gt;&gt; callback) { (queryType.Provider as TwitterQueryProvider) .Context .TwitterExecutor .AsyncCallback = callback; return queryType; } See what happened? The callback gets overwritten every time you call this method. Even though the call to FirstOrDefault() causes all 3 expressions to evaluate, only the last view model will get values because that’s the with the callback attached. Lesson of the day: The AsyncCallback extension method for LinqToTwitter is not thread-safe. So&hellip;the question is, how do we make it thread safe? I just replaced wrapped the AsyncCallback with another extension method: private static readonly AutoResetEvent _twitterEvt = new AutoResetEvent(true); public static void AsyncTwitterCallback&lt;T&gt;(this IQueryable&lt;T&gt; twitter, Action&lt;IEnumerable&lt;T&gt;&gt; callback) { Observable.Start(() =&gt; { _twitterEvt.WaitOne(); twitter.AsyncCallback(results =&gt; { try { callback(results); } finally { _twitterEvt.Set(); } }).FirstOrDefault(); }); } Nothing complicated – just a simple wait handle to ensure only 1 thread can go through at a time. Hopefully upstream fixes this, or at least documents it.
+
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
+    <a href="http://bling.github.io/blog/2011/09/05/building-real-time-push-app-with-rx-4/">Building a Real-time Push App with Silverlight: Part 4</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2011-09-05</small></p> <hr/>
+  <div class="post">
+    Originally I wanted to avoid bringing in external libraries to keep the app as lean as possible, but then I realized that I would spend too much time reinventing the wheel. Twitter is deprecating basic authentication in the near future, which makes OAuth no longer optional. Rather than writing yet another Twitter client (if you’re curious I found a great reference here), I fired up NuGet and brought in LinqToTwitter, and while I’m there I brought in Autofac and Caliburn.Micro as well. Naturally, LinqToTwitter will work nicely with Rx because as name implies it uses LINQ heavily. Caliburn.Micro is a MVVM library which I’ve always wanted an excuse to try because of features like this: &lt;ListBox cal:Message.Attach=&quot;[Event Loaded] = [LoadList($dataContext)]&quot; /&gt; That’s only scratching the surface of what Caliburn can do, so it will be a fresh breath of air to see what else it can do. By default, Caliburn uses MEF to wire up its bootstrapper. After adding a couple [Import]s and [Export]s, I knew it wasn’t for me. It works well for writing plugins, i.e. external dependencies because of its built-in assembly scanning capabilities, but for injecting internal dependencies, other IoC containers do a much better job of that. I used Castle Windsor in past projects, but for a change I’m going to use Autofac which I haven’t used since v2 came out. When this was all said and done the View was the only thing that didn’t change. Everything underneath either changed radically or was deleted altogether (because LinqToTwitter provided it). I added OAuth support and registered my application with Twitter, and with that was the birth of Ping Pong. This took much longer than expected. Silverlight 5 RC just came out and it broke pretty much any container (including MEF) for OOB because of a TypeLoadException. I haven’t been using too many v5 features, so for the time being I downgraded to v4 to get the project working until RC2 comes out. Integrating LinqToTwitter was a challenge. The project site has a lot of good documentation, but most of it was for desktop, not Silverlight, and because of that I banged my head a couple times. I wish I grabbed the source code earlier because it’s there where you’ll find hundreds of working examples (in code!) to do everything with the library (and in Silverlight). After all that, PingPong now has 3 columns (home, public, sampling) that dynamically resizes (it’s surprising that MetroTwit is the only client that does this&hellip;) to the window size. Oh, and there’s pictures now! The streaming time line takes significantly more CPU now that it has to load images, but we’re still sitting at around 5-10% for what is continuously streaming data and loading pictures. Not too shabby! (It took a couple tries to get a PG-13 screenshot from the public/streaming time lines&hellip;) To conclude this post in the series, I’m going to talk about converting an asynchronous operation into an Observable that does not follow any predefined pattern. Creating an Observable One of Silverlight’s limitations is that almost everything needs to be an asynchronous call. In regards to LinqToTwitter, something like this will fail (but work on desktop): var tweets = (from t in context.Status where t.Type == StatusType.Public select t).ToArray(); On Silverlight you will get a single empty element. To get it working, there is an extension method that comes with the library, and you use it like this: (from t in context.Status where t.Type == StatusType.Public select t) .AsyncCallback(tweets =&gt; { /* do something with it */ }) .FirstOrDefault(); Code is self-explanatory. The FirstOrDefault() exists only to initiate the expression, otherwise it wouldn’t do anything. So now the question is how do we convert that into an Rx Observable? Every time I write an Rx query I try to use the least amount of state as possible. This helps to keep the number unexpected anomalies to a minimum. In the following section of code, I was able to get it down to 2 fields: _sinceId, and Context. There is probably some operator that will let me save the sinceId variable from one observable to the next but I wasn’t able to figure it out. In any case, I came up with this: _subscription = Observable.Create&lt;Tweet&gt;( ob =&gt; Observable.Interval(TimeSpan.FromSeconds(60)) .StartWith(-1) .SubscribeOnThreadPool() .Subscribe(_ =&gt; { ulong sinceId; (ulong.TryParse(_sinceId, out sinceId) ? Context.Status.Where(s =&gt; s.Type == statusType &amp;&amp; s.Count == 200) : Context.Status.Where(s =&gt; s.Type == statusType &amp;&amp; s.Count == 200 &amp;&amp; s.SinceID == sinceId)) .AsyncCallback(statuses =&gt; { foreach (var status in statuses) { ob.OnNext(new Tweet(status)); _sinceId = status.StatusID; } }) .FirstOrDefault(); // materalize the results })) .DispatcherSubscribe(SubscribeToTweet); That contains some custom code: Context: is a TwitterContext from LinqToTwitter DispatcherSubscribe: is a helper extension method which Subscribes on the ThreadPool, Observes on the Dispatcher, and then Subscribes with the specified action SubscribeToTweet: a method in the base class which adds to a ObservableCollection so the UI gets updated To translate the code, here is a basic flow of what’s happening: Observable.Create wraps the subscription of another Observable. It provides access to an IObserver ob which lets you explicitly invoke OnNext(). Observable.Interval will raise an observable every 60 seconds. The subscription of Observable.Interval will query the TwitterContext for the next set of tweets. Inside the AsyncCallback, it invokes ob.OnNextas well as keeps track of the ID so the next time it queries it only gets newer tweets. Finally, DispatcherSubscribe will take the Tweet object and add it to an ObservableCollection&lt;Tweet&gt;, which notifies the UI. As always, you should “clean up your garbage”. In this respect I was pretty impressed with Rx as it was able to clean up the entire chain of observables with a single call to _subscription.Dispose(). Nice! In the next post I’m going to switch back to UI and completely restyle the application. The code will hit GitHub soon as well (I promise!). Stay tuned&hellip; Comments bling Looks like the same StartWith() trick is needed for Observable.Generate. I played around with Observable.Generate and all the expressions I came up looked pretty complicated in comparison with what I originally had. This is mainly because I need to call OnNext() inside the AsyncCallback, so all solutions either had external Subjects or obscure ways of passing an IObserver around&hellip; Maybe I&#39;m overcomplicating things so if you can come up with an example it&#39;d be greatly appreciated. I&#39;m still a Rx newbie&hellip; Thanks! bling Thanks! I didn&#39;t know about that overload. Is there a way to make it start immediately, like the StartWith(-1) in the original expression? Observable.Generate( 0, _ =&gt; true, _ =&gt; _, _ =&gt; { // this doesn&#39;t get called until 60 seconds passes first&hellip; return 0; }, _ =&gt; TimeSpan.FromSeconds(60)); jwooley Rather than the custom Observable generator with Iterval, why not use Observable.Generate passing in a timespan of 60 seconds?
+
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
+    <a href="http://bling.github.io/blog/2011/08/28/building-real-time-push-app-with-rx-3/">Building a Real-time Push App with Silverlight: Part 3</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2011-08-28</small></p> <hr/>
+  <div class="post">
+    In this part we’re going to fire up Expression Blend (the trial for version 5 can be found here) and do some UI work. In part 2, I created a simple Twitter client which connected to the streaming API, and connected to the sampling request which brings back random tweets. Here is the data template: &lt;DataTemplate x:Key=&quot;TweetDataTemplate&quot;&gt; &lt;Grid DataContext=&quot;{Binding}&quot;&gt; &lt;Grid.RowDefinitions&gt; &lt;RowDefinition /&gt; &lt;RowDefinition Height=&quot;Auto&quot; /&gt; &lt;/Grid.RowDefinitions&gt; &lt;TextBlock FontFamily=&quot;{StaticResource FontFamily}&quot; FontSize=&quot;12&quot; Text=&quot;{Binding Text}&quot; TextWrapping=&quot;Wrap&quot; /&gt; &lt;TextBlock Grid.Row=&quot;1&quot; HorizontalAlignment=&quot;Right&quot; VerticalAlignment=&quot;Bottom&quot; FontFamily=&quot;{StaticResource FontFamily}&quot; FontSize=&quot;13.333&quot; Foreground=&quot;BlueViolet&quot; Text=&quot;{Binding ScreenName}&quot; /&gt; &lt;TextBlock Grid.Row=&quot;1&quot; HorizontalAlignment=&quot;Left&quot; VerticalAlignment=&quot;Bottom&quot; FontFamily=&quot;{StaticResource FontFamily}&quot; FontSize=&quot;9.333&quot; Foreground=&quot;DarkCyan&quot; Text=&quot;{Binding CreatedAt}&quot; /&gt; &lt;/Grid&gt; &lt;/DataTemplate&gt; This renders into something like this: The text is randomly generated from Blend’s sample capability, which is totally awesome as it allows designers to see what they’re working with, and keeps the sample data separate from the real data. While design is a matter of personal taste, and you’re bound to get disagreements between different people, if you follow some basic rules you’ll satisfy a greater audience. Subtle gradients and small shadows If you take a look at all the nice interfaces, they tend to use very slight gradients and small shadows. Most of the time you don’t even notice unless you look closely. I think Microsoft’s Metro design is beautiful. Reason? It emphasizes text over decorations (like gradients and shadows). This tends to lead to very clean design because there’s very little opportunity to abuse gradients and shadows. Realism and light sources Continuing on with gradients and shadows, they should be realistic. Look at your design from a 3D point of view. Apply a light source from a certain angle, and then apply your shadows relative to that light source. Convey distance properly Darker shadows imply being closer to the background, whereas lighter shadows imply being further away. Use blurring to add emphasis to the distance. If you overlap planes you should apply these rules to each individual plane. Don’t use the same border for everything. Think about how it would look like in real life if you laid it out like that with pieces of paper. The shadow sizes for that will be different, so you should do the same. Also keep in mind that the shadows used above are way too much for any application. Be subtle! Consistent theme This one seems obvious but nothing is worse than having a nice looking application bring up an unskinned dialog. Usability If the design doesn’t serve a purpose to make it more usable, it shouldn’t be there. Even something as simple as black on white follows this – you do that so you can read text. However, even something as simple as that can be improved. Take a look at why the Kindle is so successful. The readability is better because of the lower contrast between the black and light-brown background. With these starting points, let’s redesign the data template. &lt;DataTemplate x:Key=&quot;TweetDataTemplate&quot;&gt; &lt;Grid&gt; &lt;Grid.Background&gt; &lt;LinearGradientBrush StartPoint=&quot;0.5,0&quot; EndPoint=&quot;0.5,1&quot;&gt; &lt;GradientStop Color=&quot;#FFDADADA&quot; /&gt; &lt;GradientStop Offset=&quot;1&quot; Color=&quot;#FFC8C8C8&quot; /&gt; &lt;/LinearGradientBrush&gt; &lt;/Grid.Background&gt; &lt;Grid.RowDefinitions&gt; &lt;RowDefinition /&gt; &lt;RowDefinition Height=&quot;Auto&quot; /&gt; &lt;/Grid.RowDefinitions&gt; &lt;TextBlock FontFamily=&quot;{StaticResource FontFamily}&quot; FontSize=&quot;12&quot; Text=&quot;{Binding Text}&quot; TextWrapping=&quot;Wrap&quot; /&gt; &lt;TextBlock Grid.Row=&quot;1&quot; HorizontalAlignment=&quot;Right&quot; VerticalAlignment=&quot;Bottom&quot; FontFamily=&quot;{StaticResource FontFamily}&quot; FontSize=&quot;13.333&quot; Foreground=&quot;BlueViolet&quot; Text=&quot;{Binding ScreenName}&quot; /&gt; &lt;TextBlock Grid.Row=&quot;1&quot; HorizontalAlignment=&quot;Left&quot; VerticalAlignment=&quot;Bottom&quot; FontFamily=&quot;{StaticResource FontFamily}&quot; FontSize=&quot;9.333&quot; Foreground=&quot;#FF003D8F&quot; Text=&quot;{Binding CreatedAt}&quot; /&gt; &lt;Border Grid.RowSpan=&quot;2&quot; BorderBrush=&quot;#FF999999&quot; BorderThickness=&quot;0,0,0,1&quot; /&gt; &lt;Border Grid.RowSpan=&quot;2&quot; BorderBrush=&quot;White&quot; BorderThickness=&quot;0,1,0,0&quot; /&gt; &lt;/Grid&gt; &lt;/DataTemplate&gt; After these changes, it looks like this: Did you notice the gradient? You might think after seeing it here to adjust the gradients more so you can see it. That would be a mistake. See below. The above is the exact same thing, but stacked vertically three times. When this happens the subtle difference between the top and bottom of the control is more pronounced, so it looks like multiple panels are aligned together. However, there’s still a little touch you can add. The white and gray borders are only 1 pixel high, but that’s the little touch needed to make it look crisp. Finally, let’s see the before and after (or eh&hellip;rather after and before, because I took the screenshot backwards :P):
+
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
+    <a href="http://bling.github.io/blog/2011/08/27/building-real-time-push-app-with-rx-2/">Building a Real-time Push App with Silverlight: Part 2</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2011-08-27</small></p> <hr/>
+  <div class="post">
+    Let’s review the main Rx code from last time: public IObservable&lt;string&gt; GetJsonStreams() { var request = GetRequest(); return Observable.FromAsyncPattern&lt;WebResponse&gt;(request.BeginGetResponse, request.EndGetResponse)() .Select(wr =&gt; wr.GetResponseStream()) .Select(str =&gt; Observable.FromAsyncPattern&lt;byte[], int, int, int&gt;(str.BeginRead, str.EndRead)) .SelectMany(ParseJson); } One thing I didn’t like about this was that the web request object was created regardless of whether the Observable gets a subscription or not. This is potentially wasted resources, and I wanted to refactor this to be completely lazy. And with this I started to run into my first &ldquo;huh?&rdquo; moments with Rx: I blocked the UI thread. How did I do that? I started down the path of exploring some more of the Rx methods, which lead me to Create, which lets you manually call OnNext. With this train of thought, I came up with something like this: return Observable.Create&lt;string&gt;(obs =&gt; { var request = GetRequest(); var response = Observable.FromAsyncPattern&lt;WebResponse&gt;(request.BeginGetResponse, request.EndGetResponse)().First(); var str = response.GetResponseStream(); var reader = Observable.FromAsyncPattern&lt;byte[], int, int, int&gt;(str.BeginRead, str.EndRead); foreach (var json in ParseJson(reader)) obs.OnNext(json); obs.OnCompleted(); return str; }); Great! The initialization of the web request only occurs when subscribed! And it will even dispose the stream (by returning str) upon unsubscription. I ran the app and the UI thread immediately blocked. What happened? Rx has the concept of subscription and observation, and provides a way to subscribe and observe on different threads. Here is the original code that subscribed: s.GetJsonStreams() .ObserveOnDispatcher() .Subscribe(x =&gt; Text = x); Can you spot the error? I explicitly told Rx to observe on the dispatcher thread, because I want the action inside Subscribe to be invoked on the UI thread, but I didn’t specify where I want to set up the subscription. Since I left it out, it uses the current thread, which happens to be the UI thread. To solve this, it’s as simple as doing this: s.GetJsonStreams() .SubscribeOn(Scheduler.ThreadPool) .ObserveOnDispatcher() .Subscribe(x =&gt; Text = x); That’s it! Easy! This also follows one of the most important guidelines when using Rx: Subscription and Observation should be done as late as possible, typically just before the Subscribe. Anything more and you’ll likely make Rx spawn more threads than are necessary or some other nasty bugs. KISS! Now with that out of the way, let’s replace the boring TextBlock with something more usable. First, I need to parse all the JSON streams I’m getting into bindable models. To do that, I upgraded my StreamReader component and threw in System.Json for some basic parsing: public class TweetParser { private int _stack; private readonly StringBuilder _sb = new StringBuilder(); public IEnumerable&lt;Tweet&gt; Parse(byte[] buffer, int count) { for (int i = 0; i &lt; count; i++) { var current = (char)buffer[i]; _sb.Append(current); if (current == &#39;{&#39;) _stack++; else if (current == &#39;}&#39;) _stack--; if (_stack == 0 &amp;_sb.Length &gt; 0) { Tweet tweet; var value = JsonValue.Parse(_sb.ToString()); if (value is JsonObject &amp;Tweet.TryParse((JsonObject)value, out tweet)) yield return tweet; _sb.Clear(); } } } } Nothing overly complicated. Next, the Tweet object: public class Tweet { private readonly JsonObject _json; public static bool TryParse(JsonObject value, out Tweet tweet) { if (value.ContainsKey(&quot;text&quot;) &amp;value.ContainsKey(&quot;user&quot;)) { tweet = new Tweet(value); return true; } tweet = null; return false; } private Tweet(JsonObject json) { _json = json; } public string Text { get { return _json[&quot;text&quot;].ToValueString(); } } public string ScreenName { get { return _json[&quot;user&quot;][&quot;screen_name&quot;].ToValueString(); } } } internal static class TweetEx { public static string ToValueString(this JsonValue s) { return s.ToString().Trim(&#39;&quot;&#39;); } } To keep things simple I’m only extracting the screen name and text. I won’t bore you setting up the views since it’s just simple ListBox bound to an ObservableCollection&lt;Tweet&gt;, and a DataTemplate for Tweet. When it’s all said and done, we see something like this: Performance is still good at 2-5% CPU, even though we’re scrolling through 1000 items in near real-time. Stay tuned for part 3, when we introduce Expression Blend and go into basics of UI design. Also, most of this will hit GitHub very soon.
+
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
+    <a href="http://bling.github.io/blog/2011/08/26/building-real-time-push-app-with-rx-1/">Building a Real-time Push App with Silverlight: Part 1</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2011-08-26</small></p> <hr/>
+  <div class="post">
+    This is the beginning of a multi-part series where I’ll be building an interactive application with Silverlight 5 (still beta as of this post). It will be built from the ground up and designed predominantly from a “push data” point of view, where the application is reacting to events in real-time, rather than a more traditional “pulling” point of view. This type of application has exploded with the popularity of social networking and has made a lot of the traditional methods of building applications obsolete. The best example of this shift is from Twitter. When it first came out, it was (and still is predominantly) a “pull” model. You have 200 API requests an hour, and you pull Twitter whenever you want to check if there are tweets of people you follow. That is changing with the Streaming API where data is “pushed” to you as it comes. This changes the way you write your code and requires a mind shift much like from for loops to LINQ. The primary purpose of this series is build a real-time push application from beginning to end, and to show any problems I run along the way, and how I managed to solve them. This will be my first attempt at building a Silverlight application as well as learning Reactive Extensions, so I’m bound to run into newbie mistakes. If you have any tips or pointers please let me know! Also, rather than doing this from a purely technical point of view, I’m also going to put on my designer hat and talk about UI design, and make it look good with Expression Blend when I get to designing the UI in later parts of this series. I feel that this is often overlooked and can result in a lot of wasted work and lead to frustration. This first post will be to get up and running and connected to Twitter with the Streaming API. This was chosen primarily because it is so much data can be pushed through and it can be used to demonstrate how to write a high performance Silverlight application. It’s one thing to write something maintainable, and another altogether to make it run fast as well. I’ve worked on too many WPF projects where performance took a back seat, and in WPF particularly this tends to create some massive technical debt. The Silverlight/WPF technology stack is an exception to the rule and you should definitely think about performance from the start. Well let’s get started! We will connect to Twitter, convert it to an Observable, and then display tweets on the UI. First, let’s create our TwitterStream class: public class TwitterStream { static TwitterStream() { // this allows http authentication to work WebRequest.RegisterPrefix(&quot;http://&quot;, System.Net.Browser.WebRequestCreator.ClientHttp); } protected readonly StreamParser parser = new StreamParser(); public string Username { get; set; } public string Password { get; set; } protected HttpWebRequest GetRequest() { var request = WebRequest.CreateHttp(&quot;http://stream.twitter.com/1/statuses/sample.json?delimited=length&quot;); request.UseDefaultCredentials = false; request.Credentials = new NetworkCredential(Username, Password); return request; } public IObservable&lt;string&gt; GetJsonStreams() { var request = GetRequest(); return Observable.FromAsyncPattern&lt;WebResponse&gt;(request.BeginGetResponse, request.EndGetResponse)() .Select(wr =&gt; wr.GetResponseStream()) .Select(str =&gt; Observable.FromAsyncPattern&lt;byte[], int, int, int&gt;(str.BeginRead, str.EndRead)) .SelectMany(ParseJson); } private IEnumerable&lt;string&gt; ParseJson(Func&lt;byte[], int, int, IObservable&lt;int&gt;&gt; reader) { var buffer = new byte[256]; int bytesRead; while ((bytesRead = reader(buffer, 0, buffer.Length).Single()) &gt; 0) { foreach (var json in parser.Parse(buffer, bytesRead)) yield return json; } } } And that’s all there is to it! The most complicated part is probably parsing of the JSON documents themselves, which I refactored into its own class. The algorithm in the parser is pretty primitive, as it just looks for opening { and closing } and calls that a document – nothing more, nothing less. Note that this uses the deprecated basic HTTP authentication. Sooner or later it will be shut down and OAuth will be required, so I will upgrade when that happens as I want to keep the amount of written code to a minimum. Perhaps the more interesting bit is this part with Rx: Observable.FromAsyncPattern&lt;WebResponse&gt;(request.BeginGetResponse, request.EndGetResponse)() .Select(wr =&gt; wr.GetResponseStream()) .Select(str =&gt; Observable.FromAsyncPattern&lt;byte[], int, int, int&gt;(str.BeginRead, str.EndRead)) .SelectMany(ParseJson); The API takes some getting used to, but once you “tune in” things start to make sense. The FromAsyncPattern essentially wraps the APM pattern’s Begin/End calls into a single Func&lt;&gt;, which when invoked gets you the result as if you called End(), however without all the tedious AsyncCallback implementation. The nice thing about this wrapper Func is that the code starts to look synchronous, even though it is using the ThreadPool behind the scenes. Next, the response is projected into its response stream, which again is converted to another Observable for reading bytes from the stream until finally it goes into the ParseJson method which projects string results. This is both good and bad. Good in that it can make asynchronous code look short and succinct (in this example I’ve wrapped 2 APM pattern calls in 2 lines of code), bad in that anyone inexperienced with Rx will get lost pretty fast. Rx thus far has been a fairly high learning curve. Maybe it’s just me. When I read about it from others, or from seminars, it all makes sense and I generally don’t have any questions. Trying to use it directly is another story, as there are so many overloads it’s easy to get overwhelmed. I feel like Intellisense is making things worse! Carrying on, the code above actually doesn’t do anything yet. First, you must Subscribe to an observable before it does something, similar to you must foreach on a IEnumerable before it starts pulling data. To finish off, let’s create a simple Window with a TextBlock bound to a Text property. This is the constructor: public MainPage() { InitializeComponent(); DataContext = this; var s = new TwitterStream(); s.Username = &quot;blingcoder&quot;; s.Password = &quot;1234567&quot;; s.GetJsonStreams() .ObserveOnDispatcher() .Subscribe(x =&gt; Text = x); } Perhaps one of the nicest features of Rx is automatic thread switching between background threads and UI threads. Above, there is a call to ObserveOnDispatcher, which as the name implies it observes to events on the Dispatcher thread :-). Rx automatically handles switching to the UI thread so when Subscribe occurs we’re on the UI thread. Performance is also very good so far, only maxing out at 5% CPU for what appears to be a continuous flood of tweets from random people. And there you have it! A completely asynchronous streaming Twitter client in roughly 20 lines of code (minus the parsing). Stay tuned for part 2&hellip;
+
+    
+  </div>
+</div>
+
+
+
+    
+    <ul class="pagination">
+        
+        <li>
+            <a href="/" aria-label="First"><span aria-hidden="true">&laquo;&laquo;</span></a>
+        </li>
+        
+        <li
+        >
+        <a href="/page/5/" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+        </li>
+        
+        <li
+        ><a href="/">1</a></li>
+        
+        <li
+        ><a href="/page/2/">2</a></li>
+        
+        <li
+        ><a href="/page/3/">3</a></li>
+        
+        <li
+        ><a href="/page/4/">4</a></li>
+        
+        <li
+        ><a href="/page/5/">5</a></li>
+        
+        <li
+        class="active"><a href="/page/6/">6</a></li>
+        
+        <li
+        ><a href="/page/7/">7</a></li>
+        
+        <li
+        ><a href="/page/8/">8</a></li>
+        
+        <li
+        ><a href="/page/9/">9</a></li>
+        
+        <li
+        ><a href="/page/10/">10</a></li>
+        
+        <li
+        ><a href="/page/11/">11</a></li>
+        
+        <li
+        ><a href="/page/12/">12</a></li>
+        
+        <li
+        ><a href="/page/13/">13</a></li>
+        
+        <li
+        ><a href="/page/14/">14</a></li>
+        
+        <li
+        ><a href="/page/15/">15</a></li>
+        
+        <li
+        ><a href="/page/16/">16</a></li>
+        
+        <li
+        ><a href="/page/17/">17</a></li>
+        
+        <li
+        >
+        <a href="/page/7/" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+        </li>
+        
+        <li>
+            <a href="/page/17/" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
+        </li>
+        
+    </ul>
+    
+
+    </div>
+
+    <footer>
+      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
+    </footer>
+
+    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.js"></script>
+    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+
+    
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38439430-2', 'auto');
+ga('send', 'pageview');
+</script>
+
+  </body>
+</html>
+

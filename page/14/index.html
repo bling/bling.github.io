@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>bling on software</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="generator" content="Hugo 0.16-DEV" />
+    <link href="http://bling.github.io/index.xml" rel="alternate" type="application/rss+xml" title="bling on software" />
+    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    
+    
+  </head>
+  <body>
+    <div id = "wrapper">
+
+      <div class="navbar navbar-default" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a href="http://bling.github.io/"><p class="navbar-brand">bling on software</p></a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+
+
+
+      
+      <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+          <li class="sidebar-brand">
+            <a href="http://bling.github.io/">
+              <h1 class="brand">bling on software</h1>
+            </a>
+            <a href="/about">
+              <img src="https://pbs.twimg.com/profile_images/1188386482/Untitled_bigger.png" />
+            </a>
+            <h3>when pragmatism meets minimalism</h3>
+          </li>
+
+          <hr />
+
+          <div id="social-wrapper">
+            <li> <a href="https://github.com/bling"><i class="fa fa-github-square"></i> github</a> </li>
+            <li> <a href="https://twitter.com/blingcoder"><i class="fa fa-twitter-square"></i> @twitter</a></li>
+            <li> <a href="https://linkedin.com/in/baileyling"><i class="fa fa-linkedin-square"></i> linkedin</a> </li>
+          </div>
+
+          <hr />
+
+          <li class="sidebar-categories">
+            <div>
+              <span>Categories</span>
+              <a href="/post" style="float:right">show all</a>
+            </div>
+            <div>
+              
+              <a href="/categories/blend">blend</a>
+              
+              <a href="/categories/castle">castle</a>
+              
+              <a href="/categories/castle-coding">castle-coding</a>
+              
+              <a href="/categories/coding">coding</a>
+              
+              <a href="/categories/cqrs">cqrs</a>
+              
+              <a href="/categories/emacs">emacs</a>
+              
+              <a href="/categories/forex">forex</a>
+              
+              <a href="/categories/ioc">ioc</a>
+              
+              <a href="/categories/javascript">javascript</a>
+              
+              <a href="/categories/logging">logging</a>
+              
+              <a href="/categories/powershell">powershell</a>
+              
+              <a href="/categories/rx">rx</a>
+              
+              <a href="/categories/software-tools">software-tools</a>
+              
+              <a href="/categories/source-control-management">source-control-management</a>
+              
+              <a href="/categories/testing">testing</a>
+              
+              <a href="/categories/twitter">twitter</a>
+              
+              <a href="/categories/vim">vim</a>
+              
+              <a href="/categories/visual-studio">visual-studio</a>
+              
+            </div>
+          </li>
+        </ul>
+      </div>
+
+
+
+      <div class="container">
+
+
+
+
+
+<div class="article">
+  <div class="article-title">
+    <a href="http://bling.github.io/blog/2009/07/25/best-tool-for-job/">Best tool for the job...</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-07-25</small></p> <hr/>
+  <div class="post">
+    So I recently moved, and my new place doesn&rsquo;t make internet by wire all that accessible&hellip;so now I have a big honkin desktop computer with no internet, but I have a little netbook which has wireless. Hmmmm&hellip;my netbook&rsquo;s main operating system is Archlinux&hellip;and Linux is strong in networking&hellip;so it should be easy to set it up right? Right I was! # give my ethernet an IP address and start it $ ifconfig eth1 192.168.0.1 netmask 255.255.255.0 $ ifconfig eth1 up # enable packet forwarding and reboot (or modify /proc) $ set /etc/sysctl.conf to set net.ipv4.ip_forward=1 # set up iptables $ iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE Done! Now on my desktop I just set it to static IP 192.168.0.2, connected to my gateway 192.168.0.1, and boom, I got internet! Now I can wait patiently for a wireless adapter to go on sale&hellip;
+
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
+    <a href="http://bling.github.io/blog/2009/06/24/coderush-resharper-visual-assistx/">CodeRush, ReSharper, Visual AssistX</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-06-24</small></p> <hr/>
+  <div class="post">
+    Hmmmmm&hellip;CodeRush and ReSharper&hellip;It seems like these are the only 2 products people think about when they want that all super powerful addon that&rsquo;s supposed to quadruple their productivity. I think people just look at the feature chart and say wow, ReSharper and CodeRush have hundreds of features!!! I&rsquo;m going to be so much more productive now! I&rsquo;ve tried both and there are features I like from both products. For example, ReSharper&rsquo;s find references is extremely useful because you can filter by read-only or writeable. I&rsquo;m also a big fan of all the visual cues that CodeRush adds to the editor. But&hellip;neither of them have the 1 feature Visual AssistX I like most: Partial Names IntelliSense. What&rsquo;s that? Let&rsquo;s say you have SomeMethodWithAReallyLongName. If you type &ldquo;really&rdquo; with VAX&rsquo;s intellisense, that method appears in the list. Originally I thought that was a nice feature, but it can&rsquo;t be that useful. But then I was fortunate (or unfortunate is probably more accurate) to get to work with MSHTML. Now I have 1 humongous namespace with around 100 different types. Sometimes it&rsquo;s called TextRange and other times it&rsquo;s called TxtRange. Some have the HTML prefix, and others don&rsquo;t. When was the last time you could only remember a part of a method name?
+
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
+    <a href="http://bling.github.io/blog/2009/05/05/im-doing-vim-challenge/">I&#39;m doing the VI challenge!</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-05-05</small></p> <hr/>
+  <div class="post">
+    One of my time-wasting hobbies is running Linux on virtual machines. I play games from time to time so Windows is still my main OS. But otherwise, I do use my Linux virtual machines for many things like my personal Mercurial repository is running on VirtualBox. For the curious, my distro of choice is Archlinux. Anyone who&rsquo;s needed to tinker with a Linux distro knows that you spend a lot of time in a text editor changing configuration files. Typically, the choices are pico/nano for its simplicity, or vi because it&rsquo;s on any POSIX compliant operating system. I decided, ah what the heck, I&rsquo;m gonna learn vi and use that for editing files instead of nano. I got decent with vi. I could move around (albeit I still relied on home/end and arrow keys), save, search, etc., but on Windows I&rsquo;d still use Notepad2. In an attempt to improve my productivity in text editing, I&rsquo;m doing the VIM challenge! All my text editing I will be using WinVI (I even replaced the notepad.exe with it), and I even got the demo of ViEmu running on Visual Studio. For the next 2 weeks I will be using vi for anything text related. I&rsquo;ve been going through tutorials and trying to remember all the new things I&rsquo;m learning. Most importantly, I&rsquo;ll be trying to avoid the home/end/arrow keys as well. BTW, * is an awesome feature in vi. It highlights all instances of the current word in the document, and subsequently you can use n or N to back or to the next instance. Like, take a look at the following screen shot: Boom! All instances of &ldquo;total&rdquo; highlighted with just a Shift+8. Let&rsquo;s see you do the same thing with Ctrl+F, mouse-click &ldquo;Find next&rdquo; (or worse, reverse your search).
+
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
+    <a href="http://bling.github.io/blog/2009/05/05/metatrader-indicators/">MetaTrader Indicators</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-05-05</small></p> <hr/>
+  <div class="post">
+    One of my hobbies is forex trading, and a sub-hobby of that is writing custom indicators. MetaTrader is a trading platform that is very popular in the forex community because it allows traders to write custom indicators. It&rsquo;s pretty easy to get started if you have programming experience because the language is very similar to C. And yes, you can also write your own bot if you wanted, called an Expert Advisor. Personally I don&rsquo;t spend too much time trying to write a winning bot simply because there are way too many variables to take into account, and eventually the market&rsquo;s going to yell &ldquo;in your face&rdquo; and your winning bot will end up losing. I just write simple scripts that help me identify entry points, and filter out all the non-interesting price movements. Recently I&rsquo;ve been looking at breakout strategies because they are simple, yet effective. The result is a custom indicator I wrote which simply put calculates the high and low for a time period, and then draws pretty rectangles. Like so: The above is simply the high/low of 2 hours before the opening London session, and the opening US session. Isn&rsquo;t it puurrrrrrty?
+
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
+    <a href="http://bling.github.io/blog/2009/04/28/trick-question-with-closures/">A Trick Question With Closures</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-04-28</small></p> <hr/>
+  <div class="post">
+    Given the following code, what do you expect the output to be? for (int i = 0; i &lt; 100; ++i) { ThreadPool.QueueUserWorkItem(delegate { Console.WriteLine(i); }); } Keep that answer in your head! Now&hellip;what do you expect the output of the following? int i; for (i = 0; i &lt; 100; ++i) { ThreadPool.QueueUserWorkItem(delegate { Console.WriteLine(i); }); } Were your answers the same? Different? Why?
+
+    
+  </div>
+</div>
+
+
+
+    
+    <ul class="pagination">
+        
+        <li>
+            <a href="/" aria-label="First"><span aria-hidden="true">&laquo;&laquo;</span></a>
+        </li>
+        
+        <li
+        >
+        <a href="/page/13/" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+        </li>
+        
+        <li
+        ><a href="/">1</a></li>
+        
+        <li
+        ><a href="/page/2/">2</a></li>
+        
+        <li
+        ><a href="/page/3/">3</a></li>
+        
+        <li
+        ><a href="/page/4/">4</a></li>
+        
+        <li
+        ><a href="/page/5/">5</a></li>
+        
+        <li
+        ><a href="/page/6/">6</a></li>
+        
+        <li
+        ><a href="/page/7/">7</a></li>
+        
+        <li
+        ><a href="/page/8/">8</a></li>
+        
+        <li
+        ><a href="/page/9/">9</a></li>
+        
+        <li
+        ><a href="/page/10/">10</a></li>
+        
+        <li
+        ><a href="/page/11/">11</a></li>
+        
+        <li
+        ><a href="/page/12/">12</a></li>
+        
+        <li
+        ><a href="/page/13/">13</a></li>
+        
+        <li
+        class="active"><a href="/page/14/">14</a></li>
+        
+        <li
+        ><a href="/page/15/">15</a></li>
+        
+        <li
+        ><a href="/page/16/">16</a></li>
+        
+        <li
+        ><a href="/page/17/">17</a></li>
+        
+        <li
+        >
+        <a href="/page/15/" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+        </li>
+        
+        <li>
+            <a href="/page/17/" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
+        </li>
+        
+    </ul>
+    
+
+    </div>
+
+    <footer>
+      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
+    </footer>
+
+    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.js"></script>
+    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+
+    
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38439430-2', 'auto');
+ga('send', 'pageview');
+</script>
+
+  </body>
+</html>
+

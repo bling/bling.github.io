@@ -1,116 +1,133 @@
-
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <title>Asynchronous Eval in Emacs with Stylus and Skewer - bling on software development</title>
-  <meta name="author" content="Bailey Ling">
-
-  
-  <meta name="description" content="You haven&rsquo;t experienced Emacs if you haven&rsquo;t experienced the power of C-x C-e. This is the magical keybinding which evalulates the &hellip;">
-  
-
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  
-  <link rel="canonical" href="http://bling.github.io/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="bling on software development" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic|Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
-
-
-  
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-38439430-2']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
-
-</head>
-
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">bling on software development</a></h1>
-  
-    <h2>when pragmatism meets minimalism</h2>
-  
-</hgroup>
-
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:bling.github.io" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
-
-</nav>
-  <div id="main">
-    <div id="content">
-      <div>
-<article class="hentry" role="article">
-  
-  <header>
-    
-      <h1 class="entry-title">Asynchronous Eval in Emacs With Stylus and Skewer</h1>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Asynchronous Eval in Emacs with Stylus and Skewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="generator" content="Hugo 0.16-DEV" />
+    <link href="" rel="alternate" type="application/rss+xml" title="bling on software" />
+    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
     
     
-      <p class="meta">
-        
+  </head>
+  <body>
+    <div id = "wrapper">
+
+      <div class="navbar navbar-default" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a href="http://bling.github.io/"><p class="navbar-brand">bling on software</p></a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              
+              
+            </ul>
+          </div>
+        </div>
+      </div>
 
 
 
+      
+      <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+          <li class="sidebar-brand">
+            <a href="http://bling.github.io/">
+              <h1 class="brand">bling on software</h1>
+            </a>
+            <a href="/about">
+              <img src="https://pbs.twimg.com/profile_images/1188386482/Untitled_bigger.png" />
+            </a>
+            <h3>when pragmatism meets minimalism</h3>
+          </li>
+
+          <hr />
+
+          <div id="social-wrapper">
+            <li> <a href="https://github.com/bling"><i class="fa fa-github-square"></i> github</a> </li>
+            <li> <a href="https://twitter.com/blingcoder"><i class="fa fa-twitter-square"></i> @twitter</a></li>
+            <li> <a href="https://linkedin.com/in/baileyling"><i class="fa fa-linkedin-square"></i> linkedin</a> </li>
+          </div>
+
+          <hr />
+
+          <li class="sidebar-categories">
+            <div>
+              <span>Categories</span>
+              <a href="/post" style="float:right">show all</a>
+            </div>
+            <div>
+              
+              <a href="/categories/blend">blend</a>
+              
+              <a href="/categories/castle">castle</a>
+              
+              <a href="/categories/castle-coding">castle-coding</a>
+              
+              <a href="/categories/coding">coding</a>
+              
+              <a href="/categories/cqrs">cqrs</a>
+              
+              <a href="/categories/emacs">emacs</a>
+              
+              <a href="/categories/forex">forex</a>
+              
+              <a href="/categories/ioc">ioc</a>
+              
+              <a href="/categories/javascript">javascript</a>
+              
+              <a href="/categories/logging">logging</a>
+              
+              <a href="/categories/powershell">powershell</a>
+              
+              <a href="/categories/rx">rx</a>
+              
+              <a href="/categories/software-tools">software-tools</a>
+              
+              <a href="/categories/source-control-management">source-control-management</a>
+              
+              <a href="/categories/testing">testing</a>
+              
+              <a href="/categories/twitter">twitter</a>
+              
+              <a href="/categories/vim">vim</a>
+              
+              <a href="/categories/visual-studio">visual-studio</a>
+              
+            </div>
+          </li>
+        </ul>
+      </div>
 
 
 
+      <div class="container">
 
 
-  
 
-
-<time datetime="2014-01-21T16:41:16+00:00" pubdate data-updated="true">Jan 21<span>st</span>, 2014</time>
-        
-      </p>
+<div class="article">
+  <div class="article-title">Asynchronous Eval in Emacs with Stylus and Skewer</div>
+  <p class="meta"><small>&nbsp;<i class="fa fa-calendar-o"></i> 2014-01-21</small></p> <hr/>
+  <div class="post">
     
-  </header>
 
-
-<div class="entry-content"><p>You haven&rsquo;t experienced Emacs if you haven&rsquo;t experienced the power of <code>C-x C-e</code>.  This is the magical keybinding which evalulates the current line.  Another useful companion is <code>C-M-x</code>, which evaluates the current function.</p>
+<p>You haven&rsquo;t experienced Emacs if you haven&rsquo;t experienced the power of <code>C-x C-e</code>.  This is the magical keybinding which evalulates the current line.  Another useful companion is <code>C-M-x</code>, which evaluates the current function.</p>
 
 <p>Lisp dialects naturally work with these patterns seamlessly, and once I figured out the possibilities of this I got addicted and wanted it available in <em>all</em> of my languages.  It&rsquo;s like having a debugger available all the time.  But unlike debuggers where you inspect and change variables at run time, and then need to translate your changes back to code, in Lisp you just edit the code directly and eval (and repeat until you like the result).</p>
 
-<!--more-->
-
-
-<h1>Adapting the Pattern to Stylus</h1>
+<h1 id="adapting-the-pattern-to-stylus:6219f9e2c0ad4a4dcda9b93b8ed614eb">Adapting the Pattern to Stylus</h1>
 
 <p>Anyone doing serious web development will not be writing CSS directly.  There are many compelling alternatives; the 3 most popular being SASS/Compass, LESS, and Stylus.  On my current project I&rsquo;m using Stylus, so I adapted this workflow to it.</p>
 
@@ -118,24 +135,16 @@
 
 <p>However, it only supports CSS&hellip;so how am I going to use my beloved eval against Stylus code?</p>
 
-<h1>The First Attempt</h1>
+<h1 id="the-first-attempt:6219f9e2c0ad4a4dcda9b93b8ed614eb">The First Attempt</h1>
 
-<p>The first thing I did was do the simplest thing &mdash; convert Stylus to CSS and show it in a temporary buffer.  This turned out to be pretty straightforward.  I came up with the following code snippet:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='cl'><span class='line'><span class="p">(</span><span class="nb">defun</span> <span class="nv">stylus-compile-and-show-region</span> <span class="p">(</span><span class="nv">start</span> <span class="nv">end</span><span class="p">)</span>
-</span><span class='line'>  <span class="p">(</span><span class="nv">interactive</span> <span class="s">&quot;r&quot;</span><span class="p">)</span>
-</span><span class='line'>  <span class="p">(</span><span class="nv">call-process-region</span> <span class="nv">start</span> <span class="nv">end</span> <span class="s">&quot;stylus&quot;</span> <span class="no">nil</span> <span class="p">(</span><span class="nv">get-buffer-create</span> <span class="s">&quot;*Stylus*&quot;</span><span class="p">))</span>
-</span><span class='line'>  <span class="p">(</span><span class="nv">display-buffer</span> <span class="s">&quot;*Stylus*&quot;</span><span class="p">)</span>
-</span><span class='line'>  <span class="p">(</span><span class="nv">with-current-buffer</span> <span class="s">&quot;*Stylus*&quot;</span>
-</span><span class='line'>    <span class="p">(</span><span class="nv">css-mode</span><span class="p">)))</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<p>The first thing I did was do the simplest thing &ndash; convert Stylus to CSS and show it in a temporary buffer.  This turned out to be pretty straightforward.  I came up with the following code snippet:</p>
+<div class="highlight"><pre><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nb">defun</span> <span class="nv">stylus-compile-and-show-region</span> <span class="p">(</span><span class="nv">start</span> <span class="nv">end</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">interactive</span> <span class="s">&quot;r&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">call-process-region</span> <span class="nv">start</span> <span class="nv">end</span> <span class="s">&quot;stylus&quot;</span> <span class="no">nil</span> <span class="p">(</span><span class="nv">get-buffer-create</span> <span class="s">&quot;*Stylus*&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">display-buffer</span> <span class="s">&quot;*Stylus*&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">with-current-buffer</span> <span class="s">&quot;*Stylus*&quot;</span>
+    <span class="p">(</span><span class="nv">css-mode</span><span class="p">)))</span>
+</code></pre></div>
 
 <p>Easy!  It creates an interactive command which takes in a region, then calls out to the external <code>stylus</code> command and puts the output into a buffer named <code>*Stylus*</code>, and finally shows it and enables <code>css-mode</code>.</p>
 
@@ -143,7 +152,7 @@
 
 <p>Let&rsquo;s fix that.</p>
 
-<h1>Evaluating Stylus Directly</h1>
+<h1 id="evaluating-stylus-directly:6219f9e2c0ad4a4dcda9b93b8ed614eb">Evaluating Stylus Directly</h1>
 
 <p>First things first, I realized that I don&rsquo;t need to show a buffer to interact with it.  So evaluating from Stylus directly actually involved replacing one line of code.  Instead of <code>(display-buffer)</code>, I put in <code>(skewer-css-eval-buffer)</code>, and viola!!  Now I can eval any Stylus code and have it appear in the browser!</p>
 
@@ -151,7 +160,7 @@
 
 <p>But, there was one last itch I still needed to scratch&hellip;</p>
 
-<h1>It was blocking!</h1>
+<h1 id="it-was-blocking:6219f9e2c0ad4a4dcda9b93b8ed614eb">It was blocking!</h1>
 
 <p>All things considered, blocking the UI for 1 second isn&rsquo;t the end of the world.  But it was enough of an annoyance that I felt compelled to fix it!</p>
 
@@ -160,31 +169,18 @@
 <p>I eventually stumbled across <code>start-process</code>, which lets you control asynchronous processes.  Digging through the documentation further, I was able to find <code>set-process-sentinel</code>.</p>
 
 <p>And with that, the following snippet was born:</p>
+<div class="highlight"><pre><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nb">defun</span> <span class="nv">stylus-eval-region-async</span> <span class="p">(</span><span class="nv">begin</span> <span class="nv">end</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">process</span> <span class="p">(</span><span class="nv">start-process</span> <span class="s">&quot;stylus&quot;</span> <span class="s">&quot;*Stylus*&quot;</span> <span class="s">&quot;stylus&quot;</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nv">set-process-sentinel</span> <span class="nv">process</span> <span class="ss">&#39;stylus-process-sentinel</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">process-send-region</span> <span class="nv">process</span> <span class="nv">begin</span> <span class="nv">end</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">process-send-eof</span> <span class="nv">process</span><span class="p">)))</span>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='cl'><span class='line'><span class="p">(</span><span class="nb">defun</span> <span class="nv">stylus-eval-region-async</span> <span class="p">(</span><span class="nv">begin</span> <span class="nv">end</span><span class="p">)</span>
-</span><span class='line'>  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">process</span> <span class="p">(</span><span class="nv">start-process</span> <span class="s">&quot;stylus&quot;</span> <span class="s">&quot;*Stylus*&quot;</span> <span class="s">&quot;stylus&quot;</span><span class="p">)))</span>
-</span><span class='line'>    <span class="p">(</span><span class="nv">set-process-sentinel</span> <span class="nv">process</span> <span class="ss">&#39;stylus-process-sentinel</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">(</span><span class="nv">process-send-region</span> <span class="nv">process</span> <span class="nv">begin</span> <span class="nv">end</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">(</span><span class="nv">process-send-eof</span> <span class="nv">process</span><span class="p">)))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="nb">defun</span> <span class="nv">stylus-process-sentinel</span> <span class="p">(</span><span class="nv">process</span> <span class="nv">event</span><span class="p">)</span>
-</span><span class='line'>  <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nb">equal</span> <span class="nv">event</span> <span class="s">&quot;finished\n&quot;</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">(</span><span class="nv">with-current-buffer</span> <span class="s">&quot;*Stylus*&quot;</span>
-</span><span class='line'>      <span class="p">(</span><span class="nv">css-mode</span><span class="p">)</span>
-</span><span class='line'>      <span class="p">(</span><span class="nv">skewer-css-eval-buffer</span><span class="p">))))</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">stylus-process-sentinel</span> <span class="p">(</span><span class="nv">process</span> <span class="nv">event</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nb">equal</span> <span class="nv">event</span> <span class="s">&quot;finished\n&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">with-current-buffer</span> <span class="s">&quot;*Stylus*&quot;</span>
+      <span class="p">(</span><span class="nv">css-mode</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">skewer-css-eval-buffer</span><span class="p">))))</span>
+</code></pre></div>
 
 <p>Basically, what&rsquo;s happening here is that I&rsquo;m starting an asynchronous process which writes all output into the <code>*Stylus*</code> buffer.  I send the region as input into the process, and finally, when the process terminates, which is detected by the sentinel function, it evaluates the buffer.</p>
 
@@ -193,212 +189,66 @@
 <p>The full source code (with emptying buffers and other housekeeping) can be found in my <a href="https://github.com/bling/dotemacs/blob/master/config/init-stylus.el">dotemacs</a>.</p>
 
 <p>If you haven&rsquo;t already noticed, this is not specific to Stylus and will work with any program which works with stdin/stdout!  Enjoy.</p>
+
+  </div>
 </div>
 
 
-  <footer>
-    <p class="meta">
-      
-  
-
-<span class="byline author vcard">Posted by <span class="fn">Bailey Ling</span></span>
-
-      
 
 
+<div class="social-bar">
+  <a href="https://twitter.com/share" class="twitter-share-button"{count} data-via="blingcoder">Tweet</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-21T16:41:16+00:00" pubdate data-updated="true">Jan 21<span>st</span>, 2014</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/emacs/'>emacs</a>
-  
-</span>
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bling.github.io/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/" data-via="blingcoder" data-counturl="http://bling.github.io/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <g:plusone></g:plusone>
 </div>
 
-    
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/" title="Previous Post: Emacs as my &lt;Leader&gt;: Vim Survival Guide">&laquo; Emacs as my &lt;Leader&gt;: Vim Survival Guide</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2015/01/06/emacs-as-my-leader-1-year-later/" title="Next Post: Emacs As My &lt;Leader&gt;, 1 Year Later">Emacs As My &lt;Leader&gt;, 1 Year Later &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
+<ul class="pager">
+   &nbsp;<li class="previous"><a href="http://bling.github.io/blog/2015/01/06/emacs-as-my-leader-1-year-later/"> Emacs As My &lt;Leader&gt; 1 Year Later</a></li>
+   &nbsp;<li class="next"><a href="http://bling.github.io/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/"> Emacs as my &lt;Leader&gt; Vim Survival Guide</a></li>
+</ul>
 
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-  </section>
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'blingdev';
+    var disqus_identifier = 'http:\/\/bling.github.io\/blog\/2014\/01\/21\/asynchronous-eval-with-stylus-and-skewer\/';
+    var disqus_title = 'Asynchronous Eval in Emacs with Stylus and Skewer';
+    var disqus_url = 'http:\/\/bling.github.io\/blog\/2014\/01\/21\/asynchronous-eval-with-stylus-and-skewer\/';
 
-</div>
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
-<aside class="sidebar">
-  
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2015/01/06/emacs-as-my-leader-1-year-later/">Emacs As My &lt;Leader&gt;, 1 Year Later</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/">Asynchronous Eval in Emacs with Stylus and Skewer</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/">Emacs as my &lt;Leader&gt;: Vim Survival Guide</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my &lt;Leader&gt;: evil-mode</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/09/09/vim-in-emacs-bootstrap/">Vim in Emacs Bootstrap</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/08/16/modularizing-vimscript/">Modularizing VimScript</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/30/1000-stars-in-1-month/">1000 stars in 1 month</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
-      </li>
-    
-  </ul>
-</section>
-
-<section>
-  <h1>GitHub Repos</h1>
-  <ul id="gh_repos">
-    <li class="loading">Status updating...</li>
-  </ul>
-  
-  <a href="https://github.com/bling">@bling</a> on GitHub
-  
-  <script type="text/javascript">
-    $(document).ready(function(){
-        if (!window.jXHR){
-            var jxhr = document.createElement('script');
-            jxhr.type = 'text/javascript';
-            jxhr.src = '/javascripts/libs/jXHR.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(jxhr, s);
-        }
-
-        github.showRepos({
-            user: 'bling',
-            count: 0,
-            skip_forks: true,
-            target: '#gh_repos'
-        });
-    });
-  </script>
-  <script src="/javascripts/github.js" type="text/javascript"> </script>
-</section>
-
-
-
-
-
-  
-</aside>
 
 
     </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - Bailey Ling -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
 
-</footer>
-  
+    <footer>
+      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
+    </footer>
 
-<script type="text/javascript">
-      var disqus_shortname = 'blingdev';
-      
-        
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://bling.github.io/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/';
-        var disqus_url = 'http://bling.github.io/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
+    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.js"></script>
+    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+
+    
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38439430-2', 'auto');
+ga('send', 'pageview');
 </script>
 
-
-
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id; js.async = true;
-  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
-
-
-  <script type="text/javascript">
-    (function() {
-      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
-      script.src = 'https://apis.google.com/js/plusone.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
-    })();
-  </script>
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
-
-</body>
+  </body>
 </html>
+

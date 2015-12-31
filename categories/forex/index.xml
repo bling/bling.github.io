@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Forex on bling on software</title>
+    <link>http://bling.github.io/categories/forex/</link>
+    <description>Recent content in Forex on bling on software</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 05 May 2009 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://bling.github.io/categories/forex/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>MetaTrader Indicators</title>
+      <link>http://bling.github.io/blog/2009/05/05/metatrader-indicators/</link>
+      <pubDate>Tue, 05 May 2009 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2009/05/05/metatrader-indicators/</guid>
+      <description>&lt;p&gt;One of my hobbies is forex trading, and a sub-hobby of that is writing custom indicators.  MetaTrader is a trading platform that is very popular in the forex community because it allows traders to write custom indicators.  It&amp;rsquo;s pretty easy to get started if you have programming experience because the language is very similar to C.  And yes, you can also write your own bot if you wanted, called an Expert Advisor.&lt;/p&gt;
+
+&lt;p&gt;Personally I don&amp;rsquo;t spend too much time trying to write a winning bot simply because there are way too many variables to take into account, and eventually the market&amp;rsquo;s going to yell &amp;ldquo;in your face&amp;rdquo; and your winning bot will end up losing.  I just write simple scripts that help me identify entry points, and filter out all the non-interesting price movements.&lt;/p&gt;
+
+&lt;p&gt;Recently I&amp;rsquo;ve been looking at breakout strategies because they are simple, yet effective.  The result is a custom indicator I wrote which simply put calculates the high and low for a time period, and then draws pretty rectangles.  Like so:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://imgur.com/2ceH.gif&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The above is simply the high/low of 2 hours before the opening London session, and the opening US session.  Isn&amp;rsquo;t it puurrrrrrty?&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

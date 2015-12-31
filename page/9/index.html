@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>bling on software</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="generator" content="Hugo 0.16-DEV" />
+    <link href="http://bling.github.io/index.xml" rel="alternate" type="application/rss+xml" title="bling on software" />
+    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    
+    
+  </head>
+  <body>
+    <div id = "wrapper">
+
+      <div class="navbar navbar-default" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a href="http://bling.github.io/"><p class="navbar-brand">bling on software</p></a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+
+
+
+      
+      <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+          <li class="sidebar-brand">
+            <a href="http://bling.github.io/">
+              <h1 class="brand">bling on software</h1>
+            </a>
+            <a href="/about">
+              <img src="https://pbs.twimg.com/profile_images/1188386482/Untitled_bigger.png" />
+            </a>
+            <h3>when pragmatism meets minimalism</h3>
+          </li>
+
+          <hr />
+
+          <div id="social-wrapper">
+            <li> <a href="https://github.com/bling"><i class="fa fa-github-square"></i> github</a> </li>
+            <li> <a href="https://twitter.com/blingcoder"><i class="fa fa-twitter-square"></i> @twitter</a></li>
+            <li> <a href="https://linkedin.com/in/baileyling"><i class="fa fa-linkedin-square"></i> linkedin</a> </li>
+          </div>
+
+          <hr />
+
+          <li class="sidebar-categories">
+            <div>
+              <span>Categories</span>
+              <a href="/post" style="float:right">show all</a>
+            </div>
+            <div>
+              
+              <a href="/categories/blend">blend</a>
+              
+              <a href="/categories/castle">castle</a>
+              
+              <a href="/categories/castle-coding">castle-coding</a>
+              
+              <a href="/categories/coding">coding</a>
+              
+              <a href="/categories/cqrs">cqrs</a>
+              
+              <a href="/categories/emacs">emacs</a>
+              
+              <a href="/categories/forex">forex</a>
+              
+              <a href="/categories/ioc">ioc</a>
+              
+              <a href="/categories/javascript">javascript</a>
+              
+              <a href="/categories/logging">logging</a>
+              
+              <a href="/categories/powershell">powershell</a>
+              
+              <a href="/categories/rx">rx</a>
+              
+              <a href="/categories/software-tools">software-tools</a>
+              
+              <a href="/categories/source-control-management">source-control-management</a>
+              
+              <a href="/categories/testing">testing</a>
+              
+              <a href="/categories/twitter">twitter</a>
+              
+              <a href="/categories/vim">vim</a>
+              
+              <a href="/categories/visual-studio">visual-studio</a>
+              
+            </div>
+          </li>
+        </ul>
+      </div>
+
+
+
+      <div class="container">
+
+
+
+
+
+<div class="article">
+  <div class="article-title">
+    <a href="http://bling.github.io/blog/2010/12/04/cqrs-building-transactional-event-store/">CQRS: Building a “Transactional” Event Store with MongoDB</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2010-12-04</small></p> <hr/>
+  <div class="post">
+    As you all already know if you’re familiar with MongoDB, is that it does not support transactions.&nbsp; The closest thing we have is atomic modifications of a single document. The Event Store in a CQRS architecture has the important responsibility of detecting concurrency violations, where two different sources try to update the same version of the aggregate.&nbsp; The one that gets it late should be denied changes into the store with an exception thrown.&nbsp; This ensures the integrity of the data. Here is a very simple typical implementation of appending events into the event store: public void Append(Guid id, long expectedVersion, IEnumerable&lt;IEvent&gt; events) { &nbsp; try &nbsp; { &nbsp;&nbsp;&nbsp; _events.Insert(events.Select(x =&gt; ...)); // convert to storage type &nbsp; } &nbsp; catch (...) &nbsp; { &nbsp; &nbsp; if (E11000 duplicate key) &nbsp; &nbsp;&nbsp;&nbsp; throw new ConcurrencyException(...); &nbsp; } } Syntax is a mix of C#/pseudo code, but the basic concepts are the same.&nbsp; This assumes that you’ve set up an multi-index on the collection between the ID and the version.&nbsp; Thus, when you insert something that already has a matching ID/version, Mongo will tell you of a duplicate key violation, and all is good. But wait!&nbsp; Operations are atomic per document!&nbsp; So what happens if you append 100 events, and it fails on the 43rd one?&nbsp; Events 1 through 42 will continue to exist in the data store, which is bad news. Obviously, this solution is not going to work.&nbsp; The next step was to do something like this: catch (...) { &nbsp; if (E11000 duplicate keys) &nbsp; { &nbsp;&nbsp;&nbsp; foreach (var e in events) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _events.Delete(new { _id = e._id }); &nbsp;&nbsp;&nbsp;&nbsp; throw new ConcurrencyException(...); &nbsp; } } So, before inserting into the collection, each events gets a generated ObjectID, so that if it fails, the catch exception can simply tell the data store to delete everything. At first glance this seems to fix everything, except for one glaring problem.&nbsp; What happens if you lose connection to the database before, or midway sending the deletes?&nbsp; Now you have a problem of ensuring that those deletes are guaranteed, and so then the question that arises from that is where would you store it?&nbsp; A local file?&nbsp; Another database?&nbsp; The problem is, at that moment, if another process in the system queries all events for the same aggregate it will return invalid data. So, we’re back to square one.&nbsp; We need to simulate a transaction through a single insert. The secret is in the schema design.&nbsp; Initially, we started out with a straight forward row-per-event schema.&nbsp; But since we’re operating with documents, we can model it as a batch of events. Thus, instead of versioning every event individually, we version a batch of events.&nbsp; For example, originally we would insert 3 events, and the data saved would look like this: { _id = 1, aggregate_id = 1, version = 1, event = { … } } { _id = 2, aggregate_id = 1, version = 2, event = { … } } { _id = 3, aggregate_id = 1, version = 3, event = { … } } In the new schema, it would look like this: { _id = 1, aggregate_id = 1, version = 1, events = [ { … }, { … }, { … }, { … } ] } Now, a downside to this approach is you lose a bit of granularity of stored events, since you are grouping multiple events under a single version.&nbsp; However, I don’t see this as a huge loss since the main reason you want to use event sourcing in the first place is to be able to restore an aggregate to any state in its history, and we still retain that functionality. In our case, this is working very well for us.&nbsp; When a command gets handled, it generates a bunch of events that get applied and then saved to MongoDB.&nbsp; I can’t think of any scenario where it’d want to replay to the middle of a half-processed command (but of course it’s possible anyways, just reply half of a batch of events).&nbsp; But that’s just asking for trouble.&nbsp; It’s most likely easier to just the re-process the command. Now, you may be asking why go through the trouble of batching events when you can just store one document per aggregate, and then put all events in one document?&nbsp; Yes, that would solve the problem very effectively…until you hit the 4MB per document limit ;-) Comments Bailey Ling It wouldn&#39;t be any different from processing a new command. You will need to load all snapshots/events to get the aggregate root to the latest version. Events should typically be &quot;fire and forget&quot;. If you require them to be guaranteed delivery it&#39;s better to restructure them as commands. bodrin Nice, thanks for answering :) I should definitely take a closer look at the MongoDB! Sounds very interesting :) On the other hand I&#39;m still wondering if there is a general approach for this situation - you have done a state transition into the KV/doc DB and you have some events there. Then your system goes down just before it publishes these events on to the wire (some external messaging system). Then when you start again is there an efficient way/query to be done against the KV/doc DB so that you get all the events that haven&#39;t been dispatched yet? Bailey Ling Well, the easiest way is to cheat and use Mongo as your messaging bus ;-) There&#39;s a bunch of examples on the web. Basically, you create a direct connection against the database and read the oplog. This is the mechanism that Mongo uses to do replication, so you get near real-time performance. Since it&#39;s only one system to manage, rather than two in concert, it&#39;s a bit easier to maintain. You&#39;ll get the same guarantees as any other write to a Mongo node. If you must go to another messaging system it&#39;ll depend on the guarantees of that implementation. It&#39;s not the end of the world to tell the user to &quot;try again later&quot;, assuming that&#39;s acceptable for the 0.01% of the time. Also, if the messaging system is down, you can still read from the event store to get the latest information (and is required for stale nodes joining the system). bodrin Hi, I want to ask how do you dispatch the events. I guess the flow is somthing like this: 1. receive a command 2. load the related AR and process the command which produces some events - a batch 3. store the event batch in MongoDB, e.g. at { &quot;_id&quot;: { &quot;aggregate&quot;: 1234, &quot;version&quot;: 65 } } 4. dispatch the events to some messaging system 5. mark the { &quot;_id&quot;: { &quot;aggregate&quot;: 1234, &quot;version&quot;: 65 } } as dispatched So if this is similar to what you are doing I&#39;m wondering what if the system goes down just after step 3. ? The events are not dispatched, but how do you find that after restart? Is there an efficient way with MongoDb and/or with other documen / KV stores? bling Thanks for the comments! You are absolutely right in all of your points. Actually, each individual event in my system is meaningless unless it is part of a batch. The batch is the only thing that is versioned, and the batch version is required to save or get events from the store. As for duplicate handling, since I wrote the post I implemented _id as a complex object like this: { &quot;_id&quot;: { &quot;aggregate&quot;: 1234, &quot;version&quot;: 65 } } _id is always indexed, and unique. If version 66 already exists, the 2nd command handler will simply fail, and the event store will continue to have good, consistent data. Jonathan Oliver Awesome post. When I started writing version 2.0 of my EventStore library, I wanted to ensure that NoSQL databases such as MongoDB could be handled. Pushing everything up as a single batch is critical. Here is the implementation for Mongo: https://github.com/joliver/EventStore/tree/master/src/proj/EventStore.Persistence.MongoPersistence Here is the design guide: http://jonathan-oliver.blogspot.com/2010/12/cqrs-eventstore-v2-architectural.html There are three quick things I wanted to mention regarding your implementation. First, because you&#39;re now pushing things up as a batch, you can no longer use the event version as an optimistic control technique. Instead, you&#39;ll want to number each batch that you push using a sequential, incrementing value. Lastly, if you only push the event information, you may lose some context because there is oftentimes metadata associated with all of the events that you&#39;ll want to store. You&#39;ll also want to consider what happens when a message is processed more than once which causes a batch to be written. NoSQL doesn&#39;t provide any guarantees related to de-duplication so you&#39;ll need to handle that in your application code/event store code.
+
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
+    <a href="http://bling.github.io/blog/2010/11/23/cqrs-auto-register-event-handlers/">CQRS: Auto register event handlers</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2010-11-23</small></p> <hr/>
+  <div class="post">
+    I’m not going to go into detail about what the deal is about event handlers in a CQRS architecture, since a quick Google/Bing search will give plenty of very good information.&nbsp; What this post is about is a solution to the “how do I quickly register something to handle a bunch of events” without copying pasting all over the place. There are other solutions out there, like this one.&nbsp; Here’s something I came up with (took some concepts from my post on Weak Events). public class Aggregate { private delegate void OpenEventHandler&lt;in TTarget, in TEvt&gt;(TTarget target, TEvt @event); private static readonly IDictionary&lt;Type, OpenEventHandler&lt;Game, IEvent&gt;&gt; _evtHandlers = new Dictionary&lt;Type, OpenEventHandler&lt;Game, IEvent&gt;&gt;(); static Aggregate() { var methods = from m in typeof(Game).GetMethods(BindingFlags.NonPublic | BindingFlags.Instance) let p = m.GetParameters() where m.Name == "ApplyEvent" &amp;&amp; p.Length == 1 &amp;&amp; typeof(IEvent).IsAssignableFrom(p[0].ParameterType) select m; var registerForwarder = typeof(Game).GetMethod("RegisterForwarder", BindingFlags.NonPublic | BindingFlags.Static); foreach (var m in methods) { Type eventType = m.GetParameters()[0].ParameterType; var forwarder = registerForwarder.MakeGenericMethod(eventType).Invoke(null, new[] { m }); _evtHandlers[eventType] = (OpenEventHandler&lt;Game, IEvent&gt;)forwarder; } } private static OpenEventHandler&lt;Game, IEvent&gt; RegisterForwarder&lt;TEvt&gt;(MethodInfo method) { var invoker = typeof(OpenEventHandler&lt;,&gt;).MakeGenericType(typeof(Game), typeof(TEvt)); var forwarder = (OpenEventHandler&lt;Game, TEvt&gt;)Delegate.CreateDelegate(invoker, null, method); return (g, e) =&gt; forwarder(g, (TEvt)e); } private void ApplyEvent(EventHappened e) { _something = e.Something; } public void ApplyChanges(IEnumerable&lt;IEvent&gt; events) { foreach (var e in events) { _evtHandlers[e.GetType()](this, e); } } } A couple things: The registration happens in the static constructor.&nbsp; This is important, because this relatively heavy cost of using reflection only happens once for the aggregate. The filtering of methods is arbitrary.&nbsp; I chose “ApplyEvent” here as the convention, but of course you can choose whatever you like. ApplyChanges simply invokes the event handlers dictionary directly.&nbsp; Assuming you’re being a good citizen with the code, accessing _evtHandlers doesn’t need a lock because once created it should never be modified. So in summary, it finds all methods named ApplyEvent in the current class, and generates an “open delegate” which takes in an extra parameter which is the instance itself.&nbsp; In this case, the instance is the aggregate, as shown in the ApplyChanges method. So there you have it!&nbsp; Excluding the lengthy LINQ query, roughly 10 lines of code to find and register all event handlers in the aggregate.&nbsp; And if you’re wondering, the performance cost is negligible because there’s no reflection involved in the invocation of the handlers.&nbsp; Awesome!
+
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
+    <a href="http://bling.github.io/blog/2010/11/08/that-immutable-thing/">That Immutable Thing</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2010-11-08</small></p> <hr/>
+  <div class="post">
+    Do you have some sort of ImmutableAttribute in your domain that you use to mark classes as immutable?&#160; Have you ever needed to enforce that contract?&#160; Checking for readonly fields isn’t enough?&#160; Well, this weekend I had a code spike that helped solve this problem in my current project. For this project, I’m using the NoRM driver for MongoDB, and one of the limitations of the serializer is that all types must be classes, must have a default constructor, and all properties have a public setter.&#160; So, now the domain has a bunch of classes like this: public class UserCreatedEvent : IEvent { public string Name { get; set; } public UserCreatedEvent() { } public UserCreatedEvent(string name) { Name = name; } } That God for code snippets (or Resharper templates).&#160; With so many classes like this that need to get serialized, I wanted to extra sure that no code ever calls the setter method for the Name property.&#160; Thankfully, with some help of Mono.Cecil, it’s possible. First off, you need to define ImmutableAttribute and that add that do classes, and in my case, it is historical domain events that get serialized to an event store. Then, you just write a unit test which leverages the power of Mono.Cecil.&#160; It turned out to be pretty simple.&#160; Here’s the code: using System.Collections.Generic; using System.Linq; using Mono.Cecil; using Mono.Cecil.Cil; using NUnit.Framework; namespace blingcode { [TestFixture] public class ImmutabilityTests { private static readonly MethodDefinition[] _setterMethods; private static readonly AssemblyDefinition[] _assemblies; static ImmutabilityTests() { _assemblies = new[] { AssemblyDefinition.ReadAssembly(typeof(Something).Assembly.Location), }; _setterMethods = _assemblies .SelectMany(a =&gt; a.Modules) .SelectMany(m =&gt; m.Types) .Where(t =&gt; t.CustomAttributes.Any(attr =&gt; attr.AttributeType.Name.Contains(&quot;ImmutableAttribute&quot;))) .SelectMany(t =&gt; t.Properties) .Where(p =&gt; p.SetMethod != null) .Select(m =&gt; m.SetMethod) .ToArray(); } [Test] public void ClassesWith_ImmutableAttribute_ShouldNotUse_PropertySetters() { AssertForViolations(_assemblies .SelectMany(a =&gt; a.Modules) .SelectMany(m =&gt; m.Types) .Where(t =&gt; t.IsClass) .SelectMany(t =&gt; t.Methods)); } [Test] public void ThisFixtureActuallyWorks() { var assembly = AssemblyDefinition.ReadAssembly(typeof(ImmutabilityTests).Assembly.Location); var type = assembly.Modules.SelectMany(m =&gt; m.Types) .Where(t =&gt; t.IsClass &amp;&amp; t.FullName.Contains(GetType().FullName)).First(); try { AssertForViolations(type.Methods); } catch (AssertionException) { Assert.Pass(); } } private static void AssertForViolations(IEnumerable&lt;MethodDefinition&gt; potentialMethods) { foreach (var method in potentialMethods.Where(m =&gt; m.HasBody)) { foreach (Instruction ins in method.Body.Instructions.Where(ins =&gt; ins.OpCode == OpCodes.Callvirt)) { MemberReference mr = ins.Operand as MemberReference; if (mr != null) { var result = _setterMethods.FirstOrDefault(m =&gt; m.FullName == mr.FullName); if (result != null) { throw new AssertionException(result + &quot; was invoked by &quot; + method + &quot;, even though the type has the Immutable attribute.&quot;); } } } } } private void InvokeCardSetters() { // this only exists to test that the test does indeed work var c = new SomeImmutableClass(); c.SomeImmutableValue = 123; } } } Nothing too complicated.&#160; The main thing to look for is the callvirt method, which the C# compiler always generates for classes.&#160; Then, you match the operand to the method definition and viola!
+
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
+    <a href="http://bling.github.io/blog/2010/10/05/memory-leak-with-wpfs-richtextbox/">Memory Leak with WPF’s RichTextBox</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2010-10-05</small></p> <hr/>
+  <div class="post">
+    Apparently, setting IsUndoEnabled to false isn’t enough. You must also set UndoLimit=0 as well otherwise it&rsquo;ll still keep track of undo history. Doh!
+
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
+    <a href="http://bling.github.io/blog/2010/10/04/yet-another-weak-event-for-wpf/">Yet Another Weak Event Implementation</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2010-10-04</small></p> <hr/>
+  <div class="post">
+    I gotta say that WPF is a complete pain in the butt when it comes to memory leaks. A simple google/bing search shows up more than enough results for weak events, so why am I making yet another blog post about another implementation of a weak event? Well, if someone else out there happens to have the same requirements/needs that I do right now, maybe this will save them a little time. In my particular case, I needed to accomplish a couple goals: - Minimal performance hit. a.k.a minimal use of reflection. - Generic and easy to use. - Thread safe. - Support for explicit registration and unregistration. One of the better implementations on weak events I found was from Dustin Campbell&rsquo;s blog post. Unfortunately, this implementation has one major problem: you cannot explicitly unregister. In fact, the only way an attached listener no longer receives messages is if it gets garbage collected. Our application happened to use this for an especially special event on our base entity: the infamous INotifyPropertyChanged event. Needless to say, all the static WPF dependency objects left a whole bunch of leaked WeakReferences around (ironic?). But wait, doesn&rsquo;t WPF already have a IWeakEventManager that solves this problem? The problem with this is a couple things. It&rsquo;s slow. It&rsquo;s painful to use. It&rsquo;s annoying to implement. Long story short, you need a static WeakEventManager for every unique delegate. Yes, sure, you can override a lot of the methods to make it more perform faster, but if you need to go that far you might as well write your own that does just what you need, and no more. If you haven&rsquo;t found it already, Daniel Grunwald&rsquo;s Code Project article is yet another great resource. My implementation was a mix of this and the earlier mentioned link. Anywho, here it is: public interface IWeakEventEntry&lt;TSender, TArgs&gt; { bool IsAlive { get; } bool Matches(Delegate handler); bool Invoke(SynchronizationPriority priority, TSender sender, TArgs args); } public class WeakEventEntry&lt;TTarget, TSource, TArgs&gt; : IWeakEventEntry&lt;TSource, TArgs&gt; where TTarget : class { private delegate void OpenForwardingEventHandler(TTarget target, TSource sender, TArgs args); private readonly WeakReference m_TargetRef; private readonly OpenForwardingEventHandler m_OpenHandler; private readonly MethodInfo m_Method; public WeakEventEntry(Delegate handler) { m_OpenHandler = (OpenForwardingEventHandler)Delegate.CreateDelegate(typeof(OpenForwardingEventHandler), null, handler.Method); m_TargetRef = new WeakReference(handler.Target); m_Method = handler.Method; } public bool IsAlive { get { return m_TargetRef.IsAlive; } } public bool Matches(Delegate handler) { return handler.Method == m_Method &amp;&amp; handler.Target == m_TargetRef.Target; } public bool Invoke(TSource sender, TArgs args) { TTarget target = m_TargetRef.Target as TTarget; if (target != null) { m_OpenHandler(target, sender, args); return true; } return false; } } public class WeakEvent&lt;TSender, TArgs&gt; { private static readonly IWeakEventEntry&lt;TSender, TArgs&gt;[] EMPTY_LIST = new IWeakEventEntry&lt;TSender, TArgs&gt;[0]; private List&lt;IWeakEventEntry&lt;TSender, TArgs&gt;&gt; m_Events; private IWeakEventEntry&lt;TSender, TArgs&gt;[] m_InvokeList = EMPTY_LIST; public int Count { get { return m_InvokeList.Length; } } public void Add(Delegate handler) { if (handler.Target == null) // static method { Add(new StrongEventEntry&lt;TSender, TArgs&gt;(handler)); } else { Type type = typeof(WeakEventEntry&lt;,,&gt;).MakeGenericType(handler.Target.GetType(), typeof(TSender), typeof(TArgs)); Add((IWeakEventEntry&lt;TSender, TArgs&gt;)type.GetConstructors()[0].Invoke(new object[] { handler })); } } public void Add(IWeakEventEntry&lt;TSender, TArgs&gt; entry) { lock (this) { if (m_Events == null) m_Events = new List&lt;IWeakEventEntry&lt;TSender, TArgs&gt;&gt;(8); m_Events.Add(entry); m_InvokeList = m_Events.ToArray(); } } public void Remove(Delegate handler) { lock (this) { if (m_Events != null) { for (int i = 0; i &lt; m_Events.Count; i++) { if (m_Events[i].Matches(handler)) { m_Events.RemoveAt(i); break; } } m_InvokeList = m_Events.ToArray(); } } } public void Clear() { lock (this) { m_Events = null; m_InvokeList = EMPTY_LIST; } } public void Raise(TSender sender, TArgs args) { IWeakEventEntry&lt;TSender, TArgs&gt;[] events = m_InvokeList; bool removeDead = false; for (int i = events.Length - 1; i &gt;= 0; i--) removeDead |= !events[i].Invoke(sender, args); if (removeDead) RemoveDeadReferences(); } private void RemoveDeadReferences() { lock (this) { if (m_Events != null) { for (int i = m_Events.Count - 1; i &gt;= 0; i--) { if (!m_Events[i].IsAlive) m_Events.RemoveAt(i); } m_InvokeList = m_Events.ToArray(); } } } } Nothing too special here. For performance, a copy of all events are stored in an array so that raising events doesn&rsquo;t need to be in a lock. And while locking on &ldquo;this&rdquo; is usually bad practice, in this case I didn&rsquo;t have any other local variable to use, and creating an object just for the sake of locking in my eyes was not worth it in this scenario. I tried generating the OpenForwardingDelegate using DynamicMethod and IL, but the result was negligible because it doesn&rsquo;t actually affect invoking speed, which is what we&rsquo;re most concerned with. Also, if you didn&rsquo;t notice, this implementation also supports static methods attaching, hence why there is an IWeakEventEntry interface. Here&rsquo;s the StrongEventEntry implementation: public class StrongEventEntry&lt;TSource, TArgs&gt; : IWeakEventEntry&lt;TSource, TArgs&gt; { private delegate void ClosedForwardingEventHandler(TSource sender, TArgs args); private readonly ClosedForwardingEventHandler m_ClosedHandler; private readonly MethodInfo m_Method; public bool IsAlive { get { return true; } } public StrongEventEntry(Delegate handler) { m_Method = handler.Method; m_ClosedHandler = (ClosedForwardingEventHandler)Delegate.CreateDelegate(typeof(ClosedForwardingEventHandler), null, handler.Method); } public bool Matches(Delegate handler) { return m_Method == handler.Method; } public bool Invoke(SynchronizationPriority priority, TSource sender, TArgs args) { m_ClosedHandler(sender, args); return true; } } Last but not least, usage: private WeakEvent&lt;object, PropertyChangedEventArgs&gt; _propertyChanged = new WeakEvent&lt;object, PropertyChangedEventArgs&gt;(); public event PropertyChangedEventHandler PropertyChanged { add { _propertyChanged.Add(value); } remove { _propertyChanged.Remove(value); } } Performance is quite good. On my machine for 1,000,000,000 invocations, it takes the WeakEvent ~17.3 seconds, vs 4.2 seconds for a standard delegate, for roughly 4x invocation cost. And there you have it! A simple, generic, and fast weak event in ~200 lines of code.
+
+    
+  </div>
+</div>
+
+
+
+    
+    <ul class="pagination">
+        
+        <li>
+            <a href="/" aria-label="First"><span aria-hidden="true">&laquo;&laquo;</span></a>
+        </li>
+        
+        <li
+        >
+        <a href="/page/8/" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+        </li>
+        
+        <li
+        ><a href="/">1</a></li>
+        
+        <li
+        ><a href="/page/2/">2</a></li>
+        
+        <li
+        ><a href="/page/3/">3</a></li>
+        
+        <li
+        ><a href="/page/4/">4</a></li>
+        
+        <li
+        ><a href="/page/5/">5</a></li>
+        
+        <li
+        ><a href="/page/6/">6</a></li>
+        
+        <li
+        ><a href="/page/7/">7</a></li>
+        
+        <li
+        ><a href="/page/8/">8</a></li>
+        
+        <li
+        class="active"><a href="/page/9/">9</a></li>
+        
+        <li
+        ><a href="/page/10/">10</a></li>
+        
+        <li
+        ><a href="/page/11/">11</a></li>
+        
+        <li
+        ><a href="/page/12/">12</a></li>
+        
+        <li
+        ><a href="/page/13/">13</a></li>
+        
+        <li
+        ><a href="/page/14/">14</a></li>
+        
+        <li
+        ><a href="/page/15/">15</a></li>
+        
+        <li
+        ><a href="/page/16/">16</a></li>
+        
+        <li
+        ><a href="/page/17/">17</a></li>
+        
+        <li
+        >
+        <a href="/page/10/" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+        </li>
+        
+        <li>
+            <a href="/page/17/" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
+        </li>
+        
+    </ul>
+    
+
+    </div>
+
+    <footer>
+      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
+    </footer>
+
+    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.js"></script>
+    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+
+    
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38439430-2', 'auto');
+ga('send', 'pageview');
+</script>
+
+  </body>
+</html>
+

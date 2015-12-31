@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Logging on bling on software</title>
+    <link>http://bling.github.io/categories/logging/</link>
+    <description>Recent content in Logging on bling on software</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 19 Aug 2011 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://bling.github.io/categories/logging/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Injecting Logger Instances Via Convention With Unity</title>
+      <link>http://bling.github.io/blog/2011/08/19/injecting-logger-instances-via-unity/</link>
+      <pubDate>Fri, 19 Aug 2011 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2011/08/19/injecting-logger-instances-via-unity/</guid>
+      <description>&lt;p&gt;Let’s say you have something like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;MyClass&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ILog&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Logger&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;set&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;And you simply want Unity to inject an instance of &lt;code&gt;ILog&lt;/code&gt; such that its name is &lt;code&gt;requestingDependency.GetType().FullName&lt;/code&gt;, which in this case would be &lt;code&gt;Full.Namespace.MyClass&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ll leave it up to the exercise of the reader, but if you search for &amp;lsquo;log4net and Unity&amp;rsquo; you will find some working solutions which IMO are way too long to solve this.  I have obviously taken for granted the features of Windsor and Autofac too much because I expected something like this to be easily done in 2-3 lines of code.&lt;/p&gt;
+
+&lt;p&gt;After a lot of cursing I&amp;rsquo;ve come up with something that&amp;rsquo;s almost as short and gets the job done:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;LoggingExtension&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;UnityContainerExtension&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;protected&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;override&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Initialize&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Context&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Strategies&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;AddNew&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;UnityBuildStage&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;PreCreation&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;LogBuilderStrategy&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;BuilderStrategy&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;readonly&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Stack&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;buildKeys&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Stack&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;override&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;PreBuildUp&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;IBuilderContext&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;type&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;NamedTypeBuildKey&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;BuildKey&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;type&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;typeof&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ILog&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+                &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;buildKeys&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Count&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+                    &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;InvalidOperationException&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Log instances cannot be resolved directly.&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+                &lt;span class=&#34;n&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Existing&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;LogManager&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetLog&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;buildKeys&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Peek&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;());&lt;/span&gt;
+            &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;buildKeys&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Push&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;override&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;PostBuildUp&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;IBuilderContext&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;buildKeys&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Pop&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;If you noticed, I had to cast to &lt;code&gt;NamedTypeBuildKey&lt;/code&gt;, which unfortunately means I’m still stuck with Unity 1.2&amp;hellip;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Real World Performance Comparison: Enterprise Library Logging Block vs log4net</title>
+      <link>http://bling.github.io/blog/2009/11/23/real-world-performance-comparison/</link>
+      <pubDate>Mon, 23 Nov 2009 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2009/11/23/real-world-performance-comparison/</guid>
+      <description>&lt;div class=&#39;post&#39;&gt;
+Any search on the web you find will consistently show log4net outperforming EL by a factor of around 4:1.&amp;nbsp; Most of these tests are typically tight for/loops, and comments will end up saying things like “oh well that’s not a realistic test” or “well you shouldn’t be logging that much anyway”, etc etc.&amp;nbsp; Well, let’s see how important choosing your logging infrastructure is in terms of overall system performance in a multithreaded application.&lt;br /&gt;
+&lt;br /&gt;
+One of my recent tasks was hunting down a memory leak.&amp;nbsp; So I downloaded the trial of the ANTS .NET Bundle which contains a memory profiler and performance profiler.&amp;nbsp; Hunting the memory leak was a pain since I wasn’t the one who wrote the code, so it took a while for me to realize which objects were “leaked.”&amp;nbsp; I eventually found it, and then I turned my attention to using the performance profiler to see if any obvious places could be optimized.&lt;br /&gt;
+&lt;br /&gt;
+At this point I decided to swap in the Enterprise Logging Block to see how it would fair.&amp;nbsp; The logging migration project was still in progress, and we haven’t made the full switch yet, but I figured I should try out it anyway because I’m the curious type.&lt;br /&gt;
+&lt;br /&gt;
+The software already uses the Trace diagnostics extensively.&amp;nbsp; Practically every message, error, you name it, will get Trace.WriteLined…and then a LogFileWriter will pick it up, and dump it to a file.&amp;nbsp; In my testing, I simply added an extra line of code here, namely Logger.Write(LogEntry).&amp;nbsp; Thus, anything that used to get logged, will also get logged by the EL.&lt;br /&gt;
+&lt;br /&gt;
+Then, it was basically running the application to a similar set of scenarios, and then seeing what the profiler says.&amp;nbsp; Obviously each run will not be exactly the same as the previous, but overall I think if we look at percentages we can begin to see where the CPU is taking the most time. &lt;br /&gt;
+&lt;br /&gt;
+Here is what the application does without any modifications.&lt;br /&gt;
+&lt;div class=&#34;separator&#34; style=&#34;clear: both; text-align: center;&#34;&gt;&lt;a href=&#34;http://2.bp.blogspot.com/_WZr-_wsEf1c/SwojFG6Z-bI/AAAAAAAAABs/JOlmoVHku8c/s1600/1.png&#34; imageanchor=&#34;1&#34; style=&#34;margin-left: 1em; margin-right: 1em;&#34;&gt;&lt;img border=&#34;0&#34; src=&#34;http://2.bp.blogspot.com/_WZr-_wsEf1c/SwojFG6Z-bI/AAAAAAAAABs/JOlmoVHku8c/s320/1.png&#34; /&gt;&lt;/a&gt;&lt;br /&gt;
+&lt;/div&gt;Here is the application after adding Logger.Write(LogEntry).&lt;br /&gt;
+&lt;div class=&#34;separator&#34; style=&#34;clear: both; text-align: center;&#34;&gt;&lt;a href=&#34;http://4.bp.blogspot.com/_WZr-_wsEf1c/SwojGq9R6FI/AAAAAAAAAB0/l899yhPm5a0/s1600/2.png&#34; imageanchor=&#34;1&#34; style=&#34;margin-left: 1em; margin-right: 1em;&#34;&gt;&lt;img border=&#34;0&#34; src=&#34;http://4.bp.blogspot.com/_WZr-_wsEf1c/SwojGq9R6FI/AAAAAAAAAB0/l899yhPm5a0/s320/2.png&#34; /&gt;&lt;/a&gt;&lt;br /&gt;
+&lt;/div&gt;&lt;br /&gt;
+Yeah, I was pretty surprised too.&amp;nbsp; That one method ended up being the most expensive method in the entire application.&lt;br /&gt;
+&lt;br /&gt;
+A quick look at the source revealed quite a bit of code dedicated to thread safety.&amp;nbsp; So digging deeper, I decided to avoid the static Logger.Write method altogether, create instance LogWriters directly, and have them all go to a singleton FileTraceListener.&lt;br /&gt;
+&lt;div class=&#34;separator&#34; style=&#34;clear: both; text-align: center;&#34;&gt;&lt;a href=&#34;http://3.bp.blogspot.com/_WZr-_wsEf1c/SwojH5vrfYI/AAAAAAAAAB8/bKYT18Hdx-8/s1600/3.png&#34; imageanchor=&#34;1&#34; style=&#34;margin-left: 1em; margin-right: 1em;&#34;&gt;&lt;img border=&#34;0&#34; src=&#34;http://3.bp.blogspot.com/_WZr-_wsEf1c/SwojH5vrfYI/AAAAAAAAAB8/bKYT18Hdx-8/s320/3.png&#34; /&gt;&lt;/a&gt;&lt;br /&gt;
+&lt;/div&gt;That’s a noticeable improvement…it’s not #1 anymore.&amp;nbsp; The CPU time also dropped from ~15% to ~10%.&amp;nbsp; That means that ~5% of CPU time was in the static Logger.Write(LogEntry) method.&amp;nbsp; If you look at the graphs you’ll notice a common pattern among them, because I wanted to test with the same scenario to get as close to as measurable results as possible…but to illustrate how bad the EL’s performance can get, here’s one:&lt;br /&gt;
+&lt;br /&gt;
+&lt;div class=&#34;separator&#34; style=&#34;clear: both; text-align: center;&#34;&gt;&lt;a href=&#34;http://4.bp.blogspot.com/_WZr-_wsEf1c/SwojJLBz2KI/AAAAAAAAACE/FI3Sl-wNhmE/s1600/4.png&#34; imageanchor=&#34;1&#34; style=&#34;margin-left: 1em; margin-right: 1em;&#34;&gt;&lt;img border=&#34;0&#34; src=&#34;http://4.bp.blogspot.com/_WZr-_wsEf1c/SwojJLBz2KI/AAAAAAAAACE/FI3Sl-wNhmE/s320/4.png&#34; /&gt;&lt;/a&gt;&lt;br /&gt;
+&lt;/div&gt;&lt;br /&gt;
+I literally fell off my chair when I first discovered this as I didn’t think it could be possible something that’s supposed to be non-invasive could end up taking this much CPU.&amp;nbsp; This is one of the earlier tests I did where&amp;nbsp; I didn&#39;t have a set scenario yet.&lt;br /&gt;
+&lt;br /&gt;
+And of course, here are the results with log4net.&lt;br /&gt;
+&lt;div class=&#34;separator&#34; style=&#34;clear: both; text-align: center;&#34;&gt;&lt;a href=&#34;http://1.bp.blogspot.com/_WZr-_wsEf1c/SwojKotCNLI/AAAAAAAAACM/jhlHy7LvZyc/s1600/5.png&#34; imageanchor=&#34;1&#34; style=&#34;margin-left: 1em; margin-right: 1em;&#34;&gt;&lt;img border=&#34;0&#34; src=&#34;http://1.bp.blogspot.com/_WZr-_wsEf1c/SwojKotCNLI/AAAAAAAAACM/jhlHy7LvZyc/s320/5.png&#34; /&gt;&lt;/a&gt;&lt;br /&gt;
+&lt;/div&gt;&lt;br /&gt;
+So what does that leave us?&lt;br /&gt;
+&lt;br /&gt;
+log4net:&amp;nbsp; 5%&lt;br /&gt;
+EL static:&amp;nbsp; 15%&lt;br /&gt;
+EL instance:&amp;nbsp; 10%&lt;br /&gt;
+&lt;br /&gt;
+So what should you get out of this?&amp;nbsp; Be very careful of how you invoke Logger.Write()…it may not be as cheap as you think it is.&amp;nbsp; Even log4net took much more CPU time than I expected.&lt;br /&gt;
+&lt;br /&gt;
+I redid the test using Castle’s logging framework, which is a barebones dump messages to a file.&amp;nbsp; The total CPU time for this was 0.016%.&amp;nbsp; Yep!&amp;nbsp; I had to scroll down to even find it!&lt;br /&gt;
+&lt;br /&gt;
+I guess this shows that even log4net, which is touted for high-performance, comes at a cost.&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

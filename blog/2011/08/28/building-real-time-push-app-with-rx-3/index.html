@@ -1,160 +1,153 @@
-
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <title>Building a Real-time Push App with Silverlight: Part 3 - bling on software development</title>
-  <meta name="author" content="Bailey Ling">
-
-  
-  <meta name="description" content="In this part we’re going to fire up Expression Blend (the trial for version 5 can be found here) and do some UI work. In part 2, I created a simple &hellip;">
-  
-
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  
-  <link rel="canonical" href="http://bling.github.io/blog/2011/08/28/building-real-time-push-app-with-rx-3">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="bling on software development" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic|Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
-
-
-  
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-38439430-2']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
-
-</head>
-
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">bling on software development</a></h1>
-  
-    <h2>when pragmatism meets minimalism</h2>
-  
-</hgroup>
-
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:bling.github.io" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
-
-</nav>
-  <div id="main">
-    <div id="content">
-      <div>
-<article class="hentry" role="article">
-  
-  <header>
-    
-      <h1 class="entry-title">Building a Real-time Push App With Silverlight: Part 3</h1>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Building a Real-time Push App with Silverlight: Part 3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="generator" content="Hugo 0.16-DEV" />
+    <link href="" rel="alternate" type="application/rss+xml" title="bling on software" />
+    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
     
     
-      <p class="meta">
-        
+  </head>
+  <body>
+    <div id = "wrapper">
+
+      <div class="navbar navbar-default" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a href="http://bling.github.io/"><p class="navbar-brand">bling on software</p></a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              
+              
+            </ul>
+          </div>
+        </div>
+      </div>
 
 
 
+      
+      <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+          <li class="sidebar-brand">
+            <a href="http://bling.github.io/">
+              <h1 class="brand">bling on software</h1>
+            </a>
+            <a href="/about">
+              <img src="https://pbs.twimg.com/profile_images/1188386482/Untitled_bigger.png" />
+            </a>
+            <h3>when pragmatism meets minimalism</h3>
+          </li>
+
+          <hr />
+
+          <div id="social-wrapper">
+            <li> <a href="https://github.com/bling"><i class="fa fa-github-square"></i> github</a> </li>
+            <li> <a href="https://twitter.com/blingcoder"><i class="fa fa-twitter-square"></i> @twitter</a></li>
+            <li> <a href="https://linkedin.com/in/baileyling"><i class="fa fa-linkedin-square"></i> linkedin</a> </li>
+          </div>
+
+          <hr />
+
+          <li class="sidebar-categories">
+            <div>
+              <span>Categories</span>
+              <a href="/post" style="float:right">show all</a>
+            </div>
+            <div>
+              
+              <a href="/categories/blend">blend</a>
+              
+              <a href="/categories/castle">castle</a>
+              
+              <a href="/categories/castle-coding">castle-coding</a>
+              
+              <a href="/categories/coding">coding</a>
+              
+              <a href="/categories/cqrs">cqrs</a>
+              
+              <a href="/categories/emacs">emacs</a>
+              
+              <a href="/categories/forex">forex</a>
+              
+              <a href="/categories/ioc">ioc</a>
+              
+              <a href="/categories/javascript">javascript</a>
+              
+              <a href="/categories/logging">logging</a>
+              
+              <a href="/categories/powershell">powershell</a>
+              
+              <a href="/categories/rx">rx</a>
+              
+              <a href="/categories/software-tools">software-tools</a>
+              
+              <a href="/categories/source-control-management">source-control-management</a>
+              
+              <a href="/categories/testing">testing</a>
+              
+              <a href="/categories/twitter">twitter</a>
+              
+              <a href="/categories/vim">vim</a>
+              
+              <a href="/categories/visual-studio">visual-studio</a>
+              
+            </div>
+          </li>
+        </ul>
+      </div>
 
 
 
+      <div class="container">
 
 
-  
 
-
-<time datetime="2011-08-28T00:00:00+00:00" pubdate data-updated="true">Aug 28<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-<div class="entry-content"><p>In this part we’re going to fire up Expression Blend (the trial for version 5 can be found <a href="http://www.microsoft.com/download/en/details.aspx?displaylang=en&amp;amp;id=9503">here</a>) and do some UI work.</p>
+<div class="article">
+  <div class="article-title">Building a Real-time Push App with Silverlight: Part 3</div>
+  <p class="meta"><small>&nbsp;<i class="fa fa-calendar-o"></i> 2011-08-28</small></p> <hr/>
+  <div class="post">
+    <p>In this part we’re going to fire up Expression Blend (the trial for version 5 can be found <a href="http://www.microsoft.com/download/en/details.aspx?displaylang=en&amp;amp;id=9503">here</a>) and do some UI work.</p>
 
 <p>In part 2, I created a simple Twitter client which connected to the streaming API, and connected to the sampling request which brings back random tweets.  Here is the data template:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;DataTemplate</span> <span class="na">x:Key=</span><span class="s">&quot;TweetDataTemplate&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;Grid</span> <span class="na">DataContext=</span><span class="s">&quot;{Binding}&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;Grid.RowDefinitions&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;RowDefinition</span> <span class="nt">/&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;RowDefinition</span> <span class="na">Height=</span><span class="s">&quot;Auto&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/Grid.RowDefinitions&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;TextBlock</span> <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span> <span class="na">FontSize=</span><span class="s">&quot;12&quot;</span> <span class="na">Text=</span><span class="s">&quot;{Binding Text}&quot;</span> <span class="na">TextWrapping=</span><span class="s">&quot;Wrap&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;TextBlock</span> <span class="na">Grid.Row=</span><span class="s">&quot;1&quot;</span>
-</span><span class='line'>                   <span class="na">HorizontalAlignment=</span><span class="s">&quot;Right&quot;</span>
-</span><span class='line'>                   <span class="na">VerticalAlignment=</span><span class="s">&quot;Bottom&quot;</span>
-</span><span class='line'>                   <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span>
-</span><span class='line'>                   <span class="na">FontSize=</span><span class="s">&quot;13.333&quot;</span>
-</span><span class='line'>                   <span class="na">Foreground=</span><span class="s">&quot;BlueViolet&quot;</span>
-</span><span class='line'>                   <span class="na">Text=</span><span class="s">&quot;{Binding ScreenName}&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;TextBlock</span> <span class="na">Grid.Row=</span><span class="s">&quot;1&quot;</span>
-</span><span class='line'>                   <span class="na">HorizontalAlignment=</span><span class="s">&quot;Left&quot;</span>
-</span><span class='line'>                   <span class="na">VerticalAlignment=</span><span class="s">&quot;Bottom&quot;</span>
-</span><span class='line'>                   <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span>
-</span><span class='line'>                   <span class="na">FontSize=</span><span class="s">&quot;9.333&quot;</span>
-</span><span class='line'>                   <span class="na">Foreground=</span><span class="s">&quot;DarkCyan&quot;</span>
-</span><span class='line'>                   <span class="na">Text=</span><span class="s">&quot;{Binding CreatedAt}&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/Grid&gt;</span>
-</span><span class='line'><span class="nt">&lt;/DataTemplate&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;DataTemplate</span> <span class="na">x:Key=</span><span class="s">&quot;TweetDataTemplate&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;Grid</span> <span class="na">DataContext=</span><span class="s">&quot;{Binding}&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;Grid.RowDefinitions&gt;</span>
+            <span class="nt">&lt;RowDefinition</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;RowDefinition</span> <span class="na">Height=</span><span class="s">&quot;Auto&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/Grid.RowDefinitions&gt;</span>
+        <span class="nt">&lt;TextBlock</span> <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span> <span class="na">FontSize=</span><span class="s">&quot;12&quot;</span> <span class="na">Text=</span><span class="s">&quot;{Binding Text}&quot;</span> <span class="na">TextWrapping=</span><span class="s">&quot;Wrap&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;TextBlock</span> <span class="na">Grid.Row=</span><span class="s">&quot;1&quot;</span>
+                   <span class="na">HorizontalAlignment=</span><span class="s">&quot;Right&quot;</span>
+                   <span class="na">VerticalAlignment=</span><span class="s">&quot;Bottom&quot;</span>
+                   <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span>
+                   <span class="na">FontSize=</span><span class="s">&quot;13.333&quot;</span>
+                   <span class="na">Foreground=</span><span class="s">&quot;BlueViolet&quot;</span>
+                   <span class="na">Text=</span><span class="s">&quot;{Binding ScreenName}&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;TextBlock</span> <span class="na">Grid.Row=</span><span class="s">&quot;1&quot;</span>
+                   <span class="na">HorizontalAlignment=</span><span class="s">&quot;Left&quot;</span>
+                   <span class="na">VerticalAlignment=</span><span class="s">&quot;Bottom&quot;</span>
+                   <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span>
+                   <span class="na">FontSize=</span><span class="s">&quot;9.333&quot;</span>
+                   <span class="na">Foreground=</span><span class="s">&quot;DarkCyan&quot;</span>
+                   <span class="na">Text=</span><span class="s">&quot;{Binding CreatedAt}&quot;</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/Grid&gt;</span>
+<span class="nt">&lt;/DataTemplate&gt;</span>
+</code></pre></div>
 
 <p>This renders into something like this:</p>
 
@@ -170,103 +163,61 @@
 <ul>
 <li>If you take a look at all the nice interfaces, they tend to use very slight gradients and small shadows.  Most of the time you don’t even notice unless you look closely.</li>
 <li>I think Microsoft’s Metro design is beautiful.  Reason?  It emphasizes text over decorations (like gradients and shadows).  This tends to lead to very clean design because there’s very little opportunity to abuse gradients and shadows.</li>
-</ul>
-</li>
+</ul></li>
 <li>Realism and light sources
 
 <ul>
 <li>Continuing on with gradients and shadows, they should be realistic.  Look at your design from a 3D point of view.  Apply a light source from a certain angle, and then apply your shadows relative to that light source.</li>
-<li>Convey distance properly
-
-<ul>
+<li>Convey distance properly</li>
 <li>Darker shadows imply being closer to the background, whereas lighter shadows imply being further away.  Use blurring to add emphasis to the distance.  <img src="http://lh5.ggpht.com/-YvKRal5ToEw/Tlr6OrRIS4I/AAAAAAAAAFs/AAg79v6y2Cc/image_thumb%25255B14%25255D.png?imgmax=800" alt="eg" /></li>
 <li>If you overlap planes you should apply these rules to each individual plane.  Don’t use the same border for everything.  Think about how it would look like in real life if you laid it out like that with pieces of paper.  The shadow sizes for that will be different, so you should do the same.</li>
 <li>Also keep in mind that the shadows used above are <em>way</em> too much for any application.  Be subtle!</li>
-</ul>
-</li>
-</ul>
-</li>
+</ul></li>
 <li>Consistent theme
 
 <ul>
 <li>This one seems obvious but nothing is worse than having a nice looking application bring up an unskinned dialog.</li>
-</ul>
-</li>
+</ul></li>
 <li>Usability
 
 <ul>
 <li>If the design doesn’t serve a purpose to make it more usable, it shouldn’t be there.  Even something as simple as black on white follows this – you do that so you can read text.  However, even something as simple as that can be improved.  Take a look at why the Kindle is so successful.  The readability is better because of the lower contrast between the black and light-brown background.</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-
 
 <p>With these starting points, let’s redesign the data template.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;DataTemplate</span> <span class="na">x:Key=</span><span class="s">&quot;TweetDataTemplate&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>   <span class="nt">&lt;Grid&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;Grid.Background&gt;</span>
-</span><span class='line'>           <span class="nt">&lt;LinearGradientBrush</span> <span class="na">StartPoint=</span><span class="s">&quot;0.5,0&quot;</span> <span class="na">EndPoint=</span><span class="s">&quot;0.5,1&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>               <span class="nt">&lt;GradientStop</span> <span class="na">Color=</span><span class="s">&quot;#FFDADADA&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>               <span class="nt">&lt;GradientStop</span> <span class="na">Offset=</span><span class="s">&quot;1&quot;</span> <span class="na">Color=</span><span class="s">&quot;#FFC8C8C8&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>           <span class="nt">&lt;/LinearGradientBrush&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;/Grid.Background&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;Grid.RowDefinitions&gt;</span>
-</span><span class='line'>           <span class="nt">&lt;RowDefinition</span> <span class="nt">/&gt;</span>
-</span><span class='line'>           <span class="nt">&lt;RowDefinition</span> <span class="na">Height=</span><span class="s">&quot;Auto&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;/Grid.RowDefinitions&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;TextBlock</span> <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span> <span class="na">FontSize=</span><span class="s">&quot;12&quot;</span> <span class="na">Text=</span><span class="s">&quot;{Binding Text}&quot;</span> <span class="na">TextWrapping=</span><span class="s">&quot;Wrap&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;TextBlock</span> <span class="na">Grid.Row=</span><span class="s">&quot;1&quot;</span>
-</span><span class='line'>                  <span class="na">HorizontalAlignment=</span><span class="s">&quot;Right&quot;</span>
-</span><span class='line'>                  <span class="na">VerticalAlignment=</span><span class="s">&quot;Bottom&quot;</span>
-</span><span class='line'>                  <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span>
-</span><span class='line'>                  <span class="na">FontSize=</span><span class="s">&quot;13.333&quot;</span>
-</span><span class='line'>                  <span class="na">Foreground=</span><span class="s">&quot;BlueViolet&quot;</span>
-</span><span class='line'>                  <span class="na">Text=</span><span class="s">&quot;{Binding ScreenName}&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;TextBlock</span> <span class="na">Grid.Row=</span><span class="s">&quot;1&quot;</span>
-</span><span class='line'>                  <span class="na">HorizontalAlignment=</span><span class="s">&quot;Left&quot;</span>
-</span><span class='line'>                  <span class="na">VerticalAlignment=</span><span class="s">&quot;Bottom&quot;</span>
-</span><span class='line'>                  <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span>
-</span><span class='line'>                  <span class="na">FontSize=</span><span class="s">&quot;9.333&quot;</span>
-</span><span class='line'>                  <span class="na">Foreground=</span><span class="s">&quot;#FF003D8F&quot;</span>
-</span><span class='line'>                  <span class="na">Text=</span><span class="s">&quot;{Binding CreatedAt}&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;Border</span> <span class="na">Grid.RowSpan=</span><span class="s">&quot;2&quot;</span> <span class="na">BorderBrush=</span><span class="s">&quot;#FF999999&quot;</span> <span class="na">BorderThickness=</span><span class="s">&quot;0,0,0,1&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;Border</span> <span class="na">Grid.RowSpan=</span><span class="s">&quot;2&quot;</span> <span class="na">BorderBrush=</span><span class="s">&quot;White&quot;</span> <span class="na">BorderThickness=</span><span class="s">&quot;0,1,0,0&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>   <span class="nt">&lt;/Grid&gt;</span>
-</span><span class='line'><span class="nt">&lt;/DataTemplate&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;DataTemplate</span> <span class="na">x:Key=</span><span class="s">&quot;TweetDataTemplate&quot;</span><span class="nt">&gt;</span>
+   <span class="nt">&lt;Grid&gt;</span>
+       <span class="nt">&lt;Grid.Background&gt;</span>
+           <span class="nt">&lt;LinearGradientBrush</span> <span class="na">StartPoint=</span><span class="s">&quot;0.5,0&quot;</span> <span class="na">EndPoint=</span><span class="s">&quot;0.5,1&quot;</span><span class="nt">&gt;</span>
+               <span class="nt">&lt;GradientStop</span> <span class="na">Color=</span><span class="s">&quot;#FFDADADA&quot;</span> <span class="nt">/&gt;</span>
+               <span class="nt">&lt;GradientStop</span> <span class="na">Offset=</span><span class="s">&quot;1&quot;</span> <span class="na">Color=</span><span class="s">&quot;#FFC8C8C8&quot;</span> <span class="nt">/&gt;</span>
+           <span class="nt">&lt;/LinearGradientBrush&gt;</span>
+       <span class="nt">&lt;/Grid.Background&gt;</span>
+       <span class="nt">&lt;Grid.RowDefinitions&gt;</span>
+           <span class="nt">&lt;RowDefinition</span> <span class="nt">/&gt;</span>
+           <span class="nt">&lt;RowDefinition</span> <span class="na">Height=</span><span class="s">&quot;Auto&quot;</span> <span class="nt">/&gt;</span>
+       <span class="nt">&lt;/Grid.RowDefinitions&gt;</span>
+       <span class="nt">&lt;TextBlock</span> <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span> <span class="na">FontSize=</span><span class="s">&quot;12&quot;</span> <span class="na">Text=</span><span class="s">&quot;{Binding Text}&quot;</span> <span class="na">TextWrapping=</span><span class="s">&quot;Wrap&quot;</span> <span class="nt">/&gt;</span>
+       <span class="nt">&lt;TextBlock</span> <span class="na">Grid.Row=</span><span class="s">&quot;1&quot;</span>
+                  <span class="na">HorizontalAlignment=</span><span class="s">&quot;Right&quot;</span>
+                  <span class="na">VerticalAlignment=</span><span class="s">&quot;Bottom&quot;</span>
+                  <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span>
+                  <span class="na">FontSize=</span><span class="s">&quot;13.333&quot;</span>
+                  <span class="na">Foreground=</span><span class="s">&quot;BlueViolet&quot;</span>
+                  <span class="na">Text=</span><span class="s">&quot;{Binding ScreenName}&quot;</span> <span class="nt">/&gt;</span>
+       <span class="nt">&lt;TextBlock</span> <span class="na">Grid.Row=</span><span class="s">&quot;1&quot;</span>
+                  <span class="na">HorizontalAlignment=</span><span class="s">&quot;Left&quot;</span>
+                  <span class="na">VerticalAlignment=</span><span class="s">&quot;Bottom&quot;</span>
+                  <span class="na">FontFamily=</span><span class="s">&quot;{StaticResource FontFamily}&quot;</span>
+                  <span class="na">FontSize=</span><span class="s">&quot;9.333&quot;</span>
+                  <span class="na">Foreground=</span><span class="s">&quot;#FF003D8F&quot;</span>
+                  <span class="na">Text=</span><span class="s">&quot;{Binding CreatedAt}&quot;</span> <span class="nt">/&gt;</span>
+       <span class="nt">&lt;Border</span> <span class="na">Grid.RowSpan=</span><span class="s">&quot;2&quot;</span> <span class="na">BorderBrush=</span><span class="s">&quot;#FF999999&quot;</span> <span class="na">BorderThickness=</span><span class="s">&quot;0,0,0,1&quot;</span> <span class="nt">/&gt;</span>
+       <span class="nt">&lt;Border</span> <span class="na">Grid.RowSpan=</span><span class="s">&quot;2&quot;</span> <span class="na">BorderBrush=</span><span class="s">&quot;White&quot;</span> <span class="na">BorderThickness=</span><span class="s">&quot;0,1,0,0&quot;</span> <span class="nt">/&gt;</span>
+   <span class="nt">&lt;/Grid&gt;</span>
+<span class="nt">&lt;/DataTemplate&gt;</span>
+</code></pre></div>
 
 <p>After these changes, it looks like this:</p>
 
@@ -285,212 +236,66 @@
 <p>Finally, let’s see the before and after (or eh&hellip;rather after and before, because I took the screenshot backwards :P):</p>
 
 <p><img src="http://lh6.ggpht.com/-tzZ8AVtNv0M/Tlr6QmHJHnI/AAAAAAAAAGM/H1SYEqT6cis/image_thumb%25255B50%25255D.png?imgmax=800" alt="eg" /></p>
+
+  </div>
 </div>
 
 
-  <footer>
-    <p class="meta">
-      
-  
-
-<span class="byline author vcard">Posted by <span class="fn">Bailey Ling</span></span>
-
-      
 
 
+<div class="social-bar">
+  <a href="https://twitter.com/share" class="twitter-share-button"{count} data-via="blingcoder">Tweet</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 
-
-
-
-
-
-  
-
-
-<time datetime="2011-08-28T00:00:00+00:00" pubdate data-updated="true">Aug 28<span>th</span>, 2011</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/blend/'>blend</a>, <a class='category' href='/blog/categories/coding/'>coding</a>, <a class='category' href='/blog/categories/rx/'>rx</a>
-  
-</span>
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bling.github.io/blog/2011/08/28/building-real-time-push-app-with-rx-3/" data-via="blingcoder" data-counturl="http://bling.github.io/blog/2011/08/28/building-real-time-push-app-with-rx-3/" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <g:plusone></g:plusone>
 </div>
 
-    
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2011/08/27/building-real-time-push-app-with-rx-2/" title="Previous Post: Building a Real-time Push App with Silverlight: Part 2">&laquo; Building a Real-time Push App with Silverlight: Part 2</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2011/09/05/building-real-time-push-app-with-rx-4/" title="Next Post: Building a Real-time Push App with Silverlight: Part 4">Building a Real-time Push App with Silverlight: Part 4 &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
+<ul class="pager">
+   &nbsp;<li class="previous"><a href="http://bling.github.io/blog/2011/09/05/building-real-time-push-app-with-rx-4/"> Building a Real-time Push App with Silverlight: Part 4</a></li>
+   &nbsp;<li class="next"><a href="http://bling.github.io/blog/2011/08/27/building-real-time-push-app-with-rx-2/"> Building a Real-time Push App with Silverlight: Part 2</a></li>
+</ul>
 
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-  </section>
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'blingdev';
+    var disqus_identifier = 'http:\/\/bling.github.io\/blog\/2011\/08\/28\/building-real-time-push-app-with-rx-3\/';
+    var disqus_title = 'Building a Real-time Push App with Silverlight: Part 3';
+    var disqus_url = 'http:\/\/bling.github.io\/blog\/2011\/08\/28\/building-real-time-push-app-with-rx-3\/';
 
-</div>
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
-<aside class="sidebar">
-  
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2015/01/06/emacs-as-my-leader-1-year-later/">Emacs As My &lt;Leader&gt;, 1 Year Later</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/">Asynchronous Eval in Emacs with Stylus and Skewer</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/">Emacs as my &lt;Leader&gt;: Vim Survival Guide</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my &lt;Leader&gt;: evil-mode</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/09/09/vim-in-emacs-bootstrap/">Vim in Emacs Bootstrap</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/08/16/modularizing-vimscript/">Modularizing VimScript</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/30/1000-stars-in-1-month/">1000 stars in 1 month</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
-      </li>
-    
-  </ul>
-</section>
-
-<section>
-  <h1>GitHub Repos</h1>
-  <ul id="gh_repos">
-    <li class="loading">Status updating...</li>
-  </ul>
-  
-  <a href="https://github.com/bling">@bling</a> on GitHub
-  
-  <script type="text/javascript">
-    $(document).ready(function(){
-        if (!window.jXHR){
-            var jxhr = document.createElement('script');
-            jxhr.type = 'text/javascript';
-            jxhr.src = '/javascripts/libs/jXHR.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(jxhr, s);
-        }
-
-        github.showRepos({
-            user: 'bling',
-            count: 0,
-            skip_forks: true,
-            target: '#gh_repos'
-        });
-    });
-  </script>
-  <script src="/javascripts/github.js" type="text/javascript"> </script>
-</section>
-
-
-
-
-
-  
-</aside>
 
 
     </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - Bailey Ling -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
 
-</footer>
-  
+    <footer>
+      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
+    </footer>
 
-<script type="text/javascript">
-      var disqus_shortname = 'blingdev';
-      
-        
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://bling.github.io/blog/2011/08/28/building-real-time-push-app-with-rx-3/';
-        var disqus_url = 'http://bling.github.io/blog/2011/08/28/building-real-time-push-app-with-rx-3/';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
+    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.js"></script>
+    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+
+    
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38439430-2', 'auto');
+ga('send', 'pageview');
 </script>
 
-
-
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id; js.async = true;
-  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
-
-
-  <script type="text/javascript">
-    (function() {
-      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
-      script.src = 'https://apis.google.com/js/plusone.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
-    })();
-  </script>
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
-
-</body>
+  </body>
 </html>
+

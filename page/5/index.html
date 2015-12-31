@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>bling on software</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="generator" content="Hugo 0.16-DEV" />
+    <link href="http://bling.github.io/index.xml" rel="alternate" type="application/rss+xml" title="bling on software" />
+    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    
+    
+  </head>
+  <body>
+    <div id = "wrapper">
+
+      <div class="navbar navbar-default" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a href="http://bling.github.io/"><p class="navbar-brand">bling on software</p></a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+
+
+
+      
+      <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+          <li class="sidebar-brand">
+            <a href="http://bling.github.io/">
+              <h1 class="brand">bling on software</h1>
+            </a>
+            <a href="/about">
+              <img src="https://pbs.twimg.com/profile_images/1188386482/Untitled_bigger.png" />
+            </a>
+            <h3>when pragmatism meets minimalism</h3>
+          </li>
+
+          <hr />
+
+          <div id="social-wrapper">
+            <li> <a href="https://github.com/bling"><i class="fa fa-github-square"></i> github</a> </li>
+            <li> <a href="https://twitter.com/blingcoder"><i class="fa fa-twitter-square"></i> @twitter</a></li>
+            <li> <a href="https://linkedin.com/in/baileyling"><i class="fa fa-linkedin-square"></i> linkedin</a> </li>
+          </div>
+
+          <hr />
+
+          <li class="sidebar-categories">
+            <div>
+              <span>Categories</span>
+              <a href="/post" style="float:right">show all</a>
+            </div>
+            <div>
+              
+              <a href="/categories/blend">blend</a>
+              
+              <a href="/categories/castle">castle</a>
+              
+              <a href="/categories/castle-coding">castle-coding</a>
+              
+              <a href="/categories/coding">coding</a>
+              
+              <a href="/categories/cqrs">cqrs</a>
+              
+              <a href="/categories/emacs">emacs</a>
+              
+              <a href="/categories/forex">forex</a>
+              
+              <a href="/categories/ioc">ioc</a>
+              
+              <a href="/categories/javascript">javascript</a>
+              
+              <a href="/categories/logging">logging</a>
+              
+              <a href="/categories/powershell">powershell</a>
+              
+              <a href="/categories/rx">rx</a>
+              
+              <a href="/categories/software-tools">software-tools</a>
+              
+              <a href="/categories/source-control-management">source-control-management</a>
+              
+              <a href="/categories/testing">testing</a>
+              
+              <a href="/categories/twitter">twitter</a>
+              
+              <a href="/categories/vim">vim</a>
+              
+              <a href="/categories/visual-studio">visual-studio</a>
+              
+            </div>
+          </li>
+        </ul>
+      </div>
+
+
+
+      <div class="container">
+
+
+
+
+
+<div class="article">
+  <div class="article-title">
+    <a href="http://bling.github.io/blog/2011/10/09/pingpong-twitter-client/">ping.pong Twitter Client</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2011-10-09</small></p> <hr/>
+  <div class="post">
+    I have a whole series dedicated to blogging about how I wrote a Twitter client from scratch, but if I want anyone to actually use it, I better do some advertising :-D. ping.pong is a fast and lightweight Twitter client written in Silverlight.&nbsp; As of this moment it targets v4 but will likely target v5 whenever that is released. Here are some highlights… Visually Pleasing The UI is based on your typical column-based design.&nbsp; The column widths will automatically resize to take up all available horizontal space.&nbsp; There is no horizontal scrolling. Access to the Streaming API No more rate limits!&nbsp; Your timeline is connected directly with Twitter’s streaming API, which means whenever someone you follow tweets you will know about it in almost near real-time.&nbsp; Searching is also done through the streaming API. Fast &amp; Lightweight ping.pong was built to run fast with low CPU utilization.&nbsp; Even when stream searching for “e” (yes, the letter E), the CPU usage stays under 15%.&nbsp; The maximum number of tweets that Twitter sends appears to be 50 per second. Conversations ping.pong will quickly show an entire tweet conversation by navigating reply tags back to the original tweet that started it all. Free &amp; Open Source The full source code for ping.pong can be found on GitHub.&nbsp; You can compile it, make modifications as you please, and run it yourself.&nbsp; The only thing missing is the consumer keys which uniquely identifies this client from another.&nbsp; You can generate them through Twitter once you have a developer account. Installer The latest and greatest can be quickly installed from here.&nbsp; Check back periodically for updates!
+
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
+    <a href="http://bling.github.io/blog/2011/09/29/push-driven-development-with-reactive/">Push Driven Development with Reactive Extensions</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2011-09-29</small></p> <hr/>
+  <div class="post">
+    This is going to be the last post that concludes my series on building a real-time push app with Silverlight. Any additional posts would likely be outside the context of writing a push app and more about how I’m adding features to ping.pong, my Twitter app, so I think this is a good place to wrap up and talk generally from a top down overview of building a push-style application. Here’s a recap of everything discussed so far: Part 1: Basics – Creating an Observable around a basic HTTP web stream against Twitter’s streaming API Part 2: Subscription and Observation of Observables Part 3: Basics of UX design with a look at shadows and gradients. Part 4: Integrating with 3rd party libraries, notably Caliburn Micro and Linq2Twitter and how to achieve polling with observables. Part 5: A minor hick up with Linq2Twitter. Part 6: Taking advantage of transparencies to improve the design and reusability of UX. Part 7: A summary of all things encountered so far, replacing Linq2Twitter with Hammock, first release of code to GitHub, and a binary released capable pulling and streaming tweets from Twitter. Part 8: Examples of using Caliburn Micro to easily resolve data bindings that otherwise would be much more effort. And that leads us to this post… PDD (Push Driven Development) One of the main goals of this series is to create a performant Silverlight app based on push principles, as opposed to more traditional pull principles. To that effect, ping.pong has performed remarkably well and is limited only by Twitter’s throttling, which currently appears to be maximum of 50 tweets per second via the streaming API. Writing the application from a push-driven mindset was definitely unintuitive at first, and I had to refactor (actually rewrite is more accurate) the code many times to move closer to a world where the application is simply reacting to events thrown at it (as opposed to asking the world for events). To be absolutely clear on what I mean on the differences between push and pull, here’s a comparison: Pulling Push var e = tweets.GetEnumerator(); while (e.MoveNext()) // is there more? { e.Current; // get current DoSomething(e.Current); } IObservable&lt;Data&gt; data = /* get source */ // whenever data comes, do something data.Subscribe(DoSometing); On the pulling side, the caller is much more concerned with the logic on how to process each message. It needs to repeatedly ask the world, &ldquo;hey, is there more data?&rdquo;. On the push side, the caller merely asks the world, &ldquo;hey, give me data when you get some&rdquo;. Twitter is a perfect example because their APIs have both a pulling and pushing models. Traditional clients poll continuously all the time, and many had configurable options to try to stay under the 200 API calls per hour limit. Most of Twitter’s API still consists of pulling, but the user’s home line and searching can be streamed in near real time via the streaming API, aka. push. Streaming tweets effectively removes the API call limit. Push and Pull with Reactive Extensions The beauty of Rx is that regardless of whether it is actually pushing or pulling, the API will look same: IObservable&lt;Tweet&gt; tweets = _client.GetHomeTimeline(); tweets.Subscribe(t =&gt; { /* do something with the tweet */ }); As far as the caller is concerned, it doesn’t care (or needs to know) whether the GetHomeTimeline method is polling Twitter or streaming from Twitter. All it needs to know is when a tweet comes it will react and do something in the Subscribe action. In fact, Subscribe simply means &ldquo;when you have data, call this&rdquo;, but that could also be immediately, which would be analogous to IEnumerable. However, if that was the only thing Rx provided it wouldn’t be as popular as it is, because other pub/sub solutions like the EventAggregator already provide a viable asynchronous solution. Unlocking Rx’s power comes with its multitude of operators. Here’s an example: public static IObservable&lt;Tweet&gt; GetStreamingStatuses(this TwitterClient client) { return client.GetHomeTimeline() .Merge(client.GetMentions()) .Concat(client.GetStreamingHomeline()); } GetHomeTimeline and GetMentions initiate once-only pull style API calls, while GetStreamingHomeline will initiate a sticky connection and stream subsequent tweets down the pipe. The Merge operator is defined as this: &ldquo;Merges an observable sequence of observable sequences into an observable sequence.&rdquo; I think a better description would be &ldquo;whenever there is data from any of the sources, push it through&rdquo;. In the example above, this would translate to whenever a tweet comes from either the home timeline or the mentions timeline, give me a Tweet (first-come-first-push), followed by anything from the streaming timeline. And there lies one of the greatest beauties of Rx. All of the complexity lies solely on setting up the stream and operators. And that, also, is its disadvantage. Rx Complexity Let’s take a look at the Concat operator, defined as: &ldquo;Concatenates two observable sequences.&rdquo; In the remarks sections it states this: &ldquo;The Concat operator runs the first sequence to completion. Then, the second sequence is run to completion effectively concatenating the second sequence to the end of the first sequence.&rdquo; Let’s try it out: var a = Observable.Interval(TimeSpan.FromSeconds(1)).Select(x =&gt; x.ToString()); var b = Observable.Interval(TimeSpan.FromSeconds(1)).Select(x =&gt; &quot;s&quot; + x); a.Concat(b).Subscribe(Console.WriteLine); // output: 0, 1, 2, 3, 4... As expected, only numbers are printed because the first sequence never ends, so it won’t concatenate the second one. Let’s modify it so that it does finish: int count = 0; var a = Observable.Interval(TimeSpan.FromSeconds(1)) .TakeWhile(_ =&gt; ++count &lt; 5) .Select(x =&gt; x.ToString()); Note, that using Observable.Generate is preferred because it doesn’t introduce an external variable, but I stuck with Interval so the code looks similar to the second observable. As expected again, it will print &ldquo;0, 1, 2, s0, s1, s2&rdquo;. OK, let’s spice things up. Let’s make b a ConnectableObservable by using the Publish operator, and immediately call Connect. int count = 0; var a = Observable.Interval(TimeSpan.FromSeconds(1)) .TakeWhile(_ =&gt; ++count &lt; 5) .Select(x =&gt; x.ToString()); var b = Observable.Interval(TimeSpan.FromSeconds(1)).Select(_ =&gt; &quot;s&quot; + _).Publish(); b.Connect(); a.Concat(b).Subscribe(Console.WriteLine); What do you think the output of this will be? The answer is &ldquo;0, 1, 2, 3, s5, s6, s7, &hellip;&rdquo; Despite using the same Concat operator, the result can be very different depending on the source observables. If you use the Replay operator, it would have printed &ldquo;0, 1, 2, 3, s0, s1, s2, &hellip;&rdquo; Years and years of working in synchronous programming models have trained us to think in synchronous ways, and I picked Concat specifically because Concat also exists in the enumerable world. Observable sequences are asynchronous, so we never know exactly when data comes at us, only what to do when it does. And because streams occur at different times, when you combine them together there are many many ways of doing so (CombineLatest, Merge, Zip, are just a few). The greatest hurdle to working in Rx is to know what the different combinations do. This takes time and practice. RxTools is a great learning tool to test out what all the operators do. Unit Testing Last but not least, Rx can make it easier to write unit tests. The concept is easy: take some inputs and test the output. In practice this is complicated because applications typically carry a lot of state with them. Even with dependency injection and mocking frameworks I’ve seen a lot of code where for every assert there is 10 lines of mock setup code. So how does it make it easier to test? It reduces what you need to test to a single method, Subscribe, which takes one input, an IObservable&lt;T&gt; Conclusion Rx is a library unlike any other you will use. With other libraries, you will add them to your solution, use a method here or there, and go on with your life. With Rx, it will radically change the way you code and think in general. It’s awesome.
+
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
+    <a href="http://bling.github.io/blog/2011/09/21/building-real-time-push-app-with-rx-8/">Building a Real-time Push App with Silverlight: Part 8</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2011-09-21</small></p> <hr/>
+  <div class="post">
+    Exploring Caliburn Micro As I hinted in earlier posts, Caliburn Micro has some wicked conventions that makes for writing MVVM super easy, and it also have a very convenient syntax for hooking up events. For example, the following: &lt;Button Content=&quot;R&quot;&gt; &lt;i:Interaction.Triggers&gt; &lt;i:EventTrigger EventName=&quot;Click&quot;&gt; &lt;i:InvokeCommandAction Command=&quot;{Binding ReplyCommand}&quot; CommandParameter=&quot;{Binding}&quot; /&gt; &lt;/i:EventTrigger&gt; &lt;/i:Interaction.Triggers&gt; &lt;/Button&gt; Can be rewritten like this: &lt;Button Content=&quot;R&quot; cal:Message.Attach=&quot;[Reply($dataContext)]&quot; /&gt; There are some smarts going on here. Caliburn Micro will default to the Click event for buttons. For a full syntax, it would be cal:Message.Attach=&quot;[Event Click] = [Reply($dataContext)]&quot;. As you can imagine, that will call the Reply method and pass in the current data context. You can also pass in other things like $this, $source, or $executionContext for full access to anything and everything Caliburn Micro itself has access to. The coolest thing about this is it gives you some wicked control over how your data context gets set. Ever struggled with popup windows or data grids and using weird hacks to get the binding correct? Caliburn Micro makes this very easy. Here’s an example. I have a DataTemplate which renders the UI for the model Tweet. Tweet is just a simple class which holds only properties. Inside the DataTemplate, I have some buttons that when the user clicks will reply, retweet, quote, or direct message. The Tweet class is purely for modeling data, so adding any methods would be bad practice. Also, since I’m in a DataTemplate I can’t easily reference another control with ElementName (in this case I need the containing parent’s DataContext). And to add insult to injury, Silverlight 4 doesn’t have RelativeSource ancestor type. So how do I solve this? &lt;StackPanel VerticalAlignment=&quot;Bottom&quot; cal:Action.TargetWithoutContext=&quot;shell&quot; Orientation=&quot;Horizontal&quot;&gt; &lt;Button Content=&quot;R&quot; cal:Message.Attach=&quot;[Reply($dataContext)]&quot; /&gt; &lt;Button Content=&quot;RT&quot; cal:Message.Attach=&quot;[Retweet($dataContext)]&quot; /&gt; &lt;Button Content=&quot;Q&quot; cal:Message.Attach=&quot;[Quote($dataContext)]&quot; /&gt; &lt;Button Content=&quot;DM&quot; cal:Message.Attach=&quot;[DirectMessage($dataContext)]&quot; /&gt; &lt;/StackPanel&gt; The secret is the attached property TargetWithoutContext. As the name implies, it will set the target for all the ActionMessages attached to all the buttons, without setting the context. If I used the Target attached property, it would set all of the Buttons’ data context to the same object – not what we want. Since the Button’s data context remains intact, we can call “Reply($dataContext)”, which calls the Reply method on the target object (set on the StackPanel) and pass in the Tweet. “shell” is the key of the service that I registered into the container. Originally I wanted this entire series to be able writing a fast push data app with Silverlight and Rx, and now I’m finding that I’m writing an entire Twitter client because it’s so much fun :-). I’m going to make another release soon. While the first release was merely experimental, the next one will be useful enough to potentially use full time. As you can probably tell with this blog post, it supports all the actions mentioned previously (and it’ll appear on mouse hover): The tweet box is much improved and shows you how many character you have left: And it’s smart enough to auto wrap http links via Twitter’s t.co service, and the counter takes that into account. Some interesting things to note is that in the future all links will be wrapped t.co. Looks like Twitter is trying to eat up bt.ly or something. Clicking on @users and #topics will automatically open a new timeline and subscribe to those tweets. It is almost full featured enough to become my main Twitter client. There are certain features still missing, and it’s purely based on when I have time to port them over. As always, you can install directly from here, or you can grab the code on the GitHub page! Next post will be about Rx from a very top level perspective and how it influenced my code from beginning to be experienced and all refactorings in between. Stay tuned!
+
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
+    <a href="http://bling.github.io/blog/2011/09/16/building-real-time-push-app-with-rx-7/">Building a Real-time Push App with Silverlight: Part 7</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2011-09-16</small></p> <hr/>
+  <div class="post">
+    Infrastructure Refactor A lot of things changed internally, and I mean….a lot…. From an infrastructure standpoint, I decided to remove the dependency on LinqToTwitter, and I replaced it with Hammock.&nbsp; A couple things led me to this decision, one being the Silverlight support wasn’t as good as I’d hoped, and the streaming API implementation was limited.&nbsp; After reading the Twitter documentation I realized that the REST API was super simple and I’d be better off writing a simple interface to it. I heard good things about Hammock, so I decided to give that one a try (I wasn’t going to go as far as reimplementing OAuth).&nbsp; It was pretty easy to set up and in the end I was able to get Twitter working again and with less lines of code compared to the beginning of the refactor. Goals I had a couple goals for this project: Learn:&nbsp; I was a complete newbie to Reactive Extensions when I started but now I understand it enough to hit the ground running with it.&nbsp; I’m still learning about more conventions available to Caliburn.Micro. UX:&nbsp; I wanted to learn a little more about interface design.&nbsp; I wanted to know how little changes to gradients, shadows, colors, etc. could have a radically effect in the end result. Performance:&nbsp; It should be fast.&nbsp; It should be able to react to real-time data.&nbsp; And it should do it with low CPU utilization. Concise:&nbsp; I am a huge advocate for KISS.&nbsp; I like convention over configuration.&nbsp; I like implementing something in 2 lines of code rather than 20 (assuming it’s not cryptic).&nbsp; As I was writing the app and refactoring, if there was an opportunity to remove a line of code, I did it.&nbsp; The result is that the app currently consists of less than 500 lines of code as of this post (excluding XAML). Tidbits What are some interest things I learned? System.Json is an amazing assembly.&nbsp; All you need to do is invoke JsonValue.Parse on a string and it will create a JsonValue for you, which will be a dictionary of key/value pairs.&nbsp; What’s more, by doing something like “string s = json[“text”]” will do an explicit conversion and unescape JSON characters, and only via the explicit operator.&nbsp; Calling ToString(), even though converting it to a string, will not unescape.&nbsp; This was completely undocumented and only found when I looked at the source code via Resharper’s external sources feature. Rx is awesome.&nbsp; When I ran into performance problems of trying to stream tweets from the world that contained the letter ‘a’ all I had to do was add an operator to improve the performance (in this case it was Buffer).&nbsp; It should be noted that it is very important to understand what Rx is doing underneath the hood to realize its benefits.&nbsp; Rx lets you refactor 30 lines of async code into 1 operator, but it’s still doing that 30 lines of code – you just don’t see it. I really, really, like the conventions available from Caliburn.&nbsp; Some of the features that come out of the box from this very small library saves me from writing a lot of boilerplate code like commands, triggers, and evening bindings (Caliburn will auto bind x:Name to a property). Twitter’s documentation for user streams currently sucks and some trial and error was required to get it working. What is the end result of all this effort?&nbsp; We have a styled Twitter app that can update your status, pull your home/mentions timeline, and most importantly will stream all subsequent tweets.&nbsp; There’s no pulling and no limits.&nbsp; You will get a tweet of everyone you follow in real-time as it happens. Moreover, there’s a feature to connect to the Streaming API to search Twitter for anything.&nbsp; To get an idea of what we’re talking about, here’s a full screenshot of it: You read that right.&nbsp; I’m streaming any tweet in the world that has the words ‘and’, ‘the’, ‘yes’, or ‘no’ in them.&nbsp; This is streaming around 400kB/s continuously and CPU utilization is under 25%.&nbsp; The tweets are coming so fast it’s impossible to read them (at a rate of 50 tweets/second), so ideally you’d want to specify realistic search terms. Moreover, the majority of the performance cost is actually downloading all the profile images.&nbsp; If I take took out pictures I could stream any tweet in the world that has the letter ‘e’ in it at under 10% CPU.&nbsp; It looks like Twitter limits the rate of tweets to 50 tweets/second because that was the rate for this one as well. Features are minimalistic.&nbsp; You can update your status, but you can’t DM, you can’t RT, you can’t do any of the normal things.&nbsp; My original goal was not to write another Twitter client, but it’s actually quite fun to do so, so I’ll probably eventually get all features in. And as promised, it’s up on GitHub, and version 0.0.0.1 alpha (yes! expect bugs!!) is available in the downloads section.&nbsp; Or, here’s a direct link to the XAP file on my Dropbox.&nbsp; Have fun!
+
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
+    <a href="http://bling.github.io/blog/2011/09/13/building-real-time-push-app-with-rx-6/">Building a Real-time Push App with Silverlight: Part 6</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2011-09-13</small></p> <hr/>
+  <div class="post">
+    Back to the UI! For this post I’m going to restyle the tweets. Recall that they currently look like this: The gradient background is currently #FFEEEEEE to #FFDDDDDD. For this post I’m going to talk about a very powerful tool in a designer’s arsenal: transparency. Your first may be to think “big deal”, but just like programmers can use base classes and injection to share common code, designers can use transparency to achieve a similar effect. Let’s change change the color to be black, and tweak only the alpha. I’m going to set the colors to be #11000000 to #22000000 on a white background. This is the result: Looks almost identical doesn’t it? However, by doing this we have dramatically improved the reusability of the gradient. Here’s what happens when I change the background to be a different color: I just changed one variable to do that. If I wanted to provide different themes for my application it would be extremely easy to do that if all the data templates were built with transparencies. In fact, I just slap on a ColorPicker and I’d be done! Even though it’d be easy to do this, any application that is dominated by one color gets boring very quickly. Most applications that look nice tend to focus around two dominant colors that contrast well against each other. Black and white are very common because they contrast well with a large variety of colors, but you can also have things like blue/green, purple/orange, etc. As always, as long as you’re consistent you’ll likely have a good result. Now, the flip side of the equation is also possible. This is where you have something that exists already and then you put a transparent layer on top of it, creating a lightening or dimming effect. In my experience I’ve found this to be inferior because it tends to wash out colors. In the example above, if I applied a slightly transparent layer over top of the tweet, my picture and text would be negatively affected. This is nonetheless a very useful trick, like with mouse over effects where you want a quick and cheap way of conveying information to the user. Now, let’s take a big detour and restyle the entire application and go with a completely different theme. I also wanted try something besides Apple and Microsoft inspired designs, which was more difficult than expected because I guess I’m not as creative as I thought I was :-). Coming up with a good design takes a long time, and frequently you need some sort of inspiration. Twitter in general is a very simple application, so the best designs are simple as well. In an attempt to try to come up with something “cool” and “unique”, I started with the idea of elevated boxes layered on top of each other. Here’s a before and after once I was done: The redesign went through many iterations. I showed it to friends and colleagues and got mixed feelings. Some liked it. Some thought it was too noisy. And herein revealed a problem with complex designs – they are hard to get right! That, and they tend to divide audience into those that really like it, and those that really don’t. Anyways, the beauty of XAML is that I can try something else entirely without any changes to the code, so I’ll try another theme in the future. I’m about 90% ready to release code to GitHub along with the first public alpha version. Stay tuned!
+
+    
+  </div>
+</div>
+
+
+
+    
+    <ul class="pagination">
+        
+        <li>
+            <a href="/" aria-label="First"><span aria-hidden="true">&laquo;&laquo;</span></a>
+        </li>
+        
+        <li
+        >
+        <a href="/page/4/" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+        </li>
+        
+        <li
+        ><a href="/">1</a></li>
+        
+        <li
+        ><a href="/page/2/">2</a></li>
+        
+        <li
+        ><a href="/page/3/">3</a></li>
+        
+        <li
+        ><a href="/page/4/">4</a></li>
+        
+        <li
+        class="active"><a href="/page/5/">5</a></li>
+        
+        <li
+        ><a href="/page/6/">6</a></li>
+        
+        <li
+        ><a href="/page/7/">7</a></li>
+        
+        <li
+        ><a href="/page/8/">8</a></li>
+        
+        <li
+        ><a href="/page/9/">9</a></li>
+        
+        <li
+        ><a href="/page/10/">10</a></li>
+        
+        <li
+        ><a href="/page/11/">11</a></li>
+        
+        <li
+        ><a href="/page/12/">12</a></li>
+        
+        <li
+        ><a href="/page/13/">13</a></li>
+        
+        <li
+        ><a href="/page/14/">14</a></li>
+        
+        <li
+        ><a href="/page/15/">15</a></li>
+        
+        <li
+        ><a href="/page/16/">16</a></li>
+        
+        <li
+        ><a href="/page/17/">17</a></li>
+        
+        <li
+        >
+        <a href="/page/6/" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+        </li>
+        
+        <li>
+            <a href="/page/17/" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
+        </li>
+        
+    </ul>
+    
+
+    </div>
+
+    <footer>
+      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
+    </footer>
+
+    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.js"></script>
+    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+
+    
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38439430-2', 'auto');
+ga('send', 'pageview');
+</script>
+
+  </body>
+</html>
+

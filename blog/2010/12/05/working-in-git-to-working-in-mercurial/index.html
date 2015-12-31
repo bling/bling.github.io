@@ -1,316 +1,188 @@
-
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <title>Working in Git to Working in Mercurial - bling on software development</title>
-  <meta name="author" content="Bailey Ling">
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Working in Git to Working in Mercurial</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="generator" content="Hugo 0.16-DEV" />
+    <link href="" rel="alternate" type="application/rss+xml" title="bling on software" />
+    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    
+    
+  </head>
+  <body>
+    <div id = "wrapper">
 
-  
-  <meta name="description" content="I took the dive a couple weeks ago and learned how to use Git and fell in love with its simplicity.&nbsp; I don’t know what it is, but after using &hellip;">
-  
+      <div class="navbar navbar-default" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a href="http://bling.github.io/"><p class="navbar-brand">bling on software</p></a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              
+              
+            </ul>
+          </div>
+        </div>
+      </div>
 
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  
-  <link rel="canonical" href="http://bling.github.io/blog/2010/12/05/working-in-git-to-working-in-mercurial">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="bling on software development" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic|Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
 
 
-  
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-38439430-2']);
-    _gaq.push(['_trackPageview']);
+      
+      <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+          <li class="sidebar-brand">
+            <a href="http://bling.github.io/">
+              <h1 class="brand">bling on software</h1>
+            </a>
+            <a href="/about">
+              <img src="https://pbs.twimg.com/profile_images/1188386482/Untitled_bigger.png" />
+            </a>
+            <h3>when pragmatism meets minimalism</h3>
+          </li>
+
+          <hr />
+
+          <div id="social-wrapper">
+            <li> <a href="https://github.com/bling"><i class="fa fa-github-square"></i> github</a> </li>
+            <li> <a href="https://twitter.com/blingcoder"><i class="fa fa-twitter-square"></i> @twitter</a></li>
+            <li> <a href="https://linkedin.com/in/baileyling"><i class="fa fa-linkedin-square"></i> linkedin</a> </li>
+          </div>
+
+          <hr />
+
+          <li class="sidebar-categories">
+            <div>
+              <span>Categories</span>
+              <a href="/post" style="float:right">show all</a>
+            </div>
+            <div>
+              
+              <a href="/categories/blend">blend</a>
+              
+              <a href="/categories/castle">castle</a>
+              
+              <a href="/categories/castle-coding">castle-coding</a>
+              
+              <a href="/categories/coding">coding</a>
+              
+              <a href="/categories/cqrs">cqrs</a>
+              
+              <a href="/categories/emacs">emacs</a>
+              
+              <a href="/categories/forex">forex</a>
+              
+              <a href="/categories/ioc">ioc</a>
+              
+              <a href="/categories/javascript">javascript</a>
+              
+              <a href="/categories/logging">logging</a>
+              
+              <a href="/categories/powershell">powershell</a>
+              
+              <a href="/categories/rx">rx</a>
+              
+              <a href="/categories/software-tools">software-tools</a>
+              
+              <a href="/categories/source-control-management">source-control-management</a>
+              
+              <a href="/categories/testing">testing</a>
+              
+              <a href="/categories/twitter">twitter</a>
+              
+              <a href="/categories/vim">vim</a>
+              
+              <a href="/categories/visual-studio">visual-studio</a>
+              
+            </div>
+          </li>
+        </ul>
+      </div>
+
+
+
+      <div class="container">
+
+
+
+<div class="article">
+  <div class="article-title">Working in Git to Working in Mercurial</div>
+  <p class="meta"><small>&nbsp;<i class="fa fa-calendar-o"></i> 2010-12-05</small></p> <hr/>
+  <div class="post">
+    <div class='post'>
+<p>I took the dive a couple weeks ago and learned how to use Git and fell in love with its simplicity.&nbsp; I don’t know what it is, but after using Git every day it actually started to <em>make sense</em> that <strong>git checkout </strong>is used for so many things, which is ironic because prior to using Git, every introductory tutorial I’ve read has always had me thinking, “checkout does what and what and what now??”.</p> <p>So why did I switch to Mercurial?&nbsp; I need to push/pull from a Subversion repository, and I work on Windows.&nbsp; General day to day work is great, but when I needed to <strong>git svn rebase</strong> or <strong>git svn dcommit</strong> it would take so long that I simply left to get coffee.&nbsp; What’s worse, no matter what I set for core.autocrlf I would <em>always</em> get some weird whitespace merging error, when nothing was wrong.&nbsp; It became a regular part of my workflow to just <strong>git rebase –skip</strong> everything because that’s what fixed things.&nbsp; Scary.</p> <p>The crappy Subversion and whitespace support (at least in Windows) led me to try Mercurial.&nbsp; After getting accustomed to Mercurial, they’re actually a lot more similar than they are different.</p> <p>First things first, you need to add the following to your mercurial.ini file in your home directory:</p> <blockquote> <p>[bookmarks]<br>track.current = True</p></blockquote> <p>Here’s a comparison of my typical Git workflow translated to Mercurial:</p> <table border="1" cellspacing="0" cellpadding="2" width="600"> <tbody> <tr> <td valign="top" width="201">&nbsp;</td> <td valign="top" width="199"><strong>Git</strong></td> <td valign="top" width="198"><strong>Mercurial</strong></td></tr> <tr> <td valign="top" width="201">Work on a new feature/bug</td> <td valign="top" width="199">git checkout –b new_feature</td> <td valign="top" width="198">hg book new_feature</td></tr> <tr> <td valign="top" width="201">Hack hack hack</td> <td valign="top" width="199">git add .</td> <td valign="top" width="198">&nbsp;</td></tr> <tr> <td valign="top" width="201">Commit</td> <td valign="top" width="199">git commit –m “done!”</td> <td valign="top" width="198">hg commit –m “done!”</td></tr> <tr> <td valign="top" width="201">Hack more and commit</td> <td valign="top" width="199">git commit –a –m “more hacking”</td> <td valign="top" width="198">hg commit –m “more hacking”</td></tr> <tr> <td valign="top" width="201">Sync with up stream</td> <td valign="top" width="199">git pull master</td> <td valign="top" width="198">hg pull</td></tr> <tr> <td valign="top" width="201">Merge</td> <td valign="top" width="199">git checkout master</td> <td valign="top" width="198">hg merge new_feature</td></tr> <tr> <td valign="top" width="201">&nbsp;</td> <td valign="top" width="199">git merge new_feature</td> <td valign="top" width="198">hg commit –m “merged”</td></tr> <tr> <td valign="top" width="201">Push</td> <td valign="top" width="199">git push</td> <td valign="top" width="198">hg push</td></tr></tbody></table> <p>Notice that they’re practically exactly the same?&nbsp; There are some minor differences.&nbsp; The obvious one being that you need to add into git’s index before committing.&nbsp; And the other I didn’t have to switch branches in Mercurial (more on that later).&nbsp; But aside from that, it’s pretty much the same, <strong>from a user’s point of view</strong>.&nbsp; Check this fantastic <a href="http://stackoverflow.com/questions/1598759/git-and-mercurial-compare-and-contrast">thread</a> on StackOverflow for one of the best comparisons on the net if you want to dive into technical details.</p> <p>So far, there are only two things that bother me having switched:<br>&nbsp; a) No fast-forward merge.&nbsp; You need to manually rebase and then commit.<br>&nbsp; b) No automatic commit after a conflict free merge.</p> <p>These are fairly minor annoyances, but can be scripted/aliased away.&nbsp; Or if you don’t like those defaults in Git, you can override them in the command arguments or set them in gitconfig.&nbsp; Mercurial similarly can change default arguments in its hgrc/mercurial.ini.</p> <p>One of the biggest advantages of Git is easily switching between all its local lightweight branches at lightning speed.&nbsp; Tangled source code is no more!&nbsp; I was confused with Mercurial’s bookmarks when I first used them because all it does is label your head with something.&nbsp; I don’t know why this is, but it is the same as <strong>git checkout –b</strong>, but for some reason I visualized Git “branching” the latest commit into two paths.&nbsp; But how do you do that if they’re the same?&nbsp; It should only branch <em>after</em> a commit which introduces changes, which is what Mercurial does.&nbsp; In this scenario, Mercurial is more explicit, whereas Git is implicit.</p> <p>Using bookmarks, you can mimic Git’s workflow like this:</p> <table border="1" cellspacing="0" cellpadding="2" width="594"> <tbody> <tr> <td valign="top" width="209">&nbsp;</td> <td valign="top" width="192"><strong>Git</strong></td> <td valign="top" width="191"><strong>Mercurial</strong></td></tr> <tr> <td valign="top" width="212">Create a bunch of ‘working areas’</td> <td valign="top" width="190">git branch feature1</td> <td valign="top" width="189">hg book feature1</td></tr> <tr> <td valign="top" width="214">&nbsp;</td> <td valign="top" width="190">git branch feature2</td> <td valign="top" width="189">hg book feature2</td></tr> <tr> <td valign="top" width="216">Switch/commit/hack/commit</td> <td valign="top" width="189">git checkout feature1</td> <td valign="top" width="188">hg up feature1</td></tr> <tr> <td valign="top" width="217">&nbsp;</td> <td valign="top" width="189">git commit –a –m “feature1”</td> <td valign="top" width="188">hg commit –m “feature1”</td></tr> <tr> <td valign="top" width="218">&nbsp;</td> <td valign="top" width="188">git checkout feature2</td> <td valign="top" width="187">hg up feature2</td></tr> <tr> <td valign="top" width="219">&nbsp;</td> <td valign="top" width="188">git commit –a –m “feature1”</td> <td valign="top" width="187">hg commit –m “feature2”</td></tr> <tr> <td valign="top" width="219">Sync up stream</td> <td valign="top" width="188">git pull master</td> <td valign="top" width="187">hg pull</td></tr> <tr> <td valign="top" width="219">&nbsp;</td> <td valign="top" width="188">git checkout master</td> <td valign="top" width="187">hg up default</td></tr> <tr> <td valign="top" width="219">Merge in 1 feature</td> <td valign="top" width="188">git merge feature1</td> <td valign="top" width="187">hg merge feature1</td></tr> <tr> <td valign="top" width="219">&nbsp;</td> <td valign="top" width="188">&nbsp;</td> <td valign="top" width="187">hg commit –m “merged”</td></tr> <tr> <td valign="top" width="219">Delete branch/bookmark</td> <td valign="top" width="188">git branch –d feature1</td> <td valign="top" width="187">hg book –d feature1</td></tr> <tr> <td valign="top" width="219">Push</td> <td valign="top" width="188">git push</td> <td valign="top" width="187">hg push –r tip</td></tr> <tr> <td valign="top" width="219">Switch back and hack again</td> <td valign="top" width="188">git checkout feature2</td> <td valign="top" width="188">hg up feature2</td></tr></tbody></table> <p>The <strong>–r tip</strong> switch on hg push might have raised an eyebrow.&nbsp; This is to tell Mercurial to push all changes that lead to the tip.&nbsp; This will include the changes in <em>feature1</em> that we just merged in, but exclude all the ones in <em>feature2</em>.&nbsp; If you issue a <strong>hg push</strong> it will complain and warn you that you’re going to create multiple heads on the remote repository.&nbsp; This is not what you want since there may be unfinished features, experimental branches, etc.&nbsp; Of course, you can force it anyways, but that’s not a good idea.</p> <p>At first, the tip was most confusing to me because I tried to associate it with Git’s master, which was simply not the case.&nbsp; Tip refers to the newest change that you know about.&nbsp; This can be on any branch or bookmark.&nbsp; Once I understood that, and <strong>stopped trying to create a Git master</strong> equivalent, everything was straightforward.</p> <p>So let’s start with an example.&nbsp; First I create a bookmark <em>feature1</em> after syncing, and then making a commit looks like this: </p> <p><a href="http://lh3.ggpht.com/_WZr-_wsEf1c/TPwPhlbcWDI/AAAAAAAAACo/3_P3Zvqu1pM/s1600-h/image%5B2%5D.png"><img style="background-image: none; border-right-width: 0px; margin: ; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh6.ggpht.com/_WZr-_wsEf1c/TPwPiMwJxgI/AAAAAAAAACs/DmZxxuMAb2k/image_thumb.png?imgmax=800" width="238" height="101"></a></p> <p>And then if you switch to <em>feature2</em> and make a commit, it becomes like this:</p> <p><a href="http://lh3.ggpht.com/_WZr-_wsEf1c/TPwPiUVV5WI/AAAAAAAAACw/9lf6dwKGApg/s1600-h/image%5B5%5D.png"><img style="background-image: none; border-right-width: 0px; margin: ; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh4.ggpht.com/_WZr-_wsEf1c/TPwPi48MmdI/AAAAAAAAAC0/cC_c0bvyvis/image_thumb%5B1%5D.png?imgmax=800" width="243" height="124"></a></p> <p>Here’s where you start thinking, “I don’t have a master which tracks upstream changes, how do I separate my local changes?”&nbsp; And now here’s a situation where Mercurial does more black magic than Git.&nbsp; If there are up stream changes, after issuing <strong>hg pull</strong>, this happens:</p> <p><a href="http://lh5.ggpht.com/_WZr-_wsEf1c/TPwPjPEMdfI/AAAAAAAAAC4/f2d3b4qfeCE/s1600-h/image%5B8%5D.png"><img style="background-image: none; border-right-width: 0px; margin: ; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh4.ggpht.com/_WZr-_wsEf1c/TPwPjRxmonI/AAAAAAAAAC8/IrEz8ig5Zo0/image_thumb%5B2%5D.png?imgmax=800" width="244" height="144"></a></p> <p>Mercurial automatically split my local changes into their own separate branches (actually, <em>heads</em> is the accurate term).&nbsp; After this operation, <strong>tip</strong> is now tracking the changes that I just pulled in from upstream, instead of my bookmark.</p> <p>From here, it’s simply <strong>hg up tip</strong> to switch to the “master” branch.&nbsp; Then a <strong>hg merge feature1; hg commit</strong>, and it becomes like this:</p> <p><a href="http://lh4.ggpht.com/_WZr-_wsEf1c/TPwPjoJRV0I/AAAAAAAAADA/PEV6bis7pJg/s1600-h/image%5B11%5D.png"><img style="background-image: none; border-right-width: 0px; margin: ; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh3.ggpht.com/_WZr-_wsEf1c/TPwPkIS-mgI/AAAAAAAAADE/labU8QL9AKQ/image_thumb%5B3%5D.png?imgmax=800" width="244" height="168"></a></p> <p>Then it’s simply <strong>hg push –r tip</strong>, and you’re good to go.&nbsp; Basically, if you bookmark every feature/bug you work on, then you should only have one branch that doesn’t have a bookmark, which is the same as the ‘master’ branch from Git.</p> <h4>What about Subversion?</h4> <p>Whoops, forgot why I switched in the first place.&nbsp; First, install <a href="http://bitbucket.org/durin42/hgsubversion/wiki/Home">hgsubversion</a>, after that’s set up, simply:</p> <p>hg clone <a href="http://path/to/subversion/repository">http://path/to/subversion/repository</a></p> <p>And then it’s just <strong>hg pull</strong> or <strong>hg push</strong>.&nbsp; Is it really that simple?&nbsp; Yes, yes it is.</p>  </div>
+
+  </div>
+</div>
+
+
+
+
+<div class="social-bar">
+  <a href="https://twitter.com/share" class="twitter-share-button"{count} data-via="blingcoder">Tweet</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <g:plusone></g:plusone>
+</div>
+
+<ul class="pager">
+   &nbsp;<li class="previous"><a href="http://bling.github.io/blog/2010/12/11/auto-mocking-nsubstitute-with-castle/"> Auto Mocking NSubstitute with Castle Windsor</a></li>
+   &nbsp;<li class="next"><a href="http://bling.github.io/blog/2010/12/04/cqrs-building-transactional-event-store/"> CQRS: Building a “Transactional” Event Store with MongoDB</a></li>
+</ul>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'blingdev';
+    var disqus_identifier = 'http:\/\/bling.github.io\/blog\/2010\/12\/05\/working-in-git-to-working-in-mercurial\/';
+    var disqus_title = 'Working in Git to Working in Mercurial';
+    var disqus_url = 'http:\/\/bling.github.io\/blog\/2010\/12\/05\/working-in-git-to-working-in-mercurial\/';
 
     (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
-  </script>
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
-
-</head>
-
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">bling on software development</a></h1>
-  
-    <h2>when pragmatism meets minimalism</h2>
-  
-</hgroup>
-
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:bling.github.io" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
-
-</nav>
-  <div id="main">
-    <div id="content">
-      <div>
-<article class="hentry" role="article">
-  
-  <header>
-    
-      <h1 class="entry-title">Working in Git to Working in Mercurial</h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-12-05T00:00:00+00:00" pubdate data-updated="true">Dec 5<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-<div class="entry-content"><div class='post'>
-<p>I took the dive a couple weeks ago and learned how to use Git and fell in love with its simplicity.&nbsp; I don’t know what it is, but after using Git every day it actually started to <em>make sense</em> that <strong>git checkout </strong>is used for so many things, which is ironic because prior to using Git, every introductory tutorial I’ve read has always had me thinking, “checkout does what and what and what now??”.</p> <p>So why did I switch to Mercurial?&nbsp; I need to push/pull from a Subversion repository, and I work on Windows.&nbsp; General day to day work is great, but when I needed to <strong>git svn rebase</strong> or <strong>git svn dcommit</strong> it would take so long that I simply left to get coffee.&nbsp; What’s worse, no matter what I set for core.autocrlf I would <em>always</em> get some weird whitespace merging error, when nothing was wrong.&nbsp; It became a regular part of my workflow to just <strong>git rebase –skip</strong> everything because that’s what fixed things.&nbsp; Scary.</p> <p>The crappy Subversion and whitespace support (at least in Windows) led me to try Mercurial.&nbsp; After getting accustomed to Mercurial, they’re actually a lot more similar than they are different.</p> <p>First things first, you need to add the following to your mercurial.ini file in your home directory:</p> <blockquote> <p>[bookmarks]<br>track.current = True</p></blockquote> <p>Here’s a comparison of my typical Git workflow translated to Mercurial:</p> <table border="1" cellspacing="0" cellpadding="2" width="600"> <tbody> <tr> <td valign="top" width="201">&nbsp;</td> <td valign="top" width="199"><strong>Git</strong></td> <td valign="top" width="198"><strong>Mercurial</strong></td></tr> <tr> <td valign="top" width="201">Work on a new feature/bug</td> <td valign="top" width="199">git checkout –b new_feature</td> <td valign="top" width="198">hg book new_feature</td></tr> <tr> <td valign="top" width="201">Hack hack hack</td> <td valign="top" width="199">git add .</td> <td valign="top" width="198">&nbsp;</td></tr> <tr> <td valign="top" width="201">Commit</td> <td valign="top" width="199">git commit –m “done!”</td> <td valign="top" width="198">hg commit –m “done!”</td></tr> <tr> <td valign="top" width="201">Hack more and commit</td> <td valign="top" width="199">git commit –a –m “more hacking”</td> <td valign="top" width="198">hg commit –m “more hacking”</td></tr> <tr> <td valign="top" width="201">Sync with up stream</td> <td valign="top" width="199">git pull master</td> <td valign="top" width="198">hg pull</td></tr> <tr> <td valign="top" width="201">Merge</td> <td valign="top" width="199">git checkout master</td> <td valign="top" width="198">hg merge new_feature</td></tr> <tr> <td valign="top" width="201">&nbsp;</td> <td valign="top" width="199">git merge new_feature</td> <td valign="top" width="198">hg commit –m “merged”</td></tr> <tr> <td valign="top" width="201">Push</td> <td valign="top" width="199">git push</td> <td valign="top" width="198">hg push</td></tr></tbody></table> <p>Notice that they’re practically exactly the same?&nbsp; There are some minor differences.&nbsp; The obvious one being that you need to add into git’s index before committing.&nbsp; And the other I didn’t have to switch branches in Mercurial (more on that later).&nbsp; But aside from that, it’s pretty much the same, <strong>from a user’s point of view</strong>.&nbsp; Check this fantastic <a href="http://stackoverflow.com/questions/1598759/git-and-mercurial-compare-and-contrast">thread</a> on StackOverflow for one of the best comparisons on the net if you want to dive into technical details.</p> <p>So far, there are only two things that bother me having switched:<br>&nbsp; a) No fast-forward merge.&nbsp; You need to manually rebase and then commit.<br>&nbsp; b) No automatic commit after a conflict free merge.</p> <p>These are fairly minor annoyances, but can be scripted/aliased away.&nbsp; Or if you don’t like those defaults in Git, you can override them in the command arguments or set them in gitconfig.&nbsp; Mercurial similarly can change default arguments in its hgrc/mercurial.ini.</p> <p>One of the biggest advantages of Git is easily switching between all its local lightweight branches at lightning speed.&nbsp; Tangled source code is no more!&nbsp; I was confused with Mercurial’s bookmarks when I first used them because all it does is label your head with something.&nbsp; I don’t know why this is, but it is the same as <strong>git checkout –b</strong>, but for some reason I visualized Git “branching” the latest commit into two paths.&nbsp; But how do you do that if they’re the same?&nbsp; It should only branch <em>after</em> a commit which introduces changes, which is what Mercurial does.&nbsp; In this scenario, Mercurial is more explicit, whereas Git is implicit.</p> <p>Using bookmarks, you can mimic Git’s workflow like this:</p> <table border="1" cellspacing="0" cellpadding="2" width="594"> <tbody> <tr> <td valign="top" width="209">&nbsp;</td> <td valign="top" width="192"><strong>Git</strong></td> <td valign="top" width="191"><strong>Mercurial</strong></td></tr> <tr> <td valign="top" width="212">Create a bunch of ‘working areas’</td> <td valign="top" width="190">git branch feature1</td> <td valign="top" width="189">hg book feature1</td></tr> <tr> <td valign="top" width="214">&nbsp;</td> <td valign="top" width="190">git branch feature2</td> <td valign="top" width="189">hg book feature2</td></tr> <tr> <td valign="top" width="216">Switch/commit/hack/commit</td> <td valign="top" width="189">git checkout feature1</td> <td valign="top" width="188">hg up feature1</td></tr> <tr> <td valign="top" width="217">&nbsp;</td> <td valign="top" width="189">git commit –a –m “feature1”</td> <td valign="top" width="188">hg commit –m “feature1”</td></tr> <tr> <td valign="top" width="218">&nbsp;</td> <td valign="top" width="188">git checkout feature2</td> <td valign="top" width="187">hg up feature2</td></tr> <tr> <td valign="top" width="219">&nbsp;</td> <td valign="top" width="188">git commit –a –m “feature1”</td> <td valign="top" width="187">hg commit –m “feature2”</td></tr> <tr> <td valign="top" width="219">Sync up stream</td> <td valign="top" width="188">git pull master</td> <td valign="top" width="187">hg pull</td></tr> <tr> <td valign="top" width="219">&nbsp;</td> <td valign="top" width="188">git checkout master</td> <td valign="top" width="187">hg up default</td></tr> <tr> <td valign="top" width="219">Merge in 1 feature</td> <td valign="top" width="188">git merge feature1</td> <td valign="top" width="187">hg merge feature1</td></tr> <tr> <td valign="top" width="219">&nbsp;</td> <td valign="top" width="188">&nbsp;</td> <td valign="top" width="187">hg commit –m “merged”</td></tr> <tr> <td valign="top" width="219">Delete branch/bookmark</td> <td valign="top" width="188">git branch –d feature1</td> <td valign="top" width="187">hg book –d feature1</td></tr> <tr> <td valign="top" width="219">Push</td> <td valign="top" width="188">git push</td> <td valign="top" width="187">hg push –r tip</td></tr> <tr> <td valign="top" width="219">Switch back and hack again</td> <td valign="top" width="188">git checkout feature2</td> <td valign="top" width="188">hg up feature2</td></tr></tbody></table> <p>The <strong>–r tip</strong> switch on hg push might have raised an eyebrow.&nbsp; This is to tell Mercurial to push all changes that lead to the tip.&nbsp; This will include the changes in <em>feature1</em> that we just merged in, but exclude all the ones in <em>feature2</em>.&nbsp; If you issue a <strong>hg push</strong> it will complain and warn you that you’re going to create multiple heads on the remote repository.&nbsp; This is not what you want since there may be unfinished features, experimental branches, etc.&nbsp; Of course, you can force it anyways, but that’s not a good idea.</p> <p>At first, the tip was most confusing to me because I tried to associate it with Git’s master, which was simply not the case.&nbsp; Tip refers to the newest change that you know about.&nbsp; This can be on any branch or bookmark.&nbsp; Once I understood that, and <strong>stopped trying to create a Git master</strong> equivalent, everything was straightforward.</p> <p>So let’s start with an example.&nbsp; First I create a bookmark <em>feature1</em> after syncing, and then making a commit looks like this: </p> <p><a href="http://lh3.ggpht.com/_WZr-_wsEf1c/TPwPhlbcWDI/AAAAAAAAACo/3_P3Zvqu1pM/s1600-h/image%5B2%5D.png"><img style="background-image: none; border-right-width: 0px; margin: ; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh6.ggpht.com/_WZr-_wsEf1c/TPwPiMwJxgI/AAAAAAAAACs/DmZxxuMAb2k/image_thumb.png?imgmax=800" width="238" height="101"></a></p> <p>And then if you switch to <em>feature2</em> and make a commit, it becomes like this:</p> <p><a href="http://lh3.ggpht.com/_WZr-_wsEf1c/TPwPiUVV5WI/AAAAAAAAACw/9lf6dwKGApg/s1600-h/image%5B5%5D.png"><img style="background-image: none; border-right-width: 0px; margin: ; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh4.ggpht.com/_WZr-_wsEf1c/TPwPi48MmdI/AAAAAAAAAC0/cC_c0bvyvis/image_thumb%5B1%5D.png?imgmax=800" width="243" height="124"></a></p> <p>Here’s where you start thinking, “I don’t have a master which tracks upstream changes, how do I separate my local changes?”&nbsp; And now here’s a situation where Mercurial does more black magic than Git.&nbsp; If there are up stream changes, after issuing <strong>hg pull</strong>, this happens:</p> <p><a href="http://lh5.ggpht.com/_WZr-_wsEf1c/TPwPjPEMdfI/AAAAAAAAAC4/f2d3b4qfeCE/s1600-h/image%5B8%5D.png"><img style="background-image: none; border-right-width: 0px; margin: ; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh4.ggpht.com/_WZr-_wsEf1c/TPwPjRxmonI/AAAAAAAAAC8/IrEz8ig5Zo0/image_thumb%5B2%5D.png?imgmax=800" width="244" height="144"></a></p> <p>Mercurial automatically split my local changes into their own separate branches (actually, <em>heads</em> is the accurate term).&nbsp; After this operation, <strong>tip</strong> is now tracking the changes that I just pulled in from upstream, instead of my bookmark.</p> <p>From here, it’s simply <strong>hg up tip</strong> to switch to the “master” branch.&nbsp; Then a <strong>hg merge feature1; hg commit</strong>, and it becomes like this:</p> <p><a href="http://lh4.ggpht.com/_WZr-_wsEf1c/TPwPjoJRV0I/AAAAAAAAADA/PEV6bis7pJg/s1600-h/image%5B11%5D.png"><img style="background-image: none; border-right-width: 0px; margin: ; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh3.ggpht.com/_WZr-_wsEf1c/TPwPkIS-mgI/AAAAAAAAADE/labU8QL9AKQ/image_thumb%5B3%5D.png?imgmax=800" width="244" height="168"></a></p> <p>Then it’s simply <strong>hg push –r tip</strong>, and you’re good to go.&nbsp; Basically, if you bookmark every feature/bug you work on, then you should only have one branch that doesn’t have a bookmark, which is the same as the ‘master’ branch from Git.</p> <h4>What about Subversion?</h4> <p>Whoops, forgot why I switched in the first place.&nbsp; First, install <a href="http://bitbucket.org/durin42/hgsubversion/wiki/Home">hgsubversion</a>, after that’s set up, simply:</p> <p>hg clone <a href="http://path/to/subversion/repository">http://path/to/subversion/repository</a></p> <p>And then it’s just <strong>hg pull</strong> or <strong>hg push</strong>.&nbsp; Is it really that simple?&nbsp; Yes, yes it is.</p>  </div>
-</div>
-
-
-  <footer>
-    <p class="meta">
-      
-  
-
-<span class="byline author vcard">Posted by <span class="fn">Bailey Ling</span></span>
-
-      
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-12-05T00:00:00+00:00" pubdate data-updated="true">Dec 5<span>th</span>, 2010</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/source-control-management/'>source control management</a>
-  
-</span>
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bling.github.io/blog/2010/12/05/working-in-git-to-working-in-mercurial/" data-via="blingcoder" data-counturl="http://bling.github.io/blog/2010/12/05/working-in-git-to-working-in-mercurial/" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-</div>
-
-    
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2010/12/04/cqrs-building-transactional-event-store/" title="Previous Post: CQRS: Building a “Transactional” Event Store with MongoDB">&laquo; CQRS: Building a “Transactional” Event Store with MongoDB</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2010/12/11/auto-mocking-nsubstitute-with-castle/" title="Next Post: Auto Mocking NSubstitute with Castle Windsor">Auto Mocking NSubstitute with Castle Windsor &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
-
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-  </section>
-
-</div>
-
-<aside class="sidebar">
-  
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2015/01/06/emacs-as-my-leader-1-year-later/">Emacs As My &lt;Leader&gt;, 1 Year Later</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/01/21/asynchronous-eval-with-stylus-and-skewer/">Asynchronous Eval in Emacs with Stylus and Skewer</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/27/emacs-as-my-leader-vim-survival-guide/">Emacs as my &lt;Leader&gt;: Vim Survival Guide</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my &lt;Leader&gt;: evil-mode</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/09/09/vim-in-emacs-bootstrap/">Vim in Emacs Bootstrap</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/08/16/modularizing-vimscript/">Modularizing VimScript</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/30/1000-stars-in-1-month/">1000 stars in 1 month</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/21/smart-tab-expansions-in-vim-with-expression-mappings/">Smart tab expansions in Vim with expression mappings</a>
-      </li>
-    
-  </ul>
-</section>
-
-<section>
-  <h1>GitHub Repos</h1>
-  <ul id="gh_repos">
-    <li class="loading">Status updating...</li>
-  </ul>
-  
-  <a href="https://github.com/bling">@bling</a> on GitHub
-  
-  <script type="text/javascript">
-    $(document).ready(function(){
-        if (!window.jXHR){
-            var jxhr = document.createElement('script');
-            jxhr.type = 'text/javascript';
-            jxhr.src = '/javascripts/libs/jXHR.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(jxhr, s);
-        }
-
-        github.showRepos({
-            user: 'bling',
-            count: 0,
-            skip_forks: true,
-            target: '#gh_repos'
-        });
-    });
-  </script>
-  <script src="/javascripts/github.js" type="text/javascript"> </script>
-</section>
-
-
-
-
-
-  
-</aside>
 
 
     </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - Bailey Ling -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
 
-</footer>
-  
+    <footer>
+      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
+    </footer>
 
-<script type="text/javascript">
-      var disqus_shortname = 'blingdev';
-      
-        
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://bling.github.io/blog/2010/12/05/working-in-git-to-working-in-mercurial/';
-        var disqus_url = 'http://bling.github.io/blog/2010/12/05/working-in-git-to-working-in-mercurial/';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
+    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
+    <script src="http://bling.github.io/js/bootstrap.js"></script>
+    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+
+    
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38439430-2', 'auto');
+ga('send', 'pageview');
 </script>
 
-
-
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id; js.async = true;
-  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
-
-
-  <script type="text/javascript">
-    (function() {
-      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
-      script.src = 'https://apis.google.com/js/plusone.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
-    })();
-  </script>
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
-
-</body>
+  </body>
 </html>
+

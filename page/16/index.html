@@ -63,48 +63,48 @@
 
           <hr />
 
-          <li class="sidebar-categories">
+          <li class="sidebar-tags">
             <div>
-              <span>Categories</span>
+              <span>Tags</span>
               <a href="/post" style="float:right">show all</a>
             </div>
             <div>
               
-              <a href="/categories/blend">blend</a>
+              <a href="/tags/blend">blend</a>
               
-              <a href="/categories/castle">castle</a>
+              <a href="/tags/castle">castle</a>
               
-              <a href="/categories/castle-coding">castle-coding</a>
+              <a href="/tags/coding">coding</a>
               
-              <a href="/categories/coding">coding</a>
+              <a href="/tags/cqrs">cqrs</a>
               
-              <a href="/categories/cqrs">cqrs</a>
+              <a href="/tags/emacs">emacs</a>
               
-              <a href="/categories/emacs">emacs</a>
+              <a href="/tags/forex">forex</a>
               
-              <a href="/categories/forex">forex</a>
+              <a href="/tags/ioc">ioc</a>
               
-              <a href="/categories/ioc">ioc</a>
+              <a href="/tags/javascript">javascript</a>
               
-              <a href="/categories/javascript">javascript</a>
+              <a href="/tags/logging">logging</a>
               
-              <a href="/categories/logging">logging</a>
+              <a href="/tags/powershell">powershell</a>
               
-              <a href="/categories/powershell">powershell</a>
+              <a href="/tags/rx">rx</a>
               
-              <a href="/categories/rx">rx</a>
+              <a href="/tags/scm">scm</a>
               
-              <a href="/categories/software-tools">software-tools</a>
+              <a href="/tags/software-tools">software-tools</a>
               
-              <a href="/categories/source-control-management">source-control-management</a>
+              <a href="/tags/source-control-management">source-control-management</a>
               
-              <a href="/categories/testing">testing</a>
+              <a href="/tags/testing">testing</a>
               
-              <a href="/categories/twitter">twitter</a>
+              <a href="/tags/twitter">twitter</a>
               
-              <a href="/categories/vim">vim</a>
+              <a href="/tags/vim">vim</a>
               
-              <a href="/categories/visual-studio">visual-studio</a>
+              <a href="/tags/visual-studio">visual-studio</a>
               
             </div>
           </li>
@@ -121,12 +121,32 @@
 
 <div class="article">
   <div class="article-title">
+    <a href="http://bling.github.io/blog/2009/04/23/sourcegear-vault-part-2/">SourceGear Vault, Part 2 (Performance vs Subversion)</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-04-23</small></p> <hr/>
+  <div class="post">
+    Obviously you can&rsquo;t compare something without performance numbers! So in this post I&rsquo;ll post some performance numbers for the most common operations. I&rsquo;ll be using the Linux kernel for no reason other than it&rsquo;s readily available and everyone knows about it. The size of the code base is also relatively large (depending on who you ask). In general, I &ldquo;felt&rdquo; that Vault is slower than Subversion. This is probably due to the .NET runtime startup time for most operations, which is negligible for anything but trivial operations.
+
+    
+    <a class="read-more" href="http://bling.github.io/blog/2009/04/23/sourcegear-vault-part-2/">
+      <span>Read on...</span>
+    </a>
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
     <a href="http://bling.github.io/blog/2009/04/22/sourcegear-vault-part-1/">SourceGear Vault, Part 1</a>
   </div>
   <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-04-22</small></p> <hr/>
   <div class="post">
-    I&rsquo;ll be starting a new job soon, and the company is using SourceGear Vault, so I went ahead and downloaded the latest beta versions off the site (since it&rsquo;s free for single users) to see how it was like. I&rsquo;ve hated SourceSafe from the first time I used it. The nail in the coffin was when my data got corrupted and some of my work was lost. At the very least, no source control management system should ever lose any work. Unfortunately, my current workplace is still using SourceSafe and I was unable to convince them otherwise. I&rsquo;ve coped with the situation by using Mercurial for a quick local repository, and checking in changes back to VSS for major changesets. The choice to go with hg instead of git or bzr was mainly because I&rsquo;m a Windows developer and hg is currently way ahead of the other two on Windows. Anyways, since Vault is frequently advertised as SourceSafe done right, I was curious to how it would affect my opinion of how things &ldquo;should&rdquo; have worked. I&rsquo;m a long term user of Subversion, and most of my experience of actually using SCM is with svn. I used hg at work just to see what all this DVCS hype is all about. With that in mind, setting up Vault was certainly more eventful then I expected, since it involved setting up SQL Server and IIS. After all the requirements were taken care of (the most time consuming part), installing Vault was pretty quick. The administration interface is simple and straightforward, and had a repository created by default. Then, the real fun began! Tune back for part 2!
+    I&rsquo;ll be starting a new job soon, and the company is using SourceGear Vault, so I went ahead and downloaded the latest beta versions off the site (since it&rsquo;s free for single users) to see how it was like. I&rsquo;ve hated SourceSafe from the first time I used it. The nail in the coffin was when my data got corrupted and some of my work was lost. At the very least, no source control management system should ever lose any work.
 
+    
+    <a class="read-more" href="http://bling.github.io/blog/2009/04/22/sourcegear-vault-part-1/">
+      <span>Read on...</span>
+    </a>
     
   </div>
 </div>
@@ -137,8 +157,12 @@
   </div>
   <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-04-09</small></p> <hr/>
   <div class="post">
-    it&rsquo;s pretty sweet. you can connect to every IM service known to man, and it even checks all your email, facebook, and twitter too with nice popup notifications! it only works for windows at the moment, but the guys over there are working hard and pushing out updates very frequently. i&rsquo;m alpha testing and even so i haven&rsquo;t seen any crashes or any major problems. there have been the minor quarks here and there, but that&rsquo;s to be expected when you&rsquo;re alpha testing. check it out at digsby.com also, you can embed a chat client into your website&hellip;like this:
+    it&rsquo;s pretty sweet. you can connect to every IM service known to man, and it even checks all your email, facebook, and twitter too with nice popup notifications! it only works for windows at the moment, but the guys over there are working hard and pushing out updates very frequently. i&rsquo;m alpha testing and even so i haven&rsquo;t seen any crashes or any major problems. there have been the minor quarks here and there, but that&rsquo;s to be expected when you&rsquo;re alpha testing.
 
+    
+    <a class="read-more" href="http://bling.github.io/blog/2009/04/09/digsby/">
+      <span>Read on...</span>
+    </a>
     
   </div>
 </div>
@@ -149,8 +173,12 @@
   </div>
   <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-04-09</small></p> <hr/>
   <div class="post">
-    “Cross thread operation not valid: Control ### accessed from a thread other than the thread it was created.” Seriously, I don’t think there’s a single person who’s written UI programs for .NET that has not encountered this error. Simply put, there is only 1 thread which does drawing on the screen, and if you try to change UI elements in a thread that’s not the UI thread, this exception is thrown. A very common example is a progress bar. Let’s say you’re loading a file which takes a long time to process, so you want to notify the user with a progress bar. public event EventHandler&lt;IntEventArgs&gt; ValueProcessed; private void StartProcessing() { ValueProcessed += ValueProcessedHandler; Thread t = new Thread(delegate() { for (int i = 0; i &lt; 1000; ++i) { // do stuff ValueProcessed(this, new IntEventArgs(i)); }); t.Start(); } private void ValueProcessedHandler(object sender, IntEventArgs e) { _progressBar.Value = e.Value; } I left some implementation details out, but you can pretty much infer what IntEventArgs is, etc. Once you try to set Value, it’ll throw an cross-thread exception. A common pattern to solve this problem is this: private void ValueProcessedHandler(object sender, IntEventArgs e) { if (this.InvokeRequired) { this.BeginInvoke(ValueProcessedHandler, sender, e); } else { _progressBar.Value = e.Value; } } It gets the job done…but frankly I’m too lazy to do that for every single GUI event handler I write. Taking advantage of anonymous delegates we can write a simple wrapper delegate to do this automatically for us. static class Program { public static EventHandler&lt;T&gt; AutoInvoke&lt;T&gt;(EventHandler&lt;T&gt; handler) where T : EventArgs { return delegate(object sender, T e) { if (Program.MainForm.InvokeRequired) { Program.MainForm.BeginInvoke(handler, sender, e); } else { handler(sender, e); } }; } } This assumes that you set Program.MainForm to an instance to a Control, typically, as the name implies, the main form of your application. Now, whenever you assign your event handlers, you can simply do this: ValueProcessed += Program.AutoInvoke&lt;IntEventArgs&gt;(ValueProcessedHandler); Pretty neat! BTW, just a word of warning, if you plan on using the same thing to unsubscribe an event with -=, it&rsquo;s not going to work. Unfortunately, calling the AutoInvoke method twice on the same input delegate returns 2 results where .Equals and == will return false. To get around this you can use a Dictionary to cache the input delegate.
+    “Cross thread operation not valid: Control ### accessed from a thread other than the thread it was created.” Seriously, I don’t think there’s a single person who’s written UI programs for .NET that has not encountered this error. Simply put, there is only 1 thread which does drawing on the screen, and if you try to change UI elements in a thread that’s not the UI thread, this exception is thrown.
 
+    
+    <a class="read-more" href="http://bling.github.io/blog/2009/04/09/cross-thread-operation-not-valid/">
+      <span>Read on...</span>
+    </a>
     
   </div>
 </div>
@@ -161,20 +189,12 @@
   </div>
   <p class="meta"><small><i class="fa fa-calendar-o"></i> 2008-10-24</small></p> <hr/>
   <div class="post">
-    Why doesn&rsquo;t C++ have garbage collection? Simply put, it doesn&rsquo;t need it. C++ has something called Resource Acquisition Is Initialization. What this means is that programmers can deterministically know when an object is created and when it is destroyed. You do not have the same information with garbage collected languages. For example, in C# you know when an object is created (when you call new), but you have no idea when the object gets destroyed. C++ heavily relies on RAII, and smart pointers make very good use of this idiom. For instance, take a look at the following C++ code: class Foo { Foo() { std::cout &lt;&lt; &quot;constructed!&quot; &lt;&lt; std::endl; } ~Foo() { std::cout &lt;&lt; &quot;destroyed!&quot; &lt;&lt; std::endl; } }; int main() { Foo a; if (true) { Foo b; } } With the above code, the following is the output: constructed! (from a) constructed! (from b) destroyed! (from b after exiting the if block) destroyed! (from a exiting the main function) The programmer can determine exactly when the destructor of the variable &lsquo;b&rsquo; is called, and that is when the if block is finished. Likewise, the destructor of &lsquo;a&rsquo; is called when the main function exits. This is called stack unwinding. In C++, all variables on the stack (locally declared variables) are destroyed when a function block terminates. This is RAII at work. While we&rsquo;re on this topic, it leads nicely into why C++ doesn&rsquo;t need a finally block as well. The finally block is meant for garbage collected languages to ensure that everything is cleaned up even if an exception is thrown. While it may sound like C++ needs this just as much, that is not true. With RAII, when an exception is thrown, the block terminates, and thus all objects declared on the stack will have their destructors called and memory is released. Smart pointers, such as boost&rsquo;s shared_ptr implementation which uses reference counting, take advantage of RAII and takes care of the hassle with managing heap variables. It does magic in the background (that&rsquo;s why it&rsquo;s called smart, right?) and automatically calls &lsquo;delete&rsquo; when the pointer is no longer used by any part of the program.
+    Why doesn&rsquo;t C++ have garbage collection? Simply put, it doesn&rsquo;t need it. C++ has something called Resource Acquisition Is Initialization. What this means is that programmers can deterministically know when an object is created and when it is destroyed. You do not have the same information with garbage collected languages. For example, in C# you know when an object is created (when you call new), but you have no idea when the object gets destroyed.
 
     
-  </div>
-</div>
-
-<div class="article">
-  <div class="article-title">
-    <a href="http://bling.github.io/blog/2008/09/30/sweeeeet-commenting-tip/">A sweeeeet commenting tip</a>
-  </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2008-09-30</small></p> <hr/>
-  <div class="post">
-    No no no&hellip;this isn&rsquo;t another typical post splurging about how you should comment your code, just another sweet tip I got from a good friend of mine. If you&rsquo;ve been coding for a while you&rsquo;ll run into a time where you have 2 sections of code that you need to edit. However, you can only have 1 section commented, and the 2nd section uncommented, or vice versa. Even with the built-in keyboard shortcuts (Ctrl+K, Ctrl+C) and (Ctrl+K, Ctrl+U), it&rsquo;s still a pain in the behind. To the rescue! /* OR //* 1ST SECTION OF CODE /*/ 2ND SECTION OF CODE //*/ All you need to do is swap between /* and //* on the first line of code, and you can easily and quickly swap comments between the 2 sections of code. Very handy at times&hellip;
-
+    <a class="read-more" href="http://bling.github.io/blog/2008/10/24/garbage-collection-and-c/">
+      <span>Read on...</span>
+    </a>
     
   </div>
 </div>

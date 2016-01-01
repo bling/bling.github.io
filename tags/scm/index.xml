@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Scm on bling on software</title>
+    <link>http://bling.github.io/tags/scm/</link>
+    <description>Recent content in Scm on bling on software</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 25 Apr 2009 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://bling.github.io/tags/scm/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>SourceGear Vault, Part 4, Conclusion</title>
+      <link>http://bling.github.io/blog/2009/04/25/sourcegear-vault-part-4/</link>
+      <pubDate>Sat, 25 Apr 2009 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2009/04/25/sourcegear-vault-part-4/</guid>
+      <description>&lt;p&gt;I suppose I should give a disclaimer since I am &lt;em&gt;not&lt;/em&gt; an expert with Vault, and my opinions may be completely due to my lack of understanding of the system.  With that in mind, here&amp;rsquo;s what my experience of using Vault has been so far.&lt;/p&gt;
+
+&lt;p&gt;In general, it is not as fast as TortoiseSVN.  There are many operations in SVN that are instant, where the comparable operation in Vault is met with 10 seconds of &amp;ldquo;beginning transaction&amp;rdquo; and &amp;ldquo;ending transaction&amp;rdquo;, sometimes more.&lt;/p&gt;
+
+&lt;p&gt;Feature-wise, Vault has much more to offer than Subversion does.  Basically, it can do most of what Subversion can do, plus features from SourceSafe (like sharing, pinning, labeling, etc.).  However, like I mentioned before, Vault has no offline support whatsoever, and you cannot generate patches, so it effectively cuts off any kind of outside collaboration.&lt;/p&gt;
+
+&lt;p&gt;You could say that this is fine because SourceGear&amp;rsquo;s target audience is small organizations where everyone will have access to the network anyway, but that doesn&amp;rsquo;t mean that you won&amp;rsquo;t be sent off to the middle of nowhere with no internet access and you need to fix bugs now!  Not to say that Subversion is much better in that scenario, but at least you can still revert back to the last updated version.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>SourceGear Vault, Part 3 (Performance vs Subversion)</title>
+      <link>http://bling.github.io/blog/2009/04/24/sourcegear-vault-part-3/</link>
+      <pubDate>Fri, 24 Apr 2009 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2009/04/24/sourcegear-vault-part-3/</guid>
+      <description>&lt;p&gt;I downloaded the kernel 2.6.29.1, and extracted it to the working folder.  I figured this was an easy way to have a real-world scenario of changes (albeit a little big since it is all changes that happened between 29 and 29.1).&lt;/p&gt;
+
+&lt;p&gt;Anywho, I was pretty surprised to find out that Vault does not have any feature whatsoever to allow collaboration between programmers other than via the client.  You cannot create a .patch file and email it to someone.  Everyone is assumed to have access to the server.&lt;/p&gt;
+
+&lt;p&gt;This thwarted my plans to test the performance of diffing the changeset, because I simply planned on comparing how long it would take to create the patch.&lt;/p&gt;
+
+&lt;p&gt;Ah well, I guess I&amp;rsquo;ll just have to compare the performance of committing the changes between 29 and 29.1, which is a common use case as well so I don&amp;rsquo;t mind.&lt;/p&gt;
+
+&lt;p&gt;Time it took to a) start up the Vault client, b) bring up the Vault commit dialog, or c) bring up to TortoiseSVN commit dialog:
+- Vault startup: ~1m02s
+- Vault commit: ~7m55s
+- Subversion commit: ~4m33s&lt;/p&gt;
+
+&lt;p&gt;Time it took to commit:
+- Vault: ~13m45s, and at 14m34s the HD stopped spinning
+- Subversion: ~1m42s&lt;/p&gt;
+
+&lt;p&gt;Hmmmmm, it doesn&amp;rsquo;t look like Vault did too well in this comparison.  Getting a status of all changed files took almost twice as long compared with Subversion, and what&amp;rsquo;s worse, committing with Valut took 12 minutes longer than it did with Subversion.  The extra minute with the hard drive spinning was attributed to SQL Server completing the transaction, which is why I separated that part, because as far as the client was concerned the operation was complete after 13m45s.&lt;/p&gt;
+
+&lt;p&gt;One more quick test&amp;hellip;branching.  Subversion is famous for its O(1) time to branch anything, from the smallest to the biggest.  SourceGear&amp;rsquo;s page of &lt;a href=&#34;http://sourcegear.com/vault/vs/subversion/&#34;&gt;Vault vs Subversion&lt;/a&gt; mentions that both offer cheap branches.  Let&amp;rsquo;s see that in action!&lt;/p&gt;
+
+&lt;p&gt;I used TortoiseSVN&amp;rsquo;s repo-browser and branched the kernel.  It was practically instant with no wait time for the operation to finish.  Vault, on the other hand, took a total of 47 seconds from the time it took me to commit the branch, to when the status said &amp;ldquo;ready&amp;rdquo; again.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>SourceGear Vault, Part 2 (Performance vs Subversion)</title>
+      <link>http://bling.github.io/blog/2009/04/23/sourcegear-vault-part-2/</link>
+      <pubDate>Thu, 23 Apr 2009 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2009/04/23/sourcegear-vault-part-2/</guid>
+      <description>&lt;p&gt;Obviously you can&amp;rsquo;t compare something without performance numbers!  So in this post I&amp;rsquo;ll post some performance numbers for the most common operations.  I&amp;rsquo;ll be using the Linux kernel for no reason other than it&amp;rsquo;s readily available and everyone knows about it.  The size of the code base is also relatively large (depending on who you ask).&lt;/p&gt;
+
+&lt;p&gt;In general, I &amp;ldquo;felt&amp;rdquo; that Vault is slower than Subversion.  This is probably due to the .NET runtime startup time for most operations, which is negligible for anything but trivial operations.&lt;/p&gt;
+
+&lt;p&gt;Test environment:
+- Core2Duo clocked at 3.6GHz
+- 4G of RAM
+- Vista 64bit/IIS7/SQL2008Express
+- Vault 5.0 Beta 1 (I&amp;rsquo;m hoping the beta isn&amp;rsquo;t going to affect performance numbers drastically)
+- TortoiseSVN 1.6.1
+- Linux kernel 2.7.29 (roughly 300MB of source code and more than 26000 files)&lt;/p&gt;
+
+&lt;p&gt;Both server and client are on the same computer, so none of these scenarios will really test network performance.&lt;/p&gt;
+
+&lt;p&gt;Anyway, on with the tests.&lt;/p&gt;
+
+&lt;p&gt;Time it took to recursively add all folders and files and just bring up confirmation dialog
+- Vault:  ~14s
+- Subversion: ~11s&lt;/p&gt;
+
+&lt;p&gt;Time it took to mark all files to add (create a changeset):
+- Vault:  0s (it was pretty much instant)
+- Subversion:  ~6m52s&lt;/p&gt;
+
+&lt;p&gt;Time it took to commit:
+- Vault: ~21m10s
+- Subversion: ~28m50s&lt;/p&gt;
+
+&lt;p&gt;Total:
+- Vault:  ~28m16s
+- Subversion:  ~35m53s&lt;/p&gt;
+
+&lt;p&gt;As you can see, Vault was slightly slower at a trivial operation like which files to add, but once it got to some real work to do, it ended up being faster overall vs Subversion.  A significant part of the Subversion time was devoted to creating .svn folders.&lt;/p&gt;
+
+&lt;p&gt;After this, it was apparent that Subversion has a pretty major advantage over Vault&amp;hellip;working offline.  Vault does not appear to keep any offline information.  This was confirmed when I went into offline mode in Visual Studio and pretty much all functionality was disabled except for &amp;ldquo;go online.&amp;rdquo;  Basically, when you&amp;rsquo;re working offline in Vault you can no longer diff with the original version, no reverting changes, no anything.  Once you go online it scans your working copy for any changes and the &amp;ldquo;pending changes&amp;rdquo; will update.&lt;/p&gt;
+
+&lt;p&gt;I don&amp;rsquo;t like super long posts, so there will most definitely be a part 3 where I&amp;rsquo;ll continue on with some common operations.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>SourceGear Vault, Part 1</title>
+      <link>http://bling.github.io/blog/2009/04/22/sourcegear-vault-part-1/</link>
+      <pubDate>Wed, 22 Apr 2009 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2009/04/22/sourcegear-vault-part-1/</guid>
+      <description>&lt;p&gt;I&amp;rsquo;ll be starting a new job soon, and the company is using SourceGear Vault, so I went ahead and downloaded the latest beta versions off the site (since it&amp;rsquo;s free for single users) to see how it was like.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ve hated SourceSafe from the first time I used it.  The nail in the coffin was when my data got corrupted and some of my work was lost.  At the very least, no source control management system should &lt;strong&gt;ever&lt;/strong&gt; lose any work.  Unfortunately, my current workplace is still using SourceSafe and I was unable to convince them otherwise.  I&amp;rsquo;ve coped with the situation by using Mercurial for a quick local repository, and checking in changes back to VSS for major changesets.  The choice to go with hg instead of git or bzr was mainly because I&amp;rsquo;m a Windows developer and hg is currently way ahead of the other two on Windows.&lt;/p&gt;
+
+&lt;p&gt;Anyways, since Vault is frequently advertised as SourceSafe done right, I was curious to how it would affect my opinion of how things &amp;ldquo;should&amp;rdquo; have worked.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;m a long term user of Subversion, and most of my experience of actually using SCM is with svn.  I used hg at work just to see what all this DVCS hype is all about.&lt;/p&gt;
+
+&lt;p&gt;With that in mind, setting up Vault was certainly more eventful then I expected, since it involved setting up SQL Server and IIS.  After all the requirements were taken care of (the most time consuming part), installing Vault was pretty quick.&lt;/p&gt;
+
+&lt;p&gt;The administration interface is simple and straightforward, and had a repository created by default.&lt;/p&gt;
+
+&lt;p&gt;Then, the real fun began!  Tune back for part 2!&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

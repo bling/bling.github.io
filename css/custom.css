@@ -62,12 +62,12 @@ a.read-more span {
     opacity:.6;
 }
 
-.sidebar-nav .sidebar-categories a {
+.sidebar-nav .sidebar-tags a {
     display:inline;
     color:#008cba;
     font-size:14px;
 }
-.sidebar-nav .sidebar-categories a:hover {
+.sidebar-nav .sidebar-tags a:hover {
     background:initial;
 }
 

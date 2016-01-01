@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blend on bling on software</title>
+    <link>http://bling.github.io/tags/blend/</link>
+    <description>Recent content in Blend on bling on software</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 13 Sep 2011 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://bling.github.io/tags/blend/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Building a Real-time Push App with Silverlight: Part 6</title>
+      <link>http://bling.github.io/blog/2011/09/13/building-real-time-push-app-with-rx-6/</link>
+      <pubDate>Tue, 13 Sep 2011 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2011/09/13/building-real-time-push-app-with-rx-6/</guid>
+      <description>&lt;p&gt;Back to the UI!&lt;/p&gt;
+
+&lt;p&gt;For this post I’m going to restyle the tweets.  Recall that they currently look like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://lh4.ggpht.com/-ooxWWcVmX9w/Tm7icHgdN_I/AAAAAAAAAGo/wQ3qnvYAeWw/image_thumb2.png?imgmax=800&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The gradient background is currently #FFEEEEEE to #FFDDDDDD.  For this post I’m going to talk about a very powerful tool in a designer’s arsenal: &lt;em&gt;transparency&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Your first may be to think “big deal”, but just like programmers can use base classes and injection to share common code, designers can use transparency to achieve a similar effect.&lt;/p&gt;
+
+&lt;p&gt;Let’s change change the color to be black, and tweak only the alpha.  I’m going to set the colors to be #11000000 to #22000000 on a white background.  This is the result:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://lh6.ggpht.com/-Ev-xA7pMsak/Tm7icnmllQI/AAAAAAAAAGw/xMZM3yNsGZA/image_thumb5.png?imgmax=800&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Looks almost identical doesn’t it?  However, by doing this we have dramatically improved the reusability of the gradient.  Here’s what happens when I change the background to be a different color:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://lh3.ggpht.com/-uPxkKsog7xU/Tm7ic2vJhpI/AAAAAAAAAG4/J-PMDfe_6EM/image_thumb8.png?imgmax=800&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I just changed one variable to do that.  If I wanted to provide different themes for my application it would be &lt;em&gt;extremely&lt;/em&gt; easy to do that if all the data templates were built with transparencies.  In fact, I just slap on a ColorPicker and I’d be done!&lt;/p&gt;
+
+&lt;p&gt;Even though it’d be easy to do this, any application that is dominated by one color gets boring very quickly. Most applications that look nice tend to focus around two dominant colors that contrast well against each other. Black and white are very common because they contrast well with a large variety of colors, but you can also have things like blue/green, purple/orange, etc.  As always, as long as you’re consistent you’ll likely have a good result.&lt;/p&gt;
+
+&lt;p&gt;Now, the flip side of the equation is also possible.  This is where you have something that exists already and then you put a transparent layer on top of it, creating a lightening or dimming effect.  In my experience I’ve found this to be inferior because it tends to wash out colors.  In the example above, if I applied a slightly transparent layer over top of the tweet, my picture and text would be negatively affected.  This is nonetheless a very useful trick, like with mouse over effects where you want a quick and cheap way of conveying information to the user.&lt;/p&gt;
+
+&lt;p&gt;Now, let’s take a big detour and restyle the entire application and go with a completely different theme.  I also wanted try something besides Apple and Microsoft inspired designs, which was more difficult than expected because I guess I’m not as creative as I thought I was :-).  Coming up with a good design takes a long time, and frequently you need some sort of inspiration.  Twitter in general is a very simple application, so the best designs are simple as well.&lt;/p&gt;
+
+&lt;p&gt;In an attempt to try to come up with something “cool” and “unique”, I started with the idea of elevated boxes layered on top of each other.  Here’s a before and after once I was done:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://lh5.ggpht.com/-Mz_J4B2JDLM/Tm7idcOBx-I/AAAAAAAAAHA/7FGeCgmZzek/image_thumb11.png?imgmax=800&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The redesign went through many iterations.  I showed it to friends and colleagues and got mixed feelings.  Some liked it.  Some thought it was too noisy.  And herein revealed a problem with complex designs – they are hard to get right!  That, and they tend to divide audience into those that really like it, and those that really don’t.&lt;/p&gt;
+
+&lt;p&gt;Anyways, the beauty of XAML is that I can try something else entirely without any changes to the code, so I’ll try another theme in the future.&lt;/p&gt;
+
+&lt;p&gt;I’m about 90% ready to release code to GitHub along with the first public alpha version.  Stay tuned!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Building a Real-time Push App with Silverlight: Part 3</title>
+      <link>http://bling.github.io/blog/2011/08/28/building-real-time-push-app-with-rx-3/</link>
+      <pubDate>Sun, 28 Aug 2011 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2011/08/28/building-real-time-push-app-with-rx-3/</guid>
+      <description>&lt;p&gt;In this part we’re going to fire up Expression Blend (the trial for version 5 can be found &lt;a href=&#34;http://www.microsoft.com/download/en/details.aspx?displaylang=en&amp;amp;amp;id=9503&#34;&gt;here&lt;/a&gt;) and do some UI work.&lt;/p&gt;
+
+&lt;p&gt;In part 2, I created a simple Twitter client which connected to the streaming API, and connected to the sampling request which brings back random tweets.  Here is the data template:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;&amp;lt;DataTemplate&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;x:Key=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;TweetDataTemplate&amp;quot;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;lt;Grid&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;DataContext=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{Binding}&amp;quot;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;lt;Grid.RowDefinitions&amp;gt;&lt;/span&gt;
+            &lt;span class=&#34;nt&#34;&gt;&amp;lt;RowDefinition&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+            &lt;span class=&#34;nt&#34;&gt;&amp;lt;RowDefinition&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Height=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Auto&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;lt;/Grid.RowDefinitions&amp;gt;&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;lt;TextBlock&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;FontFamily=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{StaticResource FontFamily}&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;FontSize=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;12&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Text=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{Binding Text}&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;TextWrapping=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Wrap&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;lt;TextBlock&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Grid.Row=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;1&amp;quot;&lt;/span&gt;
+                   &lt;span class=&#34;na&#34;&gt;HorizontalAlignment=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Right&amp;quot;&lt;/span&gt;
+                   &lt;span class=&#34;na&#34;&gt;VerticalAlignment=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Bottom&amp;quot;&lt;/span&gt;
+                   &lt;span class=&#34;na&#34;&gt;FontFamily=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{StaticResource FontFamily}&amp;quot;&lt;/span&gt;
+                   &lt;span class=&#34;na&#34;&gt;FontSize=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;13.333&amp;quot;&lt;/span&gt;
+                   &lt;span class=&#34;na&#34;&gt;Foreground=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;BlueViolet&amp;quot;&lt;/span&gt;
+                   &lt;span class=&#34;na&#34;&gt;Text=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{Binding ScreenName}&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;lt;TextBlock&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Grid.Row=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;1&amp;quot;&lt;/span&gt;
+                   &lt;span class=&#34;na&#34;&gt;HorizontalAlignment=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Left&amp;quot;&lt;/span&gt;
+                   &lt;span class=&#34;na&#34;&gt;VerticalAlignment=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Bottom&amp;quot;&lt;/span&gt;
+                   &lt;span class=&#34;na&#34;&gt;FontFamily=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{StaticResource FontFamily}&amp;quot;&lt;/span&gt;
+                   &lt;span class=&#34;na&#34;&gt;FontSize=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;9.333&amp;quot;&lt;/span&gt;
+                   &lt;span class=&#34;na&#34;&gt;Foreground=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;DarkCyan&amp;quot;&lt;/span&gt;
+                   &lt;span class=&#34;na&#34;&gt;Text=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{Binding CreatedAt}&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;lt;/Grid&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;/DataTemplate&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This renders into something like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://lh4.ggpht.com/-ul4umD_jKFs/Tlq_U7HuoLI/AAAAAAAAAFg/pOhMiaqmxcE/s1600/image%25255B4%25255D.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The text is randomly generated from Blend’s &lt;a href=&#34;http://lmgtfy.com/?q=blend+sample+data&#34;&gt;sample&lt;/a&gt; capability, which is totally awesome as it allows designers to see what they’re working with, and keeps the sample data separate from the real data.&lt;/p&gt;
+
+&lt;p&gt;While design is a matter of personal taste, and you’re bound to get disagreements between different people, if you follow some basic rules you’ll satisfy a greater audience.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Subtle gradients and small shadows
+
+&lt;ul&gt;
+&lt;li&gt;If you take a look at all the nice interfaces, they tend to use very slight gradients and small shadows.  Most of the time you don’t even notice unless you look closely.&lt;/li&gt;
+&lt;li&gt;I think Microsoft’s Metro design is beautiful.  Reason?  It emphasizes text over decorations (like gradients and shadows).  This tends to lead to very clean design because there’s very little opportunity to abuse gradients and shadows.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Realism and light sources
+
+&lt;ul&gt;
+&lt;li&gt;Continuing on with gradients and shadows, they should be realistic.  Look at your design from a 3D point of view.  Apply a light source from a certain angle, and then apply your shadows relative to that light source.&lt;/li&gt;
+&lt;li&gt;Convey distance properly&lt;/li&gt;
+&lt;li&gt;Darker shadows imply being closer to the background, whereas lighter shadows imply being further away.  Use blurring to add emphasis to the distance.  &lt;img src=&#34;http://lh5.ggpht.com/-YvKRal5ToEw/Tlr6OrRIS4I/AAAAAAAAAFs/AAg79v6y2Cc/image_thumb%25255B14%25255D.png?imgmax=800&#34; alt=&#34;eg&#34; /&gt;&lt;/li&gt;
+&lt;li&gt;If you overlap planes you should apply these rules to each individual plane.  Don’t use the same border for everything.  Think about how it would look like in real life if you laid it out like that with pieces of paper.  The shadow sizes for that will be different, so you should do the same.&lt;/li&gt;
+&lt;li&gt;Also keep in mind that the shadows used above are &lt;em&gt;way&lt;/em&gt; too much for any application.  Be subtle!&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Consistent theme
+
+&lt;ul&gt;
+&lt;li&gt;This one seems obvious but nothing is worse than having a nice looking application bring up an unskinned dialog.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Usability
+
+&lt;ul&gt;
+&lt;li&gt;If the design doesn’t serve a purpose to make it more usable, it shouldn’t be there.  Even something as simple as black on white follows this – you do that so you can read text.  However, even something as simple as that can be improved.  Take a look at why the Kindle is so successful.  The readability is better because of the lower contrast between the black and light-brown background.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;With these starting points, let’s redesign the data template.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;&amp;lt;DataTemplate&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;x:Key=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;TweetDataTemplate&amp;quot;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;
+   &lt;span class=&#34;nt&#34;&gt;&amp;lt;Grid&amp;gt;&lt;/span&gt;
+       &lt;span class=&#34;nt&#34;&gt;&amp;lt;Grid.Background&amp;gt;&lt;/span&gt;
+           &lt;span class=&#34;nt&#34;&gt;&amp;lt;LinearGradientBrush&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;StartPoint=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;0.5,0&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;EndPoint=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;0.5,1&amp;quot;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;
+               &lt;span class=&#34;nt&#34;&gt;&amp;lt;GradientStop&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Color=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;#FFDADADA&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+               &lt;span class=&#34;nt&#34;&gt;&amp;lt;GradientStop&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Offset=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;1&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Color=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;#FFC8C8C8&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+           &lt;span class=&#34;nt&#34;&gt;&amp;lt;/LinearGradientBrush&amp;gt;&lt;/span&gt;
+       &lt;span class=&#34;nt&#34;&gt;&amp;lt;/Grid.Background&amp;gt;&lt;/span&gt;
+       &lt;span class=&#34;nt&#34;&gt;&amp;lt;Grid.RowDefinitions&amp;gt;&lt;/span&gt;
+           &lt;span class=&#34;nt&#34;&gt;&amp;lt;RowDefinition&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+           &lt;span class=&#34;nt&#34;&gt;&amp;lt;RowDefinition&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Height=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Auto&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+       &lt;span class=&#34;nt&#34;&gt;&amp;lt;/Grid.RowDefinitions&amp;gt;&lt;/span&gt;
+       &lt;span class=&#34;nt&#34;&gt;&amp;lt;TextBlock&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;FontFamily=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{StaticResource FontFamily}&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;FontSize=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;12&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Text=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{Binding Text}&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;TextWrapping=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Wrap&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+       &lt;span class=&#34;nt&#34;&gt;&amp;lt;TextBlock&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Grid.Row=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;1&amp;quot;&lt;/span&gt;
+                  &lt;span class=&#34;na&#34;&gt;HorizontalAlignment=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Right&amp;quot;&lt;/span&gt;
+                  &lt;span class=&#34;na&#34;&gt;VerticalAlignment=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Bottom&amp;quot;&lt;/span&gt;
+                  &lt;span class=&#34;na&#34;&gt;FontFamily=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{StaticResource FontFamily}&amp;quot;&lt;/span&gt;
+                  &lt;span class=&#34;na&#34;&gt;FontSize=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;13.333&amp;quot;&lt;/span&gt;
+                  &lt;span class=&#34;na&#34;&gt;Foreground=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;BlueViolet&amp;quot;&lt;/span&gt;
+                  &lt;span class=&#34;na&#34;&gt;Text=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{Binding ScreenName}&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+       &lt;span class=&#34;nt&#34;&gt;&amp;lt;TextBlock&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Grid.Row=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;1&amp;quot;&lt;/span&gt;
+                  &lt;span class=&#34;na&#34;&gt;HorizontalAlignment=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Left&amp;quot;&lt;/span&gt;
+                  &lt;span class=&#34;na&#34;&gt;VerticalAlignment=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;Bottom&amp;quot;&lt;/span&gt;
+                  &lt;span class=&#34;na&#34;&gt;FontFamily=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{StaticResource FontFamily}&amp;quot;&lt;/span&gt;
+                  &lt;span class=&#34;na&#34;&gt;FontSize=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;9.333&amp;quot;&lt;/span&gt;
+                  &lt;span class=&#34;na&#34;&gt;Foreground=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;#FF003D8F&amp;quot;&lt;/span&gt;
+                  &lt;span class=&#34;na&#34;&gt;Text=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;{Binding CreatedAt}&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+       &lt;span class=&#34;nt&#34;&gt;&amp;lt;Border&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Grid.RowSpan=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;2&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;BorderBrush=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;#FF999999&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;BorderThickness=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;0,0,0,1&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+       &lt;span class=&#34;nt&#34;&gt;&amp;lt;Border&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;Grid.RowSpan=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;2&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;BorderBrush=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;White&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;BorderThickness=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;0,1,0,0&amp;quot;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+   &lt;span class=&#34;nt&#34;&gt;&amp;lt;/Grid&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;/DataTemplate&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;After these changes, it looks like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://lh5.ggpht.com/-fTL8wgr5ebs/Tlr6PGkqyeI/AAAAAAAAAF0/O98iakwvqGc/image_thumb%25255B17%25255D.png?imgmax=800&#34; alt=&#34;eg&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Did you notice the gradient?  You might think after seeing it here to adjust the gradients more so you can see it.  That would be a mistake.  See below.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://lh6.ggpht.com/--uPF_IEo6LM/Tlr6PpL9YDI/AAAAAAAAAF8/UxqCqYW3Wl4/image_thumb%25255B47%25255D.png?imgmax=800&#34; alt=&#34;eg&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The above is the exact same thing, but stacked vertically three times.  When this happens the subtle difference between the top and bottom of the control is more pronounced, so it looks like multiple panels are aligned together.&lt;/p&gt;
+
+&lt;p&gt;However, there’s still a little touch you can add.  The white and gray borders are only 1 pixel high, but that’s the little touch needed to make it look crisp.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://lh3.ggpht.com/-QHLW-sKfPfI/Tlr6P_c9qLI/AAAAAAAAAGE/kJ0Z8VgS3xg/image_thumb%25255B44%25255D.png?imgmax=800&#34; alt=&#34;eg&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Finally, let’s see the before and after (or eh&amp;hellip;rather after and before, because I took the screenshot backwards :P):&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://lh6.ggpht.com/-tzZ8AVtNv0M/Tlr6QmHJHnI/AAAAAAAAAGM/H1SYEqT6cis/image_thumb%25255B50%25255D.png?imgmax=800&#34; alt=&#34;eg&#34; /&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

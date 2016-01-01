@@ -63,48 +63,48 @@
 
           <hr />
 
-          <li class="sidebar-categories">
+          <li class="sidebar-tags">
             <div>
-              <span>Categories</span>
+              <span>Tags</span>
               <a href="/post" style="float:right">show all</a>
             </div>
             <div>
               
-              <a href="/categories/blend">blend</a>
+              <a href="/tags/blend">blend</a>
               
-              <a href="/categories/castle">castle</a>
+              <a href="/tags/castle">castle</a>
               
-              <a href="/categories/castle-coding">castle-coding</a>
+              <a href="/tags/coding">coding</a>
               
-              <a href="/categories/coding">coding</a>
+              <a href="/tags/cqrs">cqrs</a>
               
-              <a href="/categories/cqrs">cqrs</a>
+              <a href="/tags/emacs">emacs</a>
               
-              <a href="/categories/emacs">emacs</a>
+              <a href="/tags/forex">forex</a>
               
-              <a href="/categories/forex">forex</a>
+              <a href="/tags/ioc">ioc</a>
               
-              <a href="/categories/ioc">ioc</a>
+              <a href="/tags/javascript">javascript</a>
               
-              <a href="/categories/javascript">javascript</a>
+              <a href="/tags/logging">logging</a>
               
-              <a href="/categories/logging">logging</a>
+              <a href="/tags/powershell">powershell</a>
               
-              <a href="/categories/powershell">powershell</a>
+              <a href="/tags/rx">rx</a>
               
-              <a href="/categories/rx">rx</a>
+              <a href="/tags/scm">scm</a>
               
-              <a href="/categories/software-tools">software-tools</a>
+              <a href="/tags/software-tools">software-tools</a>
               
-              <a href="/categories/source-control-management">source-control-management</a>
+              <a href="/tags/source-control-management">source-control-management</a>
               
-              <a href="/categories/testing">testing</a>
+              <a href="/tags/testing">testing</a>
               
-              <a href="/categories/twitter">twitter</a>
+              <a href="/tags/twitter">twitter</a>
               
-              <a href="/categories/vim">vim</a>
+              <a href="/tags/vim">vim</a>
               
-              <a href="/categories/visual-studio">visual-studio</a>
+              <a href="/tags/visual-studio">visual-studio</a>
               
             </div>
           </li>
@@ -121,12 +121,28 @@
 
 <div class="article">
   <div class="article-title">
+    <a href="http://bling.github.io/blog/2009/04/28/trick-question-with-closures/">A Trick Question With Closures</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-04-28</small></p> <hr/>
+  <div class="post">
+    Given the following code, what do you expect the output to be? for (int i = 0; i &lt; 100; ++i) { ThreadPool.QueueUserWorkItem(delegate { Console.WriteLine(i); }); } Keep that answer in your head! Now&hellip;what do you expect the output of the following? int i; for (i = 0; i &lt; 100; ++i) { ThreadPool.QueueUserWorkItem(delegate { Console.WriteLine(i); }); } Were your answers the same? Different? Why?
+
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
     <a href="http://bling.github.io/blog/2009/04/27/simple-thread-pool-implementation-1/">A Simple Thread Pool Implementation</a>
   </div>
   <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-04-27</small></p> <hr/>
   <div class="post">
-    I&rsquo;ve always wanted to do this, and finally I&rsquo;ve gotten around to doing it. Here&rsquo;s a super duper simple implementation of a working thread pool. I named in ThreadQueue just so it&rsquo;s clearly discernible from the one provided by the framework. public static class ThreadQueue { static Queue&lt;WorkItem&gt; _queue = new Queue&lt;WorkItem&gt;(); struct WorkItem { public WaitCallback Worker; public object State; } static ThreadQueue() { for (int i = 0; i &lt; 25; ++i) { Thread t = new Thread(ThreadWorker); t.IsBackground = true; t.Start(); } } static void ThreadWorker() { while (true) { WorkItem wi; lock (_queue) { while (_queue.Count == 0) { Monitor.Wait(_queue); } wi = _queue.Dequeue(); } wi.Worker(wi.State); } } public static void QueueUserWorkItem(WaitCallback callBack, object state) { WorkItem wi = new WorkItem(); wi.Worker = callBack; wi.State = state; lock (_queue) { _queue.Enqueue(wi); Monitor.Pulse(_queue); } } } As you can see, it&rsquo;s very short and very simple. Basically, if it&rsquo;s not used, no threads are started, so in a sense it is lazy. When you use it for the first time, the static initializer will start up 25 threads, and put them all into waiting state (because the queue will initially be empty). When something needs to be done, it is added to the queue, and then it pulses a waiting thread to perform some work. And just to warn you, if the worker delegate throws an exception it will crash the pool&hellip;.so if you want to avoid that you will need to wrap the wi.Worker(wi.State) with a try/catch. I guess at this point you may wonder why one should even bother writing a thread pool. For one, it&rsquo;s a great exercise and will probably strengthen your understanding of how to write multithreaded applications. The above thread pool is probably one of the simplest use-cases for Monitor.Pulse and Monitor.Wait, which are crucial for writing high-performance threaded applications. Another reason is that the .NET ThreadPool is optimized for many quick ending tasks. All asynchronous operations are done with the ThreadPool (think BeginInvoke, EndInvoke, BeginRead, EndRead, etc.). It is not well-suited for any operation that takes a long time to complete. MSDN recommends that you use a full-blown thread to do that. Unfortunately, there&rsquo;s a relatively big cost of creating threads, which is why we have thread pools in the first place! Hence, to solve this problem, we can write our own thread pool which contains some alive and waiting threads to performing longer operations, without clogging the .NET ThreadPool. In my next post I&rsquo;ll compare the above implementation&rsquo;s performance against the built-in ThreadPool.
+    I&rsquo;ve always wanted to do this, and finally I&rsquo;ve gotten around to doing it. Here&rsquo;s a super duper simple implementation of a working thread pool. I named in ThreadQueue just so it&rsquo;s clearly discernible from the one provided by the framework. public static class ThreadQueue { static Queue&lt;WorkItem&gt; _queue = new Queue&lt;WorkItem&gt;(); struct WorkItem { public WaitCallback Worker; public object State; } static ThreadQueue() { for (int i = 0; i &lt; 25; ++i) { Thread t = new Thread(ThreadWorker); t.IsBackground = true; t.Start(); } } static void ThreadWorker() { while (true) { WorkItem wi; lock (_queue) { while (_queue.Count == 0) { Monitor.Wait(_queue); } wi = _queue.Dequeue(); } wi.Worker(wi.State); } } public static void QueueUserWorkItem(WaitCallback callBack, object state) { WorkItem wi = new WorkItem(); wi.Worker = callBack; wi.State = state; lock (_queue) { _queue.Enqueue(wi); Monitor.Pulse(_queue); } } } As you can see, it&rsquo;s very short and very simple.
 
+    
+    <a class="read-more" href="http://bling.github.io/blog/2009/04/27/simple-thread-pool-implementation-1/">
+      <span>Read on...</span>
+    </a>
     
   </div>
 </div>
@@ -137,8 +153,12 @@
   </div>
   <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-04-27</small></p> <hr/>
   <div class="post">
-    I said last time I&rsquo;d compare the performance of my super duper simple implementation against the .NET ThreadPool, so here it is! Here&rsquo;s the test code: ManualResetEvent evt = new ManualResetEvent(false); int total = 100000; int count = 0; DateTime start = DateTime.Now; for (int i = 0; i &lt; total; ++i) { // ThreadQueue.QueueUserWorkItem(delegate(object obj) ThreadPool.QueueUserWorkItem(delegate(object obj) { Console.WriteLine(obj); if (Interlocked.Increment(ref count) == total) evt.Set(); }, i); } evt.WaitOne(); Console.WriteLine(&quot;Time: {0}ms&quot;, (DateTime.Now - start).TotalMilliseconds); Console.ReadLine(); Here are the initial tests. My CPU is a Core2Duo clocked at 3.6GHz. I also ran a release build outside of the debugger. I set my ThreadQueue to have 25 worker threads. The results were pretty surprising: - ThreadPool: 1515.6444ms - ThreadQueue: 5093.8152ms Well, that&rsquo;s interesting. The .NET ThreadPool whooped my butt! How can that be? Let&rsquo;s dig deeper and find out how many threads actually got used. I used ThreadPool.GetMinThreads and ThreadPool.GetMaxThreads, and I got 2-500 for worker threads, and 2-1000 for completion IO threads. Then, I tracked how many threads were actually used, like this: Dictionary&lt;int, int&gt; threads = new Dictionary&lt;int, int&gt;(); // ...snip ThreadPool.QueueUserWorkItem(delegate(object obj) { Console.WriteLine(obj); threads[Thread.CurrentThread.ManagedThreadId] = 0; if (Interlocked.Increment(ref count) == total) evt.Set(); }, i); // ...snip Console.WriteLine(&quot;Threads used: {0}&quot;, threads.Count); Surprisingly, only 2 threads were used. So, I set the number of worker threads of my ThreadQueue to 2. Viola! 1437.5184ms, which is just a little under 100ms faster than the ThreadPool. I guess this shows that more threads does not mean better or faster! For fun I set the number of worker threads to 200 and it took 27906.6072ms! There was clearly a lot of locking overhead here&hellip;
+    I said last time I&rsquo;d compare the performance of my super duper simple implementation against the .NET ThreadPool, so here it is! Here&rsquo;s the test code: ManualResetEvent evt = new ManualResetEvent(false); int total = 100000; int count = 0; DateTime start = DateTime.Now; for (int i = 0; i &lt; total; ++i) { // ThreadQueue.QueueUserWorkItem(delegate(object obj) ThreadPool.QueueUserWorkItem(delegate(object obj) { Console.WriteLine(obj); if (Interlocked.Increment(ref count) == total) evt.Set(); }, i); } evt.WaitOne(); Console.WriteLine(&quot;Time: {0}ms&quot;, (DateTime.Now - start).TotalMilliseconds); Console.ReadLine(); Here are the initial tests.
 
+    
+    <a class="read-more" href="http://bling.github.io/blog/2009/04/27/simple-thread-pool-implementation-2/">
+      <span>Read on...</span>
+    </a>
     
   </div>
 </div>
@@ -149,8 +169,12 @@
   </div>
   <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-04-25</small></p> <hr/>
   <div class="post">
-    I suppose I should give a disclaimer since I am not an expert with Vault, and my opinions may be completely due to my lack of understanding of the system. With that in mind, here&rsquo;s what my experience of using Vault has been so far. In general, it is not as fast as TortoiseSVN. There are many operations in SVN that are instant, where the comparable operation in Vault is met with 10 seconds of &ldquo;beginning transaction&rdquo; and &ldquo;ending transaction&rdquo;, sometimes more. Feature-wise, Vault has much more to offer than Subversion does. Basically, it can do most of what Subversion can do, plus features from SourceSafe (like sharing, pinning, labeling, etc.). However, like I mentioned before, Vault has no offline support whatsoever, and you cannot generate patches, so it effectively cuts off any kind of outside collaboration. You could say that this is fine because SourceGear&rsquo;s target audience is small organizations where everyone will have access to the network anyway, but that doesn&rsquo;t mean that you won&rsquo;t be sent off to the middle of nowhere with no internet access and you need to fix bugs now! Not to say that Subversion is much better in that scenario, but at least you can still revert back to the last updated version.
+    I suppose I should give a disclaimer since I am not an expert with Vault, and my opinions may be completely due to my lack of understanding of the system. With that in mind, here&rsquo;s what my experience of using Vault has been so far. In general, it is not as fast as TortoiseSVN. There are many operations in SVN that are instant, where the comparable operation in Vault is met with 10 seconds of &ldquo;beginning transaction&rdquo; and &ldquo;ending transaction&rdquo;, sometimes more.
 
+    
+    <a class="read-more" href="http://bling.github.io/blog/2009/04/25/sourcegear-vault-part-4/">
+      <span>Read on...</span>
+    </a>
     
   </div>
 </div>
@@ -161,20 +185,12 @@
   </div>
   <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-04-24</small></p> <hr/>
   <div class="post">
-    I downloaded the kernel 2.6.29.1, and extracted it to the working folder. I figured this was an easy way to have a real-world scenario of changes (albeit a little big since it is all changes that happened between 29 and 29.1). Anywho, I was pretty surprised to find out that Vault does not have any feature whatsoever to allow collaboration between programmers other than via the client. You cannot create a .patch file and email it to someone. Everyone is assumed to have access to the server. This thwarted my plans to test the performance of diffing the changeset, because I simply planned on comparing how long it would take to create the patch. Ah well, I guess I&rsquo;ll just have to compare the performance of committing the changes between 29 and 29.1, which is a common use case as well so I don&rsquo;t mind. Time it took to a) start up the Vault client, b) bring up the Vault commit dialog, or c) bring up to TortoiseSVN commit dialog: - Vault startup: ~1m02s - Vault commit: ~7m55s - Subversion commit: ~4m33s Time it took to commit: - Vault: ~13m45s, and at 14m34s the HD stopped spinning - Subversion: ~1m42s Hmmmmm, it doesn&rsquo;t look like Vault did too well in this comparison. Getting a status of all changed files took almost twice as long compared with Subversion, and what&rsquo;s worse, committing with Valut took 12 minutes longer than it did with Subversion. The extra minute with the hard drive spinning was attributed to SQL Server completing the transaction, which is why I separated that part, because as far as the client was concerned the operation was complete after 13m45s. One more quick test&hellip;branching. Subversion is famous for its O(1) time to branch anything, from the smallest to the biggest. SourceGear&rsquo;s page of Vault vs Subversion mentions that both offer cheap branches. Let&rsquo;s see that in action! I used TortoiseSVN&rsquo;s repo-browser and branched the kernel. It was practically instant with no wait time for the operation to finish. Vault, on the other hand, took a total of 47 seconds from the time it took me to commit the branch, to when the status said &ldquo;ready&rdquo; again.
+    I downloaded the kernel 2.6.29.1, and extracted it to the working folder. I figured this was an easy way to have a real-world scenario of changes (albeit a little big since it is all changes that happened between 29 and 29.1). Anywho, I was pretty surprised to find out that Vault does not have any feature whatsoever to allow collaboration between programmers other than via the client. You cannot create a .patch file and email it to someone.
 
     
-  </div>
-</div>
-
-<div class="article">
-  <div class="article-title">
-    <a href="http://bling.github.io/blog/2009/04/23/sourcegear-vault-part-2/">SourceGear Vault, Part 2 (Performance vs Subversion)</a>
-  </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-04-23</small></p> <hr/>
-  <div class="post">
-    Obviously you can&rsquo;t compare something without performance numbers! So in this post I&rsquo;ll post some performance numbers for the most common operations. I&rsquo;ll be using the Linux kernel for no reason other than it&rsquo;s readily available and everyone knows about it. The size of the code base is also relatively large (depending on who you ask). In general, I &ldquo;felt&rdquo; that Vault is slower than Subversion. This is probably due to the .NET runtime startup time for most operations, which is negligible for anything but trivial operations. Test environment: - Core2Duo clocked at 3.6GHz - 4G of RAM - Vista 64bit/IIS7/SQL2008Express - Vault 5.0 Beta 1 (I&rsquo;m hoping the beta isn&rsquo;t going to affect performance numbers drastically) - TortoiseSVN 1.6.1 - Linux kernel 2.7.29 (roughly 300MB of source code and more than 26000 files) Both server and client are on the same computer, so none of these scenarios will really test network performance. Anyway, on with the tests. Time it took to recursively add all folders and files and just bring up confirmation dialog - Vault: ~14s - Subversion: ~11s Time it took to mark all files to add (create a changeset): - Vault: 0s (it was pretty much instant) - Subversion: ~6m52s Time it took to commit: - Vault: ~21m10s - Subversion: ~28m50s Total: - Vault: ~28m16s - Subversion: ~35m53s As you can see, Vault was slightly slower at a trivial operation like which files to add, but once it got to some real work to do, it ended up being faster overall vs Subversion. A significant part of the Subversion time was devoted to creating .svn folders. After this, it was apparent that Subversion has a pretty major advantage over Vault&hellip;working offline. Vault does not appear to keep any offline information. This was confirmed when I went into offline mode in Visual Studio and pretty much all functionality was disabled except for &ldquo;go online.&rdquo; Basically, when you&rsquo;re working offline in Vault you can no longer diff with the original version, no reverting changes, no anything. Once you go online it scans your working copy for any changes and the &ldquo;pending changes&rdquo; will update. I don&rsquo;t like super long posts, so there will most definitely be a part 3 where I&rsquo;ll continue on with some common operations.
-
+    <a class="read-more" href="http://bling.github.io/blog/2009/04/24/sourcegear-vault-part-3/">
+      <span>Read on...</span>
+    </a>
     
   </div>
 </div>

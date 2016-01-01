@@ -6,8 +6,62 @@
     <description>Recent content on bling on software</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 31 Dec 2015 14:34:07 -0500</lastBuildDate>
+    <lastBuildDate>Thu, 31 Dec 2015 22:55:37 -0500</lastBuildDate>
     <atom:link href="http://bling.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Migrating from Jekyll/Octopress to Hugo</title>
+      <link>http://bling.github.io/blog/2015/12/31/migrating-from-jekyll-octopress-to-hugo/</link>
+      <pubDate>Thu, 31 Dec 2015 22:55:37 -0500</pubDate>
+      
+      <guid>http://bling.github.io/blog/2015/12/31/migrating-from-jekyll-octopress-to-hugo/</guid>
+      <description>
+
+&lt;p&gt;Migrating my blog from &lt;a href=&#34;https://github.com/octopress/octopress&#34;&gt;Octopress&lt;/a&gt; to &lt;a href=&#34;https://github.com/spf13/hugo&#34;&gt;Hugo&lt;/a&gt; has been on my TODO list for a very long time.  In fact, the only reason holding me back was lack of pagination support, but that has been implemented for a while now, so I finally got around to migrating my blog over.&lt;/p&gt;
+
+&lt;h1 id=&#34;getting-started:23dc397a3b9966843174ca31c40b0ee7&#34;&gt;Getting started&lt;/h1&gt;
+
+&lt;p&gt;Since this is an entirely new generator, it made sense to start from scratch.  So I created an empty site, copied all the markdown files over, and voila, new blog!  But of course, it wasn&amp;rsquo;t all smooth sailing, and I needed to resolve some issues.&lt;/p&gt;
+
+&lt;h1 id=&#34;permalinks:23dc397a3b9966843174ca31c40b0ee7&#34;&gt;Permalinks&lt;/h1&gt;
+
+&lt;p&gt;First problem was all the permalinks that Octopress generated did not match the default value for Hugo.  This was easily resolved with a &lt;code&gt;[permalinks]&lt;/code&gt; section in the &lt;code&gt;config.toml&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;title-title:23dc397a3b9966843174ca31c40b0ee7&#34;&gt;Title != title&lt;/h1&gt;
+
+&lt;p&gt;This was most troubling, and resulted in a lot of manual labor to fix.  The problem was that Octopress (or Jekyll), would generate a URL from the title, but would omit things like &amp;ldquo;the&amp;rdquo;, or &amp;ldquo;a&amp;rdquo;.  For example, the very first post of my blog is titled &lt;a href=&#34;http://bling.github.io/blog/2008/09/11/importance-of-color-schemes/&#34;&gt;The Importance of Color Schemes&lt;/a&gt;, but the URL is actually &lt;code&gt;/importance-of-color-schemes&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Luckily, you can define a &lt;code&gt;slug&lt;/code&gt; parameter in the front matter which can override this.  Suffice to say, I had to do this for a lot of posts.&lt;/p&gt;
+
+&lt;p&gt;In most migrations you don&amp;rsquo;t have to worry about keeping the same URLs, but in my case I needed them to be the same because that&amp;rsquo;s how &lt;a href=&#34;http://www.disqus.com&#34;&gt;Disqus&lt;/a&gt; track discussions, and I wanted all the existing conversations to remain intact.&lt;/p&gt;
+
+&lt;h1 id=&#34;code-fences:23dc397a3b9966843174ca31c40b0ee7&#34;&gt;Code fences&lt;/h1&gt;
+
+&lt;p&gt;Jekyll supports doing syntax highlighting with code fences, e.g.:&lt;/p&gt;
+
+&lt;pre&gt;
+``` javascript
+alert(&#39;Hello World&#39;!);
+```
+&lt;/pre&gt;
+
+&lt;p&gt;Support for this can be done via Pygments, with is off by default.  If you add &lt;code&gt;pygmentscodefences = true&lt;/code&gt; to your &lt;code&gt;config.toml&lt;/code&gt; then these sections will be parsed correctly.  You&amp;rsquo;ll also want to use &lt;code&gt;pygmentsuseclasses = true&lt;/code&gt; so that you can style it appropriately.&lt;/p&gt;
+
+&lt;h1 id=&#34;markdown-references:23dc397a3b9966843174ca31c40b0ee7&#34;&gt;Markdown references&lt;/h1&gt;
+
+&lt;p&gt;This last one was a bit of an annoyance because I needed to download the source of Hugo and make code modifications.  Specifically, this &lt;a href=&#34;https://github.com/spf13/hugo/pull/1667&#34;&gt;pull request&lt;/a&gt; was needed.&lt;/p&gt;
+
+&lt;p&gt;Long story short, if you use references for links, instead of inline, then summaries will not work.&lt;/p&gt;
+
+&lt;h1 id=&#34;and-the-rest:23dc397a3b9966843174ca31c40b0ee7&#34;&gt;And the rest&lt;/h1&gt;
+
+&lt;p&gt;Once all the heavily lifting was done, now it was a matter of picking a theme and modifying it to my liking.  I ended up modifying &lt;a href=&#34;https://github.com/bling/herring-cove&#34;&gt;herring cove&lt;/a&gt;.  I really liked how Hugo separates the content from the theme, making it relatively easy to switch back and forth.&lt;/p&gt;
+
+&lt;h1 id=&#34;and-the-benefits:23dc397a3b9966843174ca31c40b0ee7&#34;&gt;And the benefits?&lt;/h1&gt;
+
+&lt;p&gt;Holy crap this is too fast!&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>About Me</title>
@@ -22,7 +76,7 @@
     </item>
     
     <item>
-      <title>Emacs As My &lt;Leader&gt; 1 Year Later</title>
+      <title>Emacs as my &lt;Leader&gt; 1 Year Later</title>
       <link>http://bling.github.io/blog/2015/01/06/emacs-as-my-leader-1-year-later/</link>
       <pubDate>Tue, 06 Jan 2015 00:00:00 +0000</pubDate>
       
@@ -1120,77 +1174,6 @@ nnoremap &amp;lt;space&amp;gt;y :Unite history/yank&amp;lt;cr&amp;gt;
 &lt;p&gt;It definitely feels liberating to blog using plain &amp;lsquo;ol markdown text editing.&lt;/p&gt;
 
 &lt;p&gt;So I guess the next step I&amp;rsquo;ll do is import my existing blog content, and then add some personal styling to this thing :)&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Writing Macros with Vim</title>
-      <link>http://bling.github.io/blog/2013/02/11/writing-macros-with-vim/</link>
-      <pubDate>Mon, 11 Feb 2013 00:00:00 +0000</pubDate>
-      
-      <guid>http://bling.github.io/blog/2013/02/11/writing-macros-with-vim/</guid>
-      <description>
-
-&lt;p&gt;First, let’s start with a Javascript function:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;foo&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;hello&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;world&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
-             &lt;span class=&#34;nx&#34;&gt;how&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;are&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
-             &lt;span class=&#34;nx&#34;&gt;you&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;Now let’s convert that to the following:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;foo&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;parameters&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
-    &lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;hello&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;parameters&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;hello&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
-    &lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;world&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;parameters&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;world&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
-    &lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;how&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;parameters&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;how&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
-    &lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;are&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;parameters&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;are&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
-    &lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;you&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;parameters&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;you&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;Here are the macros I used to do this:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-vim&#34; data-lang=&#34;vim&#34;&gt;&lt;span class=&#34;k&#34;&gt;let&lt;/span&gt; @&lt;span class=&#34;k&#34;&gt;r&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;di(iparameters^[/\{^M2o^[kpg`[v`]Jgv:s/\s//g^M0:try|exe &amp;quot;norm! @q&amp;quot;|endtry^MA;^[V:s/,/;\r/g^Mv``=&amp;#39;&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;let&lt;/span&gt; @&lt;span class=&#34;k&#34;&gt;q&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;ywivar ^[pa = parameters.^[f,^[l@q&amp;#39;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;Note that if you copy paste the above into your vimrc it will not work. The &lt;code&gt;^[&lt;/code&gt; and &lt;code&gt;^M&lt;/code&gt; found are actually single characters, not two. To input this properly you will need to chord it in input mode with &lt;code&gt;&amp;lt;Ctrl-V&amp;gt;&lt;/code&gt;. So for &lt;code&gt;&amp;lt;Esc&amp;gt;&lt;/code&gt; you would chord &lt;code&gt;&amp;lt;Ctrl+V&amp;gt;&amp;lt;Ctrl+[&amp;gt;&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;So, when I&amp;rsquo;m inside the parameters of the function, I can hit &lt;code&gt;@r&lt;/code&gt; and it will perform the refactoring. Now let’s break it down step by step.&lt;/p&gt;
-
-&lt;h1 id=&#34;q-the-first-macro:934b4114c71a5b8036a3d4286b75e7ae&#34;&gt;@q The first macro&lt;/h1&gt;
-
-&lt;p&gt;This is a recursive macro which takes something like &lt;code&gt;a,b,c&lt;/code&gt; and turns it into &lt;code&gt;var a = p.a,var b = p.b,var c = p.c&lt;/code&gt;. Let’s see how that’s done.&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;code&gt;yw&lt;/code&gt; &lt;code&gt;i&lt;/code&gt; &lt;code&gt;var&lt;/code&gt; &lt;code&gt;&amp;lt;Esc&amp;gt;&lt;/code&gt; &lt;code&gt;p&lt;/code&gt; Yanks the word and enter insert mode, type var, exit insert mode and paste the just yanked word.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;a = parameters.&lt;/code&gt; Append and fill in parameters.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;&amp;lt;Esc&amp;gt;&lt;/code&gt; &lt;code&gt;f&lt;/code&gt;, &lt;code&gt;l&lt;/code&gt; Exit insert mode, find the next &lt;code&gt;,&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;l&lt;/code&gt; &lt;code&gt;@q&lt;/code&gt; Adjust the cursor position and recursively call itself.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Recursive macros terminate when the first error occurs. In this macro, that error is when there are no more commas left.&lt;/p&gt;
-
-&lt;h1 id=&#34;r-the-second-macro:934b4114c71a5b8036a3d4286b75e7ae&#34;&gt;@r The second macro&lt;/h1&gt;
-
-&lt;p&gt;The is the macro that should be invoked, and references the &lt;code&gt;@q&lt;/code&gt; macro.&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;code&gt;di(&lt;/code&gt; Deletes everything inside the brackets.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;i&lt;/code&gt; parameters Enter insert mode and type parameters.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;&amp;lt;Esc&amp;gt;&lt;/code&gt; &lt;code&gt;/{&lt;/code&gt; &lt;code&gt;&amp;lt;CR&amp;gt;&lt;/code&gt; Leaves insert mode and finds the next brace.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;2o&lt;/code&gt; &lt;code&gt;&amp;lt;Esc&amp;gt;&lt;/code&gt; &lt;code&gt;k&lt;/code&gt; &lt;code&gt;p&lt;/code&gt; Creates two empty lines and pastes what we deleted into the first line.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;g`[v`]&lt;/code&gt; &lt;code&gt;J&lt;/code&gt; Visually select what we just pasted and join them all into a single line.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;gv&lt;/code&gt; &lt;code&gt;:s/\s//g&lt;/code&gt; &lt;code&gt;&amp;lt;CR&amp;gt;&lt;/code&gt; Reselect the visually and delete all whitespace.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;0&lt;/code&gt; Move to the beginning of the line.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;:try|exe &amp;quot;norm! @q&amp;quot;|endtry&lt;/code&gt; &lt;code&gt;&amp;lt;CR&amp;gt;&lt;/code&gt; Macros will terminate on the first error, even if referencing another macro. Wrapping the other macro with try|endtry swallows the error and lets the current macro continue.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;A;&lt;/code&gt; &lt;code&gt;&amp;lt;Esc&amp;gt;&lt;/code&gt; Append ; to the end of the line.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;V&lt;/code&gt; &lt;code&gt;:s/,/;\r/g&lt;/code&gt; &lt;code&gt;&amp;lt;CR&amp;gt;&lt;/code&gt; Visually select the line, replace with carriage returns.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;v=``&lt;/code&gt;  Visually select from the current cursor position back to where it was originally was, and format.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Now is this the best way to do it? Probably not. I would not be surprised if someone was able to do it with less keystrokes or a single macro.  But hey, it was fun learning experience, and ultimately I turned all of that into two keystrokes that can be reused many times.&lt;/p&gt;
-
-&lt;p&gt;I posted this on &lt;a href=&#34;http://vimgolf.com/challenges/511991607729fb0002000003&#34;&gt;vimgolf&lt;/a&gt; so let’s see how other people solved the same refactoring!&lt;/p&gt;
 </description>
     </item>
     

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Powershell on bling on software</title>
+    <link>http://bling.github.io/tags/powershell/</link>
+    <description>Recent content in Powershell on bling on software</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 29 Jul 2012 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://bling.github.io/tags/powershell/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>SnoopShell: Evolution</title>
+      <link>http://bling.github.io/blog/2012/07/29/snoopshell-evolution/</link>
+      <pubDate>Sun, 29 Jul 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2012/07/29/snoopshell-evolution/</guid>
+      <description>
+
+&lt;p&gt;It’s been a while since I last announced &lt;a href=&#34;http://blingcode.blogspot.com/2012/07/snoopshell-marriage-of-snoop-wpf-and.html&#34;&gt;SnoopShell&lt;/a&gt;, where I took some PowerShell and injected that into Snoop.  Well, I didn’t stop there!  I decided to continue working on it and adding more useful features.&lt;/p&gt;
+
+&lt;p&gt;Well, a bunch of things have changed.  For one, it’s no longer targeted at .NET 4 and PS v3 anymore (and you’ll soon know why).  Second, there’s a bunch of new features!&lt;/p&gt;
+
+&lt;h1 id=&#34;automatic-profile-loading:f539d02145ec1550ef0265d4aa3eab64&#34;&gt;Automatic Profile Loading&lt;/h1&gt;
+
+&lt;p&gt;Upon startup, the shell will look for a couple well known locations and automatically dot-source them to load them into the current session.  This works the same as the standard $profile.  The filename needs to be &lt;code&gt;SnoopProfile.ps1&lt;/code&gt;, and the search paths are &lt;code&gt;%USERPROFILE%,&lt;/code&gt; the &lt;code&gt;WindowsPowerShell&lt;/code&gt;, and the &lt;code&gt;Scripts&lt;/code&gt; folder deployed with Snoop.exe.&lt;/p&gt;
+
+&lt;p&gt;This is incredibly useful since you can write your own custom functions and scripts and have them available to you all the time.  As an added bonus, because of the dynamic nature of PowerShell, you can make modifications to the &lt;code&gt;SnoopProfile.ps1,&lt;/code&gt; save, and then invoke a &lt;code&gt;. $profile&lt;/code&gt; to reload the profile and update the session with your changes (all without restarting the application).&lt;/p&gt;
+
+&lt;p&gt;That’s awesome sauce indeed ;-)&lt;/p&gt;
+
+&lt;h1 id=&#34;powershell-provider:f539d02145ec1550ef0265d4aa3eab64&#34;&gt;PowerShell Provider&lt;/h1&gt;
+
+&lt;p&gt;This was more of a for-fun thing at first just to see if I could do it.  Writing a PS provider is not fun at all, since it’s not very well documented and I actually needed some help from ILSpy to figure out how things really worked.  Nonetheless, it’s got some basic functionality that is helpful to navigate around.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://lh6.ggpht.com/-hpRCncySB3g/UBXOagD2xII/AAAAAAAAALs/qBCKmxV-B0M/s1600-h/image%25255B10%25255D.png&#34;&gt;&lt;img style=&#34;background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px&#34; title=&#34;image&#34; border=&#34;0&#34; alt=&#34;image&#34; src=&#34;http://lh6.ggpht.com/-QMqNxt2DmZ8/UBXOa1SVqwI/AAAAAAAAAL0/ULMweSOFso0/image_thumb%25255B8%25255D.png?imgmax=800&#34; width=&#34;654&#34; height=&#34;399&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Yep, the selected grid actually has a path, like how you would navigate the file system.  Let’s see what happens with a &lt;code&gt;cd&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://lh4.ggpht.com/-R3wQmpiA7dw/UBXObb7FNsI/AAAAAAAAAL8/z3mgZwnFLok/s1600-h/image%25255B15%25255D.png&#34;&gt;&lt;img style=&#34;background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px&#34; title=&#34;image&#34; border=&#34;0&#34; alt=&#34;image&#34; src=&#34;http://lh3.ggpht.com/-mdRas9rg4gs/UBXOb4W6z7I/AAAAAAAAAME/pNH-1jzMbGA/image_thumb%25255B11%25255D.png?imgmax=800&#34; width=&#34;654&#34; height=&#34;399&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Cool, you can &lt;code&gt;cd&lt;/code&gt; into the child “directory”, and it’ll automatically select the item in the tree view as well.  What if you’re lazy and don’t want to type?&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://lh3.ggpht.com/-QgZ0iBA1AKw/UBXOcPU9uDI/AAAAAAAAAMM/iy9qHsS0zHA/s1600-h/image%25255B20%25255D.png&#34;&gt;&lt;img style=&#34;background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px&#34; title=&#34;image&#34; border=&#34;0&#34; alt=&#34;image&#34; src=&#34;http://lh5.ggpht.com/-YV-f5-aPnP0/UBXOcRFGPkI/AAAAAAAAAMU/oo85Qg9fohU/image_thumb%25255B14%25255D.png?imgmax=800&#34; width=&#34;654&#34; height=&#34;399&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Wildcards are supported.  And because the visual tree doesn’t exactly require unique names, I needed to trick it by adding a number after each duplicate item.  So the above matches the third Rectangle child of the Grid.&lt;/p&gt;
+
+&lt;h1 id=&#34;code-injection:f539d02145ec1550ef0265d4aa3eab64&#34;&gt;Code Injection&lt;/h1&gt;
+
+&lt;p&gt;One of the cool things about Javascript is that it’s so darn easy to test.  You make a change, save, reload, and you’ll immediately see if something worked or not.  This feedback loop is so fast it changes how you work and formulate ideas.&lt;/p&gt;
+
+&lt;p&gt;In the static world, we don’t really have this luxury, and especially not when you’re working on a large project, which at work, takes just under a minute for a full rebuild.  And this is on a monster machine.  Because of this, we had to employ tricks and workarounds to speed things up, like messing with build configurations and build output paths to minimize duplicate work.  Despite that, it’s still a pain to wait for the application to start and all that jazz.&lt;/p&gt;
+
+&lt;p&gt;What if we could do the super fast feedback loop development, in a static world?  Well, now you can!&lt;/p&gt;
+
+&lt;p&gt;It starts with a simple function:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span class=&#34;k&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;replace-command&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;[string]&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$msg&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;hello world&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nv&#34;&gt;$action&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;[system.windows.messagebox]&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;::&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;show&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$msg&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetNewClosure&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;nv&#34;&gt;$cmd&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;new-object&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;galasoft&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;mvvmlight&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;command&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;relaycommand&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;[system.action]&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$action&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;nv&#34;&gt;$selected&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;target&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;command&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$cmd&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The above function will replace anything that has a &lt;code&gt;Command&lt;/code&gt; property on the target, like a Button or MenuItem, with a MessageBox showing a message.  For the curious, &lt;code&gt;GetNewClosure&lt;/code&gt; is needed so that $msg is available within the inner script block.  Unlike C#, closures are not automatic.&lt;/p&gt;
+
+&lt;p&gt;Since PowerShell is dynamic, if you need to make a change, simply save the script, reload it with a dot-source, which will overwrite the existing function, and then set the target’s &lt;code&gt;Command&lt;/code&gt; property again.  Awesome!&lt;/p&gt;
+
+&lt;p&gt;The only annoyance is converting PowerShell code back into C# code once you’re done.&lt;/p&gt;
+
+&lt;h1 id=&#34;evolution:f539d02145ec1550ef0265d4aa3eab64&#34;&gt;Evolution&lt;/h1&gt;
+
+&lt;p&gt;If you made it this far you didn’t forget about my comment about untargeting .NET 4 and PS v3.  Well, changes have been &lt;a href=&#34;https://github.com/cplotts/snoopwpf/commit/16030418b14778029d10e198b288b4efa9bad65c&#34;&gt;merged&lt;/a&gt; to the main branch!  Soon the masses will be able to experiment with supercharging their applications with PowerShell!&lt;/p&gt;
+
+&lt;p&gt;I’ll likely continue working on my &lt;a href=&#34;https://github.com/bling/snoopwpf&#34;&gt;fork&lt;/a&gt; as there’s still more goodies I’d like to add.  Stay tuned!&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -63,48 +63,48 @@
 
           <hr />
 
-          <li class="sidebar-categories">
+          <li class="sidebar-tags">
             <div>
-              <span>Categories</span>
+              <span>Tags</span>
               <a href="/post" style="float:right">show all</a>
             </div>
             <div>
               
-              <a href="/categories/blend">blend</a>
+              <a href="/tags/blend">blend</a>
               
-              <a href="/categories/castle">castle</a>
+              <a href="/tags/castle">castle</a>
               
-              <a href="/categories/castle-coding">castle-coding</a>
+              <a href="/tags/coding">coding</a>
               
-              <a href="/categories/coding">coding</a>
+              <a href="/tags/cqrs">cqrs</a>
               
-              <a href="/categories/cqrs">cqrs</a>
+              <a href="/tags/emacs">emacs</a>
               
-              <a href="/categories/emacs">emacs</a>
+              <a href="/tags/forex">forex</a>
               
-              <a href="/categories/forex">forex</a>
+              <a href="/tags/ioc">ioc</a>
               
-              <a href="/categories/ioc">ioc</a>
+              <a href="/tags/javascript">javascript</a>
               
-              <a href="/categories/javascript">javascript</a>
+              <a href="/tags/logging">logging</a>
               
-              <a href="/categories/logging">logging</a>
+              <a href="/tags/powershell">powershell</a>
               
-              <a href="/categories/powershell">powershell</a>
+              <a href="/tags/rx">rx</a>
               
-              <a href="/categories/rx">rx</a>
+              <a href="/tags/scm">scm</a>
               
-              <a href="/categories/software-tools">software-tools</a>
+              <a href="/tags/software-tools">software-tools</a>
               
-              <a href="/categories/source-control-management">source-control-management</a>
+              <a href="/tags/source-control-management">source-control-management</a>
               
-              <a href="/categories/testing">testing</a>
+              <a href="/tags/testing">testing</a>
               
-              <a href="/categories/twitter">twitter</a>
+              <a href="/tags/twitter">twitter</a>
               
-              <a href="/categories/vim">vim</a>
+              <a href="/tags/vim">vim</a>
               
-              <a href="/categories/visual-studio">visual-studio</a>
+              <a href="/tags/visual-studio">visual-studio</a>
               
             </div>
           </li>
@@ -121,12 +121,32 @@
 
 <div class="article">
   <div class="article-title">
+    <a href="http://bling.github.io/blog/2009/11/23/real-world-performance-comparison/">Real World Performance Comparison: Enterprise Library Logging Block vs log4net</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-11-23</small></p> <hr/>
+  <div class="post">
+    Any search on the web you find will consistently show log4net outperforming EL by a factor of around 4:1.&nbsp; Most of these tests are typically tight for/loops, and comments will end up saying things like “oh well that’s not a realistic test” or “well you shouldn’t be logging that much anyway”, etc etc.&nbsp; Well, let’s see how important choosing your logging infrastructure is in terms of overall system performance in a multithreaded application.
+
+    
+    <a class="read-more" href="http://bling.github.io/blog/2009/11/23/real-world-performance-comparison/">
+      <span>Read on...</span>
+    </a>
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
     <a href="http://bling.github.io/blog/2009/11/07/fixing-resharper-5-eap-missing-colors/">Fixing ReSharper 5 EAP Missing Colors</a>
   </div>
   <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-11-07</small></p> <hr/>
   <div class="post">
-    I think anyone’s who has used ReSharper for an extended period of time has experienced the colors disappearing all of a sudden from Fonts &amp; Colors. This is excruciatingly annoying when I have a dark color scheme set up and the colors disappear on me. In the case of RS5, it seems even more flakey than RS4, and installing/uninstalling other addins have a pretty high probability of losing the colors, and this time, repairing the installation doesn’t fix the problem (nor does the registry restore trick). For me, to fix the problem I had to: Uninstall RS5. Install RS4.5 Open VS!!! Go into settings, and verify all the colors are in Fonts &amp; Colors. Upgrade to RS5. If you skip opening VS, it will not restore colors&hellip;at least it didn’t when I tried it. Following the above fixed it for me in 2 occasions already. If Jetbrains sees this blog post, PLEASE fix this extremely annoying bug.
+    I think anyone’s who has used ReSharper for an extended period of time has experienced the colors disappearing all of a sudden from Fonts &amp; Colors. This is excruciatingly annoying when I have a dark color scheme set up and the colors disappear on me. In the case of RS5, it seems even more flakey than RS4, and installing/uninstalling other addins have a pretty high probability of losing the colors, and this time, repairing the installation doesn’t fix the problem (nor does the registry restore trick).
 
+    
+    <a class="read-more" href="http://bling.github.io/blog/2009/11/07/fixing-resharper-5-eap-missing-colors/">
+      <span>Read on...</span>
+    </a>
     
   </div>
 </div>
@@ -137,8 +157,12 @@
   </div>
   <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-11-06</small></p> <hr/>
   <div class="post">
-    Having some significant experience with C++, every once in a while I’ll really miss features available in C++ that just aren’t possible in C#.&nbsp; Sure, linking takes forever and if you could calculate the percentage of time for a C++ developer spent on linking time I’m sure it’d be around 50%.&nbsp; Nonetheless, there’s a certain seductive pull to stepping through the debugger and the sheer speed of a C++ program (arguably debugger is being made obsolete with TDD).&nbsp; If you’re only used C# for a long time, you probably didn’t even know that C++ was THAT much faster until you try this out.&nbsp; Even a simple hello world program: you can tell a difference. But that’s not the point of this post.&nbsp; This post is about mixins! So what is a mixin?&nbsp; You can wikipedia it, but basically it’s a way to add functionality to an existing object.&nbsp; In a way, it’s like multiple inheritance, but not exactly.&nbsp; If you wanna go CS101 terms, this is not a “is-a” relationship, but more of a “can-do” relationship.&nbsp; Both methods promote code reuse, and of course, both can be abused. In a way, C# extension methods are a form of mixin, but really it’s just syntactic sugar.&nbsp; It’s a static method but looks like a instance method.&nbsp; True mixins are actual instances. I’ve been playing around with Castle.DynamicProxy lately, and some of it is going into production code soon.&nbsp; This is honestly kind of scary, because I really don’t want to mess up production code which generates daily profit for the company.&nbsp; However, if NHibernate’s using dynamic proxy, and that has been proven to work in countless production environments, I’m sure the complexity of the proxies I’m doing pales in comparison to what NHibernate does. Most of the examples available on the web show you how a mixin works.&nbsp; Basically, you create a target, and then you mixin extra stuff.&nbsp; Basic stuff…but there’s a really cool trick you can do to make all consuming code a lot easier to use by removing the need of consuming code to cast to a mixin instance.&nbsp; In my case, the system is a very complex piece of legacy code where there are threads all over the place locking things all over the place.&nbsp; I was given the task of keeping track of who owned the lock. Originally I started with an extension method, but I soon realized that even though it’s nice that along with IDisposable, I could do something like this: using (anyInstance.Lock()) { anyInstance.DoStuff(); } Where Lock() is an extension method which returns an IDisposable, which when Dispose() is invoked will call Monitor.Exit.&nbsp; This is all nice and dandy use of the ‘using’ syntax, but as you can see this is all just syntactic sugar.&nbsp; At the end of the day, this is still a public static method can is accessible by thousands of other objects.&nbsp; And once you need to keep track of all those owners, you need to create a dictionary of object hashcodes, and locking on that thing for each incoming lock on an instance is…well…very very bad. Anyways, so with DynamicProxy2, I decided to mix in this lock tracking logic.&nbsp; Now, the interface is simple: public interface ILockMixin { IDisposable Lock(string tag); IDisposable TryLock(string tag); } Now, the particular thing I wanted to target happened to be a hashtable, so with a little interface trick, you could do this: public interface ILockableHashtable : IDictionary, ILockMixin { } Finally, any code that references hashtable needs to be replaced with ILockableHashtable, but the beauty of this is that none of the existing code had to change, and now all proxied hashtables have the Lock() method as well.&nbsp; And alongside Windsor, this is brain-dead simple to wire up: kernel.Register( Component.For&lt;IDictionary, ILockableDictionary&gt;() .ImplementedBy&lt;Hashtable&gt;() .Proxy.AdditionalInterfaces(typeof(ILockableDictionary)) .Proxy.MixIns(new Locker())); And that’s it!&nbsp; BTW, I realize I could have easily achieved the same effect and with a lot less effort if I just inherited from Hashtable directly (and avoid the negligible proxy/performance cost), but if I needed this locking mechanism for any other code, I would have to resort to either copy/pasting a lot of code, or a lot of copy/paste/redirect to a static class. Edit: There is a bug in this last bit, check out my latest entry about this topic.
+    Having some significant experience with C++, every once in a while I’ll really miss features available in C++ that just aren’t possible in C#.&nbsp; Sure, linking takes forever and if you could calculate the percentage of time for a C++ developer spent on linking time I’m sure it’d be around 50%.&nbsp; Nonetheless, there’s a certain seductive pull to stepping through the debugger and the sheer speed of a C++ program (arguably debugger is being made obsolete with TDD).&nbsp; If you’re only used C# for a long time, you probably didn’t even know that C++ was THAT much faster until you try this out.&nbsp; Even a simple hello world program: you can tell a difference.
 
+    
+    <a class="read-more" href="http://bling.github.io/blog/2009/11/06/multiple-inheritance-in-c-with-castle/">
+      <span>Read on...</span>
+    </a>
     
   </div>
 </div>
@@ -149,8 +173,12 @@
   </div>
   <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-10-19</small></p> <hr/>
   <div class="post">
-    Unit testing is hard! I came to this sad realization when my code which had a large test suite with near 100% code coverage, with every thought-of requirement unit tested, failed during integration testing. How is that possible? I thought to myself. Easy&hellip;my unit tests were incomplete. Writing software is pretty complex stuff. This is pretty evident in the level of difficulty in determining how good a software developer is. Do you measure them based on lines of code? Can you measure on time to completion of tasks? Or maybe the feature to bugs coming back ratio? If writing features alone can be this complicated, surely unit testing is just as (or more) complicated. First, you must be in a place where you can even start testing your code. Are you using dependency injection? Are your components decoupled? Do you understand mocking and can you use mocking frameworks? You need an understanding of all these concepts before you can even begin to unit test effectively. Sure, you can unit test without these prerequisites, but the result will likely be pain and more pain because the you&rsquo;ll be spending 90% of your time setting up a test rather than running it. But back to the point of this post. Unit testing is hard because it&rsquo;s one of those things where you&rsquo;ll never really know how to do it properly until you&rsquo;ve tried it. And that assumes you&rsquo;ve even made the step to do testing at all. I&rsquo;m at the point where my experience with writing unit tests allows me to set them up quickly with relative ease, and perform very concise tests where anyone reading the unit test would say &ldquo;oh, he&rsquo;s testing this requirement.&rdquo; However, the problem is that there&rsquo;s still 2 problems that are hard to fix: 1. Is the test actually correct? 2. Do the tests cover all scenarios? (1) is obvious. If the test is wrong then you might as well not run it all. You must make it absolute goal to trust your unit tests. If something fails, it should mean there&rsquo;s a serious problem going on. You can&rsquo;t have &ldquo;oh that&rsquo;s ok, it&rsquo;ll fail half the time, just ignore it.&rdquo; (2) is also obvious. If you don&rsquo;t cover all scenarios, then your unit tests aren&rsquo;t complete. In my case, I actually made both errors. The unit test in question was calculating the time until minute X. So in my unit test, I set the current time to 45 minutes. The target time was 50 minutes. 5 minutes until minute 50, test passed. Simple right? Any veteran developer will probably know what I did wrong. Yep&hellip;if the current time was 51 minutes, I ended up with a negative result. The test was wrong in that it only tested half of the problem. It never accounted for time wrapping. The test was also incomplete, since it didn&rsquo;t test all scenarios. Fixing the bug was obviously very simple, but it was still ego shattering knowing that all the confidence I had previously was all false. I went back to check out other scenarios, and was able to come up with some archaic scenarios where my code failed. And this is probably another area where novice coders will do, where experienced coders will not: I only coded tests per-requirement. What happens when 2 requirements collide with each other? Or, what happens when 2 or more requirements must happen at the same time? With this thinking I was able to come up with a scenario which led to 4 discrete requirements occurring at the same time. Yeah&hellip;not fun. Basically, in summary: - Verify that your tests are correct. - Strive to test for less than, equal, and greater than when applicable. - Cross reference all requirements against each other, and chain them if necessary.
+    Unit testing is hard! I came to this sad realization when my code which had a large test suite with near 100% code coverage, with every thought-of requirement unit tested, failed during integration testing. How is that possible? I thought to myself. Easy&hellip;my unit tests were incomplete. Writing software is pretty complex stuff. This is pretty evident in the level of difficulty in determining how good a software developer is. Do you measure them based on lines of code?
 
+    
+    <a class="read-more" href="http://bling.github.io/blog/2009/10/19/improving-your-unit-testing-skills/">
+      <span>Read on...</span>
+    </a>
     
   </div>
 </div>
@@ -161,20 +189,12 @@
   </div>
   <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-10-07</small></p> <hr/>
   <div class="post">
-    I’ve been listening to a bunch of podcasts lately and I came across a gem that was pretty darn useful.&nbsp; It’s pretty old I suppose in technology standards, since it was recorded January 12, 2009, but it’s still worth a listen.&nbsp; Scott Hanselman talks with Scott Bellware about TDD and design.&nbsp; Find it here. I’m merely reiterating what Scott has already said in the podcast, but it’s different when I can personally say that I’m joining the ranks of countless others who have seen the benefits of TDD. Now I can’t say that I’m a 100% TDD practitioner since I’m still learning how to write tests before code effectively, but I’ve already seen the improvements in design in my code many times over just by merely writing unit tests. At this point I'd say half of my tests are written first, and the other after are after the fact. I’ve been through many phases of writing unit tests, it it took me a long time to get it right (and I’m sure I have tons more to go).&nbsp; It takes some experience to figure out how to properly write unit tests, and as a by-product how to make classes easily testable.&nbsp; Code quality and testability go hand-in-hand, so if you find something difficult to test, it’s probably because it was badly designed to start. The first time I was introduced to unit testing in a work setting was when I was writing C++…and man it was ugly, not because it was C++, but because everything was tightly coupled and everything was a singleton.&nbsp; The fixture setup was outrageous, and it was common to ::Sleep(5000) to make tests pass.&nbsp; Needless to say, my first experience with unit testing was extremely painful. After a job switch and back to the C# world, I started reading more blogs, listening to more podcasts, and experimenting more.&nbsp; I was given a project to prototype, and for phase 1 it was an entirely DDD experience with I got the opportunity to experiment with writing unit tests the “proper” way with dependency injection and mocking frameworks. Unit tests are easy to write when you have highly decoupled components. Prototype was finished, and now I was back on the main project, and given a critical task to complete in 2 weeks.&nbsp; I had to modify a class which was 10,000 lines long, which has mega dependencies on everything else in the project.&nbsp; Anything I touched could potentially break something else.&nbsp; And of course…no unit tests whatsoever.&nbsp; I like challenges and responsibility – but this was close to overkill.&nbsp; This thing produces revenue for the company daily so I really don’t want to mess anything up. First thing I realized was that there’s no way I could possibly write any unit test for something like this.&nbsp; If the class file was 10,000 lines long, you can imagine the average line count for methods. And of course, the business team didn’t make things easy on me by asking that this feature be turned off in production, but turned on for QA.&nbsp; So, the best option was to refactor the existing logic out to a separate class, extract an interface, implement the new implementation, and swap between the 2 implementations dynamically. After 4 days of analyzing and reading code to make sure I have a very detailed battle plan, I started extracting the feature to a new class.&nbsp; The first iteration of the class was UGLY.&nbsp; I extracted out the feature I was changing to a separate class, but the method names were archaic and didn’t have any good “flow” to them.&nbsp; I felt that I had to comment my unit tests just so whoever’s reading them could understand what’s happening, which brings up a point. If you need to comment your unit tests, you need to redesign the API It took many iterations and refactoring of the interface to get it to the point where I found acceptable.&nbsp; If you compared the 1st batch of unit tests to the last batch of unit tests it is like night and day.&nbsp; The end result were unit tests which typically followed a 3-line pattern of setup/execute/verify.&nbsp; Brain dead simple. The last thing to do was to reintegrate the class into the original class.&nbsp; For this I was back to compile/run/debug/cross-fingers, but I had full confidence that whenever I called anything in the extracted class it would work. An added benefit is that I didn’t add another 500 lines of code to the already gigantic class.&nbsp; Basically, in summary: Get super mega long legacy code class files Extract feature into separate file as close to original implementation as possible (initially will be copy-paste) Run and make sure things don’t die Write unit tests for extracted class (forces you to have a better understanding of the code modifications, and the requirements) Make sure unit tests cover all possible scenarios of invocation from original class Start refactoring and redesigning to better testability, while maintaining all previous tests Done!&nbsp; Repeat as necessary!
+    I’ve been listening to a bunch of podcasts lately and I came across a gem that was pretty darn useful.&nbsp; It’s pretty old I suppose in technology standards, since it was recorded January 12, 2009, but it’s still worth a listen.&nbsp; Scott Hanselman talks with Scott Bellware about TDD and design.&nbsp; Find it here. I’m merely reiterating what Scott has already said in the podcast, but it’s different when I can personally say that I’m joining the ranks of countless others who have seen the benefits of TDD.
 
     
-  </div>
-</div>
-
-<div class="article">
-  <div class="article-title">
-    <a href="http://bling.github.io/blog/2009/09/27/dark-color-refresh/">Dark Color Refresh</a>
-  </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-09-27</small></p> <hr/>
-  <div class="post">
-    There you have it!&#160; I started with Visual Studio’s default settings and configured each and every color one by one.&#160; 3 hours later I was finished and satisfied with what I have…but I think it was time well spent considering this is what I’m looking at for &gt;= 8 hours a day. This was a complete re-do of my previous dark theme.&#160; This one is even more colorful than the previous, mainly because Resharper does an amazing job of detecting additional code elements like mutable vs unmutable, or unused code, in additional to many other things. By the way, you should definitely spend the time to configure your own colors rather than using someone else’s template.&#160; The reason being is that each and every person is different, and obviously will have preferences towards different colors.&#160; I go through different moods and I’ll tweak the theme to be “blue” or “red” for a period of time. Another reason why you configure it manually is that it drills into your brain more of what each color represents.&#160; If you just used my template you would probably never notice that orange means input parameter, and green is a local variable. However, one thing you can and should take from this blog post is not to use pure black or pure white as your background (did you notice my current line indicator is darker than my background?).&#160; Set your background to (10,10,10) or (245,245,245).&#160; Your eyes will thank me.
-
+    <a class="read-more" href="http://bling.github.io/blog/2009/10/07/tdd-is-designunit-testing-legacy-code/">
+      <span>Read on...</span>
+    </a>
     
   </div>
 </div>

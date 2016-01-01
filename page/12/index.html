@@ -63,48 +63,48 @@
 
           <hr />
 
-          <li class="sidebar-categories">
+          <li class="sidebar-tags">
             <div>
-              <span>Categories</span>
+              <span>Tags</span>
               <a href="/post" style="float:right">show all</a>
             </div>
             <div>
               
-              <a href="/categories/blend">blend</a>
+              <a href="/tags/blend">blend</a>
               
-              <a href="/categories/castle">castle</a>
+              <a href="/tags/castle">castle</a>
               
-              <a href="/categories/castle-coding">castle-coding</a>
+              <a href="/tags/coding">coding</a>
               
-              <a href="/categories/coding">coding</a>
+              <a href="/tags/cqrs">cqrs</a>
               
-              <a href="/categories/cqrs">cqrs</a>
+              <a href="/tags/emacs">emacs</a>
               
-              <a href="/categories/emacs">emacs</a>
+              <a href="/tags/forex">forex</a>
               
-              <a href="/categories/forex">forex</a>
+              <a href="/tags/ioc">ioc</a>
               
-              <a href="/categories/ioc">ioc</a>
+              <a href="/tags/javascript">javascript</a>
               
-              <a href="/categories/javascript">javascript</a>
+              <a href="/tags/logging">logging</a>
               
-              <a href="/categories/logging">logging</a>
+              <a href="/tags/powershell">powershell</a>
               
-              <a href="/categories/powershell">powershell</a>
+              <a href="/tags/rx">rx</a>
               
-              <a href="/categories/rx">rx</a>
+              <a href="/tags/scm">scm</a>
               
-              <a href="/categories/software-tools">software-tools</a>
+              <a href="/tags/software-tools">software-tools</a>
               
-              <a href="/categories/source-control-management">source-control-management</a>
+              <a href="/tags/source-control-management">source-control-management</a>
               
-              <a href="/categories/testing">testing</a>
+              <a href="/tags/testing">testing</a>
               
-              <a href="/categories/twitter">twitter</a>
+              <a href="/tags/twitter">twitter</a>
               
-              <a href="/categories/vim">vim</a>
+              <a href="/tags/vim">vim</a>
               
-              <a href="/categories/visual-studio">visual-studio</a>
+              <a href="/tags/visual-studio">visual-studio</a>
               
             </div>
           </li>
@@ -121,12 +121,32 @@
 
 <div class="article">
   <div class="article-title">
+    <a href="http://bling.github.io/blog/2009/09/27/dark-color-refresh/">Dark Color Refresh</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-09-27</small></p> <hr/>
+  <div class="post">
+    There you have it!&#160; I started with Visual Studio’s default settings and configured each and every color one by one.&#160; 3 hours later I was finished and satisfied with what I have…but I think it was time well spent considering this is what I’m looking at for &gt;= 8 hours a day. This was a complete re-do of my previous dark theme.&#160; This one is even more colorful than the previous, mainly because Resharper does an amazing job of detecting additional code elements like mutable vs unmutable, or unused code, in additional to many other things.
+
+    
+    <a class="read-more" href="http://bling.github.io/blog/2009/09/27/dark-color-refresh/">
+      <span>Read on...</span>
+    </a>
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
     <a href="http://bling.github.io/blog/2009/09/26/autofacs-extremely-powerful-containerscope/">Autofac’s extremely powerful and flexible ContainerScope</a>
   </div>
   <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-09-26</small></p> <hr/>
   <div class="post">
-    I need to show some love and support for my favorite IoC tool because it’s most powerful feature needs more explaining.&nbsp; It’s not that the main site doesn’t provide a good explanation, because it does, but because most people don’t really understand what the solution is solving. The following is on Autofac’s front page: var container = // ... using (var inner = container.CreateInnerContainer()) { var controller = inner.Resolve&lt;IController&gt;(); controller.Execute(); // use controller.. }The first time I saw this I basically glanced right passed it.&nbsp; Honestly I didn’t think anything of it, and initially the reason I tried out Autofac was for its very slick lambda registrations.&nbsp; I didn’t realize I was in a world of surprises when I finally realized the power and flexibility of Autofac’s container scope. If benchmarks and feature comparisons are not enough show off Autofac’s features, this blog post hopes to show how to solve “complex” problems elegantly. Let’s start with the typical NHibernate use-case.&nbsp; Create 1 singleton, create many sessions-per-request.&nbsp; Here’s a solution with Ninject (not that I’m picking on Ninject, because I love its very slick contextual binding, but because most other IoC containers have a similar solution, like per-session with WCF &amp; Windsor). Basically, the solutions mentioned above will following an approach like this: a) Hook into the beginning of a request, and create the ISession from the ISessionFactory. b) Set it in the HttpContext.Current or OperationContext.Current’s dictionaries. c) Get this property in all the dependencies that need it. d) At the end of the request, Dispose() the ISession. OK, pretty simple and straightforward solution, but there’s one key thing that really bugs me is that by doing this we have introduced a dependency…that is, HttpContext.Current[].&nbsp; That, or you could wrap that around a class, like SessionManager, again, basically coupling to a dependency under a different name.&nbsp; With Autofac, we can bypass steps b and c entirely and only worry about the beginning and end of a request. To start off, here's the basic wiring needed: 1: var cb = new ContainerBuilder(); 2: cb.Register(x =&gt; CreateSessionFactory()) .As&lt;ISessionFactory&gt;() .SingletonScoped(); 3: cb.Register(x =&gt; x.Resolve&lt;ISessionFactory&gt;().OpenSession()) .As&lt;ISession&gt;() .ContainerScoped(); 4: IContainer c = cb.Build(); 5: &nbsp; 6: Assert.AreSame(c.Resolve&lt;ISessionFactory&gt;(), c.Resolve&lt;ISessionFactory&gt;()); 7: Assert.AreSame(c.Resolve&lt;ISession&gt;(), c.Resolve&lt;ISession&gt;()); 8: &nbsp; 9: var inner1 = c.CreateInnerContainer(); 10: Assert.AreSame(c.Resolve&lt;ISessionFactory&gt;(), inner1.Resolve&lt;ISessionFactory&gt;()); 11: Assert.AreNotSame(c.Resolve&lt;ISession&gt;(), inner1.Resolve&lt;ISession&gt;());That’s the configuration.&nbsp; And that’s it!&nbsp; Nothing more.&nbsp; No additional SessionManager class.&nbsp; No need to use HttpContext.Current to store the session.&nbsp; Just pass ISession in with regular constructor/property injection. Here’s how it works: Line 2: ISessionFactory is created from CreateSessionFactory().&nbsp; This is a singleton so there will always be one and only one instance of it within the container (and all child containers). Line 3: This is where it’s interesting.&nbsp; We’re saying “whenever I need an ISession, resolve ISessionFactory and call OpenSession() on it”.&nbsp; Also, by specifying ContainerScope, we only get 1 instance per-container. And this is where it’s sort of confusing with the terminology.&nbsp; You can think of Autofac as a tree of containers.&nbsp; The root container (variable c in this case), can create children containers (inner1 in this case, and inner1 could create an inner2, and so on).&nbsp; So when something is Singleton scoped, that means that the root container, and any child containers (and child’s children) will only have 1 instance of a service.&nbsp; With ContainerScope, each “node = container” in the tree gets 1 instance. So back to the unit test above, in line 6 we verify that there is only 1 instance of ISessionFactory.&nbsp; We resolve ISession twice as well, which shows that we get the same instance. Line 9, we create an inner container, and here we see that ISessionFactory is the same for both the container c and inner container inner1.&nbsp; However, the ISession resolved is different between the two. Thus, by specifying ContainerScope, you can very easily group multiple services and dependencies together as one unit.&nbsp; Implementing the Unit of Work pattern is insanely easy with Autofac.&nbsp; Create services A, which depends on B, which depends on C, which all the previous depends on D.&nbsp; Resolve A within a new inner container, and B, C, and D will always be the same instances.&nbsp; Resolve A in another inner container and you will get a new set of instances. Last but not least, Autofac will automatically call Dispose() on all resolved services once the container is disposed.&nbsp; So for the above, once inner1.Dispose() is called, ISession.Dispose() is automatically called.&nbsp; If you needed to, you can very easily hook into this mechanism and implement things like transactions and rollbacks. I hope this blog post clears things up a little bit about Autofac’s ContainerScope! Comments Nick Heya Bailey! Think there is more than one &#39;Nick&#39; lurking around your blog (or else I have a case of amnesia :)) Love the article, definitely need more info like this around the &#39;net. Nick (mk II) bling Thanks for dropping by Nick! To answer the question, what I ended up doing was creating a set of services for each request/session, basically like how I described in my post. I also wrote my own custom interception module (took some ideas from the one in contrib) based on Castle&#39;s DynamicProxy2. The main difference was that my interceptors work iff methods have specific attributes, and with that I was able to selectively say which methods got transactions (among other things). This made things really easy because I could have the transaction span multiple methods as one huge call or a simple 1 line method depending on where my transaction attributes appear in the code. Nick I&#39;ve been toying with a similar approach, but I&#39;m uncertain about how to manage NHibernate&#39;s Transaction (Commits and Rollbacks) in this scenario. I&#39;ve seen examples that make use of TransactionAttributes (in the case of MVC apps), and previously I had been managing transactions in the begin/end request events (in global.asax), but that ties every request to a transaction which isn&#39;t necessary. How did you go about handling transactions in this scenario?
+    I need to show some love and support for my favorite IoC tool because it’s most powerful feature needs more explaining.&nbsp; It’s not that the main site doesn’t provide a good explanation, because it does, but because most people don’t really understand what the solution is solving. The following is on Autofac’s front page: var container = // ... using (var inner = container.CreateInnerContainer()) { var controller = inner.Resolve&lt;IController&gt;(); controller.Execute(); // use controller..
 
+    
+    <a class="read-more" href="http://bling.github.io/blog/2009/09/26/autofacs-extremely-powerful-containerscope/">
+      <span>Read on...</span>
+    </a>
     
   </div>
 </div>
@@ -137,8 +157,12 @@
   </div>
   <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-09-13</small></p> <hr/>
   <div class="post">
-    I&rsquo;ve been experimenting lately with TeamCity 5 EAP and so far it&rsquo;s been a pretty awesome experience. I was up and running within minutes and I was swarmed with beautiful graphs and statistics with specifics even per-test. Getting something like that up with CC.NET is not a trivial task. Anywho, with TC5 code coverage is one of the cool new features added for .NET, but unfortunately only NUnit is supported. Not that that&rsquo;s a bad thing, but some people prefer to use other testing tools. Two notable contenders are xUnit.net and MbUnit. I like the fact (pun intended) that xUnit.net makes it a point to prevent you from doing bad practices (like [ExpectedException]), and I like how MbUnit is so bleeding edge with useful features (like [Parallelizable] and a vast availability of assertions). And with that I set up to figure out how to get TC working with Gallio, but the following should work with any test runner. It certainly was a pain to set up because it took a lot of trial and error but eventually I figured it out. I analyzed the build logs provided in each build report and noticed something interesting&hellip;specifically: [13:51:23]: ##teamcity[importData type=’dotNetCoverage’ tool=’ncover’ file=’C:\TeamCity5\buildAgent\temp\buildTmp\tmp1C93.tmp’] and [13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageL’ value=’94.85067’] [13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageM’ value=’97.32143’] [13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageC’ value=’98.68421’] [13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageAbsLCovered’ value=’921.0’] [13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageAbsMCovered’ value=’218.0’] [13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageAbsCCovered’ value=’75.0’] [13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageAbsLTotal’ value=’971.0’] [13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageAbsMTotal’ value=’224.0’] [13:51:30]: ##teamcity[buildStatisticValue key=’CodeCoverageAbsCTotal’ value=’76.0’] The first message happens after NCover.Console is done its thing. After NCoverExplorer is done its thing, the statistics are published. I set out to mimic this functionality with Gallio, but what&rsquo;s described here should work with any test runner. Disable code coverage in TC. We&rsquo;re doing it manually instead. In your build script, run your unit tests with NCover and generate a coverage.xml report. Run NCoverExplorer on coverage.xml and generate reports ncoverexplorer.xml and index.html. Create a zip file of index.html and name it coverage.zip. Configure coverage.zip to be an artifact in your TC configuration (this is to enable the tab). Parse out ncoverexplorer.xml with XPath and output the statistics. Certainly a lot of things to do just for the sake of pretty statistics reporting&hellip;.but it was the weekend and I was bored. With the help of MSBuildCommunityTasks, the zip file and XML parsing was made a lot easier. After that, viola! Code coverage + Gallio on TeamCity 5!!! Unfortunately, NCoverExplorer&rsquo;s report only reports the # total of classes and nothing about unvisited or covered, so for those values I set to 0/0/0 (BTW, you need all values present for the statistics to show). A task for next weekend!!! (Edit: I suppose I could should also mention that you could technically avoid all the trouble above and hack it with this: #if NUNIT using TestFixtureAttribute = NUnit.Framework.TestFixtureAttribute; using TestAttribute = NUnit.Framework.TestAttribute; #endif And it&rsquo;ll work just fine as well).
+    I&rsquo;ve been experimenting lately with TeamCity 5 EAP and so far it&rsquo;s been a pretty awesome experience. I was up and running within minutes and I was swarmed with beautiful graphs and statistics with specifics even per-test. Getting something like that up with CC.NET is not a trivial task. Anywho, with TC5 code coverage is one of the cool new features added for .NET, but unfortunately only NUnit is supported. Not that that&rsquo;s a bad thing, but some people prefer to use other testing tools.
 
+    
+    <a class="read-more" href="http://bling.github.io/blog/2009/09/13/getting-code-coverage-working-on/">
+      <span>Read on...</span>
+    </a>
     
   </div>
 </div>
@@ -149,8 +173,12 @@
   </div>
   <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-09-07</small></p> <hr/>
   <div class="post">
-    Inevitably as a project gets more complicated, you will need to start using more features of your IoC container. Autofac has built-in support for property injection by hooking into the OnActivating or OnActivated events, which basically set all public properties (or only those which are unset). However, I didn't really like this because once you start using properties, it's not as clear cut as constructors that you are using injection. It becomes hard to manage later on when you have many properties which some should be injected and others should be manually set in code. Autofac's inject all or only-null approach doesn't fit the bill when a class gets a little more complicated. I set up to fix this by writing a custom module, and it turned out to be very very simple. With attributes, we can mimic functionality that's used in Ninject. Here's the module code: public class MemberInjectionModule : IModule { public void Configure(IContainer container) { container.ComponentRegistered += (oo, ee) = ee.ComponentRegistration.Activated += (o, e) = { const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public; var type = e.Instance.GetType(); foreach (var field in type.GetFields(flags)) { if (field.GetCustomAttributes(typeof(InjectedAttribute), true).Length 0) field.SetValue(e.Instance, e.Context.Resolve(field.FieldType)); } foreach (var prop in type.GetProperties(flags)) { if (prop.GetCustomAttributes(typeof(InjectedAttribute), true).Length 0) { if (prop.GetIndexParameters().Length 0) throw new InvalidOperationException("Indexed properties cannot be injected."); prop.SetValue(e.Instance, e.Context.Resolve(prop.PropertyType), null); } } }; } } [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)] public class InjectedAttribute : Attribute { } And that's it! Pretty basic reflection here stuff here, but as you can see...iterate through all fields and properties (including privates), and try to resolve them. Now, you can just RegisterModule(new MemberInjectionModule()), and inside your services you simply annotate your properties/fields with the [Injected] attribute, like so: public class SomeService : ISomeService { [Injected] protected ISomeOtherService SomeOtherService { get; set; } } And now, it's a very clear cut way of explicitly defining which properties (and fields) should be injected. Also, it's also a simple string property away defined in the attribute if you want to specify a named service, which I'll leave the the reader to implement :)
+    Inevitably as a project gets more complicated, you will need to start using more features of your IoC container. Autofac has built-in support for property injection by hooking into the OnActivating or OnActivated events, which basically set all public properties (or only those which are unset). However, I didn't really like this because once you start using properties, it's not as clear cut as constructors that you are using injection. It becomes hard to manage later on when you have many properties which some should be injected and others should be manually set in code.
 
+    
+    <a class="read-more" href="http://bling.github.io/blog/2009/09/07/member-injection-module-for-autofac/">
+      <span>Read on...</span>
+    </a>
     
   </div>
 </div>
@@ -161,20 +189,12 @@
   </div>
   <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-08-21</small></p> <hr/>
   <div class="post">
-    Ooops, I forgot to mention that it's easily mockable as well. public class UserService : IUserService { public UserService(ISessionFactory factory, UsersRepositoryFactory usersFactory) { ... } } So that's the basic thing right. So now, with Moq, we can do this: var mockUserRepo = new Mock&lt;IUsersRepository&gt;(); mockUserRepo.Setup(x =&gt; x.GetUser(It.IsAny&lt;string&gt;())).Returns(() =&gt; someUser); var userService = new UserService(..., x = mockUserRepo.Object); So what I've basically done is insert a lambda expression into the constructor, which is the delegate, which always returns my mock repository. Pretty nifty methinks!
+    Ooops, I forgot to mention that it's easily mockable as well. public class UserService : IUserService { public UserService(ISessionFactory factory, UsersRepositoryFactory usersFactory) { ... } } So that's the basic thing right. So now, with Moq, we can do this: var mockUserRepo = new Mock&lt;IUsersRepository&gt;(); mockUserRepo.Setup(x =&gt; x.GetUser(It.IsAny&lt;string&gt;())).Returns(() =&gt; someUser); var userService = new UserService(..., x = mockUserRepo.Object); So what I've basically done is insert a lambda expression into the constructor, which is the delegate, which always returns my mock repository.
 
     
-  </div>
-</div>
-
-<div class="article">
-  <div class="article-title">
-    <a href="http://bling.github.io/blog/2009/08/20/session-management-with-nhibernate-and-autofac-1/">Session management with NHibernate and Autofac</a>
-  </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-08-20</small></p> <hr/>
-  <div class="post">
-    NHibernate is a beast let me tell you! I think I already mentioned this in the previous post, but NHibernate definitely has a VERY high learning curve. If it wasn't for FluentNHibernate I'd probably still be struggling with XML mapping files right now. But anywho, it didn't take long for me to run into very many problems with NHibernate. It's not really NHibernate's fault, but more of maybe I'm trying to use the wrong tool for the job. I'm using DDD for my project, and there's a clear separation between the client and the domain. I got lazy and I didn't make any DTOs for my entities, and just used the [DataContract] and [DataMember] to have WCF automatically generated "DTO"s for me (and in the options turn OFF reusing assemblies). (Disclaimer: I am *not* by any means knowledgeable about NHibernate, but maybe, just maybe what I say here might point other people in the right direction) OK, all is good. I can store my entities in the database, I can read them back. So I fire up my client and read some users, and it blows up. NHibernate by default lazy loads everything. Here's what I originally had in my UsersRepository public IEnumerable&lt;User&gt; GetAll() { using (var session = _factory.OpenSession()) return session.CreateCriteria&lt;User&gt;().List&lt;User&gt;(); } It looks pretty innocent. But it blows up. Why? If Users has a collection of other entities (which mine did), they are not loaded with the above code. They are loaded on-demand, i.e. lazy loaded. So when my WCF service finally returns the objects and serializes them, it pukes and throws an exception because the session was long closed already. Easy solution was to Not.LazyLoad() all my collections. Now here's what I'm thinking I might not be using the right tool for the job because I am purposely disabling one of the key features of NHibernate. By default, caching is always enabled, and I couldn't find anywhere how to globally turn it off. You must go class by class. OK, so on to my next problem. I soon ran into issues with entities not being unique. I would have code like this in my UserService: public void AddProduct(string username, Guid productId) { var user = _usersRepository.GetUser(username); var product = _productRepository.GetProduct(productId); user.Products.Add(product); _usersRepository.Store(user); } Again, this puked. The problem here was after my GetUser call, inside my repository, like my first example, I had a using(session), which closed when the method ended. Shortly after, I am trying to update the same user, but with a *different* session. NHibernate doesn't like this, an NHibernate.NonUniqueObjectException is thrown, and I had a new problem to deal with. It became clear I had to actively manage the sessions somehow, and the best place would be to have them in my services, which typically each method had a "unit of work" placed on them. So the goal I wanted to accomplish was to initiate a new session at the beginning of a service method, call a repository multiple times, close the session, and then exit the method. So how can we achieve that? I thought of a couple things, and the first thing I did actually was to use AOP style and use Autofac with Castle.DynamicProxy. I created an interceptor for my service, and before invocation I opened a session, then manually called a property setter for a CurrentSession, and after invocation close the session. It did the job, but had some problems: a) It did a little too much black magic for me. All methods got intercepted. b) I still had to manually set the CurrentSession property of my repositories. Sooner or later I'm sure to run in the threading problems. After I got that half working I scrapped it and tried to come up with something better. This is what I came up with: public delegate IUsersRepository UsersRepositoryFactory(ISession session); public class UserService : IUserService { public UserService(ISessionFactory factory, UsersRepositoryFactory usersFactory) { ... } } public class UsersRepository : IUsersRepository { public UsersRepository(ISession session) { ... } } Now, when I call a method on my UserService, I do this: public void AddProduct(string username, Guid productId) { using (var session = _factory.OpenSession()) { var userRepo = _userRepoFactory(session); var productRepo = _productFactory(session); ... } } And, of course, the Autofac code: b.Register&lt;UsersRepository&gt;().As&lt;IUsersRepository&gt;().FactoryScoped(); b.RegisterGeneratedFactory&lt;UsersRepositoryFactory&gt;(); More details on the delegate factory here. But basically, with Autofac I have told it to inject delegates into my UserService, and those delegates can create new instances of my user repository by passing in the current session. You'll also notice I had a products repository as well. With these delegate factories I can create up multiple repositories on the fly with the same session (and all the good NHibernate stuff that comes with that). Sure, there's a whole bunch of using(var session) boilerplate now, but it's explicit, clear, and allows for a lot of fine-grained control. EDIT: I have since dropped this approach and I'm currently injecting ISessions into my constructors by using Autofac's container-scope (something that took me a while to understand).
-
+    <a class="read-more" href="http://bling.github.io/blog/2009/08/21/session-management-with-nhibernate-and-autofac-2/">
+      <span>Read on...</span>
+    </a>
     
   </div>
 </div>

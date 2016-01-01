@@ -6,11 +6,65 @@
     <description>Recent content in Posts on bling on software</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 06 Jan 2015 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 31 Dec 2015 22:55:37 -0500</lastBuildDate>
     <atom:link href="http://bling.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>Emacs As My &lt;Leader&gt; 1 Year Later</title>
+      <title>Migrating from Jekyll/Octopress to Hugo</title>
+      <link>http://bling.github.io/blog/2015/12/31/migrating-from-jekyll-octopress-to-hugo/</link>
+      <pubDate>Thu, 31 Dec 2015 22:55:37 -0500</pubDate>
+      
+      <guid>http://bling.github.io/blog/2015/12/31/migrating-from-jekyll-octopress-to-hugo/</guid>
+      <description>
+
+&lt;p&gt;Migrating my blog from &lt;a href=&#34;https://github.com/octopress/octopress&#34;&gt;Octopress&lt;/a&gt; to &lt;a href=&#34;https://github.com/spf13/hugo&#34;&gt;Hugo&lt;/a&gt; has been on my TODO list for a very long time.  In fact, the only reason holding me back was lack of pagination support, but that has been implemented for a while now, so I finally got around to migrating my blog over.&lt;/p&gt;
+
+&lt;h1 id=&#34;getting-started:23dc397a3b9966843174ca31c40b0ee7&#34;&gt;Getting started&lt;/h1&gt;
+
+&lt;p&gt;Since this is an entirely new generator, it made sense to start from scratch.  So I created an empty site, copied all the markdown files over, and voila, new blog!  But of course, it wasn&amp;rsquo;t all smooth sailing, and I needed to resolve some issues.&lt;/p&gt;
+
+&lt;h1 id=&#34;permalinks:23dc397a3b9966843174ca31c40b0ee7&#34;&gt;Permalinks&lt;/h1&gt;
+
+&lt;p&gt;First problem was all the permalinks that Octopress generated did not match the default value for Hugo.  This was easily resolved with a &lt;code&gt;[permalinks]&lt;/code&gt; section in the &lt;code&gt;config.toml&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;title-title:23dc397a3b9966843174ca31c40b0ee7&#34;&gt;Title != title&lt;/h1&gt;
+
+&lt;p&gt;This was most troubling, and resulted in a lot of manual labor to fix.  The problem was that Octopress (or Jekyll), would generate a URL from the title, but would omit things like &amp;ldquo;the&amp;rdquo;, or &amp;ldquo;a&amp;rdquo;.  For example, the very first post of my blog is titled &lt;a href=&#34;http://bling.github.io/blog/2008/09/11/importance-of-color-schemes/&#34;&gt;The Importance of Color Schemes&lt;/a&gt;, but the URL is actually &lt;code&gt;/importance-of-color-schemes&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Luckily, you can define a &lt;code&gt;slug&lt;/code&gt; parameter in the front matter which can override this.  Suffice to say, I had to do this for a lot of posts.&lt;/p&gt;
+
+&lt;p&gt;In most migrations you don&amp;rsquo;t have to worry about keeping the same URLs, but in my case I needed them to be the same because that&amp;rsquo;s how &lt;a href=&#34;http://www.disqus.com&#34;&gt;Disqus&lt;/a&gt; track discussions, and I wanted all the existing conversations to remain intact.&lt;/p&gt;
+
+&lt;h1 id=&#34;code-fences:23dc397a3b9966843174ca31c40b0ee7&#34;&gt;Code fences&lt;/h1&gt;
+
+&lt;p&gt;Jekyll supports doing syntax highlighting with code fences, e.g.:&lt;/p&gt;
+
+&lt;pre&gt;
+``` javascript
+alert(&#39;Hello World&#39;!);
+```
+&lt;/pre&gt;
+
+&lt;p&gt;Support for this can be done via Pygments, with is off by default.  If you add &lt;code&gt;pygmentscodefences = true&lt;/code&gt; to your &lt;code&gt;config.toml&lt;/code&gt; then these sections will be parsed correctly.  You&amp;rsquo;ll also want to use &lt;code&gt;pygmentsuseclasses = true&lt;/code&gt; so that you can style it appropriately.&lt;/p&gt;
+
+&lt;h1 id=&#34;markdown-references:23dc397a3b9966843174ca31c40b0ee7&#34;&gt;Markdown references&lt;/h1&gt;
+
+&lt;p&gt;This last one was a bit of an annoyance because I needed to download the source of Hugo and make code modifications.  Specifically, this &lt;a href=&#34;https://github.com/spf13/hugo/pull/1667&#34;&gt;pull request&lt;/a&gt; was needed.&lt;/p&gt;
+
+&lt;p&gt;Long story short, if you use references for links, instead of inline, then summaries will not work.&lt;/p&gt;
+
+&lt;h1 id=&#34;and-the-rest:23dc397a3b9966843174ca31c40b0ee7&#34;&gt;And the rest&lt;/h1&gt;
+
+&lt;p&gt;Once all the heavily lifting was done, now it was a matter of picking a theme and modifying it to my liking.  I ended up modifying &lt;a href=&#34;https://github.com/bling/herring-cove&#34;&gt;herring cove&lt;/a&gt;.  I really liked how Hugo separates the content from the theme, making it relatively easy to switch back and forth.&lt;/p&gt;
+
+&lt;h1 id=&#34;and-the-benefits:23dc397a3b9966843174ca31c40b0ee7&#34;&gt;And the benefits?&lt;/h1&gt;
+
+&lt;p&gt;Holy crap this is too fast!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Emacs as my &lt;Leader&gt; 1 Year Later</title>
       <link>http://bling.github.io/blog/2015/01/06/emacs-as-my-leader-1-year-later/</link>
       <pubDate>Tue, 06 Jan 2015 00:00:00 +0000</pubDate>
       
@@ -1179,79 +1233,6 @@ nnoremap &amp;lt;space&amp;gt;y :Unite history/yank&amp;lt;cr&amp;gt;
 &lt;p&gt;Now is this the best way to do it? Probably not. I would not be surprised if someone was able to do it with less keystrokes or a single macro.  But hey, it was fun learning experience, and ultimately I turned all of that into two keystrokes that can be reused many times.&lt;/p&gt;
 
 &lt;p&gt;I posted this on &lt;a href=&#34;http://vimgolf.com/challenges/511991607729fb0002000003&#34;&gt;vimgolf&lt;/a&gt; so let’s see how other people solved the same refactoring!&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Love Affair with Vim</title>
-      <link>http://bling.github.io/blog/2013/02/10/love-affair-with-vim/</link>
-      <pubDate>Sun, 10 Feb 2013 00:00:00 +0000</pubDate>
-      
-      <guid>http://bling.github.io/blog/2013/02/10/love-affair-with-vim/</guid>
-      <description>
-
-&lt;p&gt;It wasn&amp;rsquo;t too long ago when I was a full-time C# developer and my environment was Visual Studio eight hours a day.  Then, I became a web developer over night cold turkey writing Javascript and CSS.  It&amp;rsquo;s one of the benefits of working for a consulting company.&lt;/p&gt;
-
-&lt;p&gt;You might think what does that have to do with the title of this post?  Well, originally my plan was to write a blog post contrasting on the differences between Javascript and C#, as well as the development environments and deployment platforms.  But really, what I really wanted to write about was Vim.&lt;/p&gt;
-
-&lt;p&gt;Moving from Visual Studio to Vim was a progression through different editors and environments.  The first thing I used to write Javascript was Webstorm.  Over time I realized that you didn&amp;rsquo;t really need an IDE to write Javascript/CSS.  Then, I used Sublime Text for a little bit.  But ultimately, I settled on Vim, and stayed there.&lt;/p&gt;
-
-&lt;p&gt;My stubbornness turned out to be beneficial when I was learning Vim because the first month was absolutely painful.  I remapped all of my arrows keys to do nothing to force myself to use hjkl.  Eventually I got the hang of it, and now I definitely have the muscle memory that makes me much more productive when editing (and reading) text.&lt;/p&gt;
-
-&lt;p&gt;By default Vim is just a text editor.  But I work on a project, so like most lazy people I searched for prepackaged plugins and came across two popular distributions: &lt;a href=&#34;https://github.com/spf13/spf13-vim&#34;&gt;spf13&lt;/a&gt; and &lt;a href=&#34;https://github.com/carlhuda/janus&#34;&gt;janus&lt;/a&gt;.  When I installed them, it was like someone took over Vim and made it change into a completely different beast.  I didn&amp;rsquo;t know how to use it anymore.&lt;/p&gt;
-
-&lt;p&gt;I took a step back.  I forgot where I got this advice, but I think anyone using Vim needs to do this: &lt;em&gt;start your own vimrc from scratch&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;I took a look at all the settings that spf13 and janus changed.  I copied them to my vimrc &lt;em&gt;one by one&lt;/em&gt;, and also &lt;code&gt;:help&lt;/code&gt;ing each setting so that I knew exactly what it changed.  I must say, Vim&amp;rsquo;s documentation is some of the best and most comprehensive of any tool I&amp;rsquo;ve worked with.  It was incredibly helpful in my progression.&lt;/p&gt;
-
-&lt;p&gt;Then, I did the same thing for plugins.  And the nice thing was that most plugins followed the Vim pattern of having good documentation.  After installing &lt;code&gt;fooplugin&lt;/code&gt;, I just &lt;code&gt;:help fooplugin&lt;/code&gt; and I got all the information I needed to know about the plugin.&lt;/p&gt;
-
-&lt;p&gt;I became obsessed with optimizing my vimrc, and trying out different plugins on a daily basis.  And because I was very adamant with trying one plugin at a time, I got to know them very well.  I knew about how to turn certain settings on and off, how to configure their bindings, and more importantly, how it interacted with all of the other plugins I have already installed.  Over time my vimrc became a full blown distribution in its own right, highly customized to my personal work habits.&lt;/p&gt;
-
-&lt;p&gt;However, even though I recommend that anyone interested in taking their Vim skills to the next level should do this discovery that I have done, there are certainly classes of plugins that I deem to be &lt;em&gt;must-have&lt;/em&gt; for any Vim user and I wanted to highlight them here.&lt;/p&gt;
-
-&lt;h1 id=&#34;plugin-management:26b9b2fce97a525eeef6748f8d84a375&#34;&gt;Plugin Management&lt;/h1&gt;
-
-&lt;p&gt;First things first you will need one plugin to rule them all!  &lt;a href=&#34;https://github.com/tpope/vim-pathogen&#34;&gt;Pathogen&lt;/a&gt; changed the way people install plugins by utilizing git submodules.  This has the pros and cons of git submodules, i.e. they track a specific version of the external git repository, so if external plugins are updated frequently you have to manually update all your submodules.&lt;/p&gt;
-
-&lt;p&gt;However, more often than not, you just want the latest version.  &lt;a href=&#34;https://github.com/gmarik/vundle&#34;&gt;Vundle&lt;/a&gt; takes the management one step further and will automatically grab source code from Github for you (as well as automatically updating everything to the latest version).&lt;/p&gt;
-
-&lt;p&gt;The last one and least known is &lt;a href=&#34;https://github.com/Shougo/neobundle.vim&#34;&gt;NeoBundle&lt;/a&gt;, which is like Vundle on steroids.  It adds a whole ton of new features like allowing you to specify installation steps for compiling something.&lt;/p&gt;
-
-&lt;h1 id=&#34;fuzzy-file-searching:26b9b2fce97a525eeef6748f8d84a375&#34;&gt;Fuzzy File Searching&lt;/h1&gt;
-
-&lt;p&gt;This was the major game changer for me and changed the way I worked.  Naturally, proper Vim technique forces your hands to be on the home row, which makes reaching for the mouse (or even the arrow keys) to be inefficient.  Therefore, the fastest way to open a file is usually to type its name.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/wincent/Command-T&#34;&gt;CommandT&lt;/a&gt; (written in Ruby) is noticeably much faster than &lt;a href=&#34;https://github.com/kien/ctrlp.vim&#34;&gt;CtrlP&lt;/a&gt; (pure VimScript), but CtrlP has a lot more features.  There&amp;rsquo;s also &lt;a href=&#34;http://www.vim.org/scripts/script.php?script_id=1984&#34;&gt;FuzzyFinder&lt;/a&gt;, which I have not tried.&lt;/p&gt;
-
-&lt;h1 id=&#34;autocomplete-and-snippets:26b9b2fce97a525eeef6748f8d84a375&#34;&gt;Autocomplete and Snippets&lt;/h1&gt;
-
-&lt;p&gt;There are various contenders here.  Generally, you&amp;rsquo;ll find that people fall into two camps.&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/garbas/vim-snipmate&#34;&gt;Snipmate&lt;/a&gt;/&lt;a href=&#34;https://github.com/SirVer/ultisnips&#34;&gt;UltiSnips&lt;/a&gt; + &lt;a href=&#34;https://github.com/ervandew/supertab&#34;&gt;SuperTab&lt;/a&gt; + &lt;a href=&#34;http://www.vim.org/scripts/script.php?script_id=1879&#34;&gt;AutoComplPop&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/Shougo/neocomplcache&#34;&gt;neocomplcache&lt;/a&gt; + &lt;a href=&#34;https://github.com/Shougo/neosnippet&#34;&gt;neosnippet&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Snipmate is an older implementation of snippets which is getting replaced with UltiSnips.  Supertab gives you an easy way to trigger omnicompletion with (you guessed it) tab, and AutoComplPop is for automatically showing the popup as you type.&lt;/p&gt;
-
-&lt;p&gt;Neocomplcache is a very powerful completion plugin.  It runs a little slower than SuperTab because it does a lot more, but I find the performance acceptable so that&amp;rsquo;s what I&amp;rsquo;m using.  And I choose neosnippet over the others simply because it&amp;rsquo;s by the same author and thus has better integration (e.g. available snippets will appear in the list).&lt;/p&gt;
-
-&lt;p&gt;And of course, a good collection of snippets like &lt;a href=&#34;https://github.com/honza/vim-snippets&#34;&gt;honza&lt;/a&gt;&amp;rsquo;s collection.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;edit&lt;/em&gt;: Since I last posted this another autocomplete plugin has taken the Vim world by storm.  It is none other than &lt;a href=&#34;https://github.com/Valloric/YouCompleteMe&#34;&gt;YouCompleteMe&lt;/a&gt;.  This is a fantastic plugin which shows a lot of promise.  It does not have as many features as neocomplcache yet, but it is improving every day and has a large community gathering around it.  Things can only get better!&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;edit 2&lt;/em&gt;: &lt;a href=&#34;https://github.com/Shougo/neocomplete.vim&#34;&gt;neocomplete&lt;/a&gt; is the next generation version of neocomplcache, and despite being in its infancy is showing great progress and has most (if not all) of the features of neocomplcache.  It requires you to recompile vim with lua support, but has the added benefit that it is way faster than before, and unlike YouCompleteMe (which officially does not support Windows), it works very well on Windows as well.&lt;/p&gt;
-
-&lt;h1 id=&#34;and-that-s-it:26b9b2fce97a525eeef6748f8d84a375&#34;&gt;And that&amp;rsquo;s it!&lt;/h1&gt;
-
-&lt;p&gt;What?!  No file browser?  No buffer manager?  Yes, I have all of those installed as well.  In fact, I have over 50 plugins installed in total.  But in my opinion, they are not &lt;em&gt;killer&lt;/em&gt; features.  I can live without them.  But if I didn&amp;rsquo;t have fuzzy searching or completion/snippets, I would feel a little too naked.&lt;/p&gt;
-
-&lt;p&gt;Out of the box Vim has some interesting defaults, mainly for backwards compatibility with Vi, but I think it&amp;rsquo;s safe to say that anyone who uses Vim seriously will have a custom vimrc.  If you&amp;rsquo;re just starting out and don&amp;rsquo;t know what to change, &lt;a href=&#34;https://github.com/tpope/vim-sensible&#34;&gt;sensible&lt;/a&gt; is a good set of defaults.&lt;/p&gt;
-
-&lt;p&gt;Vim has changed my work habits dramatically.  I think and dream Vim.  I install Vim plugins in my browsers.  And every day, she still teaches me new tricks.  It&amp;rsquo;s quite exhilarating!&lt;/p&gt;
-
-&lt;p&gt;If you&amp;rsquo;ve read until this point you might be interested in the full set of plugins that I&amp;rsquo;m using.  If so, head over to my &lt;a href=&#34;http://bling.github.com/dotvim/&#34;&gt;vim distribution project&lt;/a&gt;!&lt;/p&gt;
 </description>
     </item>
     

@@ -63,48 +63,48 @@
 
           <hr />
 
-          <li class="sidebar-categories">
+          <li class="sidebar-tags">
             <div>
-              <span>Categories</span>
+              <span>Tags</span>
               <a href="/post" style="float:right">show all</a>
             </div>
             <div>
               
-              <a href="/categories/blend">blend</a>
+              <a href="/tags/blend">blend</a>
               
-              <a href="/categories/castle">castle</a>
+              <a href="/tags/castle">castle</a>
               
-              <a href="/categories/castle-coding">castle-coding</a>
+              <a href="/tags/coding">coding</a>
               
-              <a href="/categories/coding">coding</a>
+              <a href="/tags/cqrs">cqrs</a>
               
-              <a href="/categories/cqrs">cqrs</a>
+              <a href="/tags/emacs">emacs</a>
               
-              <a href="/categories/emacs">emacs</a>
+              <a href="/tags/forex">forex</a>
               
-              <a href="/categories/forex">forex</a>
+              <a href="/tags/ioc">ioc</a>
               
-              <a href="/categories/ioc">ioc</a>
+              <a href="/tags/javascript">javascript</a>
               
-              <a href="/categories/javascript">javascript</a>
+              <a href="/tags/logging">logging</a>
               
-              <a href="/categories/logging">logging</a>
+              <a href="/tags/powershell">powershell</a>
               
-              <a href="/categories/powershell">powershell</a>
+              <a href="/tags/rx">rx</a>
               
-              <a href="/categories/rx">rx</a>
+              <a href="/tags/scm">scm</a>
               
-              <a href="/categories/software-tools">software-tools</a>
+              <a href="/tags/software-tools">software-tools</a>
               
-              <a href="/categories/source-control-management">source-control-management</a>
+              <a href="/tags/source-control-management">source-control-management</a>
               
-              <a href="/categories/testing">testing</a>
+              <a href="/tags/testing">testing</a>
               
-              <a href="/categories/twitter">twitter</a>
+              <a href="/tags/twitter">twitter</a>
               
-              <a href="/categories/vim">vim</a>
+              <a href="/tags/vim">vim</a>
               
-              <a href="/categories/visual-studio">visual-studio</a>
+              <a href="/tags/visual-studio">visual-studio</a>
               
             </div>
           </li>
@@ -121,12 +121,32 @@
 
 <div class="article">
   <div class="article-title">
+    <a href="http://bling.github.io/blog/2009/08/20/session-management-with-nhibernate-and-autofac-1/">Session management with NHibernate and Autofac</a>
+  </div>
+  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-08-20</small></p> <hr/>
+  <div class="post">
+    NHibernate is a beast let me tell you! I think I already mentioned this in the previous post, but NHibernate definitely has a VERY high learning curve. If it wasn't for FluentNHibernate I'd probably still be struggling with XML mapping files right now. But anywho, it didn't take long for me to run into very many problems with NHibernate. It's not really NHibernate's fault, but more of maybe I'm trying to use the wrong tool for the job.
+
+    
+    <a class="read-more" href="http://bling.github.io/blog/2009/08/20/session-management-with-nhibernate-and-autofac-1/">
+      <span>Read on...</span>
+    </a>
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
     <a href="http://bling.github.io/blog/2009/08/18/goodbye-db4o-hello-orm/">Goodbye db4o, Hello ORM</a>
   </div>
   <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-08-18</small></p> <hr/>
   <div class="post">
-    It&rsquo;s unfortunate that I have to remove db4o from my project, but I can&rsquo;t say this was unexpected. The CTO finally came to me today to voice his concerns on using an object database rather than a relational database. As typical of many organizations, we have a database team dedicated to maintaining the integrity and performance of our main product. We are also stored procedure happy and every write and read operation goes through a stored procedure&hellip;.so you can say I was pretty gutsy to even consider using an object database ;-) It was fun nonetheless&hellip; Sooooo&hellip;.which ORM to use? I&rsquo;ve already read of all the things about the Entity Framework already, so I didn&rsquo;t even bother considering it. Choices came down to just a few: - Castle.ActiveRecord - Fluent NHibernate - SubSonic I&rsquo;ve initially started with Fluent NHibernate. The main reason is because it&rsquo;s got really good documentation for beginners like me who&rsquo;ve never used NHibernate, and has more configuration options via code. Even so, it didn&rsquo;t take long for me to run into gazillions of mapping errors though :-[ I&rsquo;m still undecided whether I prefer ClassMap&lt;&gt; or ActiveRecord attributes though&hellip; I started porting all my repositories to using NHibernate, and for the most part it wasn&rsquo;t too bad. I&rsquo;ve learned some things along the way like lazy loading and cascading, but the conclusion is having Fluent NHibernate with pretty code completion isn&rsquo;t going to prevent the need to actually learn NHibernate the old-fashioned way, although it definitely got me up and running a lot faster. I&rsquo;ll probably write up a quick repository implementation with SubSonic as well as part of my prototype to see which I like. SubSonic definitely looks more &lsquo;hip&rsquo; with it&rsquo;s very flashy and web 2.0ey looking website :)
+    It&rsquo;s unfortunate that I have to remove db4o from my project, but I can&rsquo;t say this was unexpected. The CTO finally came to me today to voice his concerns on using an object database rather than a relational database. As typical of many organizations, we have a database team dedicated to maintaining the integrity and performance of our main product. We are also stored procedure happy and every write and read operation goes through a stored procedure&hellip;.so you can say I was pretty gutsy to even consider using an object database ;-) It was fun nonetheless&hellip; Sooooo&hellip;.which ORM to use?
 
+    
+    <a class="read-more" href="http://bling.github.io/blog/2009/08/18/goodbye-db4o-hello-orm/">
+      <span>Read on...</span>
+    </a>
     
   </div>
 </div>
@@ -137,8 +157,12 @@
   </div>
   <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-08-15</small></p> <hr/>
   <div class="post">
-    So my project has been chuggin along quite nicely, and gave my CTO a quick look over the design of my project of which he was very impressed...I'm glad I spent all that time reading up on DDD, BDD, TDD, and listening to all the ALT.NET podcasts. I've learned SOOOOO much in the past month it is ridiculous, mostly thanks to coming across ALT.NET, and then reading everything linked from that source. I can honestly say I'm 100% sold on the TDD approach. Initially, after reading about it I was like, hmmm, yeah, I can see that working, but writing tests first kinda seems dumb and redundant. After all, obviously you know the tests will pass because you wrote them!! Then...I saw the light!!! I'm currently prototyping my project, but since I live in the real world I can reasonably assume the prototype will become the real thing. But that's not really an issue having designed everything with DDD and DI. Once the prototype is done, we can optionally replace the implementation, change the IoC wiring up, and voila, it just works (because we had all those tests written). Another design choice for the prototype I made was to use DB4O rather than SQL Server. DDD emphasizes very much on storing aggregate roots in repositories, and let's be honest, object databases work ridiculously well with storing domain entities. So not only can I speed up development in my prototype by having all repositories go to a DB4O backing store, if it's decided we need to change to a relational database, boom, I just need to reimplement all my repositories with NHibernate. And just to drive home how easy DB4O is, literally, this is what you need to do to store a User in the database. using (IObjectContainer c = Db4oFactory.OpenFile("database.db")) { c.Store(user); } Seriously!!! It IS that easy! But back to why I'm sold on TDD. Originally, I had IUsersRepository modeled something like this: User GetUserByName(string userName); User GetUserById(Guid id); User GetUserByFirstName(string firstName); And then I realized, it's a total pain in the butt to be adding all these methods because once the method call reaches the DB4O container, I need to pass in a predicate for the query. So I thought, I'll just pass the predicate directly to DB4O. I changed all my repositories (I had 4 at the time), to do this instead: User GetUser(Predicate&lt;User&gt; condition); So now I can simply do this: var user = usersRepository.GetUser(x = x.UserName == userName); I've converted 3 methods (and potentially more) into a single method that is very expressive and easy to read (thank you lambdas!). And then I reran all my tests and they passed....which leads to the following conclusion: TDD lets you refactor with confidence! Oh wait, I mentioned Autofac and Lokad.Shared libs in this blog post didn't I.... To start...my project has removed all dependencies on the Enterprise Library. In my previous post I mentioned how Unity wasn't as mature as other frameworks. Well, it appears that the Logging Block and/or the Exception Handling Block has a dependency on Unity. I definitely did not like having 2 IoC containers in my bin directory, so I decided maybe I should just ditch the entire thing. Honestly, I didn't really like the EntLib anyways....the logging block requires the use of a static class Logger (tight coupling), and the exception block needs a try/catch/handle for any exception you want to handle, again with a static class ExceptionPolicy (more tight coupling!!!). So now it was a matter of finding a replacement. There really was only 2 choices: the Castle Stack, or Autofac+Lokad.Shared. I was not very impressed with the lack of documentation on the Castle Validator component (or even where to download a binary of it). Also, I'm really not a big fan of attributes on parameters. So what's left is Autofac and Lokad.Shared. I chose Autofac mainly because I love its lambda syntax (and the included performance benefit). But of more concern is Lokad.Shared. a) It is basically written by 1 guy b) It doesn't have community inertia But after reading the examples here and here I didn't have a choice! It is just too damn nice! Comparing code I'm writing today with code I wrote 3 months ago is like light and day....on different planets. And since I'm very link happy today, check out this awesome add-on called Studio Tools. It's free, only 1.9 megs and has the most impressive and blazing fast file/class/symbol search I've ever seen. Comments Codestructioner There&#39;s a few of us floating around who&#39;ve found, like, and use Lokad.Shard (and Lokad.ActionPolicy).
+    So my project has been chuggin along quite nicely, and gave my CTO a quick look over the design of my project of which he was very impressed...I'm glad I spent all that time reading up on DDD, BDD, TDD, and listening to all the ALT.NET podcasts. I've learned SOOOOO much in the past month it is ridiculous, mostly thanks to coming across ALT.NET, and then reading everything linked from that source.
 
+    
+    <a class="read-more" href="http://bling.github.io/blog/2009/08/15/ddd-tdd-enterprise-library-autofac-and-lokad/">
+      <span>Read on...</span>
+    </a>
     
   </div>
 </div>
@@ -149,8 +173,12 @@
   </div>
   <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-08-08</small></p> <hr/>
   <div class="post">
-    Life has sure been a roller coaster lately ever since I started working on my new project. I've learned a lot about WCF in the past week. There's really nothing that can teach you faster than trying something out yourself. I've joined the ranks of countless others who have had to deal with implementing service behaviors to handle WCF exceptions (because by default thrown exceptions fault the communication channel), realized that WCF proxy clients breaks the 'using' keyword because someone thought it was a good idea to throw exceptions in Dispose(), and even Unity's InterfaceInterceptor not supporting more than 1 interface! But now that we're talking about proxies, I've been thinking for a while about switching out Unity with a more mature IoC container like Windsor or StructureMap. There are little touches that other containers have that I miss in Unity. For example, auto-wiring. But then again, the integration that Unity has with the rest of the Enterprise Library is very nice, of which I'm using the Logging and Exception Policy blocks, so it made sense in a way that everything in my bin folder just had Microsoft.Practices.*.dll But now I'm seriously reconsidering. public interface ITestService { int Count { get; set; } void DoWork(); bool ShouldDoWork(); } public class TestService : ITestService { public int Count { get; set; } public void DoWork() { ++Count; } bool ShouldDoWork() { return true; } } public void HowDoTheyCompare() { var unity = (ITestService)new Microsoft.Practices.Unity.InterceptionExtension.InterfaceInterceptor() .CreateProxy(typeof(ITestService), new TestService()); var castle = new Castle.DynamicProxy.ProxyGenerator() .CreateInterfaceProxyWithTarget&lt;ITestService&gt;(new TestService()); Thread.Sleep(1000); Stopwatch sw = new Stopwatch(); sw.Start(); for (int i = 0; i Results? unity: 1787 castle: 136 From this test it looks like the Unity interception is 13x slower....but wait! I mentioned before that Unity has a bug where it can only proxy one interface....so to resolve that we would need to use the TransparentProxyInterceptor. Let's change it and test again... unity: 30462 castle: 142 Hmmmm....214x slower. I guess we can try the VirtualMethodInterceptor for completeness. After making all methods virtual, here's the results. unity: 3843 castle: 132 Still 29x slower. Whatever DynamicProxy is doing...it's orders of magnitude faster than what Unity's doing. Comments Krzysztof Koźmic (2) Not only that. Castle has integration with logging, validation framework, much more mature and powerful IoC container, and also nice proxy library.
+    Life has sure been a roller coaster lately ever since I started working on my new project. I've learned a lot about WCF in the past week. There's really nothing that can teach you faster than trying something out yourself. I've joined the ranks of countless others who have had to deal with implementing service behaviors to handle WCF exceptions (because by default thrown exceptions fault the communication channel), realized that WCF proxy clients breaks the 'using' keyword because someone thought it was a good idea to throw exceptions in Dispose(), and even Unity's InterfaceInterceptor not supporting more than 1 interface!
 
+    
+    <a class="read-more" href="http://bling.github.io/blog/2009/08/08/dynamic-proxies/">
+      <span>Read on...</span>
+    </a>
     
   </div>
 </div>
@@ -162,18 +190,6 @@
   <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-08-06</small></p> <hr/>
   <div class="post">
     It can&rsquo;t be that hard!!! I keep telling myself this. I&rsquo;m writing a WCF application right now and I&rsquo;ve been running into loads of problems trying to configure things. ABC right? Set my address, contract, and binding&hellip;.how hard can it be?? Why is a horrible ExecutionEngineException being thrown and taking down IIS with it??? http://connect.microsoft.com/wcf/feedback/ViewFeedback.aspx?FeedbackID=433569 Turns out you can&rsquo;t have an IList&lt;&gt; of DataContracts.
-
-    
-  </div>
-</div>
-
-<div class="article">
-  <div class="article-title">
-    <a href="http://bling.github.io/blog/2009/07/29/assimilated-by-altnet/">Assimilated by ALT.NET</a>
-  </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-07-29</small></p> <hr/>
-  <div class="post">
-    It feels good to be revitalized again! A couple months back I was very unhappy. I was at a job I didn&rsquo;t particularly like. The team I worked with was very rigid and used waterfall practices (even though it was a small 5 man team), and they were very resistant to change (I struggled to move them off SourceSafe, and failed). It was time to job ship and try something else, but then the market crash hit and suddenly having money to put food on the table became a priority. Life got boring and dull. I was writing C++ code (which didn&rsquo;t even use boost because it wasn&rsquo;t allowed), and .NET 2 code when 3.5 was out for 3 years already. I lost all drive to learn and grow, and after 8 hours of work I really didn&rsquo;t want to have anything to do with coding when I was home. Then my life changed&hellip; I found a new job, got hired, and it has been a HUGE turnaround. I haven&rsquo;t been there long (almost done my 3 month probation), but I&rsquo;m finding myself working at home simply because I love what I&rsquo;m doing. The difference? My new team actually wants to learn new things and continually improve. It is just under 3 months, and I have already helped my team implement branching conventions (rather than 2 week code freezes), unit testing conventions (rather than no conventions), and maintaining a CruiseControl.NET build server (rather than no build server). It sure makes a HUGE difference when what you&rsquo;re doing is valued by your coworkers. In my 2nd month I was sent to my first conference, DevTeach in Vancouver, and I&rsquo;d probably consider this the biggest trigger of change in my way of thinking. I was only away from the .NET community for about a year, but sitting in on the sessions with a panel of experts really drove home exactly how obsolete I already was. I&rsquo;ve heard of Test Driven Development. But what&rsquo;s this Behavior Driven Development all about? What&rsquo;s Domain Driven Development? What is Inversion of Control and why should I care? And then I came across ALT.NET. I first heard about it in James Kovacs&rsquo; Vancouver DevTeach session on IoC containers, who was telling everyone about a ALT.NET conference that weekend after the DevTeach conference. I had next to no knowledge about what ALT.NET was, so I skipped out on the conference because I had other obligations that weekend. I wish I knew more about ALT.NET earlier, because I would have rescheduled my obligation so I could attend the conference!! It didn&rsquo;t take long for me to be fully immersed in everything the ALT.NET community has to offer, and I was reading up on anything and everything I could. I practically had years of catchup to do. And then I was given my big break. A completely new project with absolutely no dependencies on anything else was assigned to me. It was going to be a massive n-tier project with web clients, windows clients, business logic, database, and anything else you could think of. I got the chance to design something big from scratch. So now I&rsquo;m reading everything I can about domain driven development and making sure I don&rsquo;t do the classic Gang of Four mistake of overdesigning after reading ;)
 
     
   </div>

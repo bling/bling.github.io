@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="generator" content="Hugo 0.16-DEV" />
     <link href="" rel="alternate" type="application/rss+xml" title="bling on software" />
-    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
     <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
     <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
@@ -72,6 +72,8 @@
               
               <a href="/tags/blend">blend</a>
               
+              <a href="/tags/blogging">blogging</a>
+              
               <a href="/tags/castle">castle</a>
               
               <a href="/tags/coding">coding</a>
@@ -96,8 +98,6 @@
               
               <a href="/tags/software-tools">software-tools</a>
               
-              <a href="/tags/source-control-management">source-control-management</a>
-              
               <a href="/tags/testing">testing</a>
               
               <a href="/tags/twitter">twitter</a>
@@ -109,6 +109,10 @@
             </div>
           </li>
         </ul>
+        <footer>
+          <p class="text-muted">&copy; bling on software 2016. All rights reserved. </p>
+        </footer>
+
       </div>
 
 
@@ -119,7 +123,19 @@
 
 <div class="article">
   <div class="article-title">Tools I Use To Do What I Do</div>
-  <p class="meta"><small>&nbsp;<i class="fa fa-calendar-o"></i> 2011-06-23</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2011-06-23</small>
+    <div class="article-tags">
+      
+      <a href="/tags/coding">coding</a>
+      
+      <a href="/tags/visual%20studio">visual studio</a>
+      
+      <a href="/tags/software%20tools">software tools</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     <div class='post'>
 <p>It’s been a while since I last blogged, but I want to get back into it….I just haven’t thought about what I wanna blog about yet.&nbsp; I’m thinking of doing some sort of multi-part series on a topic but haven’t decided on what yet.&nbsp; Nonetheless, just to get the ball rolling again here’s a quick blog post on some of the tools I use to do my every day job that’s in addition to your typical .NET developer tool chain.</p> <p><strong>General</strong></p> <p><a href="http://www.tcbmi.com/strokeit/">StrokeIt</a>:&nbsp; Funny name aside, on any clean install of Windows this is the <strong>first</strong> thing I install.&nbsp; I load up IE and I download this, followed by Chrome/Firefox.&nbsp; It is a mouse gesture program that affects all of Windows.&nbsp; By holding down the right mouse button, and making gestures you can do common tasks like minimize (drag SW), maximize (drag NE), close (draw a C), and others.&nbsp; It’s much faster than clicking the minimize/maximize buttons.&nbsp; For web browsing, creating and close tabs are drag SE and drag NW respectively.&nbsp; Back is W.&nbsp; Forward is E.&nbsp; Working this way is faster than any keyboard shortcut.</p> <p><a href="http://sourceforge.net/projects/console/">Console2</a>:&nbsp; It’s not a necessity, but it’s nice to be able to use a console with a better looking font.&nbsp; You can easily customize to run another shell, and in my case I have Powershell as the shell.</p> <p><a href="http://virtuawin.sourceforge.net/">VirtuaWin</a>:&nbsp; Ironically I don’t use any virtual desktops, but this app creates a nice middle click on any window that lets you mark it as ‘always on top’.</p> <p><a href="http://www.vim.org/">Vim</a>:&nbsp; It was an awful, painful 2 weeks to learn this thing but I’m sure glad I did.</p> <p><strong>Development/Visual Studio</strong></p> <p><a href="http://www.jetbrains.com/resharper/">Resharper</a>:&nbsp; This one doesn’t need much mentioning as anyone serious about programming in .NET has either heard of it, use it, or use one of its competitors like <a href="http://www.devexpress.com/Products/Visual_Studio_Add-in/Coding_Assistance/">CodeRush</a>.</p> <p><a href="http://visualstudiogallery.msdn.microsoft.com/465a0d53-5133-4edd-a0cd-94484fe3d853">AllMargins</a>:&nbsp; This hidden gem is an awesome extension has brings a bunch of very useful features to the editor.&nbsp; It brings structural highlighting, highlighting matching words under caret, and RockScroll inspired scroll bar, and it does it all with little to no cost in performance.</p> <p><a href="http://visualstudiogallery.msdn.microsoft.com/d0d33361-18e2-46c0-8ff2-4adea1e34fef/">Productivity Power Tools</a>:&nbsp; There’s only 2 that I use here: document tabs, and moving lines.&nbsp; All the rest are either eye candy, negligible enhancements, or just plain too slow to be any use in large solutions (solution navigator I’m looking at you!!).</p> <p><a href="http://visualstudiogallery.msdn.microsoft.com/1a67eee3-fdd1-4745-b290-09d649d07ee0">XAML Intellisense Presenter</a>:&nbsp; This is a must-have for anyone who works with XAML in VS regularly.&nbsp; Resharper 6 may soon make this obsolete, however…</p> <p><a href="http://wiki.sharpdevelop.net/ILSpy.ashx">ILSpy</a>/<a href="http://www.jetbrains.com/decompiler/">dotPeek</a>:&nbsp; Decompilers.&nbsp; ‘nuff said.</p> <p><a href="http://snoopwpf.codeplex.com/">Snoop</a>:&nbsp; Staple tool for WPF developers to inspect the visual/logical tree.&nbsp; There’s also <a href="http://wpfinspector.codeplex.com/">WPF Inspector</a> which has a much nicer UI, but unfortunately doesn’t perform as fast.</p> <p><strong>Profiling</strong></p> <p><a href="http://www.red-gate.com/products/dotnet-development/dotnet-developer-bundle/">ANTS</a>/<a href="http://www.jetbrains.com/profiler/">dotTrace</a>/<a href="http://www.yourkit.com/dotnet/download/">YourKit</a>/etc:&nbsp; I’ve used many performance/memory profilers, and those 3 are the ones I like the most.&nbsp; Unfortunately, they all do things the others don’t, and all these things are very useful, so you still end up needing to use all of them to fix the particular problem you’re working on.</p> <p><a href="http://msdn.microsoft.com/en-us/windows/hardware/gg463009">WinDbg</a>: It isn’t every day I use this, but I’m sure glad to know that such a thing exists and the amount of power it gives me.</p> <p><strong>Scripting</strong></p> <p><a href="http://powergui.org/index.jspa">PowerGUI</a>:&nbsp; Best tool I found for editing PowerShell.&nbsp; The intellisense is great and has all the things you were expect when debugging through scripts.</p> <p><strong>Miscellaneous</strong></p> <p><a href="http://www.baremetalsoft.com/baretail/">BareTail</a>:&nbsp; Amazing program which watches log files in real time and can highlight rows based on a search pattern.</p> <p><a href="http://technet.microsoft.com/en-us/scriptcenter/dd742419">PowerShell</a>/<a href="http://cygwin.org/">Cygwin</a>/<a href="http://www.mingw.org/wiki/MSYS">MSYS</a>:&nbsp; I used to be a Cygwin/MSYS user because back in the day I liked to install a different Linux distribution every week so I learned some basic Bash commands and that carried over to Windows.&nbsp; Since PowerShell now exists, we have a real shell in Windows, so I’ve switched over to learn it, since as a Windows developer it’s more applicable to the kind of work I do.</p> <p>&nbsp;</p> <p>And there’s more but that’s enough for now!</p>  </div>
@@ -156,34 +172,34 @@ Nice post! Gonna check out XAML Intellisense Presenter, All Margins, and PowerGU
    &nbsp;<li class="next"><a href="http://bling.github.io/blog/2011/05/20/taking-quick-look-at-net-decompilers/"> Taking a Quick Look at .NET Decompilers</a></li>
 </ul>
 
+
 <div id="disqus_thread"></div>
 <script type="text/javascript">
-    var disqus_shortname = 'blingdev';
-    var disqus_identifier = 'http:\/\/bling.github.io\/blog\/2011\/06\/23\/tools-i-use-to-do-what-i-do\/';
-    var disqus_title = 'Tools I Use To Do What I Do';
-    var disqus_url = 'http:\/\/bling.github.io\/blog\/2011\/06\/23\/tools-i-use-to-do-what-i-do\/';
+ if (window.location.hostname === 'localhost')
+   return;
 
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
+ var disqus_shortname = 'blingdev';
+ var disqus_identifier = 'http:\/\/bling.github.io\/blog\/2011\/06\/23\/tools-i-use-to-do-what-i-do\/';
+ var disqus_title = 'Tools I Use To Do What I Do';
+ var disqus_url = 'http:\/\/bling.github.io\/blog\/2011\/06\/23\/tools-i-use-to-do-what-i-do\/';
+
+ (function() {
+   var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+   dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+   (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+ })();
 </script>
 <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
 
 
+
+
     </div>
 
-    <footer>
-      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
-    </footer>
-
-    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.js"></script>
-    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
     
 <script>

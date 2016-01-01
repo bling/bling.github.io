@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="generator" content="Hugo 0.16-DEV" />
     <link href="" rel="alternate" type="application/rss+xml" title="bling on software" />
-    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
     <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
     <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
@@ -72,6 +72,8 @@
               
               <a href="/tags/blend">blend</a>
               
+              <a href="/tags/blogging">blogging</a>
+              
               <a href="/tags/castle">castle</a>
               
               <a href="/tags/coding">coding</a>
@@ -96,8 +98,6 @@
               
               <a href="/tags/software-tools">software-tools</a>
               
-              <a href="/tags/source-control-management">source-control-management</a>
-              
               <a href="/tags/testing">testing</a>
               
               <a href="/tags/twitter">twitter</a>
@@ -109,6 +109,10 @@
             </div>
           </li>
         </ul>
+        <footer>
+          <p class="text-muted">&copy; bling on software 2016. All rights reserved. </p>
+        </footer>
+
       </div>
 
 
@@ -119,7 +123,15 @@
 
 <div class="article">
   <div class="article-title">Introducing DependencyPropertyWeaver</div>
-  <p class="meta"><small>&nbsp;<i class="fa fa-calendar-o"></i> 2011-04-15</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2011-04-15</small>
+    <div class="article-tags">
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     <div class='post'>
 <p>As part of my demonstration for the NYC .NET Meetup in the next couple of days, I prepared some material to show how to use Mono.Cecil to manually weave IL as a post-build step.&nbsp; It solves the problem of what I call “WPF Verbosity Hell”: the thing that makes your eyes bleed and makes God kill a kitten every time you declare a new property.</p> <p>Since <a href="http://code.google.com/p/notifypropertyweaver/">notifypropertyweaver</a> already exists, I figured I’d release the other side of the coin, dependencypropertyweaver.&nbsp; I just pushed my changes onto <a href="https://github.com/bling/dependencypropertyweaver">GitHub</a>.</p> <p>There are a couple of reasons to use dependency properties rather than regular properties with INotifyPropertyChanged.&nbsp; If you’re using WPF they make more sense because they perform faster and they give you a lot of extra bells and whistles for free.&nbsp; However, the INPC route tends to be more popular because it doesn’t bring in the dependency of WPF.</p> <p>IL post-build weaving solves the dependency problem because you can selectively choose to weave only the assemblies that get deployed with WPF, and you could even weave INPC into your service layer, and DPs into your client layer.&nbsp; That’s the power of post-build processes.</p> <p>While this little project initially started out as a simple demonstration of using <a href="http://www.mono-project.com/Cecil">Mono.Cecil</a> to perform low-level aspect oriented principles, it didn’t take much more work to tidy things up and make it ‘releasable’ into the wild, so I did just that, and open sourced it.</p> <p>The concept is simple.&nbsp; You take something like this:</p><pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    <span style="color: #0000ff">public</span> <span style="color: #0000ff">class</span> Student
@@ -209,14 +221,8 @@ Awesome, I&#39;ve just started working on my first c# job after 10 years of Java
 
     </div>
 
-    <footer>
-      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
-    </footer>
-
-    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.js"></script>
-    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
     
 <script>

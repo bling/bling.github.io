@@ -15,32 +15,46 @@
       <pubDate>Sat, 11 Dec 2010 00:00:00 +0000</pubDate>
       
       <guid>http://bling.github.io/blog/2010/12/11/auto-mocking-nsubstitute-with-castle/</guid>
-      <description>&lt;div class=&#39;post&#39;&gt;
-&lt;p&gt;I was debating whether to make this blog post because it’s so damn simple to implement, but hey, if it saves someone else time, I did some good.&lt;/p&gt; &lt;p&gt;First of all, register an ILazyComponentLoader into Windsor:&lt;/p&gt;&lt;pre style=&#34;border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px&#34;&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;var c = &lt;span style=&#34;color: #0000ff&#34;&gt;new&lt;/span&gt; WindsorContainer();
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;c.Register(Component.For&amp;lt;LazyComponentAutoMocker&amp;gt;());&lt;/pre&gt;&lt;/pre&gt;
-&lt;p&gt;Then, the implementation of LazyComponentAutoMocker is simply this:&lt;/p&gt;&lt;pre style=&#34;border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px&#34;&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;&lt;span style=&#34;color: #0000ff&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color: #0000ff&#34;&gt;class&lt;/span&gt; LazyComponentAutoMocker : ILazyComponentLoader
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;{
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;  &lt;span style=&#34;color: #0000ff&#34;&gt;public&lt;/span&gt; IRegistration Load(&lt;span style=&#34;color: #0000ff&#34;&gt;string&lt;/span&gt; key, Type service, IDictionary arguments)
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;  {
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;    &lt;span style=&#34;color: #0000ff&#34;&gt;return&lt;/span&gt; Component.For(service).Instance(Substitute.For(&lt;span style=&#34;color: #0000ff&#34;&gt;new&lt;/span&gt;[] { service }, &lt;span style=&#34;color: #0000ff&#34;&gt;null&lt;/span&gt;));
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;  }
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;}&lt;/pre&gt;&lt;/pre&gt;
-&lt;p&gt;And you’re done!&amp;nbsp; Here’s a simple unit test example using &lt;strong&gt;only&lt;/strong&gt; the code from above:&lt;/p&gt;&lt;pre style=&#34;border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px&#34;&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;[Test]
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;&lt;span style=&#34;color: #0000ff&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color: #0000ff&#34;&gt;void&lt;/span&gt; IDictionary_Add_Invoked()
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;{
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;  var dict = c.Resolve&amp;lt;IDictionary&amp;gt;();
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;  dict.Add(1, 1);
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;  dict.Received().Add(1, 1);
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;}&lt;/pre&gt;&lt;/pre&gt;
-&lt;p&gt;That was almost too easy.&lt;/p&gt;  &lt;/div&gt;
-&lt;h2&gt;Comments&lt;/h2&gt;
+      <description>&lt;p&gt;I was debating whether to make this blog post because it’s so damn
+simple to implement, but hey, if it saves someone else time, I did some
+good.&lt;/p&gt;
+
+&lt;p&gt;First of all, register an ILazyComponentLoader into Windsor:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;WindsorContainer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Register&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Component&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;For&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;LazyComponentAutoMocker&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;());&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Then, the implementation of LazyComponentAutoMocker is simply this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;LazyComponentAutoMocker&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ILazyComponentLoader&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IRegistration&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Load&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Type&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;service&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IDictionary&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;arguments&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Component&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;For&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;service&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Instance&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Substitute&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;For&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;service&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;));&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;And you’re done!  Here’s a simple unit test example using &lt;strong&gt;only&lt;/strong&gt; the
+code from above:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;na&#34;&gt;[Test]&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;IDictionary_Add_Invoked&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;dict&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Resolve&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;IDictionary&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;();&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;dict&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Add&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;dict&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Received&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Add&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;That was almost too easy.&lt;/p&gt;
+
+&lt;p&gt;&lt;h2&gt;Comments&lt;/h2&gt;
 &lt;div class=&#39;comments&#39;&gt;
 &lt;div class=&#39;comment&#39;&gt;
 &lt;div class=&#39;author&#39;&gt;Randy&lt;/div&gt;
 &lt;div class=&#39;content&#39;&gt;
 For what it&amp;#39;s worth, I found this helpful. I&amp;#39;m new to Castle Windsor as well as NSubstitute. This post was able to get me going a lot quicker than sifting through documentation. Thanks.&lt;/div&gt;
 &lt;/div&gt;
-&lt;/div&gt;
+&lt;/div&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -505,75 +519,94 @@ actually, with the trunk version the limitation &amp;quot;one mixin per registra
       <pubDate>Sat, 08 Aug 2009 00:00:00 +0000</pubDate>
       
       <guid>http://bling.github.io/blog/2009/08/08/dynamic-proxies/</guid>
-      <description>Life has sure been a roller coaster lately ever since I started working on my new project.  I&#39;ve learned a lot about WCF in the past week.  There&#39;s really nothing that can teach you faster than trying something out yourself.
+      <description>
 
-I&#39;ve joined the ranks of countless others who have had to deal with implementing service behaviors to handle WCF exceptions (because by default thrown exceptions fault the communication channel), realized that WCF proxy clients breaks the &#39;using&#39; keyword because someone thought it was a good idea to throw exceptions in Dispose(), and even Unity&#39;s InterfaceInterceptor not &lt;a href=&#34;http://unity.codeplex.com/WorkItem/View.aspx?WorkItemId=3685&#34;&gt;supporting more than 1 interface&lt;/a&gt;!
+&lt;p&gt;Life has sure been a roller coaster lately ever since I started working on my new project. I&amp;rsquo;ve learned a lot about WCF in the past week. There&amp;rsquo;s really nothing that can teach you faster than trying something out yourself.&lt;/p&gt;
 
-But now that we&#39;re talking about proxies, I&#39;ve been thinking for a while about switching out Unity with a more mature IoC container like Windsor or StructureMap.  There are little touches that other containers have that I miss in Unity.  For example, auto-wiring.
+&lt;p&gt;I&amp;rsquo;ve joined the ranks of countless others who have had to deal with implementing service behaviors to handle WCF exceptions (because by default thrown exceptions fault the communication channel), realized that WCF proxy clients breaks the &amp;lsquo;using&amp;rsquo; keyword because someone thought it was a good idea to throw exceptions in Dispose(), and even Unity&amp;rsquo;s InterfaceInterceptor not &lt;a href=&#34;http://unity.codeplex.com/WorkItem/View.aspx?WorkItemId=3685&#34;&gt;supporting more than 1 interface&lt;/a&gt;!&lt;/p&gt;
 
-But then again, the integration that Unity has with the rest of the Enterprise Library is very nice, of which I&#39;m using the Logging and Exception Policy blocks, so it made sense in a way that everything in my bin folder just had Microsoft.Practices.*.dll
+&lt;p&gt;But now that we&amp;rsquo;re talking about proxies, I&amp;rsquo;ve been thinking for a while about switching out Unity with a more mature IoC container like Windsor or StructureMap. There are little touches that other containers have that I miss in Unity. For example, auto-wiring.&lt;/p&gt;
 
-But now I&#39;m seriously reconsidering.
-&lt;pre&gt;
-public interface ITestService {
-  int Count { get; set; }
-  void DoWork();
-  bool ShouldDoWork();
-}
-public class TestService : ITestService {
-  public int Count { get; set; }
-  public void DoWork() { ++Count; }
-  bool ShouldDoWork() { return true; }
-}
-public void HowDoTheyCompare() {
-  var unity = (ITestService)new Microsoft.Practices.Unity.InterceptionExtension.InterfaceInterceptor()
-                   .CreateProxy(typeof(ITestService), new TestService());
-  var castle = new Castle.DynamicProxy.ProxyGenerator()
-                   .CreateInterfaceProxyWithTarget&amp;lt;ITestService&amp;gt;(new TestService());
+&lt;p&gt;But then again, the integration that Unity has with the rest of the Enterprise Library is very nice, of which I&amp;rsquo;m using the Logging and Exception Policy blocks, so it made sense in a way that everything in my bin folder just had Microsoft.Practices.*.dll.&lt;/p&gt;
 
-  Thread.Sleep(1000);
+&lt;p&gt;But now I&amp;rsquo;m seriously reconsidering.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;interface&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ITestService&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Count&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;set&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+  &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;DoWork&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+  &lt;span class=&#34;kt&#34;&gt;bool&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;ShouldDoWork&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
 
-  Stopwatch sw = new Stopwatch();
-  sw.Start();
-  for (int i = 0; i &lt; 1000000; ++i) { if (unity.ShouldDoWork()) unity.DoWork(); }
-  sw.Stop();
-  Console.WriteLine(&#34;unity: &#34; + sw.ElapsedMilliseconds);
-  sw.Reset();
-  sw.Start();
-  for (int i = 0; i &lt; 1000000; ++i) { if (castle.ShouldDoWork()) castle.DoWork(); }
-  sw.Stop();
-  Console.WriteLine(&#34;castle: &#34; + sw.ElapsedMilliseconds);
-}
-&lt;/pre&gt;
-Results?
+&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;TestService&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ITestService&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Count&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;set&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+  &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;DoWork&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;++&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Count&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+  &lt;span class=&#34;kt&#34;&gt;bool&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;ShouldDoWork&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;HowDoTheyCompare&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;unity&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ITestService&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Microsoft&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Practices&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Unity&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;InterceptionExtension&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;InterfaceInterceptor&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+                   &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CreateProxy&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;typeof&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ITestService&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;TestService&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;());&lt;/span&gt;
+  &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;castle&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Castle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DynamicProxy&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ProxyGenerator&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+                   &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CreateInterfaceProxyWithTarget&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ITestService&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;TestService&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;());&lt;/span&gt;
+
+  &lt;span class=&#34;n&#34;&gt;Thread&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Sleep&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1000&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+
+  &lt;span class=&#34;n&#34;&gt;Stopwatch&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;sw&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Stopwatch&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+
+  &lt;span class=&#34;n&#34;&gt;sw&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Start&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+  &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;i&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;i&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1000000&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;++&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;i&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;unity&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ShouldDoWork&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;unity&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DoWork&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;sw&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Stop&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;Console&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;WriteLine&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;unity: &amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;sw&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ElapsedMilliseconds&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+
+  &lt;span class=&#34;n&#34;&gt;sw&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Reset&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;sw&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Start&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+  &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;i&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;i&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1000000&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;++&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;i&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;castle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ShouldDoWork&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;castle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DoWork&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;sw&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Stop&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;Console&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;WriteLine&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;castle: &amp;quot;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;sw&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ElapsedMilliseconds&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Results?
+&lt;br&gt;
 unity: 1787
-castle: 136
+castle: 136&lt;/p&gt;
 
-From this test it looks like the Unity interception is 13x slower....but wait!  I mentioned before that Unity has a bug where it can only proxy one interface....so to resolve that we would need to use the TransparentProxyInterceptor.
+&lt;p&gt;From this test it looks like the Unity interception is 13x slower&amp;hellip;.but wait! I mentioned before that Unity has a bug where it can only proxy one interface&amp;hellip;.so to resolve that we would need to use the TransparentProxyInterceptor.&lt;/p&gt;
 
-Let&#39;s change it and test again...
-
+&lt;p&gt;Let&amp;rsquo;s change it and test again&amp;hellip;
+&lt;br&gt;
 unity: 30462
-castle: 142
+castle: 142&lt;/p&gt;
 
-Hmmmm....214x slower.
-
-I guess we can try the VirtualMethodInterceptor for completeness.  After making all methods virtual, here&#39;s the results.
-
+&lt;p&gt;Hmmmm&amp;hellip;.214x slower. I guess we can try the VirtualMethodInterceptor for completeness. After making all methods virtual, here&amp;rsquo;s the results.
+&lt;br&gt;
 unity: 3843
-castle: 132
+castle: 132&lt;/p&gt;
 
-Still 29x slower.
+&lt;p&gt;Still 29x slower. Whatever DynamicProxy is doing&amp;hellip;it&amp;rsquo;s orders of magnitude faster than what Unity&amp;rsquo;s doing.&lt;/p&gt;
 
-Whatever DynamicProxy is doing...it&#39;s orders of magnitude faster than what Unity&#39;s doing.&lt;/div&gt;
-&lt;h2&gt;Comments&lt;/h2&gt;
-&lt;div class=&#39;comments&#39;&gt;
-&lt;div class=&#39;comment&#39;&gt;
-&lt;div class=&#39;author&#39;&gt;Krzysztof Koźmic (2)&lt;/div&gt;
-&lt;div class=&#39;content&#39;&gt;
-Not only that. Castle has integration with logging, validation framework, much more mature and powerful IoC container, and also nice proxy library.&lt;/div&gt;
+&lt;h2 id=&#34;comments:909c8e253e5e7d59a7dd0c20344284cd&#34;&gt;Comments&lt;/h2&gt;
+
+&lt;div class=&#34;comments&#34;&gt;
+
+&lt;div class=&#34;comment&#34;&gt;
+
+&lt;div class=&#34;author&#34;&gt;
+
+Krzysztof Koźmic (2)
+
 &lt;/div&gt;
+
+&lt;div class=&#34;content&#34;&gt;
+
+Not only that. Castle has integration with logging, validation
+framework, much more mature and powerful IoC container, and also nice
+proxy library.
+
 &lt;/div&gt;
+
+&lt;p&gt;&lt;/div&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;/div&gt;&lt;/p&gt;
 </description>
     </item>
     

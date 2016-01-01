@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="generator" content="Hugo 0.16-DEV" />
     <link href="http://bling.github.io/index.xml" rel="alternate" type="application/rss+xml" title="bling on software" />
-    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
     <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
     <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
@@ -72,6 +72,8 @@
               
               <a href="/tags/blend">blend</a>
               
+              <a href="/tags/blogging">blogging</a>
+              
               <a href="/tags/castle">castle</a>
               
               <a href="/tags/coding">coding</a>
@@ -96,8 +98,6 @@
               
               <a href="/tags/software-tools">software-tools</a>
               
-              <a href="/tags/source-control-management">source-control-management</a>
-              
               <a href="/tags/testing">testing</a>
               
               <a href="/tags/twitter">twitter</a>
@@ -109,6 +109,10 @@
             </div>
           </li>
         </ul>
+        <footer>
+          <p class="text-muted">&copy; bling on software 2016. All rights reserved. </p>
+        </footer>
+
       </div>
 
 
@@ -123,7 +127,17 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2009/08/20/session-management-with-nhibernate-and-autofac-1/">Session management with NHibernate and Autofac</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-08-20</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2009-08-20</small>
+    <div class="article-tags">
+      
+      <a href="/tags/ioc">ioc</a>
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     NHibernate is a beast let me tell you! I think I already mentioned this in the previous post, but NHibernate definitely has a VERY high learning curve. If it wasn't for FluentNHibernate I'd probably still be struggling with XML mapping files right now. But anywho, it didn't take long for me to run into very many problems with NHibernate. It's not really NHibernate's fault, but more of maybe I'm trying to use the wrong tool for the job.
 
@@ -139,7 +153,15 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2009/08/18/goodbye-db4o-hello-orm/">Goodbye db4o, Hello ORM</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-08-18</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2009-08-18</small>
+    <div class="article-tags">
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     It&rsquo;s unfortunate that I have to remove db4o from my project, but I can&rsquo;t say this was unexpected. The CTO finally came to me today to voice his concerns on using an object database rather than a relational database. As typical of many organizations, we have a database team dedicated to maintaining the integrity and performance of our main product. We are also stored procedure happy and every write and read operation goes through a stored procedure&hellip;.so you can say I was pretty gutsy to even consider using an object database ;-) It was fun nonetheless&hellip; Sooooo&hellip;.which ORM to use?
 
@@ -155,7 +177,15 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2009/08/15/ddd-tdd-enterprise-library-autofac-and-lokad/">DDD, TDD, Enterprise Library, Autofac, and Lokad.Shared libs!</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-08-15</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2009-08-15</small>
+    <div class="article-tags">
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     So my project has been chuggin along quite nicely, and gave my CTO a quick look over the design of my project of which he was very impressed...I'm glad I spent all that time reading up on DDD, BDD, TDD, and listening to all the ALT.NET podcasts. I've learned SOOOOO much in the past month it is ridiculous, mostly thanks to coming across ALT.NET, and then reading everything linked from that source.
 
@@ -171,9 +201,19 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2009/08/08/dynamic-proxies/">Dynamic proxies</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-08-08</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2009-08-08</small>
+    <div class="article-tags">
+      
+      <a href="/tags/castle">castle</a>
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
-    Life has sure been a roller coaster lately ever since I started working on my new project. I've learned a lot about WCF in the past week. There's really nothing that can teach you faster than trying something out yourself. I've joined the ranks of countless others who have had to deal with implementing service behaviors to handle WCF exceptions (because by default thrown exceptions fault the communication channel), realized that WCF proxy clients breaks the 'using' keyword because someone thought it was a good idea to throw exceptions in Dispose(), and even Unity's InterfaceInterceptor not supporting more than 1 interface!
+    Life has sure been a roller coaster lately ever since I started working on my new project. I&rsquo;ve learned a lot about WCF in the past week. There&rsquo;s really nothing that can teach you faster than trying something out yourself. I&rsquo;ve joined the ranks of countless others who have had to deal with implementing service behaviors to handle WCF exceptions (because by default thrown exceptions fault the communication channel), realized that WCF proxy clients breaks the &lsquo;using&rsquo; keyword because someone thought it was a good idea to throw exceptions in Dispose(), and even Unity&rsquo;s InterfaceInterceptor not supporting more than 1 interface!
 
     
     <a class="read-more" href="http://bling.github.io/blog/2009/08/08/dynamic-proxies/">
@@ -187,7 +227,15 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2009/08/06/who-woulda-thought-ilist-kills-wcf/">Who woulda thought, IList&lt;&gt; kills WCF</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-08-06</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2009-08-06</small>
+    <div class="article-tags">
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     It can&rsquo;t be that hard!!! I keep telling myself this. I&rsquo;m writing a WCF application right now and I&rsquo;ve been running into loads of problems trying to configure things. ABC right? Set my address, contract, and binding&hellip;.how hard can it be?? Why is a horrible ExecutionEngineException being thrown and taking down IIS with it??? http://connect.microsoft.com/wcf/feedback/ViewFeedback.aspx?FeedbackID=433569 Turns out you can&rsquo;t have an IList&lt;&gt; of DataContracts.
 
@@ -274,14 +322,8 @@
 
     </div>
 
-    <footer>
-      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
-    </footer>
-
-    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.js"></script>
-    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
     
 <script>

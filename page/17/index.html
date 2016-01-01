@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="generator" content="Hugo 0.16-DEV" />
     <link href="http://bling.github.io/index.xml" rel="alternate" type="application/rss+xml" title="bling on software" />
-    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
     <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
     <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
@@ -72,6 +72,8 @@
               
               <a href="/tags/blend">blend</a>
               
+              <a href="/tags/blogging">blogging</a>
+              
               <a href="/tags/castle">castle</a>
               
               <a href="/tags/coding">coding</a>
@@ -96,8 +98,6 @@
               
               <a href="/tags/software-tools">software-tools</a>
               
-              <a href="/tags/source-control-management">source-control-management</a>
-              
               <a href="/tags/testing">testing</a>
               
               <a href="/tags/twitter">twitter</a>
@@ -109,6 +109,10 @@
             </div>
           </li>
         </ul>
+        <footer>
+          <p class="text-muted">&copy; bling on software 2016. All rights reserved. </p>
+        </footer>
+
       </div>
 
 
@@ -123,7 +127,15 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2008/09/30/sweeeeet-commenting-tip/">A sweeeeet commenting tip</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2008-09-30</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2008-09-30</small>
+    <div class="article-tags">
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     No no no&hellip;this isn&rsquo;t another typical post splurging about how you should comment your code, just another sweet tip I got from a good friend of mine. If you&rsquo;ve been coding for a while you&rsquo;ll run into a time where you have 2 sections of code that you need to edit. However, you can only have 1 section commented, and the 2nd section uncommented, or vice versa. Even with the built-in keyboard shortcuts (Ctrl+K, Ctrl+C) and (Ctrl+K, Ctrl+U), it&rsquo;s still a pain in the behind.
 
@@ -139,7 +151,13 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2008/09/20/unfortunately-too-well-hidden-tool/">An Unfortunately Too Well Hidden Tool</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2008-09-20</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2008-09-20</small>
+    <div class="article-tags">
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     Alright, maybe it&rsquo;s not THAT well hidden, but it&rsquo;s well hidden enough that most developers don&rsquo;t even know it exists, yet I find it to be probably one of the top 3 tools of Visual Studio that I find most useful. What is it? Break into debugger at any uncaught exception. Yep! There&rsquo;s actually a feature that can do that! You don&rsquo;t have to pull your hair out trying to figure out what exception is causing your program to mess up or when it gets swallowed.
 
@@ -155,7 +173,15 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2008/09/17/infamous-idisposable-pattern/">The Infamous IDisposable Pattern</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2008-09-17</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2008-09-17</small>
+    <div class="article-tags">
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     At one point or another, any .NET developer should come across the concept of implementing the IDisposable pattern. For more detail, visit this excellent article at http://www.codeproject.com/KB/cs/idisposable.aspx. One of the most common errors of programmers with a C++ background is that they define the Finalize() method with ~() syntax. This is almost always wrong. Just like you should never call GC.Collect(), you should not define a finalizer most of the time.
 
@@ -171,7 +197,15 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2008/09/11/gccollect-is-bad-for-you/">GC.Collect Is Bad For You</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2008-09-11</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2008-09-11</small>
+    <div class="article-tags">
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     Sometimes I wish Microsoft didn&rsquo;t include this method in the API because it promotes bad programming. I&rsquo;ve seen people use this in their code and 99.99% of the time, it is incorrect to do so. I came across a program which had many try/catch/finally blocks which had GC.Collect() in the finally block. C# has a garbage collector so you, the programmer, does not have to worry about cleaning up memory. In fact, it&rsquo;s optimized in such a way that it only collects memory when it needs to.
 
@@ -187,7 +221,13 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2008/09/11/importance-of-color-schemes/">The Importance of Color Schemes</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2008-09-11</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2008-09-11</small>
+    <div class="article-tags">
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     It is surprising to me how few people use custom color schemes and just stick with the IDE defaults. I&rsquo;m not saying that the ones shipped with Visual Studio are bad, quite the contrary. They are good, but it can be better. Since VS2005, we&rsquo;ve been given the option of having different colors for classes, value types, delegates, enumerations, and interfaces. I consider this to be one of the single most useful features in the IDE.
 
@@ -278,14 +318,8 @@
 
     </div>
 
-    <footer>
-      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
-    </footer>
-
-    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.js"></script>
-    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
     
 <script>

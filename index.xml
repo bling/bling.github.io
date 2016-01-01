@@ -33,7 +33,7 @@
 
 &lt;p&gt;Luckily, you can define a &lt;code&gt;slug&lt;/code&gt; parameter in the front matter which can override this.  Suffice to say, I had to do this for a lot of posts.&lt;/p&gt;
 
-&lt;p&gt;In most migrations you don&amp;rsquo;t have to worry about keeping the same URLs, but in my case I needed them to be the same because that&amp;rsquo;s how &lt;a href=&#34;http://www.disqus.com&#34;&gt;Disqus&lt;/a&gt; track discussions, and I wanted all the existing conversations to remain intact.&lt;/p&gt;
+&lt;p&gt;In most migrations you don&amp;rsquo;t have to worry about keeping the same URLs, but in my case I needed them to be the same because that&amp;rsquo;s how &lt;a href=&#34;http://www.disqus.com&#34;&gt;Disqus&lt;/a&gt; tracks discussions, and I wanted all the existing conversations to remain intact.&lt;/p&gt;
 
 &lt;h1 id=&#34;code-fences:23dc397a3b9966843174ca31c40b0ee7&#34;&gt;Code fences&lt;/h1&gt;
 
@@ -55,7 +55,7 @@ alert(&#39;Hello World&#39;!);
 
 &lt;h1 id=&#34;and-the-rest:23dc397a3b9966843174ca31c40b0ee7&#34;&gt;And the rest&lt;/h1&gt;
 
-&lt;p&gt;Once all the heavily lifting was done, now it was a matter of picking a theme and modifying it to my liking.  I ended up modifying &lt;a href=&#34;https://github.com/bling/herring-cove&#34;&gt;herring cove&lt;/a&gt;.  I really liked how Hugo separates the content from the theme, making it relatively easy to switch back and forth.&lt;/p&gt;
+&lt;p&gt;Once all the heavily lifting was done, now it was a matter of picking a theme and modifying it to my liking.  I ended up using &lt;a href=&#34;https://github.com/bling/herring-cove&#34;&gt;herring cove&lt;/a&gt;.  I really liked how Hugo separates the content from the theme, making it relatively easy to switch back and forth.&lt;/p&gt;
 
 &lt;h1 id=&#34;and-the-benefits:23dc397a3b9966843174ca31c40b0ee7&#34;&gt;And the benefits?&lt;/h1&gt;
 
@@ -65,10 +65,10 @@ alert(&#39;Hello World&#39;!);
     
     <item>
       <title>About Me</title>
-      <link>http://bling.github.io/about/</link>
+      <link>http://bling.github.io/about</link>
       <pubDate>Thu, 31 Dec 2015 14:34:07 -0500</pubDate>
       
-      <guid>http://bling.github.io/about/</guid>
+      <guid>http://bling.github.io/about</guid>
       <description>&lt;p&gt;You want to know a little more about me?&lt;/p&gt;
 
 &lt;p&gt;My name is Bailey Ling, a.k.a bling, and I&amp;rsquo;ve been building software for almost a decade now.  I grew up in Canada and I&amp;rsquo;m currently working and residing in New York City.&lt;/p&gt;

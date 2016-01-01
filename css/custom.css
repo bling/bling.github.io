@@ -28,20 +28,20 @@ a.read-more span {
     border-bottom:1px dotted #8a8a8a;
 }
 
-.sidebar-nav {
-    padding-left:10px;
-    padding-right:10px;
-    position:relative;
-}
-
-.sidebar-nav img {
-    position:absolute;
-    top:-6px;
-    right:10px;
-}
-
 #social-wrapper {
     padding:0;
+}
+
+#sidebar-wrapper footer p {
+    font-size:12px;
+    position:absolute;
+    bottom:0;
+    left:0;
+    right:0;
+    margin:0;
+    text-align:center;
+    font-weight:100;
+    color:#5d5f67;
 }
 
 .sidebar-nav li,
@@ -62,6 +62,29 @@ a.read-more span {
     opacity:.6;
 }
 
+.article-tags {
+    float:right;
+}
+.article-tags a {
+    border:1px solid #aaa;
+    background:#eee;
+    border-radius:6px;
+    padding:3px;
+    padding-left:6px;
+    padding-right:6px;
+    font-size:14px;
+}
+
+.sidebar-nav {
+    padding-left:10px;
+    padding-right:10px;
+    position:relative;
+}
+.sidebar-nav img {
+    position:absolute;
+    top:-6px;
+    right:10px;
+}
 .sidebar-nav .sidebar-tags a {
     display:inline;
     color:#008cba;

@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="generator" content="Hugo 0.16-DEV" />
     <link href="" rel="alternate" type="application/rss+xml" title="bling on software" />
-    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
     <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
     <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
@@ -72,6 +72,8 @@
               
               <a href="/tags/blend">blend</a>
               
+              <a href="/tags/blogging">blogging</a>
+              
               <a href="/tags/castle">castle</a>
               
               <a href="/tags/coding">coding</a>
@@ -96,8 +98,6 @@
               
               <a href="/tags/software-tools">software-tools</a>
               
-              <a href="/tags/source-control-management">source-control-management</a>
-              
               <a href="/tags/testing">testing</a>
               
               <a href="/tags/twitter">twitter</a>
@@ -109,6 +109,10 @@
             </div>
           </li>
         </ul>
+        <footer>
+          <p class="text-muted">&copy; bling on software 2016. All rights reserved. </p>
+        </footer>
+
       </div>
 
 
@@ -119,77 +123,106 @@
 
 <div class="article">
   <div class="article-title">Dynamic proxies</div>
-  <p class="meta"><small>&nbsp;<i class="fa fa-calendar-o"></i> 2009-08-08</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2009-08-08</small>
+    <div class="article-tags">
+      
+      <a href="/tags/castle">castle</a>
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
-    Life has sure been a roller coaster lately ever since I started working on my new project.  I've learned a lot about WCF in the past week.  There's really nothing that can teach you faster than trying something out yourself.
+    
 
-I've joined the ranks of countless others who have had to deal with implementing service behaviors to handle WCF exceptions (because by default thrown exceptions fault the communication channel), realized that WCF proxy clients breaks the 'using' keyword because someone thought it was a good idea to throw exceptions in Dispose(), and even Unity's InterfaceInterceptor not <a href="http://unity.codeplex.com/WorkItem/View.aspx?WorkItemId=3685">supporting more than 1 interface</a>!
+<p>Life has sure been a roller coaster lately ever since I started working on my new project. I&rsquo;ve learned a lot about WCF in the past week. There&rsquo;s really nothing that can teach you faster than trying something out yourself.</p>
 
-But now that we're talking about proxies, I've been thinking for a while about switching out Unity with a more mature IoC container like Windsor or StructureMap.  There are little touches that other containers have that I miss in Unity.  For example, auto-wiring.
+<p>I&rsquo;ve joined the ranks of countless others who have had to deal with implementing service behaviors to handle WCF exceptions (because by default thrown exceptions fault the communication channel), realized that WCF proxy clients breaks the &lsquo;using&rsquo; keyword because someone thought it was a good idea to throw exceptions in Dispose(), and even Unity&rsquo;s InterfaceInterceptor not <a href="http://unity.codeplex.com/WorkItem/View.aspx?WorkItemId=3685">supporting more than 1 interface</a>!</p>
 
-But then again, the integration that Unity has with the rest of the Enterprise Library is very nice, of which I'm using the Logging and Exception Policy blocks, so it made sense in a way that everything in my bin folder just had Microsoft.Practices.*.dll
+<p>But now that we&rsquo;re talking about proxies, I&rsquo;ve been thinking for a while about switching out Unity with a more mature IoC container like Windsor or StructureMap. There are little touches that other containers have that I miss in Unity. For example, auto-wiring.</p>
 
-But now I'm seriously reconsidering.
-<pre>
-public interface ITestService {
-  int Count { get; set; }
-  void DoWork();
-  bool ShouldDoWork();
-}
-public class TestService : ITestService {
-  public int Count { get; set; }
-  public void DoWork() { ++Count; }
-  bool ShouldDoWork() { return true; }
-}
-public void HowDoTheyCompare() {
-  var unity = (ITestService)new Microsoft.Practices.Unity.InterceptionExtension.InterfaceInterceptor()
-                   .CreateProxy(typeof(ITestService), new TestService());
-  var castle = new Castle.DynamicProxy.ProxyGenerator()
-                   .CreateInterfaceProxyWithTarget&lt;ITestService&gt;(new TestService());
+<p>But then again, the integration that Unity has with the rest of the Enterprise Library is very nice, of which I&rsquo;m using the Logging and Exception Policy blocks, so it made sense in a way that everything in my bin folder just had Microsoft.Practices.*.dll.</p>
 
-  Thread.Sleep(1000);
+<p>But now I&rsquo;m seriously reconsidering.</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">interface</span> <span class="n">ITestService</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">Count</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">void</span> <span class="nf">DoWork</span><span class="p">();</span>
+  <span class="kt">bool</span> <span class="nf">ShouldDoWork</span><span class="p">();</span>
+<span class="p">}</span>
 
-  Stopwatch sw = new Stopwatch();
-  sw.Start();
-  for (int i = 0; i < 1000000; ++i) { if (unity.ShouldDoWork()) unity.DoWork(); }
-  sw.Stop();
-  Console.WriteLine("unity: " + sw.ElapsedMilliseconds);
-  sw.Reset();
-  sw.Start();
-  for (int i = 0; i < 1000000; ++i) { if (castle.ShouldDoWork()) castle.DoWork(); }
-  sw.Stop();
-  Console.WriteLine("castle: " + sw.ElapsedMilliseconds);
-}
-</pre>
-Results?
+<span class="k">public</span> <span class="k">class</span> <span class="nc">TestService</span> <span class="p">:</span> <span class="n">ITestService</span> <span class="p">{</span>
+  <span class="k">public</span> <span class="kt">int</span> <span class="n">Count</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">public</span> <span class="k">void</span> <span class="nf">DoWork</span><span class="p">()</span> <span class="p">{</span> <span class="p">++</span><span class="n">Count</span><span class="p">;</span> <span class="p">}</span>
+  <span class="kt">bool</span> <span class="nf">ShouldDoWork</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">true</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">void</span> <span class="nf">HowDoTheyCompare</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">var</span> <span class="n">unity</span> <span class="p">=</span> <span class="p">(</span><span class="n">ITestService</span><span class="p">)</span><span class="k">new</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">Practices</span><span class="p">.</span><span class="n">Unity</span><span class="p">.</span><span class="n">InterceptionExtension</span><span class="p">.</span><span class="n">InterfaceInterceptor</span><span class="p">()</span>
+                   <span class="p">.</span><span class="n">CreateProxy</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">ITestService</span><span class="p">),</span> <span class="k">new</span> <span class="n">TestService</span><span class="p">());</span>
+  <span class="kt">var</span> <span class="n">castle</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Castle</span><span class="p">.</span><span class="n">DynamicProxy</span><span class="p">.</span><span class="n">ProxyGenerator</span><span class="p">()</span>
+                   <span class="p">.</span><span class="n">CreateInterfaceProxyWithTarget</span><span class="p">&lt;</span><span class="n">ITestService</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">TestService</span><span class="p">());</span>
+
+  <span class="n">Thread</span><span class="p">.</span><span class="n">Sleep</span><span class="p">(</span><span class="m">1000</span><span class="p">);</span>
+
+  <span class="n">Stopwatch</span> <span class="n">sw</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Stopwatch</span><span class="p">();</span>
+
+  <span class="n">sw</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="m">1000000</span><span class="p">;</span> <span class="p">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">if</span> <span class="p">(</span><span class="n">unity</span><span class="p">.</span><span class="n">ShouldDoWork</span><span class="p">())</span> <span class="n">unity</span><span class="p">.</span><span class="n">DoWork</span><span class="p">();</span> <span class="p">}</span>
+  <span class="n">sw</span><span class="p">.</span><span class="n">Stop</span><span class="p">();</span>
+  <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;unity: &quot;</span> <span class="p">+</span> <span class="n">sw</span><span class="p">.</span><span class="n">ElapsedMilliseconds</span><span class="p">);</span>
+
+  <span class="n">sw</span><span class="p">.</span><span class="n">Reset</span><span class="p">();</span>
+  <span class="n">sw</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="m">1000000</span><span class="p">;</span> <span class="p">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">if</span> <span class="p">(</span><span class="n">castle</span><span class="p">.</span><span class="n">ShouldDoWork</span><span class="p">())</span> <span class="n">castle</span><span class="p">.</span><span class="n">DoWork</span><span class="p">();</span> <span class="p">}</span>
+  <span class="n">sw</span><span class="p">.</span><span class="n">Stop</span><span class="p">();</span>
+  <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;castle: &quot;</span> <span class="p">+</span> <span class="n">sw</span><span class="p">.</span><span class="n">ElapsedMilliseconds</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Results?
+<br>
 unity: 1787
-castle: 136
+castle: 136</p>
 
-From this test it looks like the Unity interception is 13x slower....but wait!  I mentioned before that Unity has a bug where it can only proxy one interface....so to resolve that we would need to use the TransparentProxyInterceptor.
+<p>From this test it looks like the Unity interception is 13x slower&hellip;.but wait! I mentioned before that Unity has a bug where it can only proxy one interface&hellip;.so to resolve that we would need to use the TransparentProxyInterceptor.</p>
 
-Let's change it and test again...
-
+<p>Let&rsquo;s change it and test again&hellip;
+<br>
 unity: 30462
-castle: 142
+castle: 142</p>
 
-Hmmmm....214x slower.
-
-I guess we can try the VirtualMethodInterceptor for completeness.  After making all methods virtual, here's the results.
-
+<p>Hmmmm&hellip;.214x slower. I guess we can try the VirtualMethodInterceptor for completeness. After making all methods virtual, here&rsquo;s the results.
+<br>
 unity: 3843
-castle: 132
+castle: 132</p>
 
-Still 29x slower.
+<p>Still 29x slower. Whatever DynamicProxy is doing&hellip;it&rsquo;s orders of magnitude faster than what Unity&rsquo;s doing.</p>
 
-Whatever DynamicProxy is doing...it's orders of magnitude faster than what Unity's doing.</div>
-<h2>Comments</h2>
-<div class='comments'>
-<div class='comment'>
-<div class='author'>Krzysztof Koźmic (2)</div>
-<div class='content'>
-Not only that. Castle has integration with logging, validation framework, much more mature and powerful IoC container, and also nice proxy library.</div>
+<h2 id="comments:909c8e253e5e7d59a7dd0c20344284cd">Comments</h2>
+
+<div class="comments">
+
+<div class="comment">
+
+<div class="author">
+
+Krzysztof Koźmic (2)
+
 </div>
+
+<div class="content">
+
+Not only that. Castle has integration with logging, validation
+framework, much more mature and powerful IoC container, and also nice
+proxy library.
+
 </div>
+
+<p></div></p>
+
+<p></div></p>
 
   </div>
 </div>
@@ -200,14 +233,8 @@ Not only that. Castle has integration with logging, validation framework, much m
 
     </div>
 
-    <footer>
-      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
-    </footer>
-
-    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.js"></script>
-    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
     
 <script>

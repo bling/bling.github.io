@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blogging on bling on software</title>
+    <link>http://bling.github.io/tags/blogging/</link>
+    <description>Recent content in Blogging on bling on software</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 31 Dec 2015 22:55:37 -0500</lastBuildDate>
+    <atom:link href="http://bling.github.io/tags/blogging/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Migrating from Jekyll/Octopress to Hugo</title>
+      <link>http://bling.github.io/blog/2015/12/31/migrating-from-jekyll-octopress-to-hugo/</link>
+      <pubDate>Thu, 31 Dec 2015 22:55:37 -0500</pubDate>
+      
+      <guid>http://bling.github.io/blog/2015/12/31/migrating-from-jekyll-octopress-to-hugo/</guid>
+      <description>
+
+&lt;p&gt;Migrating my blog from &lt;a href=&#34;https://github.com/octopress/octopress&#34;&gt;Octopress&lt;/a&gt; to &lt;a href=&#34;https://github.com/spf13/hugo&#34;&gt;Hugo&lt;/a&gt; has been on my TODO list for a very long time.  In fact, the only reason holding me back was lack of pagination support, but that has been implemented for a while now, so I finally got around to migrating my blog over.&lt;/p&gt;
+
+&lt;h1 id=&#34;getting-started:23dc397a3b9966843174ca31c40b0ee7&#34;&gt;Getting started&lt;/h1&gt;
+
+&lt;p&gt;Since this is an entirely new generator, it made sense to start from scratch.  So I created an empty site, copied all the markdown files over, and voila, new blog!  But of course, it wasn&amp;rsquo;t all smooth sailing, and I needed to resolve some issues.&lt;/p&gt;
+
+&lt;h1 id=&#34;permalinks:23dc397a3b9966843174ca31c40b0ee7&#34;&gt;Permalinks&lt;/h1&gt;
+
+&lt;p&gt;First problem was all the permalinks that Octopress generated did not match the default value for Hugo.  This was easily resolved with a &lt;code&gt;[permalinks]&lt;/code&gt; section in the &lt;code&gt;config.toml&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;title-title:23dc397a3b9966843174ca31c40b0ee7&#34;&gt;Title != title&lt;/h1&gt;
+
+&lt;p&gt;This was most troubling, and resulted in a lot of manual labor to fix.  The problem was that Octopress (or Jekyll), would generate a URL from the title, but would omit things like &amp;ldquo;the&amp;rdquo;, or &amp;ldquo;a&amp;rdquo;.  For example, the very first post of my blog is titled &lt;a href=&#34;http://bling.github.io/blog/2008/09/11/importance-of-color-schemes/&#34;&gt;The Importance of Color Schemes&lt;/a&gt;, but the URL is actually &lt;code&gt;/importance-of-color-schemes&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Luckily, you can define a &lt;code&gt;slug&lt;/code&gt; parameter in the front matter which can override this.  Suffice to say, I had to do this for a lot of posts.&lt;/p&gt;
+
+&lt;p&gt;In most migrations you don&amp;rsquo;t have to worry about keeping the same URLs, but in my case I needed them to be the same because that&amp;rsquo;s how &lt;a href=&#34;http://www.disqus.com&#34;&gt;Disqus&lt;/a&gt; tracks discussions, and I wanted all the existing conversations to remain intact.&lt;/p&gt;
+
+&lt;h1 id=&#34;code-fences:23dc397a3b9966843174ca31c40b0ee7&#34;&gt;Code fences&lt;/h1&gt;
+
+&lt;p&gt;Jekyll supports doing syntax highlighting with code fences, e.g.:&lt;/p&gt;
+
+&lt;pre&gt;
+``` javascript
+alert(&#39;Hello World&#39;!);
+```
+&lt;/pre&gt;
+
+&lt;p&gt;Support for this can be done via Pygments, with is off by default.  If you add &lt;code&gt;pygmentscodefences = true&lt;/code&gt; to your &lt;code&gt;config.toml&lt;/code&gt; then these sections will be parsed correctly.  You&amp;rsquo;ll also want to use &lt;code&gt;pygmentsuseclasses = true&lt;/code&gt; so that you can style it appropriately.&lt;/p&gt;
+
+&lt;h1 id=&#34;markdown-references:23dc397a3b9966843174ca31c40b0ee7&#34;&gt;Markdown references&lt;/h1&gt;
+
+&lt;p&gt;This last one was a bit of an annoyance because I needed to download the source of Hugo and make code modifications.  Specifically, this &lt;a href=&#34;https://github.com/spf13/hugo/pull/1667&#34;&gt;pull request&lt;/a&gt; was needed.&lt;/p&gt;
+
+&lt;p&gt;Long story short, if you use references for links, instead of inline, then summaries will not work.&lt;/p&gt;
+
+&lt;h1 id=&#34;and-the-rest:23dc397a3b9966843174ca31c40b0ee7&#34;&gt;And the rest&lt;/h1&gt;
+
+&lt;p&gt;Once all the heavily lifting was done, now it was a matter of picking a theme and modifying it to my liking.  I ended up using &lt;a href=&#34;https://github.com/bling/herring-cove&#34;&gt;herring cove&lt;/a&gt;.  I really liked how Hugo separates the content from the theme, making it relatively easy to switch back and forth.&lt;/p&gt;
+
+&lt;h1 id=&#34;and-the-benefits:23dc397a3b9966843174ca31c40b0ee7&#34;&gt;And the benefits?&lt;/h1&gt;
+
+&lt;p&gt;Holy crap this is too fast!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Jumping on the hacker blog bandwagon</title>
+      <link>http://bling.github.io/blog/2013/04/10/jumping-on-the-hacker-blog-bandwagon/</link>
+      <pubDate>Wed, 10 Apr 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://bling.github.io/blog/2013/04/10/jumping-on-the-hacker-blog-bandwagon/</guid>
+      <description>
+
+&lt;h1 id=&#34;following-the-tutorial:2d4cff6cca7d29a5c1b9fcff26b4d01c&#34;&gt;Following the tutorial&amp;hellip;&lt;/h1&gt;
+
+&lt;p&gt;Not much to say here&amp;hellip;I went to &lt;a href=&#34;http://octopress.org&#34;&gt;Octopress&amp;rsquo;&lt;/a&gt; website, followed the instructions, and now I have a working blog.  Pretty cool.&lt;/p&gt;
+
+&lt;p&gt;It definitely feels liberating to blog using plain &amp;lsquo;ol markdown text editing.&lt;/p&gt;
+
+&lt;p&gt;So I guess the next step I&amp;rsquo;ll do is import my existing blog content, and then add some personal styling to this thing :)&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

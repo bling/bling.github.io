@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Fixeds on bling on software</title>
+    <link>http://bling.github.io/fixed/</link>
+    <description>Recent content in Fixeds on bling on software</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 31 Dec 2015 14:34:07 -0500</lastBuildDate>
+    <atom:link href="http://bling.github.io/fixed/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>About Me</title>
+      <link>http://bling.github.io/about</link>
+      <pubDate>Thu, 31 Dec 2015 14:34:07 -0500</pubDate>
+      
+      <guid>http://bling.github.io/about</guid>
+      <description>&lt;p&gt;You want to know a little more about me?&lt;/p&gt;
+
+&lt;p&gt;My name is Bailey Ling, a.k.a bling, and I&amp;rsquo;ve been building software for almost a decade now.  I grew up in Canada and I&amp;rsquo;m currently working and residing in New York City.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

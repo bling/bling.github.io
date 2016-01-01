@@ -343,21 +343,6 @@ pre
   color:#d90006
 }
 
-.credit
-{
-  bottom:0;
-  width:100%;
-  font-size:.8em;
-  text-shadow:1px 1px #fff;
-  padding-left:20px;
-  margin-bottom:0;
-  padding-bottom:5px;
-  padding-top:5px;
-  margin-top:40px;
-  z-index:1;
-  color:#cdcdcd
-}
-
 .label-danger
 {
   background-color:#697b7b;
@@ -517,20 +502,6 @@ time
   color:#fff;
   text-align:center;
   left-padding:20%
-}
-
-.project-box
-{
-  background-color:#f9f9f9;
-  box-shadow:1px 1px 0 1px #e8e8e8;
-  min-height:200px
-}
-
-.project-box:hover
-{
-  background-color:#fff;
-  box-shadow:1px 1px 0 1px #e8e8e8;
-  min-height:200px
 }
 
 .project-title

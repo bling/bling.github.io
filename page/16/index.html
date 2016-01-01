@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="generator" content="Hugo 0.16-DEV" />
     <link href="http://bling.github.io/index.xml" rel="alternate" type="application/rss+xml" title="bling on software" />
-    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
     <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
     <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
@@ -72,6 +72,8 @@
               
               <a href="/tags/blend">blend</a>
               
+              <a href="/tags/blogging">blogging</a>
+              
               <a href="/tags/castle">castle</a>
               
               <a href="/tags/coding">coding</a>
@@ -96,8 +98,6 @@
               
               <a href="/tags/software-tools">software-tools</a>
               
-              <a href="/tags/source-control-management">source-control-management</a>
-              
               <a href="/tags/testing">testing</a>
               
               <a href="/tags/twitter">twitter</a>
@@ -109,6 +109,10 @@
             </div>
           </li>
         </ul>
+        <footer>
+          <p class="text-muted">&copy; bling on software 2016. All rights reserved. </p>
+        </footer>
+
       </div>
 
 
@@ -123,7 +127,15 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2009/04/23/sourcegear-vault-part-2/">SourceGear Vault, Part 2 (Performance vs Subversion)</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-04-23</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2009-04-23</small>
+    <div class="article-tags">
+      
+      <a href="/tags/scm">scm</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     Obviously you can&rsquo;t compare something without performance numbers! So in this post I&rsquo;ll post some performance numbers for the most common operations. I&rsquo;ll be using the Linux kernel for no reason other than it&rsquo;s readily available and everyone knows about it. The size of the code base is also relatively large (depending on who you ask). In general, I &ldquo;felt&rdquo; that Vault is slower than Subversion. This is probably due to the .NET runtime startup time for most operations, which is negligible for anything but trivial operations.
 
@@ -139,7 +151,15 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2009/04/22/sourcegear-vault-part-1/">SourceGear Vault, Part 1</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-04-22</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2009-04-22</small>
+    <div class="article-tags">
+      
+      <a href="/tags/scm">scm</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     I&rsquo;ll be starting a new job soon, and the company is using SourceGear Vault, so I went ahead and downloaded the latest beta versions off the site (since it&rsquo;s free for single users) to see how it was like. I&rsquo;ve hated SourceSafe from the first time I used it. The nail in the coffin was when my data got corrupted and some of my work was lost. At the very least, no source control management system should ever lose any work.
 
@@ -155,7 +175,13 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2009/04/09/digsby/">Digsby</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-04-09</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2009-04-09</small>
+    <div class="article-tags">
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     it&rsquo;s pretty sweet. you can connect to every IM service known to man, and it even checks all your email, facebook, and twitter too with nice popup notifications! it only works for windows at the moment, but the guys over there are working hard and pushing out updates very frequently. i&rsquo;m alpha testing and even so i haven&rsquo;t seen any crashes or any major problems. there have been the minor quarks here and there, but that&rsquo;s to be expected when you&rsquo;re alpha testing.
 
@@ -171,7 +197,15 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2009/04/09/cross-thread-operation-not-valid/">No more cross thread violations!</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-04-09</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2009-04-09</small>
+    <div class="article-tags">
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     “Cross thread operation not valid: Control ### accessed from a thread other than the thread it was created.” Seriously, I don’t think there’s a single person who’s written UI programs for .NET that has not encountered this error. Simply put, there is only 1 thread which does drawing on the screen, and if you try to change UI elements in a thread that’s not the UI thread, this exception is thrown.
 
@@ -187,7 +221,15 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2008/10/24/garbage-collection-and-c/">Garbage Collection and C&#43;&#43;</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2008-10-24</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2008-10-24</small>
+    <div class="article-tags">
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     Why doesn&rsquo;t C++ have garbage collection? Simply put, it doesn&rsquo;t need it. C++ has something called Resource Acquisition Is Initialization. What this means is that programmers can deterministically know when an object is created and when it is destroyed. You do not have the same information with garbage collected languages. For example, in C# you know when an object is created (when you call new), but you have no idea when the object gets destroyed.
 
@@ -278,14 +320,8 @@
 
     </div>
 
-    <footer>
-      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
-    </footer>
-
-    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.js"></script>
-    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
     
 <script>

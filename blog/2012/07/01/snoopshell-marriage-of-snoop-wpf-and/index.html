@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="generator" content="Hugo 0.16-DEV" />
     <link href="" rel="alternate" type="application/rss+xml" title="bling on software" />
-    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
     <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
     <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
@@ -72,6 +72,8 @@
               
               <a href="/tags/blend">blend</a>
               
+              <a href="/tags/blogging">blogging</a>
+              
               <a href="/tags/castle">castle</a>
               
               <a href="/tags/coding">coding</a>
@@ -96,8 +98,6 @@
               
               <a href="/tags/software-tools">software-tools</a>
               
-              <a href="/tags/source-control-management">source-control-management</a>
-              
               <a href="/tags/testing">testing</a>
               
               <a href="/tags/twitter">twitter</a>
@@ -109,6 +109,10 @@
             </div>
           </li>
         </ul>
+        <footer>
+          <p class="text-muted">&copy; bling on software 2016. All rights reserved. </p>
+        </footer>
+
       </div>
 
 
@@ -119,7 +123,17 @@
 
 <div class="article">
   <div class="article-title">SnoopShell: The marriage of Snoop WPF and PowerShell</div>
-  <p class="meta"><small>&nbsp;<i class="fa fa-calendar-o"></i> 2012-07-01</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2012-07-01</small>
+    <div class="article-tags">
+      
+      <a href="/tags/coding">coding</a>
+      
+      <a href="/tags/software%20tools">software tools</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     <div class='post'>
 <p>I was given the opportunity to review a couple chapters of the excellent book <a href="http://shop.oreilly.com/product/0636920024491.do">PowerShell for Developers</a>, written by my colleague <a href="http://dougfinke.com/blog/">Doug Finke</a>.&nbsp; One of the concepts in the book was embedding a PowerShell console into your application.&nbsp; This idea is ingenious and we added this feature to our client’s software, and so far it has increased our productivity and opened the doors to many possibilities.</p> <p>So what’s so cool about embedding a shell into your application?&nbsp; Well, for starters, one of the immediate advantages is that it gives you the opportunity to test your application at run time.&nbsp; If you are implementing the MVVM pattern then basically anything you can see in the UI is bound to some property in your view model.&nbsp; What if you could expose an instance of your view model to the PowerShell console?&nbsp; Yes, you would be able to interact with it directly, change values, and property change notification will kick in and update the UI.</p> <p>The possibilities start to open up from there.&nbsp; You can start scripting out common tasks – write once, run many times.&nbsp; Or you can write a full fledge test suite as a script, give it to a QA tester, and have them run through it as a special kind of integration testing, one that happens with live, real data.&nbsp; Or how about being able to modify code, <em>at runtime</em>, to try out an implementation without need to recompile or restart the application?&nbsp; Sounds pretty awesome to me!</p> <p>With this, I started thinking why don’t I try and add this to Snoop?&nbsp; It’s a staple tool for any WPF developer, and adding scripting capabilities to Snoop will make it even more useful.</p> <p>So, I sat down for a weekend and took a shot at it.&nbsp; And with that, SnoopShell was born!</p> <p>My fork of Snoop can be found here: <a href="https://github.com/bling/snoopwpf">https://github.com/bling/snoopwpf</a></p> <p>It’s still in super-duper alpha, so features/ideas are still getting formulated, but here’s a glimpse of what it can do now.</p> <p>The $root variable points to the root of the tree.&nbsp; As you can see, Snoop represents this as a ApplicationTreeItem, which has a bunch of properties, the important ones being IsSelected and IsExpanded.</p> <p><a href="http://lh6.ggpht.com/-G1xK0p7454U/T_CIl9YKnlI/AAAAAAAAAJg/z4SEb20go04/s1600-h/image%25255B29%25255D.png"><img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh4.ggpht.com/-NgT7mhbVSBY/T_CImZIe6NI/AAAAAAAAAJk/fkNeG2UGFH0/image_thumb%25255B17%25255D.png?imgmax=800" width="640" height="381"></a></p> <p>Let’s try interacting with the object by setting the IsExpanded to true.</p> <p><a href="http://lh4.ggpht.com/-uKcevwtnUO4/T_CImnGxyWI/AAAAAAAAAJo/5v1AZnM_SHw/s1600-h/image%25255B28%25255D.png"><img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh6.ggpht.com/-STnkYWGudRU/T_CInKa1nyI/AAAAAAAAAJs/qk92Zjm3BWU/image_thumb%25255B16%25255D.png?imgmax=800" width="640" height="383"></a></p> <p>So far so good.&nbsp; Now let’s find my username using Ctrl+Shift.&nbsp; The $selected variable is automatically synchronized with the selected item in the tree.</p> <p><a href="http://lh6.ggpht.com/-uUeaZMYbuDc/T_CInhNnmAI/AAAAAAAAAJw/Q--l4hrlEis/s1600-h/image%25255B27%25255D.png"><img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh6.ggpht.com/-hnDhWbHtn8w/T_CIoIzVSCI/AAAAAAAAAJ0/BiqbUMnfigM/image_thumb%25255B15%25255D.png?imgmax=800" width="640" height="379"></a></p>  <p>Let’s do some black magic and change my name.</p> <p><a href="http://lh6.ggpht.com/-hC4FVTnZDxc/T_CIoTrYfiI/AAAAAAAAAJ4/aQQGFbrxCzM/s1600-h/image%25255B26%25255D.png"><img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh3.ggpht.com/-RqOCvfsU6cU/T_CIo6zvtcI/AAAAAAAAAJ8/e8XMWPj60BM/image_thumb%25255B14%25255D.png?imgmax=800" width="640" height="382"></a></p> <p>Finally, let’s find every ListBox in the application.&nbsp; <em>Find-Item</em> is used to recursively find everything in the visual tree which is a ListBox.</p> <p><a href="http://lh6.ggpht.com/-nlycDcpP-bk/T_CIpXMcWxI/AAAAAAAAAKA/gIGruuduR9g/s1600-h/image%25255B25%25255D.png"><img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh3.ggpht.com/-oAB7IIj6LLY/T_CIqDPWS6I/AAAAAAAAAKE/aX1DNZnIOVo/image_thumb%25255B13%25255D.png?imgmax=800" width="640" height="367"></a></p> <p>And from here, it’s as simple as grabbing the <em>DataContext</em> of any control to get access to the view model.</p> <p>By the way, this is targeting PowerShell V3, so you will need to have the RC installed.</p> <p>Try it out and let me know what you think!</p>  </div>
@@ -143,34 +157,34 @@
    &nbsp;<li class="next"><a href="http://bling.github.io/blog/2012/06/08/n2n-net-2-node-part-1/"> N2N: .NET 2 Node: Part 1</a></li>
 </ul>
 
+
 <div id="disqus_thread"></div>
 <script type="text/javascript">
-    var disqus_shortname = 'blingdev';
-    var disqus_identifier = 'http:\/\/bling.github.io\/blog\/2012\/07\/01\/snoopshell-marriage-of-snoop-wpf-and\/';
-    var disqus_title = 'SnoopShell: The marriage of Snoop WPF and PowerShell';
-    var disqus_url = 'http:\/\/bling.github.io\/blog\/2012\/07\/01\/snoopshell-marriage-of-snoop-wpf-and\/';
+ if (window.location.hostname === 'localhost')
+   return;
 
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
+ var disqus_shortname = 'blingdev';
+ var disqus_identifier = 'http:\/\/bling.github.io\/blog\/2012\/07\/01\/snoopshell-marriage-of-snoop-wpf-and\/';
+ var disqus_title = 'SnoopShell: The marriage of Snoop WPF and PowerShell';
+ var disqus_url = 'http:\/\/bling.github.io\/blog\/2012\/07\/01\/snoopshell-marriage-of-snoop-wpf-and\/';
+
+ (function() {
+   var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+   dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+   (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+ })();
 </script>
 <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
 
 
+
+
     </div>
 
-    <footer>
-      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
-    </footer>
-
-    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.js"></script>
-    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
     
 <script>

@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="generator" content="Hugo 0.16-DEV" />
     <link href="http://bling.github.io/index.xml" rel="alternate" type="application/rss+xml" title="bling on software" />
-    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
     <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
     <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
@@ -72,6 +72,8 @@
               
               <a href="/tags/blend">blend</a>
               
+              <a href="/tags/blogging">blogging</a>
+              
               <a href="/tags/castle">castle</a>
               
               <a href="/tags/coding">coding</a>
@@ -96,8 +98,6 @@
               
               <a href="/tags/software-tools">software-tools</a>
               
-              <a href="/tags/source-control-management">source-control-management</a>
-              
               <a href="/tags/testing">testing</a>
               
               <a href="/tags/twitter">twitter</a>
@@ -109,6 +109,10 @@
             </div>
           </li>
         </ul>
+        <footer>
+          <p class="text-muted">&copy; bling on software 2016. All rights reserved. </p>
+        </footer>
+
       </div>
 
 
@@ -123,7 +127,17 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2011/10/31/my-thoughts-on-mef/">My Thoughts on MEF</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2011-10-31</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2011-10-31</small>
+    <div class="article-tags">
+      
+      <a href="/tags/ioc">ioc</a>
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     Ever since MEF was conceived, despite the authors saying that it is not an IoC container, it has since evolved to become one of the more popular IoC containers.&nbsp; I’ve always avoided it because I disagree with using attributes, and I’ve had no reason to use it over Autofac or Windsor. Recently, I found a reason to use it – Metro-style applications only support MEF so far.&nbsp; My Twitter client ping.pong uses Autofac as the IoC container.&nbsp; It uses some very basic functionality like factories and hooks.&nbsp; To my surprise, MEF has no support for either of these.
 
@@ -139,7 +153,15 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2011/10/09/pingpong-twitter-client/">ping.pong Twitter Client</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2011-10-09</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2011-10-09</small>
+    <div class="article-tags">
+      
+      <a href="/tags/twitter">twitter</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     I have a whole series dedicated to blogging about how I wrote a Twitter client from scratch, but if I want anyone to actually use it, I better do some advertising :-D. ping.pong is a fast and lightweight Twitter client written in Silverlight.&nbsp; As of this moment it targets v4 but will likely target v5 whenever that is released. Here are some highlights… Visually Pleasing The UI is based on your typical column-based design.&nbsp; The column widths will automatically resize to take up all available horizontal space.&nbsp; There is no horizontal scrolling.
 
@@ -155,7 +177,17 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2011/09/29/push-driven-development-with-reactive/">Push Driven Development with Reactive Extensions</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2011-09-29</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2011-09-29</small>
+    <div class="article-tags">
+      
+      <a href="/tags/rx">rx</a>
+      
+      <a href="/tags/twitter">twitter</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     This is going to be the last post that concludes my series on building a real-time push app with Silverlight. Any additional posts would likely be outside the context of writing a push app and more about how I’m adding features to ping.pong, my Twitter app, so I think this is a good place to wrap up and talk generally from a top down overview of building a push-style application. Here’s a recap of everything discussed so far: Part 1: Basics – Creating an Observable around a basic HTTP web stream against Twitter’s streaming API Part 2: Subscription and Observation of Observables Part 3: Basics of UX design with a look at shadows and gradients.
 
@@ -171,7 +203,17 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2011/09/21/building-real-time-push-app-with-rx-8/">Building a Real-time Push App with Silverlight: Part 8</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2011-09-21</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2011-09-21</small>
+    <div class="article-tags">
+      
+      <a href="/tags/coding">coding</a>
+      
+      <a href="/tags/twitter">twitter</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     Exploring Caliburn Micro As I hinted in earlier posts, Caliburn Micro has some wicked conventions that makes for writing MVVM super easy, and it also have a very convenient syntax for hooking up events. For example, the following: &lt;Button Content=&quot;R&quot;&gt; &lt;i:Interaction.Triggers&gt; &lt;i:EventTrigger EventName=&quot;Click&quot;&gt; &lt;i:InvokeCommandAction Command=&quot;{Binding ReplyCommand}&quot; CommandParameter=&quot;{Binding}&quot; /&gt; &lt;/i:EventTrigger&gt; &lt;/i:Interaction.Triggers&gt; &lt;/Button&gt; Can be rewritten like this: &lt;Button Content=&quot;R&quot; cal:Message.Attach=&quot;[Reply($dataContext)]&quot; /&gt; There are some smarts going on here. Caliburn Micro will default to the Click event for buttons.
 
@@ -187,7 +229,19 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2011/09/16/building-real-time-push-app-with-rx-7/">Building a Real-time Push App with Silverlight: Part 7</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2011-09-16</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2011-09-16</small>
+    <div class="article-tags">
+      
+      <a href="/tags/rx">rx</a>
+      
+      <a href="/tags/coding">coding</a>
+      
+      <a href="/tags/twitter">twitter</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     Infrastructure Refactor A lot of things changed internally, and I mean….a lot…. From an infrastructure standpoint, I decided to remove the dependency on LinqToTwitter, and I replaced it with Hammock.&nbsp; A couple things led me to this decision, one being the Silverlight support wasn’t as good as I’d hoped, and the streaming API implementation was limited.&nbsp; After reading the Twitter documentation I realized that the REST API was super simple and I’d be better off writing a simple interface to it.
 
@@ -278,14 +332,8 @@
 
     </div>
 
-    <footer>
-      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
-    </footer>
-
-    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.js"></script>
-    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
     
 <script>

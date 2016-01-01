@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="generator" content="Hugo 0.16-DEV" />
     <link href="http://bling.github.io/index.xml" rel="alternate" type="application/rss+xml" title="bling on software" />
-    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
     <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
     <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
@@ -72,6 +72,8 @@
               
               <a href="/tags/blend">blend</a>
               
+              <a href="/tags/blogging">blogging</a>
+              
               <a href="/tags/castle">castle</a>
               
               <a href="/tags/coding">coding</a>
@@ -96,8 +98,6 @@
               
               <a href="/tags/software-tools">software-tools</a>
               
-              <a href="/tags/source-control-management">source-control-management</a>
-              
               <a href="/tags/testing">testing</a>
               
               <a href="/tags/twitter">twitter</a>
@@ -109,6 +109,10 @@
             </div>
           </li>
         </ul>
+        <footer>
+          <p class="text-muted">&copy; bling on software 2016. All rights reserved. </p>
+        </footer>
+
       </div>
 
 
@@ -123,7 +127,17 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2013/02/10/love-affair-with-vim/">Love Affair with Vim</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2013-02-10</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2013-02-10</small>
+    <div class="article-tags">
+      
+      <a href="/tags/vim">vim</a>
+      
+      <a href="/tags/software%20tools">software tools</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     <p>It wasn&rsquo;t too long ago when I was a full-time C# developer and my environment was Visual Studio eight hours a day.  Then, I became a web developer over night cold turkey writing Javascript and CSS.  It&rsquo;s one of the benefits of working for a consulting company.</p>
 
@@ -147,7 +161,19 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2012/07/29/snoopshell-evolution/">SnoopShell: Evolution</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2012-07-29</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2012-07-29</small>
+    <div class="article-tags">
+      
+      <a href="/tags/coding">coding</a>
+      
+      <a href="/tags/software%20tools">software tools</a>
+      
+      <a href="/tags/powershell">powershell</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     It’s been a while since I last announced SnoopShell, where I took some PowerShell and injected that into Snoop. Well, I didn’t stop there! I decided to continue working on it and adding more useful features. Well, a bunch of things have changed. For one, it’s no longer targeted at .NET 4 and PS v3 anymore (and you’ll soon know why). Second, there’s a bunch of new features! Automatic Profile Loading Upon startup, the shell will look for a couple well known locations and automatically dot-source them to load them into the current session.
 
@@ -163,7 +189,17 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2012/07/01/snoopshell-marriage-of-snoop-wpf-and/">SnoopShell: The marriage of Snoop WPF and PowerShell</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2012-07-01</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2012-07-01</small>
+    <div class="article-tags">
+      
+      <a href="/tags/coding">coding</a>
+      
+      <a href="/tags/software%20tools">software tools</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     I was given the opportunity to review a couple chapters of the excellent book PowerShell for Developers, written by my colleague Doug Finke.&nbsp; One of the concepts in the book was embedding a PowerShell console into your application.&nbsp; This idea is ingenious and we added this feature to our client’s software, and so far it has increased our productivity and opened the doors to many possibilities. So what’s so cool about embedding a shell into your application?&nbsp; Well, for starters, one of the immediate advantages is that it gives you the opportunity to test your application at run time.&nbsp; If you are implementing the MVVM pattern then basically anything you can see in the UI is bound to some property in your view model.&nbsp; What if you could expose an instance of your view model to the PowerShell console?&nbsp; Yes, you would be able to interact with it directly, change values, and property change notification will kick in and update the UI.
 
@@ -179,9 +215,15 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2012/06/08/n2n-net-2-node-part-1/">N2N: .NET 2 Node: Part 1</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2012-06-08</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2012-06-08</small>
+    <div class="article-tags">
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
-    Let’s get some actual coding done.&nbsp; If you want some basic prologue, check out the first part of my series here. Anywho, let’s get to the meat of what we’re trying to accomplish.&nbsp; I will start with the typical C# class you would write, do the same in Javascript, and then again in C#, but using the style of Javascript using closures. Here’s the use case: Handle a web request Check the MongoDB database to see if an entry exists and return it if available.
+    Let&rsquo;s get some actual coding done. If you want some basic prologue, check out the first part of my series here. Anywho, let&rsquo;s get to the meat of what we&rsquo;re trying to accomplish. I will start with the typical C# class you would write, do the same in Javascript, and then again in C#, but using the style of Javascript using closures. Here&rsquo;s the use case: Handle a web request Check the MongoDB database to see if an entry exists and return it if available.
 
     
     <a class="read-more" href="http://bling.github.io/blog/2012/06/08/n2n-net-2-node-part-1/">
@@ -195,9 +237,19 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2012/06/03/n2n-net-2-node/">N2N: .NET 2 Node</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2012-06-03</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2012-06-03</small>
+    <div class="article-tags">
+      
+      <a href="/tags/javascript">javascript</a>
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
-    Well, it’s been quite a while since I’ve blogged about…well…anything, and I figured it’s about time I get off my lazy butt and do something with my spare time on weekends.&nbsp; What better option than to see what all the hype is about Node?&nbsp; I had to do it sooner or later. As any newbie would do, they go to Google and type “nodejs tutorial”.&nbsp; The Node Beginner Book came up first, so I went with that.&nbsp; It was an excellent tutorial.&nbsp; Prior to this I also skimmed through the book JavaScript, The Good Parts, so I had a basic understanding of the language syntax.
+    Well, it&rsquo;s been quite a while since I&rsquo;ve blogged about&hellip;well&hellip;anything, and I figured it&rsquo;s about time I get off my lazy butt and do something with my spare time on weekends. What better option than to see what all the hype is about Node? I had to do it sooner or later. As any newbie would do, they go to Google and type &ldquo;nodejs tutorial&rdquo;. The Node Beginner Book came up first, so I went with that.
 
     
     <a class="read-more" href="http://bling.github.io/blog/2012/06/03/n2n-net-2-node/">
@@ -286,14 +338,8 @@
 
     </div>
 
-    <footer>
-      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
-    </footer>
-
-    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.js"></script>
-    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
     
 <script>

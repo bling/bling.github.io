@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="generator" content="Hugo 0.16-DEV" />
     <link href="" rel="alternate" type="application/rss+xml" title="bling on software" />
-    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
     <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
     <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
@@ -72,6 +72,8 @@
               
               <a href="/tags/blend">blend</a>
               
+              <a href="/tags/blogging">blogging</a>
+              
               <a href="/tags/castle">castle</a>
               
               <a href="/tags/coding">coding</a>
@@ -96,8 +98,6 @@
               
               <a href="/tags/software-tools">software-tools</a>
               
-              <a href="/tags/source-control-management">source-control-management</a>
-              
               <a href="/tags/testing">testing</a>
               
               <a href="/tags/twitter">twitter</a>
@@ -109,6 +109,10 @@
             </div>
           </li>
         </ul>
+        <footer>
+          <p class="text-muted">&copy; bling on software 2016. All rights reserved. </p>
+        </footer>
+
       </div>
 
 
@@ -119,10 +123,41 @@
 
 <div class="article">
   <div class="article-title">N2N: .NET 2 Node</div>
-  <p class="meta"><small>&nbsp;<i class="fa fa-calendar-o"></i> 2012-06-03</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2012-06-03</small>
+    <div class="article-tags">
+      
+      <a href="/tags/javascript">javascript</a>
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
-    <div class='post'>
-<p>Well, it’s been quite a while since I’ve blogged about…well…anything, and I figured it’s about time I get off my lazy butt and do something with my spare time on weekends.&nbsp; What better option than to see what all the hype is about Node?&nbsp; I had to do it sooner or later.</p> <p>As any newbie would do, they go to Google and type “nodejs tutorial”.&nbsp; <a href="http://www.nodebeginner.org/">The Node Beginner Book</a> came up first, so I went with that.&nbsp; It was an excellent tutorial.&nbsp; Prior to this I also skimmed through the book <a href="http://www.amazon.com/JavaScript-Good-Parts-Douglas-Crockford/dp/0596517742">JavaScript, The Good Parts</a>, so I had a basic understanding of the language syntax.</p> <p>One of the first oddities I noticed, was that NodeJS seems to have a convention of comma-first.&nbsp; You notice this immediately because most examples start with require(‘module’), and if they require more than one module, the second line is prefixed with a comma (as opposed to the more traditional comma at the end of the line).&nbsp; I apparently missed the <a href="https://gist.github.com/357981">discussion</a> by 2 years!&nbsp; It was still interesting nonetheless.</p> <p>As someone with a strong .NET background, I definitely experienced all the usual ‘gotchas’:</p> <ul> <li>== vs ===  <li>falsey values  <li>variable hoisting</li></ul> <p>Once you understand all of these things, Javascript isn’t so bad.&nbsp; Oh, and of course understanding closures will get you <em>a long</em> way in being effective with Javascript, because that’s what you need to use to do proper scoping.&nbsp; If C# didn’t have lambdas and closures it would have been a much longer journey to “get it”.</p> <p>Not too longer after, I deployed my first Heroku app running on NodeJS.</p> <p>Anyways, enough with the prologue…I won’t bore you with anymore beginner/tutorial stuff.</p> <p>Let’s get on with what I plan on doing over a multi-part blog series.&nbsp; When I build something on my own time, I can’t build something just for the hell of it to learn something….that’s not enough.&nbsp; If I build something it has to be useful – something that I (or someone else) will find valuable.</p> <p>I won’t reveal what it is yet, but it’s going to involve Node/MongoDB on the backend, with Backbone on the front-end.&nbsp; Should be fun :-)</p>  </div>
+    <p>Well, it&rsquo;s been quite a while since I&rsquo;ve blogged about&hellip;well&hellip;anything, and I figured it&rsquo;s about time I get off my lazy butt and do something with my spare time on weekends.  What better option than to see what all the hype is about Node?  I had to do it sooner or later.</p>
+
+<p>As any newbie would do, they go to Google and type &ldquo;nodejs tutorial&rdquo;. <a href="http://www.nodebeginner.org/">The Node Beginner Book</a> came up first, so I went with that.  It was an excellent tutorial.  Prior to this I also skimmed through the book <a href="http://www.amazon.com/JavaScript-Good-Parts-Douglas-Crockford/dp/0596517742">JavaScript, The Good Parts</a>, so I had a basic understanding of the language syntax.</p>
+
+<p>One of the first oddities I noticed, was that NodeJS seems to have a convention of comma-first.  You notice this immediately because most examples start with require(‘module&rsquo;), and if they require more than one module, the second line is prefixed with a comma (as opposed to the more traditional comma at the end of the line).  I apparently missed the <a href="https://gist.github.com/357981">discussion</a> by 2 years!  It was still interesting nonetheless.</p>
+
+<p>As someone with a strong .NET background, I definitely experienced all the usual ‘gotchas&rsquo;:</p>
+
+<ul>
+<li>== vs ===</li>
+<li>falsey values</li>
+<li>variable hoisting</li>
+</ul>
+
+<p>Once you understand all of these things, Javascript isn&rsquo;t so bad.  Oh, and of course understanding closures will get you <em>a long</em> way in being effective with Javascript, because that&rsquo;s what you need to use to do proper scoping.  If C# didn&rsquo;t have lambdas and closures it would have been a much longer journey to &ldquo;get it&rdquo;.</p>
+
+<p>Not too longer after, I deployed my first Heroku app running on NodeJS.</p>
+
+<p>Anyways, enough with the prologue&hellip;I won&rsquo;t bore you with anymore beginner/tutorial stuff.</p>
+
+<p>Let&rsquo;s get on with what I plan on doing over a multi-part blog series. When I build something on my own time, I can&rsquo;t build something just for the hell of it to learn something&hellip;.that&rsquo;s not enough.  If I build something it has to be useful – something that I (or someone else) will find valuable.</p>
+
+<p>I won&rsquo;t reveal what it is yet, but it&rsquo;s going to involve Node/MongoDB on the backend, with Backbone on the front-end.  Should be fun :-)</p>
 
   </div>
 </div>
@@ -133,14 +168,8 @@
 
     </div>
 
-    <footer>
-      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
-    </footer>
-
-    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.js"></script>
-    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
     
 <script>

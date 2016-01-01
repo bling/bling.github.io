@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="generator" content="Hugo 0.16-DEV" />
     <link href="" rel="alternate" type="application/rss+xml" title="bling on software" />
-    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
     <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
     <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
@@ -72,6 +72,8 @@
               
               <a href="/tags/blend">blend</a>
               
+              <a href="/tags/blogging">blogging</a>
+              
               <a href="/tags/castle">castle</a>
               
               <a href="/tags/coding">coding</a>
@@ -96,8 +98,6 @@
               
               <a href="/tags/software-tools">software-tools</a>
               
-              <a href="/tags/source-control-management">source-control-management</a>
-              
               <a href="/tags/testing">testing</a>
               
               <a href="/tags/twitter">twitter</a>
@@ -109,6 +109,10 @@
             </div>
           </li>
         </ul>
+        <footer>
+          <p class="text-muted">&copy; bling on software 2016. All rights reserved. </p>
+        </footer>
+
       </div>
 
 
@@ -119,7 +123,19 @@
 
 <div class="article">
   <div class="article-title">Building a Real-time Push App with Silverlight: Part 7</div>
-  <p class="meta"><small>&nbsp;<i class="fa fa-calendar-o"></i> 2011-09-16</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2011-09-16</small>
+    <div class="article-tags">
+      
+      <a href="/tags/rx">rx</a>
+      
+      <a href="/tags/coding">coding</a>
+      
+      <a href="/tags/twitter">twitter</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     <div class='post'>
 <h3></h3> <h3>Infrastructure Refactor</h3> <p>A lot of things changed internally, and I mean….a lot….</p> <p>From an infrastructure standpoint, I decided to remove the dependency on LinqToTwitter, and I replaced it with <a href="https://github.com/danielcrenna/hammock">Hammock</a>.&nbsp; A couple things led me to this decision, one being the Silverlight support wasn’t as good as I’d hoped, and the streaming API implementation was limited.&nbsp; After reading the Twitter documentation I realized that the REST API was super simple and I’d be better off writing a simple interface to it.</p> <p>I heard good things about Hammock, so I decided to give that one a try (I wasn’t going to go as far as reimplementing OAuth).&nbsp; It was pretty easy to set up and in the end I was able to get Twitter working again and with less lines of code compared to the beginning of the refactor.</p> <h3>Goals</h3> <p>I had a couple goals for this project:</p> <ul> <li><strong>Learn:</strong>&nbsp; I was a complete newbie to Reactive Extensions when I started but now I understand it enough to hit the ground running with it.&nbsp; I’m still learning about more conventions available to Caliburn.Micro.  <li><strong>UX:</strong>&nbsp; I wanted to learn a little more about interface design.&nbsp; I wanted to know how little changes to gradients, shadows, colors, etc. could have a radically effect in the end result.  <li><strong>Performance:</strong>&nbsp; It should be fast.&nbsp; It should be able to react to real-time data.&nbsp; And it should do it with low CPU utilization.  <li><strong>Concise:</strong>&nbsp; I am a huge advocate for KISS.&nbsp; I like convention over configuration.&nbsp; I like implementing something in 2 lines of code rather than 20 (assuming it’s not cryptic).&nbsp; As I was writing the app and refactoring, if there was an opportunity to remove a line of code, I did it.&nbsp; The result is that the app currently consists of less than 500 lines of code as of this post (excluding XAML).</li></ul> <h3>Tidbits</h3> <p>What are some interest things I learned?</p> <ul> <li>System.Json is an amazing assembly.&nbsp; All you need to do is invoke JsonValue.Parse on a string and it will create a JsonValue for you, which will be a dictionary of key/value pairs.&nbsp; What’s more, by doing something like “string s = json[“text”]” will do an explicit conversion <strong>and unescape JSON characters</strong>, and <strong>only</strong> via the explicit operator.&nbsp; Calling ToString(), even though converting it to a string, will not unescape.&nbsp; This was completely undocumented and only found when I looked at the source code via Resharper’s external sources feature.  <li>Rx is awesome.&nbsp; When I ran into performance problems of trying to stream tweets from the world that contained the letter ‘a’ all I had to do was add an operator to improve the performance (in this case it was Buffer).&nbsp; It should be noted that it is <em>very important</em> to understand what Rx is doing underneath the hood to realize its benefits.&nbsp; Rx lets you refactor 30 lines of async code into 1 operator, but it’s still doing that 30 lines of code – you just don’t see it.  <li>I really, <em>really</em>, like the conventions available from Caliburn.&nbsp; Some of the features that come out of the box from this very small library saves me from writing a lot of boilerplate code like commands, triggers, and evening bindings (Caliburn will auto bind x:Name to a property).  <li>Twitter’s documentation for <a href="https://dev.twitter.com/docs/streaming-api/user-streams">user streams</a> currently sucks and some trial and error was required to get it working.</li></ul> <p>What is the end result of all this effort?&nbsp; We have a styled Twitter app that can update your status, pull your home/mentions timeline, and most importantly will <strong>stream all subsequent tweets</strong>.&nbsp; There’s no pulling and no limits.&nbsp; You will get a tweet of everyone you follow in real-time as it happens.</p> <p>Moreover, there’s a feature to connect to the Streaming API to search Twitter for <em>anything</em>.&nbsp; To get an idea of what we’re talking about, here’s a full screenshot of it:</p> <p><img style="background-image: none; border-right-width: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="http://lh4.ggpht.com/-tB6iLGL85aE/TnNOi7hdq9I/AAAAAAAAAHE/wGjkyHQzYKs/image%25255B20%25255D.png?imgmax=800" width="578" height="328"></p> <p>You read that right.&nbsp; I’m streaming any tweet in the world that has the words ‘and’, ‘the’, ‘yes’, <strong>or</strong> ‘no’ in them.&nbsp; This is streaming around 400kB/s continuously and CPU utilization is under 25%.&nbsp; The tweets are coming so fast it’s impossible to read them (at a rate of 50 tweets/second), so ideally you’d want to specify realistic search terms.</p> <p>Moreover, the majority of the performance cost is actually downloading all the profile images.&nbsp; If I take took out pictures I could stream any tweet in the world that has the letter ‘e’ in it at under 10% CPU.&nbsp; It looks like Twitter limits the rate of tweets to 50 tweets/second because that was the rate for this one as well.</p> <p>Features are minimalistic.&nbsp; You can update your status, but you can’t DM, you can’t RT, you can’t do any of the normal things.&nbsp; My original goal was not to write another Twitter client, but it’s actually quite fun to do so, so I’ll probably eventually get all features in.</p> <p>And as promised, it’s up on <a href="https://github.com/bling/Ping.Pong">GitHub</a>, and version 0.0.0.1 <strong>alpha</strong> (yes! expect bugs!!) is available in the downloads section.&nbsp; Or, here’s a direct link to the XAP file on my <a href="http://dl.dropbox.com/u/2072014/Ping.Pong/PingPongTestPage.html">Dropbox</a>.&nbsp; Have fun!</p>  </div>
@@ -143,34 +159,34 @@
    &nbsp;<li class="next"><a href="http://bling.github.io/blog/2011/09/13/building-real-time-push-app-with-rx-6/"> Building a Real-time Push App with Silverlight: Part 6</a></li>
 </ul>
 
+
 <div id="disqus_thread"></div>
 <script type="text/javascript">
-    var disqus_shortname = 'blingdev';
-    var disqus_identifier = 'http:\/\/bling.github.io\/blog\/2011\/09\/16\/building-real-time-push-app-with-rx-7\/';
-    var disqus_title = 'Building a Real-time Push App with Silverlight: Part 7';
-    var disqus_url = 'http:\/\/bling.github.io\/blog\/2011\/09\/16\/building-real-time-push-app-with-rx-7\/';
+ if (window.location.hostname === 'localhost')
+   return;
 
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
+ var disqus_shortname = 'blingdev';
+ var disqus_identifier = 'http:\/\/bling.github.io\/blog\/2011\/09\/16\/building-real-time-push-app-with-rx-7\/';
+ var disqus_title = 'Building a Real-time Push App with Silverlight: Part 7';
+ var disqus_url = 'http:\/\/bling.github.io\/blog\/2011\/09\/16\/building-real-time-push-app-with-rx-7\/';
+
+ (function() {
+   var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+   dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+   (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+ })();
 </script>
 <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
 
 
+
+
     </div>
 
-    <footer>
-      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
-    </footer>
-
-    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.js"></script>
-    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
     
 <script>

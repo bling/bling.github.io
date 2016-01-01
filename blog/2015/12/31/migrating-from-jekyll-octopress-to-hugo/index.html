@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="generator" content="Hugo 0.16-DEV" />
     <link href="" rel="alternate" type="application/rss+xml" title="bling on software" />
-    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
     <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
     <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
@@ -72,6 +72,8 @@
               
               <a href="/tags/blend">blend</a>
               
+              <a href="/tags/blogging">blogging</a>
+              
               <a href="/tags/castle">castle</a>
               
               <a href="/tags/coding">coding</a>
@@ -96,8 +98,6 @@
               
               <a href="/tags/software-tools">software-tools</a>
               
-              <a href="/tags/source-control-management">source-control-management</a>
-              
               <a href="/tags/testing">testing</a>
               
               <a href="/tags/twitter">twitter</a>
@@ -109,6 +109,10 @@
             </div>
           </li>
         </ul>
+        <footer>
+          <p class="text-muted">&copy; bling on software 2016. All rights reserved. </p>
+        </footer>
+
       </div>
 
 
@@ -119,7 +123,15 @@
 
 <div class="article">
   <div class="article-title">Migrating from Jekyll/Octopress to Hugo</div>
-  <p class="meta"><small>&nbsp;<i class="fa fa-calendar-o"></i> 2015-12-31</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2015-12-31</small>
+    <div class="article-tags">
+      
+      <a href="/tags/blogging">blogging</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     
 
@@ -139,7 +151,7 @@
 
 <p>Luckily, you can define a <code>slug</code> parameter in the front matter which can override this.  Suffice to say, I had to do this for a lot of posts.</p>
 
-<p>In most migrations you don&rsquo;t have to worry about keeping the same URLs, but in my case I needed them to be the same because that&rsquo;s how <a href="http://www.disqus.com">Disqus</a> track discussions, and I wanted all the existing conversations to remain intact.</p>
+<p>In most migrations you don&rsquo;t have to worry about keeping the same URLs, but in my case I needed them to be the same because that&rsquo;s how <a href="http://www.disqus.com">Disqus</a> tracks discussions, and I wanted all the existing conversations to remain intact.</p>
 
 <h1 id="code-fences:23dc397a3b9966843174ca31c40b0ee7">Code fences</h1>
 
@@ -161,7 +173,7 @@ alert('Hello World'!);
 
 <h1 id="and-the-rest:23dc397a3b9966843174ca31c40b0ee7">And the rest</h1>
 
-<p>Once all the heavily lifting was done, now it was a matter of picking a theme and modifying it to my liking.  I ended up modifying <a href="https://github.com/bling/herring-cove">herring cove</a>.  I really liked how Hugo separates the content from the theme, making it relatively easy to switch back and forth.</p>
+<p>Once all the heavily lifting was done, now it was a matter of picking a theme and modifying it to my liking.  I ended up using <a href="https://github.com/bling/herring-cove">herring cove</a>.  I really liked how Hugo separates the content from the theme, making it relatively easy to switch back and forth.</p>
 
 <h1 id="and-the-benefits:23dc397a3b9966843174ca31c40b0ee7">And the benefits?</h1>
 
@@ -183,37 +195,37 @@ alert('Hello World'!);
 
 <ul class="pager">
   
-   &nbsp;<li class="next"><a href="http://bling.github.io/about/"> About Me</a></li>
+   &nbsp;<li class="next"><a href="http://bling.github.io/about"> About Me</a></li>
 </ul>
+
 
 <div id="disqus_thread"></div>
 <script type="text/javascript">
-    var disqus_shortname = 'blingdev';
-    var disqus_identifier = 'http:\/\/bling.github.io\/blog\/2015\/12\/31\/migrating-from-jekyll-octopress-to-hugo\/';
-    var disqus_title = 'Migrating from Jekyll\/Octopress to Hugo';
-    var disqus_url = 'http:\/\/bling.github.io\/blog\/2015\/12\/31\/migrating-from-jekyll-octopress-to-hugo\/';
+ if (window.location.hostname === 'localhost')
+   return;
 
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
+ var disqus_shortname = 'blingdev';
+ var disqus_identifier = 'http:\/\/bling.github.io\/blog\/2015\/12\/31\/migrating-from-jekyll-octopress-to-hugo\/';
+ var disqus_title = 'Migrating from Jekyll\/Octopress to Hugo';
+ var disqus_url = 'http:\/\/bling.github.io\/blog\/2015\/12\/31\/migrating-from-jekyll-octopress-to-hugo\/';
+
+ (function() {
+   var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+   dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+   (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+ })();
 </script>
 <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
 
 
+
+
     </div>
 
-    <footer>
-      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
-    </footer>
-
-    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.js"></script>
-    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
     
 <script>

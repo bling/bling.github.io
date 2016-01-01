@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="generator" content="Hugo 0.16-DEV" />
     <link href="http://bling.github.io/index.xml" rel="alternate" type="application/rss+xml" title="bling on software" />
-    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
     <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
     <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
@@ -72,6 +72,8 @@
               
               <a href="/tags/blend">blend</a>
               
+              <a href="/tags/blogging">blogging</a>
+              
               <a href="/tags/castle">castle</a>
               
               <a href="/tags/coding">coding</a>
@@ -96,8 +98,6 @@
               
               <a href="/tags/software-tools">software-tools</a>
               
-              <a href="/tags/source-control-management">source-control-management</a>
-              
               <a href="/tags/testing">testing</a>
               
               <a href="/tags/twitter">twitter</a>
@@ -109,6 +109,10 @@
             </div>
           </li>
         </ul>
+        <footer>
+          <p class="text-muted">&copy; bling on software 2016. All rights reserved. </p>
+        </footer>
+
       </div>
 
 
@@ -123,7 +127,13 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2011/05/08/simple-app-to-preview-fonts/">Simple App to Preview Fonts</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2011-05-08</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2011-05-08</small>
+    <div class="article-tags">
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     I spent a good few hours yesterday trying out a new programming font.&nbsp; It’s a personal thing.&nbsp; I like switch fonts every couple weeks, and while Consolas is an excellent font and I have nothing against it, to me, it’s….too simple.&nbsp; For most people, the defaults are just fine, and they can’t be bothered to try another font.&nbsp; But for me, I want my font to speak to me a little.&nbsp; But enough of that voodoo magic stuff.
 
@@ -139,7 +149,17 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2011/04/17/integrating-dependencypropertyweaver/">Integrating DependencyPropertyWeaver Into Your Build</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2011-04-17</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2011-04-17</small>
+    <div class="article-tags">
+      
+      <a href="/tags/coding">coding</a>
+      
+      <a href="/tags/software%20tools">software tools</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     See the introduction here. The MSBuild task as it stands currently by default will attempt to weave everything that it finds.&nbsp; This is probably not optimal in most use cases, but any changes is a simple modification to the LINQ query in the code.&nbsp; For now, it’s only available in source format since there are bound to be bugs here and there, and once those get ironed out it’ll be easier to release a “point something” release.
 
@@ -155,7 +175,15 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2011/04/15/introducing-dependencypropertyweaver/">Introducing DependencyPropertyWeaver</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2011-04-15</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2011-04-15</small>
+    <div class="article-tags">
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     As part of my demonstration for the NYC .NET Meetup in the next couple of days, I prepared some material to show how to use Mono.Cecil to manually weave IL as a post-build step.&nbsp; It solves the problem of what I call “WPF Verbosity Hell”: the thing that makes your eyes bleed and makes God kill a kitten every time you declare a new property. Since notifypropertyweaver already exists, I figured I’d release the other side of the coin, dependencypropertyweaver.&nbsp; I just pushed my changes onto GitHub.
 
@@ -171,7 +199,17 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2011/03/10/that-commenting-thing/">That Commenting Thing</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2011-03-10</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2011-03-10</small>
+    <div class="article-tags">
+      
+      <a href="/tags/coding">coding</a>
+      
+      <a href="/tags/visual%20studio">visual studio</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     I’m working on a project right now that has near 99% of its code commented.&nbsp; Wow, that’s impressive!&nbsp; Actually, it’s more scary…even some of the private fields are commented…. At one point, someone decided that it was a good idea to impose some kind of standard rather than none, so they recommended StyleCop with all of its default settings, including requiring comments on everything. This seemed like a good idea, and it probably was, until someone found GhostDoc.&nbsp; The plugin definitely gives off that “cool” factor the first time you use it.&nbsp; Wow, with a single key stroke it automagically documented all of my code!!!&nbsp; The problem, and it’s a pretty big one, is that it generates documentation based on the name of the properties, names, and class.&nbsp; Surely if it can do that, you, a much more sophisticated machine, can do that!
 
@@ -187,9 +225,21 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2010/12/11/auto-mocking-nsubstitute-with-castle/">Auto Mocking NSubstitute with Castle Windsor</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2010-12-11</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2010-12-11</small>
+    <div class="article-tags">
+      
+      <a href="/tags/testing">testing</a>
+      
+      <a href="/tags/castle">castle</a>
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
-    I was debating whether to make this blog post because it’s so damn simple to implement, but hey, if it saves someone else time, I did some good. First of all, register an ILazyComponentLoader into Windsor: var c = new WindsorContainer(); c.Register(Component.For&lt;LazyComponentAutoMocker&gt;()); Then, the implementation of LazyComponentAutoMocker is simply this: public class LazyComponentAutoMocker : ILazyComponentLoader { public IRegistration Load(string key, Type service, IDictionary arguments) { return Component.For(service).Instance(Substitute.For(new[] { service }, null)); } } And you’re done!&nbsp; Here’s a simple unit test example using only the code from above: [Test] public void IDictionary_Add_Invoked() { var dict = c.Resolve&lt;IDictionary&gt;(); dict.Add(1, 1); dict.Received().Add(1, 1); } That was almost too easy.
+    I was debating whether to make this blog post because it’s so damn simple to implement, but hey, if it saves someone else time, I did some good. First of all, register an ILazyComponentLoader into Windsor: var c = new WindsorContainer(); c.Register(Component.For&lt;LazyComponentAutoMocker&gt;()); Then, the implementation of LazyComponentAutoMocker is simply this: public class LazyComponentAutoMocker : ILazyComponentLoader { public IRegistration Load(string key, Type service, IDictionary arguments) { return Component.For(service).Instance(Substitute.For(new[] { service }, null)); } } And you’re done!
 
     
     <a class="read-more" href="http://bling.github.io/blog/2010/12/11/auto-mocking-nsubstitute-with-castle/">
@@ -278,14 +328,8 @@
 
     </div>
 
-    <footer>
-      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
-    </footer>
-
-    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.js"></script>
-    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
     
 <script>

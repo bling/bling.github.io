@@ -15,32 +15,46 @@
       <pubDate>Sat, 11 Dec 2010 00:00:00 +0000</pubDate>
       
       <guid>http://bling.github.io/blog/2010/12/11/auto-mocking-nsubstitute-with-castle/</guid>
-      <description>&lt;div class=&#39;post&#39;&gt;
-&lt;p&gt;I was debating whether to make this blog post because it’s so damn simple to implement, but hey, if it saves someone else time, I did some good.&lt;/p&gt; &lt;p&gt;First of all, register an ILazyComponentLoader into Windsor:&lt;/p&gt;&lt;pre style=&#34;border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px&#34;&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;var c = &lt;span style=&#34;color: #0000ff&#34;&gt;new&lt;/span&gt; WindsorContainer();
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;c.Register(Component.For&amp;lt;LazyComponentAutoMocker&amp;gt;());&lt;/pre&gt;&lt;/pre&gt;
-&lt;p&gt;Then, the implementation of LazyComponentAutoMocker is simply this:&lt;/p&gt;&lt;pre style=&#34;border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px&#34;&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;&lt;span style=&#34;color: #0000ff&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color: #0000ff&#34;&gt;class&lt;/span&gt; LazyComponentAutoMocker : ILazyComponentLoader
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;{
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;  &lt;span style=&#34;color: #0000ff&#34;&gt;public&lt;/span&gt; IRegistration Load(&lt;span style=&#34;color: #0000ff&#34;&gt;string&lt;/span&gt; key, Type service, IDictionary arguments)
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;  {
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;    &lt;span style=&#34;color: #0000ff&#34;&gt;return&lt;/span&gt; Component.For(service).Instance(Substitute.For(&lt;span style=&#34;color: #0000ff&#34;&gt;new&lt;/span&gt;[] { service }, &lt;span style=&#34;color: #0000ff&#34;&gt;null&lt;/span&gt;));
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;  }
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;}&lt;/pre&gt;&lt;/pre&gt;
-&lt;p&gt;And you’re done!&amp;nbsp; Here’s a simple unit test example using &lt;strong&gt;only&lt;/strong&gt; the code from above:&lt;/p&gt;&lt;pre style=&#34;border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px&#34;&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;[Test]
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;&lt;span style=&#34;color: #0000ff&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color: #0000ff&#34;&gt;void&lt;/span&gt; IDictionary_Add_Invoked()
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;{
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;  var dict = c.Resolve&amp;lt;IDictionary&amp;gt;();
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;  dict.Add(1, 1);
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;  dict.Received().Add(1, 1);
-&lt;/pre&gt;&lt;pre style=&#34;background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,&#39;Courier New&#39;,courier,monospace; font-size: 12px&#34;&gt;}&lt;/pre&gt;&lt;/pre&gt;
-&lt;p&gt;That was almost too easy.&lt;/p&gt;  &lt;/div&gt;
-&lt;h2&gt;Comments&lt;/h2&gt;
+      <description>&lt;p&gt;I was debating whether to make this blog post because it’s so damn
+simple to implement, but hey, if it saves someone else time, I did some
+good.&lt;/p&gt;
+
+&lt;p&gt;First of all, register an ILazyComponentLoader into Windsor:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;WindsorContainer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Register&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Component&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;For&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;LazyComponentAutoMocker&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;());&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Then, the implementation of LazyComponentAutoMocker is simply this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;LazyComponentAutoMocker&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ILazyComponentLoader&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IRegistration&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Load&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Type&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;service&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IDictionary&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;arguments&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Component&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;For&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;service&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Instance&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Substitute&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;For&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;service&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;));&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;And you’re done!  Here’s a simple unit test example using &lt;strong&gt;only&lt;/strong&gt; the
+code from above:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span class=&#34;na&#34;&gt;[Test]&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;IDictionary_Add_Invoked&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;dict&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Resolve&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;IDictionary&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;();&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;dict&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Add&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;dict&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Received&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Add&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;That was almost too easy.&lt;/p&gt;
+
+&lt;p&gt;&lt;h2&gt;Comments&lt;/h2&gt;
 &lt;div class=&#39;comments&#39;&gt;
 &lt;div class=&#39;comment&#39;&gt;
 &lt;div class=&#39;author&#39;&gt;Randy&lt;/div&gt;
 &lt;div class=&#39;content&#39;&gt;
 For what it&amp;#39;s worth, I found this helpful. I&amp;#39;m new to Castle Windsor as well as NSubstitute. This post was able to get me going a lot quicker than sifting through documentation. Thanks.&lt;/div&gt;
 &lt;/div&gt;
-&lt;/div&gt;
+&lt;/div&gt;&lt;/p&gt;
 </description>
     </item>
     

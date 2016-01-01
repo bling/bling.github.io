@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="generator" content="Hugo 0.16-DEV" />
     <link href="http://bling.github.io/index.xml" rel="alternate" type="application/rss+xml" title="bling on software" />
-    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
     <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
     <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
@@ -72,6 +72,8 @@
               
               <a href="/tags/blend">blend</a>
               
+              <a href="/tags/blogging">blogging</a>
+              
               <a href="/tags/castle">castle</a>
               
               <a href="/tags/coding">coding</a>
@@ -96,8 +98,6 @@
               
               <a href="/tags/software-tools">software-tools</a>
               
-              <a href="/tags/source-control-management">source-control-management</a>
-              
               <a href="/tags/testing">testing</a>
               
               <a href="/tags/twitter">twitter</a>
@@ -109,6 +109,10 @@
             </div>
           </li>
         </ul>
+        <footer>
+          <p class="text-muted">&copy; bling on software 2016. All rights reserved. </p>
+        </footer>
+
       </div>
 
 
@@ -123,7 +127,15 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2009/04/28/trick-question-with-closures/">A Trick Question With Closures</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-04-28</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2009-04-28</small>
+    <div class="article-tags">
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     Given the following code, what do you expect the output to be? for (int i = 0; i &lt; 100; ++i) { ThreadPool.QueueUserWorkItem(delegate { Console.WriteLine(i); }); } Keep that answer in your head! Now&hellip;what do you expect the output of the following? int i; for (i = 0; i &lt; 100; ++i) { ThreadPool.QueueUserWorkItem(delegate { Console.WriteLine(i); }); } Were your answers the same? Different? Why?
 
@@ -135,7 +147,15 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2009/04/27/simple-thread-pool-implementation-1/">A Simple Thread Pool Implementation</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-04-27</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2009-04-27</small>
+    <div class="article-tags">
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     I&rsquo;ve always wanted to do this, and finally I&rsquo;ve gotten around to doing it. Here&rsquo;s a super duper simple implementation of a working thread pool. I named in ThreadQueue just so it&rsquo;s clearly discernible from the one provided by the framework. public static class ThreadQueue { static Queue&lt;WorkItem&gt; _queue = new Queue&lt;WorkItem&gt;(); struct WorkItem { public WaitCallback Worker; public object State; } static ThreadQueue() { for (int i = 0; i &lt; 25; ++i) { Thread t = new Thread(ThreadWorker); t.IsBackground = true; t.Start(); } } static void ThreadWorker() { while (true) { WorkItem wi; lock (_queue) { while (_queue.Count == 0) { Monitor.Wait(_queue); } wi = _queue.Dequeue(); } wi.Worker(wi.State); } } public static void QueueUserWorkItem(WaitCallback callBack, object state) { WorkItem wi = new WorkItem(); wi.Worker = callBack; wi.State = state; lock (_queue) { _queue.Enqueue(wi); Monitor.Pulse(_queue); } } } As you can see, it&rsquo;s very short and very simple.
 
@@ -151,7 +171,15 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2009/04/27/simple-thread-pool-implementation-2/">A Simple Thread Pool Implementation (Part 2)</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-04-27</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2009-04-27</small>
+    <div class="article-tags">
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     I said last time I&rsquo;d compare the performance of my super duper simple implementation against the .NET ThreadPool, so here it is! Here&rsquo;s the test code: ManualResetEvent evt = new ManualResetEvent(false); int total = 100000; int count = 0; DateTime start = DateTime.Now; for (int i = 0; i &lt; total; ++i) { // ThreadQueue.QueueUserWorkItem(delegate(object obj) ThreadPool.QueueUserWorkItem(delegate(object obj) { Console.WriteLine(obj); if (Interlocked.Increment(ref count) == total) evt.Set(); }, i); } evt.WaitOne(); Console.WriteLine(&quot;Time: {0}ms&quot;, (DateTime.Now - start).TotalMilliseconds); Console.ReadLine(); Here are the initial tests.
 
@@ -167,7 +195,15 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2009/04/25/sourcegear-vault-part-4/">SourceGear Vault, Part 4, Conclusion</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-04-25</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2009-04-25</small>
+    <div class="article-tags">
+      
+      <a href="/tags/scm">scm</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     I suppose I should give a disclaimer since I am not an expert with Vault, and my opinions may be completely due to my lack of understanding of the system. With that in mind, here&rsquo;s what my experience of using Vault has been so far. In general, it is not as fast as TortoiseSVN. There are many operations in SVN that are instant, where the comparable operation in Vault is met with 10 seconds of &ldquo;beginning transaction&rdquo; and &ldquo;ending transaction&rdquo;, sometimes more.
 
@@ -183,7 +219,15 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2009/04/24/sourcegear-vault-part-3/">SourceGear Vault, Part 3 (Performance vs Subversion)</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-04-24</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2009-04-24</small>
+    <div class="article-tags">
+      
+      <a href="/tags/scm">scm</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     I downloaded the kernel 2.6.29.1, and extracted it to the working folder. I figured this was an easy way to have a real-world scenario of changes (albeit a little big since it is all changes that happened between 29 and 29.1). Anywho, I was pretty surprised to find out that Vault does not have any feature whatsoever to allow collaboration between programmers other than via the client. You cannot create a .patch file and email it to someone.
 
@@ -274,14 +318,8 @@
 
     </div>
 
-    <footer>
-      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
-    </footer>
-
-    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.js"></script>
-    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
     
 <script>

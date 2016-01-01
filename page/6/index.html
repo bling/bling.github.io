@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="generator" content="Hugo 0.16-DEV" />
     <link href="http://bling.github.io/index.xml" rel="alternate" type="application/rss+xml" title="bling on software" />
-    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
     <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
     <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
@@ -72,6 +72,8 @@
               
               <a href="/tags/blend">blend</a>
               
+              <a href="/tags/blogging">blogging</a>
+              
               <a href="/tags/castle">castle</a>
               
               <a href="/tags/coding">coding</a>
@@ -96,8 +98,6 @@
               
               <a href="/tags/software-tools">software-tools</a>
               
-              <a href="/tags/source-control-management">source-control-management</a>
-              
               <a href="/tags/testing">testing</a>
               
               <a href="/tags/twitter">twitter</a>
@@ -109,6 +109,10 @@
             </div>
           </li>
         </ul>
+        <footer>
+          <p class="text-muted">&copy; bling on software 2016. All rights reserved. </p>
+        </footer>
+
       </div>
 
 
@@ -123,7 +127,17 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2011/09/13/building-real-time-push-app-with-rx-6/">Building a Real-time Push App with Silverlight: Part 6</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2011-09-13</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2011-09-13</small>
+    <div class="article-tags">
+      
+      <a href="/tags/twitter">twitter</a>
+      
+      <a href="/tags/blend">blend</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     Back to the UI! For this post I’m going to restyle the tweets. Recall that they currently look like this: The gradient background is currently #FFEEEEEE to #FFDDDDDD. For this post I’m going to talk about a very powerful tool in a designer’s arsenal: transparency. Your first may be to think “big deal”, but just like programmers can use base classes and injection to share common code, designers can use transparency to achieve a similar effect.
 
@@ -139,7 +153,17 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2011/09/08/building-real-time-push-app-with-rx-5/">Building a Real-time Push App with Silverlight: Part 5</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2011-09-08</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2011-09-08</small>
+    <div class="article-tags">
+      
+      <a href="/tags/coding">coding</a>
+      
+      <a href="/tags/twitter">twitter</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     I planned on this post to be about UI, but I’m going to defer that until the next post. I said from the start of this series that I would document about everything about building the application from scratch, including my struggles. And with that I want to mention something that got me scratching my head one too many times. It was with how I used LinqToTwitter. Here is the source code which you can immediately copy/paste into a blank project to reproduce: public partial class MainPage : UserControl { private readonly TwitterContext _context = new TwitterContext(); private readonly ViewModel _vm1, _vm2, _vm3; public MainPage() { InitializeComponent(); _vm1 = new ViewModel(_context); _vm2 = new ViewModel(_context); _vm3 = new ViewModel(_context); _vm1.Callback += () =&gt; Debug.WriteLine(&quot;Callback of VM1: &quot; + _vm1.LocalState); _vm2.Callback += () =&gt; Debug.WriteLine(&quot;Callback of VM2: &quot; + _vm2.LocalState); _vm3.Callback += () =&gt; Debug.WriteLine(&quot;Callback of VM3: &quot; + _vm3.LocalState); _vm1.Start(); _vm2.Start(); _vm3.Start(); } } public class ViewModel { private readonly TwitterContext _context; public event Action Callback; public int LocalState; public ViewModel(TwitterContext context) { _context = context; } public void Start() { var query = (from s in _context.Status where s.Type == StatusType.Public &amp;&amp; s.Count == 10 select s); Debug.WriteLine(&quot;Hash code of ViewModel: &quot; + query.GetHashCode()); query.AsyncCallback(statuses =&gt; { LocalState++; Debug.WriteLine(&quot;Hash code inside callback: &quot; + GetHashCode()); Callback(); }).FirstOrDefault(); } } Now, if you run this, you will see that only one of the view models will get its state updated.
 
@@ -155,7 +179,19 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2011/09/05/building-real-time-push-app-with-rx-4/">Building a Real-time Push App with Silverlight: Part 4</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2011-09-05</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2011-09-05</small>
+    <div class="article-tags">
+      
+      <a href="/tags/coding">coding</a>
+      
+      <a href="/tags/rx">rx</a>
+      
+      <a href="/tags/twitter">twitter</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     Originally I wanted to avoid bringing in external libraries to keep the app as lean as possible, but then I realized that I would spend too much time reinventing the wheel. Twitter is deprecating basic authentication in the near future, which makes OAuth no longer optional. Rather than writing yet another Twitter client (if you’re curious I found a great reference here), I fired up NuGet and brought in LinqToTwitter, and while I’m there I brought in Autofac and Caliburn.Micro as well.
 
@@ -171,7 +207,19 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2011/08/28/building-real-time-push-app-with-rx-3/">Building a Real-time Push App with Silverlight: Part 3</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2011-08-28</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2011-08-28</small>
+    <div class="article-tags">
+      
+      <a href="/tags/rx">rx</a>
+      
+      <a href="/tags/coding">coding</a>
+      
+      <a href="/tags/blend">blend</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     In this part we’re going to fire up Expression Blend (the trial for version 5 can be found here) and do some UI work. In part 2, I created a simple Twitter client which connected to the streaming API, and connected to the sampling request which brings back random tweets. Here is the data template: &lt;DataTemplate x:Key=&quot;TweetDataTemplate&quot;&gt; &lt;Grid DataContext=&quot;{Binding}&quot;&gt; &lt;Grid.RowDefinitions&gt; &lt;RowDefinition /&gt; &lt;RowDefinition Height=&quot;Auto&quot; /&gt; &lt;/Grid.RowDefinitions&gt; &lt;TextBlock FontFamily=&quot;{StaticResource FontFamily}&quot; FontSize=&quot;12&quot; Text=&quot;{Binding Text}&quot; TextWrapping=&quot;Wrap&quot; /&gt; &lt;TextBlock Grid.Row=&quot;1&quot; HorizontalAlignment=&quot;Right&quot; VerticalAlignment=&quot;Bottom&quot; FontFamily=&quot;{StaticResource FontFamily}&quot; FontSize=&quot;13.333&quot; Foreground=&quot;BlueViolet&quot; Text=&quot;{Binding ScreenName}&quot; /&gt; &lt;TextBlock Grid.Row=&quot;1&quot; HorizontalAlignment=&quot;Left&quot; VerticalAlignment=&quot;Bottom&quot; FontFamily=&quot;{StaticResource FontFamily}&quot; FontSize=&quot;9.333&quot; Foreground=&quot;DarkCyan&quot; Text=&quot;{Binding CreatedAt}&quot; /&gt; &lt;/Grid&gt; &lt;/DataTemplate&gt; This renders into something like this: The text is randomly generated from Blend’s sample capability, which is totally awesome as it allows designers to see what they’re working with, and keeps the sample data separate from the real data.
 
@@ -187,7 +235,17 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2011/08/27/building-real-time-push-app-with-rx-2/">Building a Real-time Push App with Silverlight: Part 2</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2011-08-27</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2011-08-27</small>
+    <div class="article-tags">
+      
+      <a href="/tags/rx">rx</a>
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     Let’s review the main Rx code from last time: public IObservable&lt;string&gt; GetJsonStreams() { var request = GetRequest(); return Observable.FromAsyncPattern&lt;WebResponse&gt;(request.BeginGetResponse, request.EndGetResponse)() .Select(wr =&gt; wr.GetResponseStream()) .Select(str =&gt; Observable.FromAsyncPattern&lt;byte[], int, int, int&gt;(str.BeginRead, str.EndRead)) .SelectMany(ParseJson); } One thing I didn’t like about this was that the web request object was created regardless of whether the Observable gets a subscription or not. This is potentially wasted resources, and I wanted to refactor this to be completely lazy.
 
@@ -278,14 +336,8 @@
 
     </div>
 
-    <footer>
-      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
-    </footer>
-
-    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.js"></script>
-    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
     
 <script>

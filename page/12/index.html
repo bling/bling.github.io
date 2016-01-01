@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="generator" content="Hugo 0.16-DEV" />
     <link href="http://bling.github.io/index.xml" rel="alternate" type="application/rss+xml" title="bling on software" />
-    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
     <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
     <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
@@ -72,6 +72,8 @@
               
               <a href="/tags/blend">blend</a>
               
+              <a href="/tags/blogging">blogging</a>
+              
               <a href="/tags/castle">castle</a>
               
               <a href="/tags/coding">coding</a>
@@ -96,8 +98,6 @@
               
               <a href="/tags/software-tools">software-tools</a>
               
-              <a href="/tags/source-control-management">source-control-management</a>
-              
               <a href="/tags/testing">testing</a>
               
               <a href="/tags/twitter">twitter</a>
@@ -109,6 +109,10 @@
             </div>
           </li>
         </ul>
+        <footer>
+          <p class="text-muted">&copy; bling on software 2016. All rights reserved. </p>
+        </footer>
+
       </div>
 
 
@@ -123,7 +127,15 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2009/09/27/dark-color-refresh/">Dark Color Refresh</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-09-27</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2009-09-27</small>
+    <div class="article-tags">
+      
+      <a href="/tags/visual%20studio">visual studio</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     There you have it!&#160; I started with Visual Studio’s default settings and configured each and every color one by one.&#160; 3 hours later I was finished and satisfied with what I have…but I think it was time well spent considering this is what I’m looking at for &gt;= 8 hours a day. This was a complete re-do of my previous dark theme.&#160; This one is even more colorful than the previous, mainly because Resharper does an amazing job of detecting additional code elements like mutable vs unmutable, or unused code, in additional to many other things.
 
@@ -139,7 +151,17 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2009/09/26/autofacs-extremely-powerful-containerscope/">Autofac’s extremely powerful and flexible ContainerScope</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-09-26</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2009-09-26</small>
+    <div class="article-tags">
+      
+      <a href="/tags/ioc">ioc</a>
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     I need to show some love and support for my favorite IoC tool because it’s most powerful feature needs more explaining.&nbsp; It’s not that the main site doesn’t provide a good explanation, because it does, but because most people don’t really understand what the solution is solving. The following is on Autofac’s front page: var container = // ... using (var inner = container.CreateInnerContainer()) { var controller = inner.Resolve&lt;IController&gt;(); controller.Execute(); // use controller..
 
@@ -155,7 +177,17 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2009/09/13/getting-code-coverage-working-on/">Getting code coverage working on TeamCity 5 with something other than NUnit</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-09-13</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2009-09-13</small>
+    <div class="article-tags">
+      
+      <a href="/tags/testing">testing</a>
+      
+      <a href="/tags/software%20tools">software tools</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     I&rsquo;ve been experimenting lately with TeamCity 5 EAP and so far it&rsquo;s been a pretty awesome experience. I was up and running within minutes and I was swarmed with beautiful graphs and statistics with specifics even per-test. Getting something like that up with CC.NET is not a trivial task. Anywho, with TC5 code coverage is one of the cool new features added for .NET, but unfortunately only NUnit is supported. Not that that&rsquo;s a bad thing, but some people prefer to use other testing tools.
 
@@ -171,7 +203,17 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2009/09/07/member-injection-module-for-autofac/">Member injection module for Autofac</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-09-07</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2009-09-07</small>
+    <div class="article-tags">
+      
+      <a href="/tags/ioc">ioc</a>
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     Inevitably as a project gets more complicated, you will need to start using more features of your IoC container. Autofac has built-in support for property injection by hooking into the OnActivating or OnActivated events, which basically set all public properties (or only those which are unset). However, I didn't really like this because once you start using properties, it's not as clear cut as constructors that you are using injection. It becomes hard to manage later on when you have many properties which some should be injected and others should be manually set in code.
 
@@ -187,7 +229,17 @@
   <div class="article-title">
     <a href="http://bling.github.io/blog/2009/08/21/session-management-with-nhibernate-and-autofac-2/">Session management with NHibernate and Autofac: Corollary</a>
   </div>
-  <p class="meta"><small><i class="fa fa-calendar-o"></i> 2009-08-21</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2009-08-21</small>
+    <div class="article-tags">
+      
+      <a href="/tags/ioc">ioc</a>
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
     Ooops, I forgot to mention that it's easily mockable as well. public class UserService : IUserService { public UserService(ISessionFactory factory, UsersRepositoryFactory usersFactory) { ... } } So that's the basic thing right. So now, with Moq, we can do this: var mockUserRepo = new Mock&lt;IUsersRepository&gt;(); mockUserRepo.Setup(x =&gt; x.GetUser(It.IsAny&lt;string&gt;())).Returns(() =&gt; someUser); var userService = new UserService(..., x = mockUserRepo.Object); So what I've basically done is insert a lambda expression into the constructor, which is the delegate, which always returns my mock repository.
 
@@ -278,14 +330,8 @@
 
     </div>
 
-    <footer>
-      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
-    </footer>
-
-    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.js"></script>
-    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
     
 <script>

@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="generator" content="Hugo 0.16-DEV" />
     <link href="" rel="alternate" type="application/rss+xml" title="bling on software" />
-    <link href="http://bling.github.io/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
     <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
     <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
@@ -72,6 +72,8 @@
               
               <a href="/tags/blend">blend</a>
               
+              <a href="/tags/blogging">blogging</a>
+              
               <a href="/tags/castle">castle</a>
               
               <a href="/tags/coding">coding</a>
@@ -96,8 +98,6 @@
               
               <a href="/tags/software-tools">software-tools</a>
               
-              <a href="/tags/source-control-management">source-control-management</a>
-              
               <a href="/tags/testing">testing</a>
               
               <a href="/tags/twitter">twitter</a>
@@ -109,6 +109,10 @@
             </div>
           </li>
         </ul>
+        <footer>
+          <p class="text-muted">&copy; bling on software 2016. All rights reserved. </p>
+        </footer>
+
       </div>
 
 
@@ -119,34 +123,60 @@
 
 <div class="article">
   <div class="article-title">Auto Mocking NSubstitute with Castle Windsor</div>
-  <p class="meta"><small>&nbsp;<i class="fa fa-calendar-o"></i> 2010-12-11</small></p> <hr/>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2010-12-11</small>
+    <div class="article-tags">
+      
+      <a href="/tags/testing">testing</a>
+      
+      <a href="/tags/castle">castle</a>
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
   <div class="post">
-    <div class='post'>
-<p>I was debating whether to make this blog post because it’s so damn simple to implement, but hey, if it saves someone else time, I did some good.</p> <p>First of all, register an ILazyComponentLoader into Windsor:</p><pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">var c = <span style="color: #0000ff">new</span> WindsorContainer();
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">c.Register(Component.For&lt;LazyComponentAutoMocker&gt;());</pre></pre>
-<p>Then, the implementation of LazyComponentAutoMocker is simply this:</p><pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">public</span> <span style="color: #0000ff">class</span> LazyComponentAutoMocker : ILazyComponentLoader
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">{
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  <span style="color: #0000ff">public</span> IRegistration Load(<span style="color: #0000ff">string</span> key, Type service, IDictionary arguments)
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  {
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">    <span style="color: #0000ff">return</span> Component.For(service).Instance(Substitute.For(<span style="color: #0000ff">new</span>[] { service }, <span style="color: #0000ff">null</span>));
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  }
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">}</pre></pre>
-<p>And you’re done!&nbsp; Here’s a simple unit test example using <strong>only</strong> the code from above:</p><pre style="border-bottom: #cecece 1px solid; border-left: #cecece 1px solid; padding-bottom: 5px; background-color: #fbfbfb; min-height: 40px; padding-left: 5px; width: 650px; padding-right: 5px; overflow: auto; border-top: #cecece 1px solid; border-right: #cecece 1px solid; padding-top: 5px"><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">[Test]
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px"><span style="color: #0000ff">public</span> <span style="color: #0000ff">void</span> IDictionary_Add_Invoked()
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">{
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  var dict = c.Resolve&lt;IDictionary&gt;();
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  dict.Add(1, 1);
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">  dict.Received().Add(1, 1);
-</pre><pre style="background-color: #fbfbfb; margin: 0em; width: 100%; font-family: consolas,'Courier New',courier,monospace; font-size: 12px">}</pre></pre>
-<p>That was almost too easy.</p>  </div>
-<h2>Comments</h2>
+    <p>I was debating whether to make this blog post because it’s so damn
+simple to implement, but hey, if it saves someone else time, I did some
+good.</p>
+
+<p>First of all, register an ILazyComponentLoader into Windsor:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="kt">var</span> <span class="n">c</span> <span class="p">=</span> <span class="k">new</span> <span class="n">WindsorContainer</span><span class="p">();</span>
+<span class="n">c</span><span class="p">.</span><span class="n">Register</span><span class="p">(</span><span class="n">Component</span><span class="p">.</span><span class="n">For</span><span class="p">&lt;</span><span class="n">LazyComponentAutoMocker</span><span class="p">&gt;());</span>
+</code></pre></div>
+
+<p>Then, the implementation of LazyComponentAutoMocker is simply this:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="nc">LazyComponentAutoMocker</span> <span class="p">:</span> <span class="n">ILazyComponentLoader</span>
+<span class="p">{</span>
+  <span class="k">public</span> <span class="n">IRegistration</span> <span class="nf">Load</span><span class="p">(</span><span class="kt">string</span> <span class="n">key</span><span class="p">,</span> <span class="n">Type</span> <span class="n">service</span><span class="p">,</span> <span class="n">IDictionary</span> <span class="n">arguments</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">return</span> <span class="n">Component</span><span class="p">.</span><span class="n">For</span><span class="p">(</span><span class="n">service</span><span class="p">).</span><span class="n">Instance</span><span class="p">(</span><span class="n">Substitute</span><span class="p">.</span><span class="n">For</span><span class="p">(</span><span class="k">new</span><span class="p">[]</span> <span class="p">{</span> <span class="n">service</span> <span class="p">},</span> <span class="k">null</span><span class="p">));</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>And you’re done!  Here’s a simple unit test example using <strong>only</strong> the
+code from above:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="na">[Test]</span>
+<span class="k">public</span> <span class="k">void</span> <span class="nf">IDictionary_Add_Invoked</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="kt">var</span> <span class="n">dict</span> <span class="p">=</span> <span class="n">c</span><span class="p">.</span><span class="n">Resolve</span><span class="p">&lt;</span><span class="n">IDictionary</span><span class="p">&gt;();</span>
+  <span class="n">dict</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">1</span><span class="p">);</span>
+  <span class="n">dict</span><span class="p">.</span><span class="n">Received</span><span class="p">().</span><span class="n">Add</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">1</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>That was almost too easy.</p>
+
+<p><h2>Comments</h2>
 <div class='comments'>
 <div class='comment'>
 <div class='author'>Randy</div>
 <div class='content'>
 For what it&#39;s worth, I found this helpful. I&#39;m new to Castle Windsor as well as NSubstitute. This post was able to get me going a lot quicker than sifting through documentation. Thanks.</div>
 </div>
-</div>
+</div></p>
 
   </div>
 </div>
@@ -157,14 +187,8 @@ For what it&#39;s worth, I found this helpful. I&#39;m new to Castle Windsor as 
 
     </div>
 
-    <footer>
-      <p class="text-muted credit">&copy; bling on software 2015. All rights reserved. </p>
-    </footer>
-
-    <script src="http://bling.github.io/js/jquery-1.10.2.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.min.js"></script>
-    <script src="http://bling.github.io/js/bootstrap.js"></script>
-    <script type="text/javascript" src="http://bling.github.io/js/hc.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
     
 <script>

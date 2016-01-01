@@ -1,6 +1,7 @@
 +++
 date = "2015-12-31T14:34:07-05:00"
 title = "About Me"
+slug = "about"
 comments = false
 +++
 

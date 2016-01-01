@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Best tool for the job..."
+slug: best-tool-for-job
 date: 2009-07-25
 comments: false
 ---

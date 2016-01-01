@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Asynchronous Eval in Emacs with Stylus and Skewer"
+slug: asynchronous-eval-with-stylus-and-skewer
 date: 2014-01-21 16:41:16 +0000
 comments: true
 categories: ['emacs']

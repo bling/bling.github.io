@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "A Trick Question With Closures"
+slug: trick-question-with-closures
 date: 2009-04-28
 comments: false
 categories: coding

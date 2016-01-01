@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "The Infamous IDisposable Pattern"
+slug: infamous-idisposable-pattern
 date: 2008-09-17
 comments: false
 categories: coding

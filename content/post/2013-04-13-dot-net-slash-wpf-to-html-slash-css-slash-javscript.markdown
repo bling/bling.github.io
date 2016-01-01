@@ -1,6 +1,7 @@
 ---
 layout: post
 title: ".NET/WPF to HTML/CSS/Javscript"
+slug: dot-net-slash-wpf-to-html-slash-css-slash-javscript
 date: 2013-04-13
 comments: true
 categories: [ coding ]

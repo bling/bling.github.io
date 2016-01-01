@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "No more cross thread violations!"
+slug: cross-thread-operation-not-valid
 date: 2009-04-09
 comments: false
 categories: coding

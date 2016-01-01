@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "A sweeeeet commenting tip"
+slug: sweeeeet-commenting-tip
 date: 2008-09-30
 comments: false
 categories: coding

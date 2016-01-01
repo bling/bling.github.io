@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Building a Real-time Push App with Silverlight: Part 4"
+slug: building-real-time-push-app-with-rx-4
 date: 2011-09-05
 comments: true
 categories: [ coding, rx, twitter ]

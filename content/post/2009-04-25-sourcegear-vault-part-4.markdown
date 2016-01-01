@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "SourceGear Vault, Part 4, Conclusion"
+slug: sourcegear-vault-part-4
 date: 2009-04-25
 comments: false
 categories: source control management

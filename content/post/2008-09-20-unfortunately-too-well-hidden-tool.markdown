@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "An Unfortunately Too Well Hidden Tool"
+slug: unfortunately-too-well-hidden-tool
 date: 2008-09-20
 comments: true
 ---

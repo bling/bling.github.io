@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "The Importance of Color Schemes"
+slug: importance-of-color-schemes
 date: 2008-09-11
 comments: false
 ---

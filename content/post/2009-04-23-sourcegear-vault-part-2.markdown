@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "SourceGear Vault, Part 2 (Performance vs Subversion)"
+slug: sourcegear-vault-part-2
 date: 2009-04-23
 comments: false
 categories: source control management

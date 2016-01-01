@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Unite.vim, The plugin you didn't know you need"
+slug: unite-dot-vim-the-plugin-you-didnt-know-you-need
 date: 2013-06-02
 comments: true
 categories: vim

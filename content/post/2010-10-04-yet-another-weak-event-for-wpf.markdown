@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Yet Another Weak Event Implementation"
+slug: yet-another-weak-event-for-wpf
 date: 2010-10-04
 comments: false
 categories: coding

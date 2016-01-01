@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "A Simple Thread Pool Implementation"
+slug: simple-thread-pool-implementation-1
 date: 2009-04-27
 comments: false
 categories: coding

@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "I'm doing the VI challenge!"
+slug: im-doing-vim-challenge
 date: 2009-05-05
 comments: false
 ---

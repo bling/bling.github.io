@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Getting code coverage working on TeamCity 5 with something other than NUnit"
+slug: getting-code-coverage-working-on
 date: 2009-09-13
 comments: false
 categories:

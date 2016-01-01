@@ -3,7 +3,7 @@ layout: post
 title: "Improving Your Unit Testing Skills"
 date: 2009-10-19
 comments: false
-tags: testing
+tags: [ 'testing' ]
 ---
 Unit testing is *hard*!  I came to this sad realization when my code which had a large test suite with near 100% code coverage, with every thought-of requirement unit tested, failed during integration testing.
 

@@ -1,5 +1,5 @@
 +++
-Tags = []
+tags = ['blogging']
 date = "2015-12-31T22:55:37-05:00"
 title = "Migrating from Jekyll/Octopress to Hugo"
 slug = "migrating-from-jekyll-octopress-to-hugo"

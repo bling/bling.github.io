@@ -4,7 +4,7 @@ title: "Asynchronous Eval in Emacs with Stylus and Skewer"
 slug: asynchronous-eval-with-stylus-and-skewer
 date: 2014-01-21 16:41:16 +0000
 comments: true
-tags: ['emacs']
+tags: [ 'emacs' ]
 ---
 
 You haven't experienced Emacs if you haven't experienced the power of `C-x C-e`.  This is the magical keybinding which evalulates the current line.  Another useful companion is `C-M-x`, which evaluates the current function.

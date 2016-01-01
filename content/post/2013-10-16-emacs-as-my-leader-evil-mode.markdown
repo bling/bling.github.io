@@ -3,7 +3,7 @@ layout: post
 title: "Emacs as my <Leader> evil-mode"
 date: 2013-10-16
 comments: true
-tags: ['vim','emacs']
+tags: [ 'vim', 'emacs' ]
 ---
 
 Hey guys, I just wanted to post a quick demo video on [evil-mode](https://gitorious.org/evil).

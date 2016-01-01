@@ -3,7 +3,7 @@ layout: post
 title: "On TypeScript"
 date: 2013-04-19
 comments: true
-tags: coding
+tags: [ 'coding' ]
 ---
 
 # What's the deal?

@@ -3,7 +3,7 @@ layout: post
 title: "1000 stars in 1 month"
 date: 2013-07-30
 comments: true
-tags: vim
+tags: [ 'vim' ]
 ---
 
 # 1000 stars in 1 month

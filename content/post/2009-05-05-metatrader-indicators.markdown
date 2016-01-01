@@ -3,7 +3,7 @@ layout: post
 title: "MetaTrader Indicators"
 date: 2009-05-05
 comments: false
-tags: forex
+tags: [ 'forex' ]
 ---
 One of my hobbies is forex trading, and a sub-hobby of that is writing custom indicators.  MetaTrader is a trading platform that is very popular in the forex community because it allows traders to write custom indicators.  It's pretty easy to get started if you have programming experience because the language is very similar to C.  And yes, you can also write your own bot if you wanted, called an Expert Advisor.
 

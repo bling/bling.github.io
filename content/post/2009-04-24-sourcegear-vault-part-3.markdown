@@ -4,7 +4,7 @@ title: "SourceGear Vault, Part 3 (Performance vs Subversion)"
 slug: sourcegear-vault-part-3
 date: 2009-04-24
 comments: false
-tags: scm
+tags: [ 'scm' ]
 ---
 I downloaded the kernel 2.6.29.1, and extracted it to the working folder.  I figured this was an easy way to have a real-world scenario of changes (albeit a little big since it is all changes that happened between 29 and 29.1).
 

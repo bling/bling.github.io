@@ -4,7 +4,7 @@ title: "A Simple Thread Pool Implementation (Part 2)"
 slug: simple-thread-pool-implementation-2
 date: 2009-04-27
 comments: false
-tags: coding
+tags: [ 'coding' ]
 ---
 I said last time I'd compare the performance of my super duper simple implementation against the .NET ThreadPool, so here it is!
 

@@ -4,7 +4,7 @@ title: "Assimilated by ALT.NET"
 slug: assimilated-by-altnet
 date: 2009-07-29
 comments: false
-tags: coding
+tags: [ 'coding' ]
 ---
 It feels good to be revitalized again!
 

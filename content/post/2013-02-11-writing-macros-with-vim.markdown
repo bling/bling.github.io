@@ -3,7 +3,7 @@ layout: post
 title: "Writing Macros with Vim"
 date: 2013-02-11
 comments: true
-tags: vim
+tags: [ 'vim' ]
 ---
 First, let’s start with a Javascript function:
 ``` javascript

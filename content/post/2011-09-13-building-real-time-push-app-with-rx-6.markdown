@@ -4,7 +4,7 @@ title: "Building a Real-time Push App with Silverlight: Part 6"
 slug: building-real-time-push-app-with-rx-6
 date: 2011-09-13
 comments: true
-tags: [ twitter, blend ]
+tags: [ 'twitter', 'blend' ]
 ---
 Back to the UI!
 

@@ -3,7 +3,7 @@ layout: post
 title: "Goodbye db4o, Hello ORM"
 date: 2009-08-18
 comments: false
-tags: coding
+tags: [ 'coding' ]
 ---
 It's unfortunate that I have to remove db4o from my project, but I can't say this was unexpected.  The CTO finally came to me today to voice his concerns on using an object database rather than a relational database.
 

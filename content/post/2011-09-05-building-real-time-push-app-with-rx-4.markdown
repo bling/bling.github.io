@@ -4,7 +4,7 @@ title: "Building a Real-time Push App with Silverlight: Part 4"
 slug: building-real-time-push-app-with-rx-4
 date: 2011-09-05
 comments: true
-tags: [ coding, rx, twitter ]
+tags: [ 'coding', 'rx', 'twitter' ]
 ---
 Originally I wanted to avoid bringing in external libraries to keep the app as lean as possible, but then I realized that I would spend too much time reinventing the wheel.  Twitter is deprecating basic authentication in the near future, which makes OAuth no longer optional.  Rather than writing yet another Twitter client (if you’re curious I found a great reference [here](http://chris.59north.com/post/2009/09/16/SilverTweet-e28093-Building-a-Silverlight-Twitter-client-part-1.aspx)), I fired up [NuGet](http://nuget.org/) and brought in [LinqToTwitter](http://linqtotwitter.codeplex.com/), and while I’m there I brought in [Autofac](http://code.google.com/p/autofac/) and [Caliburn.Micro](http://caliburnmicro.codeplex.com/) as well.
 

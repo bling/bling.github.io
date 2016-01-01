@@ -4,7 +4,7 @@ title: "The Infamous IDisposable Pattern"
 slug: infamous-idisposable-pattern
 date: 2008-09-17
 comments: false
-tags: coding
+tags: [ 'coding' ]
 ---
 At one point or another, any .NET developer should come across the concept of implementing the IDisposable pattern. For more detail, visit this excellent article at http://www.codeproject.com/KB/cs/idisposable.aspx.
 

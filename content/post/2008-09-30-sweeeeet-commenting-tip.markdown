@@ -4,7 +4,7 @@ title: "A sweeeeet commenting tip"
 slug: sweeeeet-commenting-tip
 date: 2008-09-30
 comments: false
-tags: coding
+tags: [ 'coding' ]
 ---
 No no no...this isn't another typical post splurging about how you should comment your code, just another sweet tip I got from a good friend of mine.
 

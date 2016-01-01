@@ -3,7 +3,7 @@ layout: post
 title: "Emacs as my <Leader> Vim Survival Guide"
 date: 2013-10-27
 comments: true
-tags: ['vim', 'emacs']
+tags: [ 'vim', 'emacs' ]
 ---
 
 Two months ago I blogged about switching from Vim to Emacs.  Today, Emacs is my main editor.  I'll try to keep this post short and to the point, because there is *a lot* to cover!  But by the end of this post you'll have to answer to the question whether you should give Emacs a try.

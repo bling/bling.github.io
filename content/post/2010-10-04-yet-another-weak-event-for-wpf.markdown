@@ -4,7 +4,7 @@ title: "Yet Another Weak Event Implementation"
 slug: yet-another-weak-event-for-wpf
 date: 2010-10-04
 comments: false
-tags: coding
+tags: [ 'coding' ]
 ---
 
 I gotta say that WPF is a complete pain in the butt when it comes to memory leaks.  A simple google/bing search shows up more than enough results for weak events, so why am I making yet another blog post about another implementation of a weak event?  Well, if someone else out there happens to have the same requirements/needs that I do right now, maybe this will save them a little time.

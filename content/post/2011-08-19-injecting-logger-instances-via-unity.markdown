@@ -4,7 +4,7 @@ title: "Injecting Logger Instances Via Convention With Unity"
 slug: injecting-logger-instances-via-unity
 date: 2011-08-19
 comments: true
-categories: [ logging, coding ]
+tags: [ logging, coding ]
 ---
 Let’s say you have something like this:
 ``` csharp

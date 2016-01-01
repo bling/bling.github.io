@@ -3,7 +3,7 @@ layout: post
 title: "Jumping on the hacker blog bandwagon"
 date: 2013-04-10
 comments: true
-categories: 
+tags: 
 ---
 # Following the tutorial...
 

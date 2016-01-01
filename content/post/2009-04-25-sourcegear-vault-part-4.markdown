@@ -4,7 +4,7 @@ title: "SourceGear Vault, Part 4, Conclusion"
 slug: sourcegear-vault-part-4
 date: 2009-04-25
 comments: false
-categories: source control management
+tags: scm
 ---
 I suppose I should give a disclaimer since I am *not* an expert with Vault, and my opinions may be completely due to my lack of understanding of the system.  With that in mind, here's what my experience of using Vault has been so far.
 

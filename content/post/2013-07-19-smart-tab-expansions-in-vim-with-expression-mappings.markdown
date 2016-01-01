@@ -4,7 +4,7 @@ title: "Smart tab expansions in Vim with expression mappings"
 date: 2013-07-21
 comments: true
 published: true
-categories: vim
+tags: vim
 ---
 
 I've been having a small itch for a while now, and it's a very simple thing -- I want to make my tab smarter.  This all starts with a dive into [Emmet][a].  To understand what it is, here's a quick introduction.  First, you type something using its syntax:

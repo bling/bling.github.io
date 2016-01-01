@@ -4,7 +4,7 @@ title: "SourceGear Vault, Part 2 (Performance vs Subversion)"
 slug: sourcegear-vault-part-2
 date: 2009-04-23
 comments: false
-categories: source control management
+tags: scm
 ---
 Obviously you can't compare something without performance numbers!  So in this post I'll post some performance numbers for the most common operations.  I'll be using the Linux kernel for no reason other than it's readily available and everyone knows about it.  The size of the code base is also relatively large (depending on who you ask).
 

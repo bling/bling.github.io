@@ -1,9 +1,9 @@
 ---
 layout: post
-title: "Emacs As My <Leader> 1 Year Later"
+title: "Emacs as my <Leader> 1 Year Later"
 date: 2015-01-06
 comments: true
-categories: ['vim', 'emacs']
+tags: ['vim', 'emacs']
 ---
 
 Last year, I wrote a [Vim Survival Guide][1] for a Vim user switching to Emacs.  In that blog post I wrote:

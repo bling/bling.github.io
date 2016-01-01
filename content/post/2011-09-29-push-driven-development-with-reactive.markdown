@@ -4,7 +4,7 @@ title: "Push Driven Development with Reactive Extensions"
 slug: push-driven-development-with-reactive
 date: 2011-09-29
 comments: true
-categories:
+tags:
  - rx
  - twitter
 ---

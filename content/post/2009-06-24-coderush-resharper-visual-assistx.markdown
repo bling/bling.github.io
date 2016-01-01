@@ -3,7 +3,7 @@ layout: post
 title: "CodeRush, ReSharper, Visual AssistX"
 date: 2009-06-24
 comments: false
-categories: coding
+tags: coding
 ---
 Hmmmmm...CodeRush and ReSharper...It seems like these are the only 2 products people think about when they want that all super powerful addon that's supposed to quadruple their productivity.
 

@@ -3,7 +3,7 @@ layout: post
 title: "Fixing ReSharper 5 EAP Missing Colors"
 date: 2009-11-07
 comments: false
-categories:
+tags:
 - visual studio
 ---
 I think anyone’s who has used ReSharper for an extended period of time has experienced the colors disappearing all of a sudden from Fonts & Colors.  This is excruciatingly annoying when I have a dark color scheme set up and the colors disappear on me.

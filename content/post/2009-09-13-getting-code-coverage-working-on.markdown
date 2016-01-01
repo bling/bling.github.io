@@ -4,7 +4,7 @@ title: "Getting code coverage working on TeamCity 5 with something other than NU
 slug: getting-code-coverage-working-on
 date: 2009-09-13
 comments: false
-categories:
+tags:
  - testing
  - software tools
 ---

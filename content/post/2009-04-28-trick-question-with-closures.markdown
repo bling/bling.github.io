@@ -4,7 +4,7 @@ title: "A Trick Question With Closures"
 slug: trick-question-with-closures
 date: 2009-04-28
 comments: false
-categories: coding
+tags: coding
 ---
 Given the following code, what do you expect the output to be?
 ``` csharp

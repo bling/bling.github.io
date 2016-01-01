@@ -4,7 +4,7 @@ title: "Taking a Quick Look at .NET Decompilers"
 slug: taking-quick-look-at-net-decompilers
 date: 2011-05-20
 comments: false
-categories:
+tags:
  - coding
  - software tools
 ---

@@ -4,7 +4,7 @@ title: "A Simple Thread Pool Implementation"
 slug: simple-thread-pool-implementation-1
 date: 2009-04-27
 comments: false
-categories: coding
+tags: coding
 ---
 I've always wanted to do this, and finally I've gotten around to doing it.  Here's a super duper simple implementation of a working thread pool.  I named in ThreadQueue just so it's clearly discernible from the one provided by the framework.
 ``` csharp

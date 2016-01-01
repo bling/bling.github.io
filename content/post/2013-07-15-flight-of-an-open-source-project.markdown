@@ -5,7 +5,7 @@ slug: flight-of-an-open-source-project
 date: 2013-07-15
 comments: true
 published: true
-categories: vim
+tags: vim
 ---
 
 # Welcome aboard!

@@ -3,7 +3,7 @@ layout: post
 title: "Vim in Emacs Bootstrap"
 date: 2013-09-09
 comments: true
-categories: ['vim','emacs']
+tags: ['vim','emacs']
 ---
 
 Did I wake up on the wrong side of the bed?

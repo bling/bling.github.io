@@ -3,7 +3,7 @@ layout: post
 title: Who woulda thought, IList<> kills WCF
 date: 2009-08-06
 comments: false
-categories: coding
+tags: coding
 ---
 It can't be that hard!!!
 

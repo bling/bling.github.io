@@ -4,7 +4,7 @@ title: "Modularizing VimScript"
 date: 2013-08-16
 comments: true
 published: true
-categories: vim
+tags: vim
 ---
 
 # The prerequisites

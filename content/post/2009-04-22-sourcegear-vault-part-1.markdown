@@ -3,7 +3,7 @@ layout: post
 title: "SourceGear Vault, Part 1"
 date: 2009-04-22
 comments: false
-categories: source control management
+tags: scm
 ---
 I'll be starting a new job soon, and the company is using SourceGear Vault, so I went ahead and downloaded the latest beta versions off the site (since it's free for single users) to see how it was like.
 

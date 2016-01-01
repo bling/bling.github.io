@@ -4,7 +4,7 @@ title: "GC.Collect Is Bad For You"
 date: 2008-09-11
 comments: false
 slug: gccollect-is-bad-for-you
-categories: coding
+tags: coding
 ---
 Sometimes I wish Microsoft didn't include this method in the API because it promotes bad programming.  I've seen people use this in their code and 99.99% of the time, it is incorrect to do so.
 

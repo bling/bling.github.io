@@ -3,7 +3,7 @@ layout: post
 title: "SnoopShell: Evolution"
 date: 2012-07-29
 comments: true
-categories:
+tags:
  - coding
  - software tools
  - powershell

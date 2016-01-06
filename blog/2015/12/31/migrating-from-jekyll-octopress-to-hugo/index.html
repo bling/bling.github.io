@@ -201,15 +201,14 @@ alert('Hello World'!);
 
 <div id="disqus_thread"></div>
 <script type="text/javascript">
- if (window.location.hostname === 'localhost')
-   return;
-
- var disqus_shortname = 'blingdev';
- var disqus_identifier = 'http:\/\/bling.github.io\/blog\/2015\/12\/31\/migrating-from-jekyll-octopress-to-hugo\/';
- var disqus_title = 'Migrating from Jekyll\/Octopress to Hugo';
- var disqus_url = 'http:\/\/bling.github.io\/blog\/2015\/12\/31\/migrating-from-jekyll-octopress-to-hugo\/';
-
  (function() {
+   if (window.location.hostname === 'localhost')
+     return;
+
+   var disqus_shortname = 'blingdev';
+   var disqus_identifier = 'http:\/\/bling.github.io\/blog\/2015\/12\/31\/migrating-from-jekyll-octopress-to-hugo\/';
+   var disqus_title = 'Migrating from Jekyll\/Octopress to Hugo';
+   var disqus_url = 'http:\/\/bling.github.io\/blog\/2015\/12\/31\/migrating-from-jekyll-octopress-to-hugo\/';
    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);

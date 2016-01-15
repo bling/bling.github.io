@@ -59,7 +59,7 @@ Am I doing anything that you cannot do in Vim?  Nope.  [browserlink.vim][11] wil
 
 # Turning evil-mode off!
 
-When I first started, I did what most people trying [evil-mode][8] probably do -- I enabled it globally.  Unfortunately, over time this proved to me problematic for me because I developed the expectation that *everything* should have Vim bindings, which was far from reality.  evil-mode comes with integration for some packages out of the box, but you're bound to hit some package which is not supported.  You are left with 3 choices: 1) get repeatedly frustrated as you hit the wrong keys, 2) configure the keymap to have Vim bindings, or 3) suck it up and use Emacs bindings.
+When I first started, I did what most people trying [evil-mode][8] probably do -- I enabled it globally.  Unfortunately, over time this proved to be problematic for me because I developed the expectation that *everything* should have Vim bindings, which was far from reality.  evil-mode comes with integration for some packages out of the box, but you're bound to hit some package which is not supported.  You are left with 3 choices: 1) get repeatedly frustrated as you hit the wrong keys, 2) configure the keymap to have Vim bindings, or 3) suck it up and use Emacs bindings.
 
 But then I realized, despite my desire for modal editing, that is a *learned* obsession.  I didn't start with Vim, I started with Notepad.
 

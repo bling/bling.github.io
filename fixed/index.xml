@@ -6,18 +6,20 @@
     <description>Recent content in Fixeds on bling on software</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 31 Dec 2015 14:34:07 -0500</lastBuildDate>
+    <lastBuildDate>Sun, 31 Dec 2000 14:34:07 -0500</lastBuildDate>
     <atom:link href="http://bling.github.io/fixed/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>About Me</title>
       <link>http://bling.github.io/about</link>
-      <pubDate>Thu, 31 Dec 2015 14:34:07 -0500</pubDate>
+      <pubDate>Sun, 31 Dec 2000 14:34:07 -0500</pubDate>
       
       <guid>http://bling.github.io/about</guid>
       <description>&lt;p&gt;You want to know a little more about me?&lt;/p&gt;
 
-&lt;p&gt;My name is Bailey Ling, a.k.a bling, and I&amp;rsquo;ve been building software for almost a decade now.  I grew up in Canada and I&amp;rsquo;m currently working and residing in New York City.&lt;/p&gt;
+&lt;p&gt;My name is Bailey Ling, a.k.a bling, and I&amp;rsquo;ve been building software for over a decade now.  I grew up in Canada and I&amp;rsquo;m currently working and residing in New York City.&lt;/p&gt;
+
+&lt;p&gt;One of my most successful creations is &lt;a href=&#34;https://github.com/vim-airline/vim-airline&#34;&gt;vim-airline&lt;/a&gt;, a statusline plugin for Vim which is now being maintained by the community.  I&amp;rsquo;ve also &lt;a href=&#34;https://github.com/bling/minivimrc&#34;&gt;created&lt;/a&gt; &lt;a href=&#34;https://github.com/bling/vim-bufferline&#34;&gt;some&lt;/a&gt; &lt;a href=&#34;https://github.com/bling/evil-jumper&#34;&gt;other&lt;/a&gt; &lt;a href=&#34;https://github.com/bling/pt.el&#34;&gt;useful&lt;/a&gt; &lt;a href=&#34;https://github.com/bling/fzf.el&#34;&gt;things&lt;/a&gt; for Vim and Emacs.&lt;/p&gt;
 </description>
     </item>
     

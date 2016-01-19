@@ -125,6 +125,38 @@
 
 <div class="article">
   <div class="article-title">
+    <a href="http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold/">Why are you changing gc-cons-threshold?</a>
+  </div>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2016-01-18</small>
+    <div class="article-tags">
+      
+      <a href="/tags/emacs">emacs</a>
+      
+    </div>
+  </div>
+  <hr/>
+  <div class="post">
+    <h1 id="the-basics:9bf4210971839ea8da436c1305007683">The basics</h1>
+
+<p>The <a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Garbage-Collection.html">garbage collection</a> in Emacs is very simple.  You allocate some bytes and once you pass a certain threshold, it garbage collects.  That&rsquo;s it.</p>
+
+<h1 id="the-problem:9bf4210971839ea8da436c1305007683">The problem</h1>
+
+<p>The default value for <code>gc-cons-threshold</code> is quite low by modern standards &ndash; it&rsquo;s only 800KB.  But is that actually a problem?  Emacs is known to have poor defaults, but most of the time defaults are chosen because they work most of the time, and something as crucial as <code>gc-cons-threshold</code> was <em>probably</em> chosen with at least some thought.  But if that&rsquo;s the case, then why is everyone (including some popular distributions) increasing the default value?</p>
+
+
+
+    
+    <a class="read-more" href="http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold/">
+      <span>Read on...</span>
+    </a>
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
     <a href="http://bling.github.io/blog/2015/12/31/migrating-from-jekyll-octopress-to-hugo/">Migrating from Jekyll/Octopress to Hugo</a>
   </div>
   <div class="meta">
@@ -261,28 +293,6 @@
   </div>
 </div>
 
-<div class="article">
-  <div class="article-title">
-    <a href="http://bling.github.io/blog/2013/10/16/emacs-as-my-leader-evil-mode/">Emacs as my &lt;Leader&gt; evil-mode</a>
-  </div>
-  <div class="meta">
-    <small><i class="fa fa-calendar-o"></i> 2013-10-16</small>
-    <div class="article-tags">
-      
-      <a href="/tags/vim">vim</a>
-      
-      <a href="/tags/emacs">emacs</a>
-      
-    </div>
-  </div>
-  <hr/>
-  <div class="post">
-    Hey guys, I just wanted to post a quick demo video on evil-mode. The video is targetted at intermediate/advanced Vim users, so if you&rsquo;re just starting out you might miss some things. But&hellip;hopefully it&rsquo;ll be an enjoyable watch regardless! Let me know what you guys think of it!
-
-    
-  </div>
-</div>
-
 
 
     
@@ -349,12 +359,15 @@
         ><a href="/page/17/">17</a></li>
         
         <li
+        ><a href="/page/18/">18</a></li>
+        
+        <li
         >
         <a href="/page/2/" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
         </li>
         
         <li>
-            <a href="/page/17/" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
+            <a href="/page/18/" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
         </li>
         
     </ul>

@@ -125,6 +125,30 @@
 
 <div class="article">
   <div class="article-title">
+    <a href="http://bling.github.io/blog/2009/10/07/tdd-is-designunit-testing-legacy-code/">TDD is Design…Unit Testing Legacy Code</a>
+  </div>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2009-10-07</small>
+    <div class="article-tags">
+      
+      <a href="/tags/testing">testing</a>
+      
+    </div>
+  </div>
+  <hr/>
+  <div class="post">
+    I’ve been listening to a bunch of podcasts lately and I came across a gem that was pretty darn useful.&nbsp; It’s pretty old I suppose in technology standards, since it was recorded January 12, 2009, but it’s still worth a listen.&nbsp; Scott Hanselman talks with Scott Bellware about TDD and design.&nbsp; Find it here. I’m merely reiterating what Scott has already said in the podcast, but it’s different when I can personally say that I’m joining the ranks of countless others who have seen the benefits of TDD.
+
+    
+    <a class="read-more" href="http://bling.github.io/blog/2009/10/07/tdd-is-designunit-testing-legacy-code/">
+      <span>Read on...</span>
+    </a>
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
     <a href="http://bling.github.io/blog/2009/09/27/dark-color-refresh/">Dark Color Refresh</a>
   </div>
   <div class="meta">
@@ -225,32 +249,6 @@
   </div>
 </div>
 
-<div class="article">
-  <div class="article-title">
-    <a href="http://bling.github.io/blog/2009/08/21/session-management-with-nhibernate-and-autofac-2/">Session management with NHibernate and Autofac: Corollary</a>
-  </div>
-  <div class="meta">
-    <small><i class="fa fa-calendar-o"></i> 2009-08-21</small>
-    <div class="article-tags">
-      
-      <a href="/tags/ioc">ioc</a>
-      
-      <a href="/tags/coding">coding</a>
-      
-    </div>
-  </div>
-  <hr/>
-  <div class="post">
-    Ooops, I forgot to mention that it's easily mockable as well. public class UserService : IUserService { public UserService(ISessionFactory factory, UsersRepositoryFactory usersFactory) { ... } } So that's the basic thing right. So now, with Moq, we can do this: var mockUserRepo = new Mock&lt;IUsersRepository&gt;(); mockUserRepo.Setup(x =&gt; x.GetUser(It.IsAny&lt;string&gt;())).Returns(() =&gt; someUser); var userService = new UserService(..., x = mockUserRepo.Object); So what I've basically done is insert a lambda expression into the constructor, which is the delegate, which always returns my mock repository.
-
-    
-    <a class="read-more" href="http://bling.github.io/blog/2009/08/21/session-management-with-nhibernate-and-autofac-2/">
-      <span>Read on...</span>
-    </a>
-    
-  </div>
-</div>
-
 
 
     
@@ -317,12 +315,15 @@
         ><a href="/page/17/">17</a></li>
         
         <li
+        ><a href="/page/18/">18</a></li>
+        
+        <li
         >
         <a href="/page/13/" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
         </li>
         
         <li>
-            <a href="/page/17/" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
+            <a href="/page/18/" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
         </li>
         
     </ul>

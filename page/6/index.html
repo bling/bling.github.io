@@ -125,6 +125,34 @@
 
 <div class="article">
   <div class="article-title">
+    <a href="http://bling.github.io/blog/2011/09/16/building-real-time-push-app-with-rx-7/">Building a Real-time Push App with Silverlight: Part 7</a>
+  </div>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2011-09-16</small>
+    <div class="article-tags">
+      
+      <a href="/tags/rx">rx</a>
+      
+      <a href="/tags/coding">coding</a>
+      
+      <a href="/tags/twitter">twitter</a>
+      
+    </div>
+  </div>
+  <hr/>
+  <div class="post">
+    Infrastructure Refactor A lot of things changed internally, and I mean….a lot…. From an infrastructure standpoint, I decided to remove the dependency on LinqToTwitter, and I replaced it with Hammock.&nbsp; A couple things led me to this decision, one being the Silverlight support wasn’t as good as I’d hoped, and the streaming API implementation was limited.&nbsp; After reading the Twitter documentation I realized that the REST API was super simple and I’d be better off writing a simple interface to it.
+
+    
+    <a class="read-more" href="http://bling.github.io/blog/2011/09/16/building-real-time-push-app-with-rx-7/">
+      <span>Read on...</span>
+    </a>
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
     <a href="http://bling.github.io/blog/2011/09/13/building-real-time-push-app-with-rx-6/">Building a Real-time Push App with Silverlight: Part 6</a>
   </div>
   <div class="meta">
@@ -231,32 +259,6 @@
   </div>
 </div>
 
-<div class="article">
-  <div class="article-title">
-    <a href="http://bling.github.io/blog/2011/08/27/building-real-time-push-app-with-rx-2/">Building a Real-time Push App with Silverlight: Part 2</a>
-  </div>
-  <div class="meta">
-    <small><i class="fa fa-calendar-o"></i> 2011-08-27</small>
-    <div class="article-tags">
-      
-      <a href="/tags/rx">rx</a>
-      
-      <a href="/tags/coding">coding</a>
-      
-    </div>
-  </div>
-  <hr/>
-  <div class="post">
-    Let’s review the main Rx code from last time: public IObservable&lt;string&gt; GetJsonStreams() { var request = GetRequest(); return Observable.FromAsyncPattern&lt;WebResponse&gt;(request.BeginGetResponse, request.EndGetResponse)() .Select(wr =&gt; wr.GetResponseStream()) .Select(str =&gt; Observable.FromAsyncPattern&lt;byte[], int, int, int&gt;(str.BeginRead, str.EndRead)) .SelectMany(ParseJson); } One thing I didn’t like about this was that the web request object was created regardless of whether the Observable gets a subscription or not. This is potentially wasted resources, and I wanted to refactor this to be completely lazy.
-
-    
-    <a class="read-more" href="http://bling.github.io/blog/2011/08/27/building-real-time-push-app-with-rx-2/">
-      <span>Read on...</span>
-    </a>
-    
-  </div>
-</div>
-
 
 
     
@@ -323,12 +325,15 @@
         ><a href="/page/17/">17</a></li>
         
         <li
+        ><a href="/page/18/">18</a></li>
+        
+        <li
         >
         <a href="/page/7/" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
         </li>
         
         <li>
-            <a href="/page/17/" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
+            <a href="/page/18/" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
         </li>
         
     </ul>

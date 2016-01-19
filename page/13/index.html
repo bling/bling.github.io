@@ -125,6 +125,32 @@
 
 <div class="article">
   <div class="article-title">
+    <a href="http://bling.github.io/blog/2009/08/21/session-management-with-nhibernate-and-autofac-2/">Session management with NHibernate and Autofac: Corollary</a>
+  </div>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2009-08-21</small>
+    <div class="article-tags">
+      
+      <a href="/tags/ioc">ioc</a>
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
+  <div class="post">
+    Ooops, I forgot to mention that it's easily mockable as well. public class UserService : IUserService { public UserService(ISessionFactory factory, UsersRepositoryFactory usersFactory) { ... } } So that's the basic thing right. So now, with Moq, we can do this: var mockUserRepo = new Mock&lt;IUsersRepository&gt;(); mockUserRepo.Setup(x =&gt; x.GetUser(It.IsAny&lt;string&gt;())).Returns(() =&gt; someUser); var userService = new UserService(..., x = mockUserRepo.Object); So what I've basically done is insert a lambda expression into the constructor, which is the delegate, which always returns my mock repository.
+
+    
+    <a class="read-more" href="http://bling.github.io/blog/2009/08/21/session-management-with-nhibernate-and-autofac-2/">
+      <span>Read on...</span>
+    </a>
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
     <a href="http://bling.github.io/blog/2009/08/20/session-management-with-nhibernate-and-autofac-1/">Session management with NHibernate and Autofac</a>
   </div>
   <div class="meta">
@@ -223,26 +249,6 @@
   </div>
 </div>
 
-<div class="article">
-  <div class="article-title">
-    <a href="http://bling.github.io/blog/2009/08/06/who-woulda-thought-ilist-kills-wcf/">Who woulda thought, IList&lt;&gt; kills WCF</a>
-  </div>
-  <div class="meta">
-    <small><i class="fa fa-calendar-o"></i> 2009-08-06</small>
-    <div class="article-tags">
-      
-      <a href="/tags/coding">coding</a>
-      
-    </div>
-  </div>
-  <hr/>
-  <div class="post">
-    It can&rsquo;t be that hard!!! I keep telling myself this. I&rsquo;m writing a WCF application right now and I&rsquo;ve been running into loads of problems trying to configure things. ABC right? Set my address, contract, and binding&hellip;.how hard can it be?? Why is a horrible ExecutionEngineException being thrown and taking down IIS with it??? http://connect.microsoft.com/wcf/feedback/ViewFeedback.aspx?FeedbackID=433569 Turns out you can&rsquo;t have an IList&lt;&gt; of DataContracts.
-
-    
-  </div>
-</div>
-
 
 
     
@@ -309,12 +315,15 @@
         ><a href="/page/17/">17</a></li>
         
         <li
+        ><a href="/page/18/">18</a></li>
+        
+        <li
         >
         <a href="/page/14/" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
         </li>
         
         <li>
-            <a href="/page/17/" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
+            <a href="/page/18/" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
         </li>
         
     </ul>

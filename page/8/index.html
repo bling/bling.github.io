@@ -125,6 +125,32 @@
 
 <div class="article">
   <div class="article-title">
+    <a href="http://bling.github.io/blog/2011/05/20/taking-quick-look-at-net-decompilers/">Taking a Quick Look at .NET Decompilers</a>
+  </div>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2011-05-20</small>
+    <div class="article-tags">
+      
+      <a href="/tags/coding">coding</a>
+      
+      <a href="/tags/software%20tools">software tools</a>
+      
+    </div>
+  </div>
+  <hr/>
+  <div class="post">
+    Decompilers in the .NET space has changed a lot since the announcement from Red Gate that they were going to start charging for Reflector, which was the defacto most important/useful tool in any developer&rsquo;s tool belt. This blog post will be a quick overview to take a look at all the new contenders that have cropped up in the .NET space to see if any of them can dethrone Reflector as the decompiler of choice.
+
+    
+    <a class="read-more" href="http://bling.github.io/blog/2011/05/20/taking-quick-look-at-net-decompilers/">
+      <span>Read on...</span>
+    </a>
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
     <a href="http://bling.github.io/blog/2011/05/08/simple-app-to-preview-fonts/">Simple App to Preview Fonts</a>
   </div>
   <div class="meta">
@@ -221,34 +247,6 @@
   </div>
 </div>
 
-<div class="article">
-  <div class="article-title">
-    <a href="http://bling.github.io/blog/2010/12/11/auto-mocking-nsubstitute-with-castle/">Auto Mocking NSubstitute with Castle Windsor</a>
-  </div>
-  <div class="meta">
-    <small><i class="fa fa-calendar-o"></i> 2010-12-11</small>
-    <div class="article-tags">
-      
-      <a href="/tags/testing">testing</a>
-      
-      <a href="/tags/castle">castle</a>
-      
-      <a href="/tags/coding">coding</a>
-      
-    </div>
-  </div>
-  <hr/>
-  <div class="post">
-    I was debating whether to make this blog post because it’s so damn simple to implement, but hey, if it saves someone else time, I did some good. First of all, register an ILazyComponentLoader into Windsor: var c = new WindsorContainer(); c.Register(Component.For&lt;LazyComponentAutoMocker&gt;()); Then, the implementation of LazyComponentAutoMocker is simply this: public class LazyComponentAutoMocker : ILazyComponentLoader { public IRegistration Load(string key, Type service, IDictionary arguments) { return Component.For(service).Instance(Substitute.For(new[] { service }, null)); } } And you’re done!
-
-    
-    <a class="read-more" href="http://bling.github.io/blog/2010/12/11/auto-mocking-nsubstitute-with-castle/">
-      <span>Read on...</span>
-    </a>
-    
-  </div>
-</div>
-
 
 
     
@@ -315,12 +313,15 @@
         ><a href="/page/17/">17</a></li>
         
         <li
+        ><a href="/page/18/">18</a></li>
+        
+        <li
         >
         <a href="/page/9/" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
         </li>
         
         <li>
-            <a href="/page/17/" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
+            <a href="/page/18/" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
         </li>
         
     </ul>

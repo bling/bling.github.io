@@ -6,8 +6,71 @@
     <description>Recent content in Emacs on bling on software</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 06 Jan 2015 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 18 Jan 2016 14:34:38 -0500</lastBuildDate>
     <atom:link href="http://bling.github.io/tags/emacs/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Why are you changing gc-cons-threshold?</title>
+      <link>http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold/</link>
+      <pubDate>Mon, 18 Jan 2016 14:34:38 -0500</pubDate>
+      
+      <guid>http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold/</guid>
+      <description>
+
+&lt;h1 id=&#34;the-basics:9bf4210971839ea8da436c1305007683&#34;&gt;The basics&lt;/h1&gt;
+
+&lt;p&gt;The &lt;a href=&#34;http://www.gnu.org/software/emacs/manual/html_node/elisp/Garbage-Collection.html&#34;&gt;garbage collection&lt;/a&gt; in Emacs is very simple.  You allocate some bytes and once you pass a certain threshold, it garbage collects.  That&amp;rsquo;s it.&lt;/p&gt;
+
+&lt;h1 id=&#34;the-problem:9bf4210971839ea8da436c1305007683&#34;&gt;The problem&lt;/h1&gt;
+
+&lt;p&gt;The default value for &lt;code&gt;gc-cons-threshold&lt;/code&gt; is quite low by modern standards &amp;ndash; it&amp;rsquo;s only 800KB.  But is that actually a problem?  Emacs is known to have poor defaults, but most of the time defaults are chosen because they work most of the time, and something as crucial as &lt;code&gt;gc-cons-threshold&lt;/code&gt; was &lt;em&gt;probably&lt;/em&gt; chosen with at least some thought.  But if that&amp;rsquo;s the case, then why is everyone (including some popular distributions) increasing the default value?&lt;/p&gt;
+
+&lt;h1 id=&#34;the-performance-hit:9bf4210971839ea8da436c1305007683&#34;&gt;The performance hit&lt;/h1&gt;
+
+&lt;p&gt;I can only speculate that one of the reasons is &lt;a href=&#34;https://github.com/lewang/flx&#34;&gt;flx&lt;/a&gt;.  On their readme they outline a sample performance test which shows that garbage collection accounts for a significant portion of the time, and that once you increase the threshold you see a dramatic performance improvement.  flx is what drives a lot of fuzzy-matching packages (which tend to very popular), so I think it has a viral effect of forcing everyone to increase the threshold.&lt;/p&gt;
+
+&lt;p&gt;But maybe it&amp;rsquo;s not just one package.  Maybe it&amp;rsquo;s also from posts like the one from &lt;a href=&#34;https://www.reddit.com/r/emacs/comments/3kqt6e/2_easy_little_known_steps_to_speed_up_emacs_start/&#34;&gt;/r/emacs&lt;/a&gt; a couple months ago which recommended to increase &lt;code&gt;gc-cons-threshold&lt;/code&gt; to improve startup time.  Indeed, it improved my startup time.  However, I went overboard &amp;ndash; I increased it to 1GB, thinking that RAM is fast.  Actually, it&amp;rsquo;s not.  If you set it that high, Emacs will freeze for ~20 seconds when it eventually garbage collects (this took me a while to track down), which is completely unacceptable when it happens in the middle of typing some code.  But even at 100MB, if I paid enough attention I would be able to notice the split second of lag when garbage collection occurs.  How am I supposed to determine the optimal value between speed and lag?&lt;/p&gt;
+
+&lt;h1 id=&#34;the-default:9bf4210971839ea8da436c1305007683&#34;&gt;The default&lt;/h1&gt;
+
+&lt;p&gt;OK, is the default value actually bad?  I changed the value of &lt;code&gt;garbage-collection-messages&lt;/code&gt; to &lt;code&gt;t&lt;/code&gt; and I was simply blown away with how often GC happens with the default threshold.  Operations like &lt;code&gt;package-list-packages&lt;/code&gt; would spawn multiple collections.  Everyday actions like completion, snippet expansion, and even &lt;code&gt;ls&lt;/code&gt; a couple times in &lt;code&gt;eshell&lt;/code&gt; would trigger garbage collection.&lt;/p&gt;
+
+&lt;p&gt;It turns out that the default behavior is to garbage collect very often.  And because there is so little garbage to collect each time, you will not notice any lag.  The problem, of course, is when you use memory-intensive features like &lt;a href=&#34;https://github.com/lewang/flx&#34;&gt;flx&lt;/a&gt; or &lt;a href=&#34;https://github.com/emacs-helm/helm&#34;&gt;helm&lt;/a&gt; on a large collection.&lt;/p&gt;
+
+&lt;h1 id=&#34;the-fix:9bf4210971839ea8da436c1305007683&#34;&gt;The fix&lt;/h1&gt;
+
+&lt;p&gt;Unsurprisingly, the fix is actually mentioned in the official documentation of the variable:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;By binding this temporarily to a large number, you can effectively prevent garbage collection during a part of the program.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Armed with that knowledge, the fix is quite straightforward:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-cl&#34; data-lang=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;my-minibuffer-setup-hook&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;setq&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;gc-cons-threshold&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;most-positive-fixnum&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;my-minibuffer-exit-hook&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;setq&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;gc-cons-threshold&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;800000&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;add-hook&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;minibuffer-setup-hook&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;my-minibuffer-setup-hook&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;add-hook&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;minibuffer-exit-hook&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;my-minibuffer-exit-hook&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This works surprisingly well.  While the minibuffer is open, garbage collection will never occur, but once we make a selection, or cancel, garbage collection will kick off immediately and then revert back to the default, sensible behavior.&lt;/p&gt;
+
+&lt;p&gt;No more random freezing!  Success!&lt;/p&gt;
+
+&lt;p&gt;And if you still want to take advantage of the speed boost at startup, simply set the value in a &lt;code&gt;let&lt;/code&gt; expression, like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-cl&#34; data-lang=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;let&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;gc-cons-threshold&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;most-positive-fixnum&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+  &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;existing&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;init&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;code&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h1 id=&#34;corollary:9bf4210971839ea8da436c1305007683&#34;&gt;Corollary&lt;/h1&gt;
+
+&lt;p&gt;With this new found old trick, I&amp;rsquo;ve started experimenting with the opposite extreme.  A value of &lt;code&gt;100&lt;/code&gt; is so low that simply moving the cursor 10 times would trigger a GC.  Bulk operations like updating all my packages is noticeably slower (heavy in CPU and memory), but normal everyday Emacs continues to be very snappy.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Emacs as my &lt;Leader&gt; 1 Year Later</title>

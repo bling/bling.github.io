@@ -125,6 +125,32 @@
 
 <div class="article">
   <div class="article-title">
+    <a href="http://bling.github.io/blog/2011/08/27/building-real-time-push-app-with-rx-2/">Building a Real-time Push App with Silverlight: Part 2</a>
+  </div>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2011-08-27</small>
+    <div class="article-tags">
+      
+      <a href="/tags/rx">rx</a>
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
+  <div class="post">
+    Let’s review the main Rx code from last time: public IObservable&lt;string&gt; GetJsonStreams() { var request = GetRequest(); return Observable.FromAsyncPattern&lt;WebResponse&gt;(request.BeginGetResponse, request.EndGetResponse)() .Select(wr =&gt; wr.GetResponseStream()) .Select(str =&gt; Observable.FromAsyncPattern&lt;byte[], int, int, int&gt;(str.BeginRead, str.EndRead)) .SelectMany(ParseJson); } One thing I didn’t like about this was that the web request object was created regardless of whether the Observable gets a subscription or not. This is potentially wasted resources, and I wanted to refactor this to be completely lazy.
+
+    
+    <a class="read-more" href="http://bling.github.io/blog/2011/08/27/building-real-time-push-app-with-rx-2/">
+      <span>Read on...</span>
+    </a>
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
     <a href="http://bling.github.io/blog/2011/08/26/building-real-time-push-app-with-rx-1/">Building a Real-time Push App with Silverlight: Part 1</a>
   </div>
   <div class="meta">
@@ -225,32 +251,6 @@
   </div>
 </div>
 
-<div class="article">
-  <div class="article-title">
-    <a href="http://bling.github.io/blog/2011/05/20/taking-quick-look-at-net-decompilers/">Taking a Quick Look at .NET Decompilers</a>
-  </div>
-  <div class="meta">
-    <small><i class="fa fa-calendar-o"></i> 2011-05-20</small>
-    <div class="article-tags">
-      
-      <a href="/tags/coding">coding</a>
-      
-      <a href="/tags/software%20tools">software tools</a>
-      
-    </div>
-  </div>
-  <hr/>
-  <div class="post">
-    Decompilers in the .NET space has changed a lot since the announcement from Red Gate that they were going to start charging for Reflector, which was the defacto most important/useful tool in any developer&rsquo;s tool belt. This blog post will be a quick overview to take a look at all the new contenders that have cropped up in the .NET space to see if any of them can dethrone Reflector as the decompiler of choice.
-
-    
-    <a class="read-more" href="http://bling.github.io/blog/2011/05/20/taking-quick-look-at-net-decompilers/">
-      <span>Read on...</span>
-    </a>
-    
-  </div>
-</div>
-
 
 
     
@@ -317,12 +317,15 @@
         ><a href="/page/17/">17</a></li>
         
         <li
+        ><a href="/page/18/">18</a></li>
+        
+        <li
         >
         <a href="/page/8/" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
         </li>
         
         <li>
-            <a href="/page/17/" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
+            <a href="/page/18/" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
         </li>
         
     </ul>

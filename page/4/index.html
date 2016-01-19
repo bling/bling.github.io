@@ -125,6 +125,52 @@
 
 <div class="article">
   <div class="article-title">
+    <a href="http://bling.github.io/blog/2013/02/11/writing-macros-with-vim/">Writing Macros with Vim</a>
+  </div>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2013-02-11</small>
+    <div class="article-tags">
+      
+      <a href="/tags/vim">vim</a>
+      
+    </div>
+  </div>
+  <hr/>
+  <div class="post">
+    <p>First, let’s start with a Javascript function:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">foo</span><span class="p">(</span><span class="nx">hello</span><span class="p">,</span> <span class="nx">world</span><span class="p">,</span>
+             <span class="nx">how</span><span class="p">,</span> <span class="nx">are</span><span class="p">,</span>
+             <span class="nx">you</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Now let’s convert that to the following:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">foo</span><span class="p">(</span><span class="nx">parameters</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">hello</span> <span class="o">=</span> <span class="nx">parameters</span><span class="p">.</span><span class="nx">hello</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">world</span> <span class="o">=</span> <span class="nx">parameters</span><span class="p">.</span><span class="nx">world</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">how</span> <span class="o">=</span> <span class="nx">parameters</span><span class="p">.</span><span class="nx">how</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">are</span> <span class="o">=</span> <span class="nx">parameters</span><span class="p">.</span><span class="nx">are</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">you</span> <span class="o">=</span> <span class="nx">parameters</span><span class="p">.</span><span class="nx">you</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Here are the macros I used to do this:</p>
+<div class="highlight"><pre><code class="language-vim" data-lang="vim"><span class="k">let</span> @<span class="k">r</span><span class="p">=</span><span class="s1">&#39;di(iparameters^[/\{^M2o^[kpg`[v`]Jgv:s/\s//g^M0:try|exe &quot;norm! @q&quot;|endtry^MA;^[V:s/,/;\r/g^Mv``=&#39;</span>
+<span class="k">let</span> @<span class="k">q</span><span class="p">=</span><span class="s1">&#39;ywivar ^[pa = parameters.^[f,^[l@q&#39;</span>
+</code></pre></div>
+
+
+
+    
+    <a class="read-more" href="http://bling.github.io/blog/2013/02/11/writing-macros-with-vim/">
+      <span>Read on...</span>
+    </a>
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
     <a href="http://bling.github.io/blog/2013/02/10/love-affair-with-vim/">Love Affair with Vim</a>
   </div>
   <div class="meta">
@@ -233,32 +279,6 @@
   </div>
 </div>
 
-<div class="article">
-  <div class="article-title">
-    <a href="http://bling.github.io/blog/2012/06/03/n2n-net-2-node/">N2N: .NET 2 Node</a>
-  </div>
-  <div class="meta">
-    <small><i class="fa fa-calendar-o"></i> 2012-06-03</small>
-    <div class="article-tags">
-      
-      <a href="/tags/javascript">javascript</a>
-      
-      <a href="/tags/coding">coding</a>
-      
-    </div>
-  </div>
-  <hr/>
-  <div class="post">
-    Well, it&rsquo;s been quite a while since I&rsquo;ve blogged about&hellip;well&hellip;anything, and I figured it&rsquo;s about time I get off my lazy butt and do something with my spare time on weekends. What better option than to see what all the hype is about Node? I had to do it sooner or later. As any newbie would do, they go to Google and type &ldquo;nodejs tutorial&rdquo;. The Node Beginner Book came up first, so I went with that.
-
-    
-    <a class="read-more" href="http://bling.github.io/blog/2012/06/03/n2n-net-2-node/">
-      <span>Read on...</span>
-    </a>
-    
-  </div>
-</div>
-
 
 
     
@@ -325,12 +345,15 @@
         ><a href="/page/17/">17</a></li>
         
         <li
+        ><a href="/page/18/">18</a></li>
+        
+        <li
         >
         <a href="/page/5/" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
         </li>
         
         <li>
-            <a href="/page/17/" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
+            <a href="/page/18/" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
         </li>
         
     </ul>

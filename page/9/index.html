@@ -125,6 +125,34 @@
 
 <div class="article">
   <div class="article-title">
+    <a href="http://bling.github.io/blog/2010/12/11/auto-mocking-nsubstitute-with-castle/">Auto Mocking NSubstitute with Castle Windsor</a>
+  </div>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2010-12-11</small>
+    <div class="article-tags">
+      
+      <a href="/tags/testing">testing</a>
+      
+      <a href="/tags/castle">castle</a>
+      
+      <a href="/tags/coding">coding</a>
+      
+    </div>
+  </div>
+  <hr/>
+  <div class="post">
+    I was debating whether to make this blog post because it’s so damn simple to implement, but hey, if it saves someone else time, I did some good. First of all, register an ILazyComponentLoader into Windsor: var c = new WindsorContainer(); c.Register(Component.For&lt;LazyComponentAutoMocker&gt;()); Then, the implementation of LazyComponentAutoMocker is simply this: public class LazyComponentAutoMocker : ILazyComponentLoader { public IRegistration Load(string key, Type service, IDictionary arguments) { return Component.For(service).Instance(Substitute.For(new[] { service }, null)); } } And you’re done!
+
+    
+    <a class="read-more" href="http://bling.github.io/blog/2010/12/11/auto-mocking-nsubstitute-with-castle/">
+      <span>Read on...</span>
+    </a>
+    
+  </div>
+</div>
+
+<div class="article">
+  <div class="article-title">
     <a href="http://bling.github.io/blog/2010/12/05/working-in-git-to-working-in-mercurial/">Working in Git to Working in Mercurial</a>
   </div>
   <div class="meta">
@@ -223,24 +251,6 @@
   </div>
 </div>
 
-<div class="article">
-  <div class="article-title">
-    <a href="http://bling.github.io/blog/2010/10/05/memory-leak-with-wpfs-richtextbox/">Memory Leak with WPF’s RichTextBox</a>
-  </div>
-  <div class="meta">
-    <small><i class="fa fa-calendar-o"></i> 2010-10-05</small>
-    <div class="article-tags">
-      
-    </div>
-  </div>
-  <hr/>
-  <div class="post">
-    Apparently, setting IsUndoEnabled to false isn’t enough. You must also set UndoLimit=0 as well otherwise it&rsquo;ll still keep track of undo history. Doh!
-
-    
-  </div>
-</div>
-
 
 
     
@@ -307,12 +317,15 @@
         ><a href="/page/17/">17</a></li>
         
         <li
+        ><a href="/page/18/">18</a></li>
+        
+        <li
         >
         <a href="/page/10/" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
         </li>
         
         <li>
-            <a href="/page/17/" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
+            <a href="/page/18/" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
         </li>
         
     </ul>

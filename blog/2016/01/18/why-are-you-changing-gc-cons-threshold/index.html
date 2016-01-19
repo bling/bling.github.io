@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Why are you changing gc-cons-threshold?</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="generator" content="Hugo 0.16-DEV" />
+    <link href="" rel="alternate" type="application/rss+xml" title="bling on software" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/hc.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/custom.css" rel="stylesheet">
+    <link href="http://bling.github.io/css/highlight.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    
+    
+  </head>
+  <body>
+    <div id = "wrapper">
+
+      <div class="navbar navbar-default" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a href="http://bling.github.io/"><p class="navbar-brand">bling on software</p></a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+
+
+
+      
+      <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+          <li class="sidebar-brand">
+            <a href="http://bling.github.io/">
+              <h1 class="brand">bling on software</h1>
+            </a>
+            <a href="/about">
+              <img src="https://pbs.twimg.com/profile_images/1188386482/Untitled_bigger.png" />
+            </a>
+            <h3>when pragmatism meets minimalism</h3>
+          </li>
+
+          <hr />
+
+          <div id="social-wrapper">
+            <li> <a href="https://github.com/bling"><i class="fa fa-github-square"></i> github</a> </li>
+            <li> <a href="https://twitter.com/blingcoder"><i class="fa fa-twitter-square"></i> @twitter</a></li>
+            <li> <a href="https://linkedin.com/in/baileyling"><i class="fa fa-linkedin-square"></i> linkedin</a> </li>
+          </div>
+
+          <hr />
+
+          <li class="sidebar-tags">
+            <div>
+              <span>Tags</span>
+              <a href="/post" style="float:right">show all</a>
+            </div>
+            <div>
+              
+              <a href="/tags/blend">blend</a>
+              
+              <a href="/tags/blogging">blogging</a>
+              
+              <a href="/tags/castle">castle</a>
+              
+              <a href="/tags/coding">coding</a>
+              
+              <a href="/tags/cqrs">cqrs</a>
+              
+              <a href="/tags/emacs">emacs</a>
+              
+              <a href="/tags/forex">forex</a>
+              
+              <a href="/tags/ioc">ioc</a>
+              
+              <a href="/tags/javascript">javascript</a>
+              
+              <a href="/tags/logging">logging</a>
+              
+              <a href="/tags/powershell">powershell</a>
+              
+              <a href="/tags/rx">rx</a>
+              
+              <a href="/tags/scm">scm</a>
+              
+              <a href="/tags/software-tools">software-tools</a>
+              
+              <a href="/tags/testing">testing</a>
+              
+              <a href="/tags/twitter">twitter</a>
+              
+              <a href="/tags/vim">vim</a>
+              
+              <a href="/tags/visual-studio">visual-studio</a>
+              
+            </div>
+          </li>
+        </ul>
+        <footer>
+          <p class="text-muted">&copy; bling on software 2016. All rights reserved. </p>
+        </footer>
+
+      </div>
+
+
+
+      <div class="container">
+
+
+
+<div class="article">
+  <div class="article-title">Why are you changing gc-cons-threshold?</div>
+  <div class="meta">
+    <small><i class="fa fa-calendar-o"></i> 2016-01-18</small>
+    <div class="article-tags">
+      
+      <a href="/tags/emacs">emacs</a>
+      
+    </div>
+  </div>
+  <hr/>
+  <div class="post">
+    
+
+<h1 id="the-basics:9bf4210971839ea8da436c1305007683">The basics</h1>
+
+<p>The <a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Garbage-Collection.html">garbage collection</a> in Emacs is very simple.  You allocate some bytes and once you pass a certain threshold, it garbage collects.  That&rsquo;s it.</p>
+
+<h1 id="the-problem:9bf4210971839ea8da436c1305007683">The problem</h1>
+
+<p>The default value for <code>gc-cons-threshold</code> is quite low by modern standards &ndash; it&rsquo;s only 800KB.  But is that actually a problem?  Emacs is known to have poor defaults, but most of the time defaults are chosen because they work most of the time, and something as crucial as <code>gc-cons-threshold</code> was <em>probably</em> chosen with at least some thought.  But if that&rsquo;s the case, then why is everyone (including some popular distributions) increasing the default value?</p>
+
+<h1 id="the-performance-hit:9bf4210971839ea8da436c1305007683">The performance hit</h1>
+
+<p>I can only speculate that one of the reasons is <a href="https://github.com/lewang/flx">flx</a>.  On their readme they outline a sample performance test which shows that garbage collection accounts for a significant portion of the time, and that once you increase the threshold you see a dramatic performance improvement.  flx is what drives a lot of fuzzy-matching packages (which tend to very popular), so I think it has a viral effect of forcing everyone to increase the threshold.</p>
+
+<p>But maybe it&rsquo;s not just one package.  Maybe it&rsquo;s also from posts like the one from <a href="https://www.reddit.com/r/emacs/comments/3kqt6e/2_easy_little_known_steps_to_speed_up_emacs_start/">/r/emacs</a> a couple months ago which recommended to increase <code>gc-cons-threshold</code> to improve startup time.  Indeed, it improved my startup time.  However, I went overboard &ndash; I increased it to 1GB, thinking that RAM is fast.  Actually, it&rsquo;s not.  If you set it that high, Emacs will freeze for ~20 seconds when it eventually garbage collects (this took me a while to track down), which is completely unacceptable when it happens in the middle of typing some code.  But even at 100MB, if I paid enough attention I would be able to notice the split second of lag when garbage collection occurs.  How am I supposed to determine the optimal value between speed and lag?</p>
+
+<h1 id="the-default:9bf4210971839ea8da436c1305007683">The default</h1>
+
+<p>OK, is the default value actually bad?  I changed the value of <code>garbage-collection-messages</code> to <code>t</code> and I was simply blown away with how often GC happens with the default threshold.  Operations like <code>package-list-packages</code> would spawn multiple collections.  Everyday actions like completion, snippet expansion, and even <code>ls</code> a couple times in <code>eshell</code> would trigger garbage collection.</p>
+
+<p>It turns out that the default behavior is to garbage collect very often.  And because there is so little garbage to collect each time, you will not notice any lag.  The problem, of course, is when you use memory-intensive features like <a href="https://github.com/lewang/flx">flx</a> or <a href="https://github.com/emacs-helm/helm">helm</a> on a large collection.</p>
+
+<h1 id="the-fix:9bf4210971839ea8da436c1305007683">The fix</h1>
+
+<p>Unsurprisingly, the fix is actually mentioned in the official documentation of the variable:</p>
+
+<blockquote>
+<p>By binding this temporarily to a large number, you can effectively prevent garbage collection during a part of the program.</p>
+</blockquote>
+
+<p>Armed with that knowledge, the fix is quite straightforward:</p>
+<div class="highlight"><pre><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nb">defun</span> <span class="nv">my-minibuffer-setup-hook</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">setq</span> <span class="nv">gc-cons-threshold</span> <span class="nv">most-positive-fixnum</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">my-minibuffer-exit-hook</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">setq</span> <span class="nv">gc-cons-threshold</span> <span class="mi">800000</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;minibuffer-setup-hook</span> <span class="nf">#&#39;</span><span class="nv">my-minibuffer-setup-hook</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;minibuffer-exit-hook</span> <span class="nf">#&#39;</span><span class="nv">my-minibuffer-exit-hook</span><span class="p">)</span>
+</code></pre></div>
+
+<p>This works surprisingly well.  While the minibuffer is open, garbage collection will never occur, but once we make a selection, or cancel, garbage collection will kick off immediately and then revert back to the default, sensible behavior.</p>
+
+<p>No more random freezing!  Success!</p>
+
+<p>And if you still want to take advantage of the speed boost at startup, simply set the value in a <code>let</code> expression, like this:</p>
+<div class="highlight"><pre><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">gc-cons-threshold</span> <span class="nv">most-positive-fixnum</span><span class="p">))</span>
+  <span class="err">#</span> <span class="nv">existing</span> <span class="nv">init</span> <span class="nv">code</span>
+  <span class="p">)</span>
+</code></pre></div>
+
+<h1 id="corollary:9bf4210971839ea8da436c1305007683">Corollary</h1>
+
+<p>With this new found old trick, I&rsquo;ve started experimenting with the opposite extreme.  A value of <code>100</code> is so low that simply moving the cursor 10 times would trigger a GC.  Bulk operations like updating all my packages is noticeably slower (heavy in CPU and memory), but normal everyday Emacs continues to be very snappy.</p>
+
+  </div>
+</div>
+
+
+
+
+<div class="social-bar">
+  <a href="https://twitter.com/share" class="twitter-share-button"{count} data-via="blingcoder">Tweet</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <g:plusone></g:plusone>
+</div>
+
+<ul class="pager">
+  
+   &nbsp;<li class="next"><a href="http://bling.github.io/blog/2015/12/31/migrating-from-jekyll-octopress-to-hugo/"> Migrating from Jekyll/Octopress to Hugo</a></li>
+</ul>
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+ (function() {
+   if (window.location.hostname === 'localhost')
+     return;
+
+   var disqus_shortname = 'blingdev';
+   var disqus_identifier = 'http:\/\/bling.github.io\/blog\/2016\/01\/18\/why-are-you-changing-gc-cons-threshold\/';
+   var disqus_title = 'Why are you changing gc-cons-threshold?';
+   var disqus_url = 'http:\/\/bling.github.io\/blog\/2016\/01\/18\/why-are-you-changing-gc-cons-threshold\/';
+   var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+   dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+   (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+ })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38439430-2', 'auto');
+ga('send', 'pageview');
+</script>
+
+  </body>
+</html>
+
